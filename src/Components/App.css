@@ -1,0 +1,51 @@
+.app {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.tab-content {
+  height: calc(100vh - 125px);
+  overflow-y: auto;
+}
+
+.rank {
+  color: white;
+}
+
+.spearmarshal {
+  background-color: #f8c300;
+}
+
+.second-spear {
+  background-color: #0099e1;
+}
+
+.first-spear {
+  background-color: #a652bb;
+}
+
+.captain {
+  background-color: #fd0061;
+}
+
+.general {
+  background-color: #cc7900;
+}
+
+.guest {
+  background-color: #00d166;
+}
+
+.bots {
+  background-color: #a62019;
+}
+
+.invited {
+  background-color: rgb(94, 94, 94);
+}
+
+.not-found {
+  background-color: black;
+}

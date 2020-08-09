@@ -51,6 +51,8 @@ const getRoleName = (allRoles, memberRoles) => {
       if (match && valid) return discordRole.name;
     }
   }
+
+  return "NOT FOUND";
 };
 
 module.exports.fetchMembers = fetchMembers;
