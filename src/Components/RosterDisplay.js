@@ -1,7 +1,7 @@
 import React from "react";
-import Table from "react-bootstrap/Table";
 import PropTypes from "prop-types";
 
+import Table from "./Table";
 import {
   formatRankId,
   isPromotionRequired,
@@ -12,7 +12,7 @@ const RosterDisplay = ({ records, filterString }) => {
   records = filterDataByString(records, filterString);
 
   return (
-    <Table striped bordered hover size="sm" variant="dark">
+    <Table>
       <thead>
         <tr>
           <th>Account Name</th>

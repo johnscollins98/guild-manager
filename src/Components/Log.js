@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table from "react-bootstrap/Table";
 
+import Table from "./Table";
 import { filterDataByString } from "../utils/Helpers";
 
 const Log = ({ data, filterString }) => {
   data = filterDataByString(data, filterString);
 
   return (
-    <Table striped bordered hover size="sm" variant="dark">
+    <Table>
       <thead>
         <tr>
           <th>Date</th>

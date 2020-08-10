@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table from "react-bootstrap/Table";
+
+import Table from "./Table";
 
 import DataProcessing from "../utils/DataProcessing";
 import { formatRankId, filterDataByString } from "../utils/Helpers";
@@ -17,7 +18,7 @@ const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
   records = filterDataByString(records, filterString);
 
   return (
-    <Table striped bordered hover size="sm" variant="dark">
+    <Table>
       <thead>
         <tr>
           <th>Name</th>
