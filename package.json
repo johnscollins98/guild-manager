@@ -18,7 +18,7 @@
   },
   "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "node src/Server/server.js",
+    "start": "node ./Server/server.js",
     "dev-server": "nodemon src/Server/server.js",
     "dev-client": "react-scripts start",
     "build": "react-scripts build"
