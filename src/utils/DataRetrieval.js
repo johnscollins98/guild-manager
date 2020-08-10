@@ -1,5 +1,3 @@
-const port = process.env.PORT || 3001;
-
 export const fetchDiscordMembers = async () => {
   const response = await fetch(`/api/discord/members`);
   const data = await response.json();
