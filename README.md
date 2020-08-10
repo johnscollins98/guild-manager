@@ -2,25 +2,34 @@
 
 Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in sync.
 
+## Environment Variables
+
+To run this you do need to set up the following env variables:
+
+| value            | description                                              | default                          |
+| ---------------- | -------------------------------------------------------- | -------------------------------- |
+| BOT_TOKEN        | Discord bot access token from the Guild's discord server | null - will fail if not defined. |
+| DISCORD_GUILD_ID | ID of Guild's discord server                             | null - will fail if not defined. |
+| GW2_GUILD_ID     | ID of Guild Wars 2 guild                                 | null - will fail if not defined. |
+| GW2_API_TOKEN    | Guild Wars 2 API Token                                   | null - will fail if not defined  |
+| PORT             | Port to run Express server on                            | 5000 if not defined              |
+
 ## Available Scripts
 
 In the project directory, you can run:
 
 ### `npm run start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Starts the Express server with node.
 
 ### `npm run dev-server`
 
-Run express server.
+Run express server with nodemon.
+
+### `npm run dev-client`
+
+Run front end in local development server
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
+Builds the front end for production/deployment.
