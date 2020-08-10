@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const port = process.env.SERVER_PORT || 3001;
+const port = process.env.PORT || 3001;
 
 const discordRoute = require("./routes/discord");
 const gw2Route = require("./routes/gw2");
