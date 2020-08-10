@@ -1,19 +1,19 @@
 const port = process.env.PORT || 3001;
 
 export const fetchDiscordMembers = async () => {
-  const response = await fetch(`http://localhost:${port}/discord/members`);
+  const response = await fetch(`/api/discord/members`);
   const data = await response.json();
   return data;
 };
 
 export const fetchGW2Members = async () => {
-  const response = await fetch(`http://localhost:${port}/gw2/members`);
+  const response = await fetch(`/api/gw2/members`);
   const data = await response.json();
   return data;
 };
 
 export const fetchGW2Log = async () => {
-  const response = await fetch(`http://localhost:${port}/gw2/log`);
+  const response = await fetch(`/api/gw2/log`);
   const data = await response.json();
   return data;
 };

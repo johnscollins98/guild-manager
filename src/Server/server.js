@@ -5,7 +5,7 @@ const path = require("path");
 const app = express();
 app.use(cors());
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5000;
 
 const discordRoute = require("./routes/discord");
 const gw2Route = require("./routes/gw2");
