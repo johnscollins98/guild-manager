@@ -19,14 +19,23 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
       gw2Members,
       discordMembers
     )
-      .filter((o) => o.role === "NOT FOUND")
+      .filter((o) =>
+        [
+          "First Spear",
+          "Second Spear",
+          "Captain",
+          "General",
+          "Spearmarshal",
+          "NOT FOUND",
+        ].includes(o.role)
+      )
       .map((o) => ({
         accountName: "-",
         rank: "-",
         joinDate: "-",
         discordName: o.name,
         role: o.role,
-        comments: "NO ROLE & NO MAPPING FOUND",
+        comments: "EXTRA DISCORD. NOT GUEST/BOT",
       }));
   }
   records = records
