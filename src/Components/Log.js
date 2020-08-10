@@ -8,7 +8,7 @@ const Log = ({ data, filterString }) => {
   data = filterDataByString(data, filterString);
 
   return (
-    <Table striped bordered hover>
+    <Table striped bordered hover variant="dark">
       <thead>
         <tr>
           <th>Date</th>

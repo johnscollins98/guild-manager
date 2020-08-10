@@ -45,7 +45,7 @@ const App = () => {
   };
 
   return (
-    <Container fluid className="app vh-100">
+    <Container fluid className="app bg-dark vh-100">
       <Row>
         <Col>
           <Control refresh={refresh} handleFilterChange={handleFilterChange} />
@@ -53,7 +53,7 @@ const App = () => {
       </Row>
       <Row className="flex-grow-1 vh-100">
         <Col className="vh-100">
-          <Tabs defaultActiveKey="roster">
+          <Tabs defaultActiveKey="roster" className="bg-dark">
             <Tab eventKey="roster" title="Roster">
               <Roster
                 gw2Members={gw2Members}

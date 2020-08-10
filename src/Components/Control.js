@@ -15,12 +15,15 @@ const Control = ({ refresh, handleFilterChange }) => {
   return (
     <InputGroup className="mb-3">
       <InputGroup.Prepend>
-        <InputGroup.Text id="basic-addon1">Filter</InputGroup.Text>
+        <InputGroup.Text id="basic-addon1" className="text-white">
+          Filter
+        </InputGroup.Text>
       </InputGroup.Prepend>
       <FormControl
         placeholder="Type here to filter for any column..."
         aria-label="Filter"
         aria-describedby="basic-addon1"
+        className="bg-dark text-white"
         onChange={handleFilterChange}
       />
       <button className="btn ml-2 btn-primary" onClick={() => onRefresh()}>

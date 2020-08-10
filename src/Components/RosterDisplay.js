@@ -12,7 +12,7 @@ const RosterDisplay = ({ records, filterString }) => {
   records = filterDataByString(records, filterString);
 
   return (
-    <Table striped bordered hover>
+    <Table striped bordered hover variant="dark">
       <thead>
         <tr>
           <th>Account Name</th>
