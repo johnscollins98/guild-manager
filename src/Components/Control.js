@@ -37,6 +37,7 @@ const Control = ({ refresh, handleFilterChange }) => {
           left: "calc(50% - 150px)",
           width: "300px",
           margin: "auto",
+          zIndex: "5000",
         }}
         autohide
       >

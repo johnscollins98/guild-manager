@@ -25,14 +25,15 @@ const App = () => {
   }, []);
 
   const fetchData = async () => {
-    const discordMem = await DataRetrieval.fetchDiscordMembers();
-    setDiscordMembers(discordMem);
+    const gw2Log = DataRetrieval.fetchGW2Log();
+    const discordMem = DataRetrieval.fetchDiscordMembers();
+    const gw2Mem = DataRetrieval.fetchGW2Members();
 
-    const gw2Mem = await DataRetrieval.fetchGW2Members();
-    setGw2Members(gw2Mem);
+    gw2Log.then((r) => setGw2Log(r));
+    discordMem.then((r) => setDiscordMembers(r));
+    gw2Mem.then((r) => setGw2Members(r));
 
-    const gw2Log = await DataRetrieval.fetchGW2Log();
-    setGw2Log(gw2Log);
+    await Promise.allSettled([discordMem, gw2Mem, gw2Log]);
   };
 
   const refresh = async () => {
