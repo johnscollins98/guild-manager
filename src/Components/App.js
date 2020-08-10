@@ -60,15 +60,15 @@ const App = () => {
                 filterString={filterString}
               />
             </Tab>
-            <Tab eventKey="actions" title="Required Actions">
-              <RequiredActions
+            <Tab eventKey="excessDiscord" title="Excess Discord">
+              <ExcessDiscord
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
               />
             </Tab>
-            <Tab eventKey="excessDiscord" title="Excess Discord">
-              <ExcessDiscord
+            <Tab eventKey="actions" title="Required Actions">
+              <RequiredActions
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}

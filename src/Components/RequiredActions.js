@@ -8,17 +8,34 @@ import RosterDisplay from "./RosterDisplay";
 
 const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
   let records = [];
+  let excessDiscord = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = DataProcessing.generateGW2RosterRecords(
       gw2Members,
       discordMembers
     );
+
+    excessDiscord = DataProcessing.getExcessDiscordRecords(
+      gw2Members,
+      discordMembers
+    )
+      .filter((o) => o.role === "NOT FOUND")
+      .map((o) => ({
+        accountName: "-",
+        rank: "-",
+        joinDate: "-",
+        discordName: o.name,
+        role: o.role,
+        comments: "NO ROLE & NO MAPPING FOUND",
+      }));
   }
-  records = records.filter(
-    (record) =>
-      record.comments !== "" ||
-      isPromotionRequired(record.rank, record.joinDate)
-  );
+  records = records
+    .filter(
+      (record) =>
+        record.comments !== "" ||
+        isPromotionRequired(record.rank, record.joinDate)
+    )
+    .concat(excessDiscord);
 
   return <RosterDisplay records={records} filterString={filterString} />;
 };
