@@ -20,21 +20,17 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
       discordMembers
     )
       .filter((o) =>
-        [
-          "First Spear",
-          "Second Spear",
-          "Captain",
-          "General",
-          "Spearmarshal",
-          "NOT FOUND",
-        ].includes(o.role)
+        ![
+          "Bots",
+          "Guest",
+        ].includes(DataProcessing.formatDiscordRole(o.roles))
       )
       .map((o) => ({
         accountName: "-",
         rank: "-",
         joinDate: "-",
         discordName: o.name,
-        role: o.role,
+        role: DataProcessing.formatDiscordRole(o.roles),
         comments: "EXTRA DISCORD. NOT GUEST/BOT",
       }));
   }
