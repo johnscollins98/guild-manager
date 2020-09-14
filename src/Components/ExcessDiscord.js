@@ -29,8 +29,12 @@ const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
         {records.map((record, i) => (
           <tr key={i}>
             <td>{record.name}</td>
-            <td className={`rank ${formatRankId(record.role)}`}>
-              {record.role}
+            <td
+              className={`rank ${formatRankId(
+                DataProcessing.formatDiscordRole(record.roles)
+              )}`}
+            >
+              {DataProcessing.formatDiscordRole(record.roles)}
             </td>
           </tr>
         ))}
@@ -47,6 +51,13 @@ ExcessDiscord.propTypes = {
       joined: PropTypes.string.isRequired,
     })
   ).isRequired,
+  filterString: PropTypes.string.isRequired,
+  discordMembers: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      roles: PropTypes.array.isRequired,
+    }).isRequired
+  ),
 };
 
 export default ExcessDiscord;

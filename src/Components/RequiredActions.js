@@ -60,7 +60,7 @@ RequiredActions.propTypes = {
   discordMembers: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
-      role: PropTypes.string.isRequired,
+      roles: PropTypes.array.isRequired,
     }).isRequired
   ),
   filterString: PropTypes.string.isRequired,

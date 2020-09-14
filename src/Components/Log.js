@@ -37,6 +37,7 @@ Log.propTypes = {
       message: PropTypes.string.isRequired,
     }).isRequired
   ),
+  filterString: PropTypes.string.isRequired
 };
 
 export default Log;

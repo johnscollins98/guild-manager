@@ -29,11 +29,11 @@ const formatMembers = (members, roles) => {
 const formatMember = (member, roles) => {
   return {
     name: member.nick ? member.nick : member.user.username,
-    role: getRoleName(roles, member.roles),
+    roles: getRoleNames(roles, member.roles),
   };
 };
 
-const getRoleName = (allRoles, memberRoles) => {
+const getRoleNames = (allRoles, memberRoles) => {
   const validRoles = [
     "Second Spear",
     "First Spear",
@@ -44,15 +44,17 @@ const getRoleName = (allRoles, memberRoles) => {
     "Bots",
   ];
 
+  let roles = [];
+
   for (const memberRoleId of memberRoles) {
     for (const discordRole of allRoles) {
       const match = memberRoleId === discordRole.id;
       const valid = validRoles.includes(discordRole.name);
-      if (match && valid) return discordRole.name;
+      if (match && valid) roles.push(discordRole.name);
     }
   }
 
-  return "NOT FOUND";
+  return roles;
 };
 
 module.exports.fetchMembers = fetchMembers;
