@@ -18,13 +18,17 @@ export const isPromotionRequired = (rank, dateString) => {
 };
 
 export const filterDataByString = (data, filterString) => {
-  return data.filter((object) => {
+  const recursiveCheck = (object) => {
     const values = Object.values(object);
     for (const value of values) {
-      if (value.toLowerCase().includes(filterString.toLowerCase())) {
+      if (typeof value != "string") {
+        if (recursiveCheck(value)) return true;
+      } else if (value.toLowerCase().includes(filterString.toLowerCase())) {
         return true;
       }
     }
     return false;
-  });
+  };
+
+  return data.filter(recursiveCheck);
 };
