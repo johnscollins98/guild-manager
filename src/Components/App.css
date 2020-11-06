@@ -79,3 +79,7 @@
 .not-found {
   background-color: black;
 }
+
+.refresh-spinner {
+  margin: 0em 1em;
+}

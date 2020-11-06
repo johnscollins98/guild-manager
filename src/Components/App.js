@@ -19,12 +19,15 @@ const App = () => {
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
   const [filterString, setFilterString] = useState("");
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoadingData(true);
+
     const gw2Log = DataRetrieval.fetchGW2Log();
     const discordMem = DataRetrieval.fetchDiscordMembers();
     const gw2Mem = DataRetrieval.fetchGW2Members();
@@ -34,6 +37,7 @@ const App = () => {
     gw2Mem.then((r) => setGw2Members(r));
 
     await Promise.allSettled([discordMem, gw2Mem, gw2Log]);
+    setLoadingData(false);
   };
 
   const refresh = async () => {
@@ -48,7 +52,7 @@ const App = () => {
     <Container fluid className="app bg-dark vh-100">
       <Row>
         <Col>
-          <Control refresh={refresh} handleFilterChange={handleFilterChange} />
+          <Control refresh={refresh} handleFilterChange={handleFilterChange} loadingData={loadingData} />
         </Col>
       </Row>
       <Row className="flex-grow-1 vh-100">
