@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
+import Toast from "react-bootstrap/Toast";
+import Spinner from "react-bootstrap/Spinner";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import DataRetrieval from "../utils/DataRetrieval";
@@ -21,65 +23,148 @@ const App = () => {
   const [filterString, setFilterString] = useState("");
   const [loadingData, setLoadingData] = useState(true);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [showToast, setShowToast] = useState(false);
+  const [toastHeader, setToastHeader] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
   const fetchData = async () => {
-    setLoadingData(true);
+    let success = false;
+    try {
+      setLoadingData(true);
+      setGw2Members([]);
+      setGw2Log([]);
+      setDiscordMembers([]);
 
-    const gw2Log = DataRetrieval.fetchGW2Log();
-    const discordMem = DataRetrieval.fetchDiscordMembers();
-    const gw2Mem = DataRetrieval.fetchGW2Members();
-
-    gw2Log.then((r) => setGw2Log(r));
-    discordMem.then((r) => setDiscordMembers(r));
-    gw2Mem.then((r) => setGw2Members(r));
-
-    await Promise.allSettled([discordMem, gw2Mem, gw2Log]);
-    setLoadingData(false);
+      const requests = [
+        DataRetrieval.fetchGW2Members().then(r => setGw2Members(r)),
+        DataRetrieval.fetchGW2Log().then(r => setGw2Log(r)),
+        DataRetrieval.fetchDiscordMembers().then(r => setDiscordMembers(r))
+      ];
+  
+      await Promise.all(requests);
+      success = true;
+    } catch (err) {
+      openToast("Error", "There was an error gathering data. See console for more information.");
+    } finally {
+      setLoadingData(false);
+      return success;
+    }
   };
 
+  useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const openToast = (header, message) => {
+    setToastHeader(header);
+    setToastMessage(message);
+    setShowToast(true);
+  }
+
+  const closeToast = () => {
+    setToastHeader("");
+    setToastMessage("");
+    setShowToast(false);
+  }
+
   const refresh = async () => {
-    await fetchData();
+    const success = await fetchData();
+    if (success) openToast("Refresh", "Successfully refreshed!");
   };
 
   const handleFilterChange = (event) => {
     setFilterString(event.target.value);
   };
 
+  const TABS = {
+    ROSTER: "Roster",
+    EXCESS_DISCORD: "Excess Discord",
+    REQUIRED_ACTIONS: "Required Actions",
+    LOG: "Log",
+  };
+
+  const any = (arr) => arr.length > 0;
+
+  const getTabTitle = (tab) => {
+    if (!loadingData) return tab;
+
+    if (tab === TABS.LOG) {
+      if (any(gw2Log)) return tab;
+    } else {
+      if (any(gw2Members) && any(discordMembers)) return tab;
+    }
+    return (
+      <span>
+        {tab}
+        {"  "}
+        <Spinner
+          animation="border"
+          variant="primary"
+          className="refresh"
+          size="sm"
+        />
+      </span>
+    );
+  };
+
   return (
     <Container fluid className="app bg-dark vh-100">
+      <Toast
+        show={showToast}
+        onClose={() => closeToast()}
+        delay={2000}
+        className="rounded"
+        style={{
+          position: "absolute",
+          top: "15px",
+          left: "calc(50% - 150px)",
+          width: "300px",
+          margin: "auto",
+          zIndex: "5000",
+        }}
+        autohide
+      >
+        <Toast.Header>{toastHeader}</Toast.Header>
+        <Toast.Body>{toastMessage}</Toast.Body>
+      </Toast>
       <Row>
         <Col>
-          <Control refresh={refresh} handleFilterChange={handleFilterChange} loadingData={loadingData} />
+          <Control
+            refresh={refresh}
+            handleFilterChange={handleFilterChange}
+            loadingData={loadingData}
+          />
         </Col>
       </Row>
       <Row className="flex-grow-1 vh-100">
         <Col className="vh-100">
           <Tabs defaultActiveKey="roster" className="bg-dark">
-            <Tab eventKey="roster" title="Roster">
+            <Tab eventKey="roster" title={getTabTitle(TABS.ROSTER)}>
               <Roster
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
               />
             </Tab>
-            <Tab eventKey="excessDiscord" title="Excess Discord">
+            <Tab
+              eventKey="excessDiscord"
+              title={getTabTitle(TABS.EXCESS_DISCORD)}
+            >
               <ExcessDiscord
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
               />
             </Tab>
-            <Tab eventKey="actions" title="Required Actions">
+            <Tab eventKey="actions" title={getTabTitle(TABS.REQUIRED_ACTIONS)}>
               <RequiredActions
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
               />
             </Tab>
-            <Tab eventKey="log" title="Log">
+            <Tab eventKey="log" title={getTabTitle(TABS.LOG)}>
               <Log data={gw2Log} filterString={filterString} />
             </Tab>
           </Tabs>
