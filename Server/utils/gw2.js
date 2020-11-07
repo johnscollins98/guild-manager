@@ -1,27 +1,3 @@
-const fetch = require("node-fetch");
-
-const fetchMembers = async (baseUrl, params) => {
-  try {
-    const url = `${baseUrl}/members`;
-    const response = await fetch(url, params);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const fetchLog = async (baseUrl, params) => {
-  try {
-    const url = `${baseUrl}/log`;
-    const response = await fetch(url, params);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const formatLog = (data) => {
   const filtered = data.filter((o) =>
     ["joined", "invited", "kick", "rank_change"].includes(o.type)
@@ -60,6 +36,4 @@ const formatLogEntry = (entry) => {
   return log;
 };
 
-module.exports.fetchMembers = fetchMembers;
-module.exports.fetchLog = fetchLog;
 module.exports.formatLog = formatLog;
