@@ -21,6 +21,7 @@
     "start": "node ./Server/server.js",
     "dev-server": "nodemon ./Server/server.js",
     "dev-client": "react-scripts start",
+    "dev": "concurrently \"npm run dev-server\" \"set PORT=5001 && npm run dev-client\"",
     "build": "react-scripts build"
   },
   "eslintConfig": {
@@ -39,6 +40,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "nodemon": "^2.0.4"
   }
 }
