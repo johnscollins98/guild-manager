@@ -16,17 +16,26 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
     record.joinDate = gw2Member.joined.split("T")[0].replace(/-/g, "/");
 
     // special case for unique account name
-    const testName =
-      record.accountName === "52ECA7F4-AF11-4724-9FCD-02A55C4722F6"
-        ? "numbers"
-        : record.accountName.toLowerCase();
+    const testName = record.accountName.toLowerCase();
 
-    const discordMember = discordMembers.find((discordMember) =>
-      discordMember.name.toLowerCase().includes(testName)
+    // check for whole word first
+    let discordMember = discordMembers.find((discordMember) =>
+      discordMember.name
+        .toLowerCase()
+        .match(new RegExp(`(?<!\\w)${testName}(?!\\w)`))
     );
 
+    // then check for any inclusion.
+    if (!discordMember) {
+      discordMember = discordMembers.find((discordMember) =>
+        discordMember.name.toLowerCase().includes(testName)
+      );
+    }
+
     record.discordName = discordMember ? discordMember.name : "NOT FOUND";
-    record.role = discordMember ? formatDiscordRole(discordMember.roles) : "NOT FOUND";
+    record.role = discordMember
+      ? formatDiscordRole(discordMember.roles)
+      : "NOT FOUND";
     record.comments = record.rank !== record.role ? "UNMATCHING" : "";
 
     return record;
@@ -47,7 +56,7 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
       return discordName.includes(gw2Name);
     });
     return found == null;
-  })
+  });
   return filtered.sort((a, b) => compareRank(a.roles, b.roles));
 };
 
@@ -70,16 +79,16 @@ const compareRank = (aRank, bRank) => {
 
 const formatDiscordRole = (roles) => {
   if (roles === undefined || roles.length === 0) return "NOT FOUND";
-  
+
   let string = "";
   for (let i = 0; i < roles.length; i++) {
     string += i === 0 ? roles[i] : `, ${roles[i]}`;
   }
   return string;
-}
+};
 
 export default {
   generateGW2RosterRecords: generateGW2RosterRecords,
   getExcessDiscordRecords: getExcessDiscordRecords,
-  formatDiscordRole: formatDiscordRole
+  formatDiscordRole: formatDiscordRole,
 };
