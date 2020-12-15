@@ -49,14 +49,18 @@
 }
 
 .second-spear {
-  background-color: #0099e1;
+  background-color: #00d166;
 }
 
 .first-spear {
-  background-color: #a652bb;
+  background-color: #0099e1;
 }
 
 .captain {
+  background-color: #a652bb;
+}
+
+.commander {
   background-color: #fd0061;
 }
 
@@ -65,7 +69,7 @@
 }
 
 .guest {
-  background-color: #00d166;
+  background-color: #62c592;
 }
 
 .bots {

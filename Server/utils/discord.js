@@ -13,6 +13,7 @@ const getRoleNames = (allRoles, memberRoles) => {
   const validRoles = [
     "Second Spear",
     "First Spear",
+    "Commander",
     "Captain",
     "General",
     "Spearmarshal",

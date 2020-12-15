@@ -53,8 +53,9 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
 
 const compareRank = (aRank, bRank) => {
   const rankSortValues = {
-    Spearmarshal: 7,
-    General: 6,
+    Spearmarshal: 8,
+    General: 7,
+    Commander: 6,
     Captain: 5,
     "First Spear": 4,
     "Second Spear": 3,
