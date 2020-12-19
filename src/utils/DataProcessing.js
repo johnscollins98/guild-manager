@@ -69,7 +69,7 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
       })
     })
     .map((discordMember) => {
-      const roleString = discordMember.roles.map(r => r.name).join(", ")
+      const roleString = discordMember.roles.map(r => r.name).join(", ") || "NOT FOUND";
       return { ...discordMember, roleString }
     })
     .sort((a, b) => compareRank(a.roleString, b.roleString));

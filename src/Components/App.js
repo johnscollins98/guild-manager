@@ -164,6 +164,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                refresh={refresh}
                 openToast={openToast}
               />
             </Tab>

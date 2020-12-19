@@ -6,7 +6,7 @@ import { isPromotionRequired } from "../utils/Helpers";
 
 import RosterDisplay from "./RosterDisplay";
 
-const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
+const RequiredActions = ({ gw2Members, discordMembers, filterString, refresh, openToast }) => {
   let records = [];
   let excessDiscord = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
@@ -30,6 +30,7 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
         rank: "-",
         joinDate: "-",
         discordName: o.name,
+        discordId: o.id,
         roleString: o.roleString || "NOT FOUND",
         roles: o.roles || [],
         comments: "EXTRA DISCORD. NOT GUEST/BOT",
@@ -43,7 +44,14 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
     )
     .concat(excessDiscord);
 
-  return <RosterDisplay records={records} filterString={filterString} />;
+  return (
+    <RosterDisplay
+      records={records}
+      filterString={filterString}
+      openToast={openToast}
+      refresh={refresh}
+    />
+  );
 };
 
 RequiredActions.propTypes = {
