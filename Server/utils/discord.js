@@ -5,11 +5,12 @@ const formatMembers = (members, roles) => {
 const formatMember = (member, roles) => {
   return {
     name: member.nick ? member.nick : member.user.username,
-    roles: getRoleNames(roles, member.roles),
+    id: member.user.id,
+    roles: getRoleInfo(roles, member.roles),
   };
 };
 
-const getRoleNames = (allRoles, memberRoles) => {
+const getRoleInfo = (allRoles, memberRoles) => {
   const validRoles = [
     "Second Spear",
     "First Spear",
@@ -27,7 +28,10 @@ const getRoleNames = (allRoles, memberRoles) => {
     for (const discordRole of allRoles) {
       const match = memberRoleId === discordRole.id;
       const valid = validRoles.includes(discordRole.name);
-      if (match && valid) roles.push(discordRole.name);
+      if (match && valid) roles.push({
+        name: discordRole.name,
+        id: discordRole.id
+      });
     }
   }
 

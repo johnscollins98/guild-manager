@@ -23,14 +23,14 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
         ![
           "Bots",
           "Guest",
-        ].includes(DataProcessing.formatDiscordRole(o.roles))
+        ].includes(o.roleString)
       )
       .map((o) => ({
         accountName: "-",
         rank: "-",
         joinDate: "-",
         discordName: o.name,
-        role: DataProcessing.formatDiscordRole(o.roles),
+        role: o.roleString,
         comments: "EXTRA DISCORD. NOT GUEST/BOT",
       }));
   }

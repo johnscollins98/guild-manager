@@ -145,6 +145,8 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                refresh={refresh}
+                openToast={openToast}
               />
             </Tab>
             <Tab
@@ -162,6 +164,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                openToast={openToast}
               />
             </Tab>
             <Tab eventKey="log" title={getTabTitle(TABS.LOG)}>

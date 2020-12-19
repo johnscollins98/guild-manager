@@ -32,11 +32,25 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
       );
     }
 
-    record.discordName = discordMember ? discordMember.name : "NOT FOUND";
-    record.role = discordMember
-      ? formatDiscordRole(discordMember.roles)
-      : "NOT FOUND";
-    record.comments = record.rank !== record.role ? "UNMATCHING" : "";
+    if (discordMember) {
+      const roleString = discordMember.roles.map(r => r.name).join(", ")
+
+      record = { ...record,
+        discordName: discordMember.name,
+        discordId: discordMember.id,
+        roles: discordMember.roles,
+        roleString: roleString.length ? roleString : "NOT FOUND"
+      }
+    } else {
+      record ={ ...record, 
+        discordName: "NOT FOUND",
+        discordId: null,
+        roles: [],
+        roleString: "NOT FOUND"
+      }
+    }
+
+    record.comments = record.rank !== record.roleString ? "UNMATCHING" : "";
 
     return record;
   });
@@ -45,19 +59,20 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
 };
 
 const getExcessDiscordRecords = (gw2Members, discordMembers) => {
-  const filtered = discordMembers.filter((discordMember) => {
-    const found = gw2Members.find((gw2Member) => {
-      const discordName = discordMember.name.toLowerCase();
-      const gw2Name =
-        gw2Member.name === "52ECA7F4-AF11-4724-9FCD-02A55C4722F6"
-          ? "numbers"
-          : gw2Member.name.toLowerCase().split(".")[0];
+  return discordMembers
+    .filter((discordMember) => {
+      return !gw2Members.some((gw2Member) => {
+        const discordName = discordMember.name.toLowerCase();
+        const gw2Name = gw2Member.name.toLowerCase().split(".")[0];
 
-      return discordName.includes(gw2Name);
-    });
-    return found == null;
-  });
-  return filtered.sort((a, b) => compareRank(a.roles, b.roles));
+        return discordName.includes(gw2Name);
+      })
+    })
+    .map((discordMember) => {
+      const roleString = discordMember.roles.map(r => r.name).join(", ")
+      return { ...discordMember, roleString }
+    })
+    .sort((a, b) => compareRank(a.roleString, b.roleString));
 };
 
 const compareRank = (aRank, bRank) => {
@@ -78,18 +93,7 @@ const compareRank = (aRank, bRank) => {
   return bVal - aVal;
 };
 
-const formatDiscordRole = (roles) => {
-  if (roles === undefined || roles.length === 0) return "NOT FOUND";
-
-  let string = "";
-  for (let i = 0; i < roles.length; i++) {
-    string += i === 0 ? roles[i] : `, ${roles[i]}`;
-  }
-  return string;
-};
-
 export default {
   generateGW2RosterRecords: generateGW2RosterRecords,
   getExcessDiscordRecords: getExcessDiscordRecords,
-  formatDiscordRole: formatDiscordRole,
 };

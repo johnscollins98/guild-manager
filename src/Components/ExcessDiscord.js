@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Table from "./Table";
 
 import DataProcessing from "../utils/DataProcessing";
-import { formatRankId, filterDataByString } from "../utils/Helpers";
+import { filterDataByString } from "../utils/Helpers";
 
 const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
   let records = [];
@@ -30,11 +30,9 @@ const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
           <tr key={i}>
             <td>{record.name}</td>
             <td
-              className={`rank ${formatRankId(
-                DataProcessing.formatDiscordRole(record.roles)
-              )}`}
+              className={`rank ${record.roleString.toLowerCase()}`}
             >
-              {DataProcessing.formatDiscordRole(record.roles)}
+              {record.roleString}
             </td>
           </tr>
         ))}

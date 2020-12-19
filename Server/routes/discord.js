@@ -36,4 +36,9 @@ router.get("/members", async (req, res) => {
   }
 });
 
+router.delete("/members/:id", async (req, res) => {
+  const response = await fetch(`${baseUrl}/members/${req.params.id}`, {...reqParams, method: "DELETE"});
+  res.status(response.status).json(req.params.id);
+});
+
 module.exports = router;

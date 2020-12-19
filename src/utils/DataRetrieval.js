@@ -9,6 +9,11 @@ export const fetchDiscordMembers = async () => {
   return data;
 };
 
+export const kickDiscordMember = async (memberId) => {
+  const response = await fetch(`/api/discord/members/${memberId}`, { method: "DELETE" });
+  return response.status === 204;
+}
+
 export const fetchGW2Members = async () => {
   const response = await fetch(`/api/gw2/members`);
   const data = await response.json();
@@ -33,6 +38,7 @@ export const fetchGW2Log = async () => {
 
 export default {
   fetchDiscordMembers: fetchDiscordMembers,
+  kickDiscordMember: kickDiscordMember,
   fetchGW2Members: fetchGW2Members,
   fetchGW2Log: fetchGW2Log,
 };

@@ -9,6 +9,31 @@
   color: white;
 }
 
+td.actions {
+  vertical-align: middle;
+}
+
+.action {
+  cursor: pointer;
+}
+
+.action:hover {
+  color: #aaa;
+}
+
+.action:active {
+  transform: translateY(1px);
+}
+
+div.actions {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-evenly;
+  justify-self: center;
+  align-items: center;
+}
+
 .nav-tabs {
   border-bottom: 1px solid #444e58;
 }
