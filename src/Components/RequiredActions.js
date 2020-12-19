@@ -30,7 +30,8 @@ const RequiredActions = ({ gw2Members, discordMembers, filterString }) => {
         rank: "-",
         joinDate: "-",
         discordName: o.name,
-        role: o.roleString,
+        roleString: o.roleString || "NOT FOUND",
+        roles: o.roles || [],
         comments: "EXTRA DISCORD. NOT GUEST/BOT",
       }));
   }
