@@ -6,7 +6,6 @@ const getUserAuthInfo = async (req) => {
   
   const inGuild = req.user.guilds.some((g) => g.id === process.env.DISCORD_GUILD_ID);
   const roles = await getRoles(req.user.id);
-  console.log(roles);
   const authorized = inGuild && roles.includes(process.env.VALID_ROLE); 
 
   const username = req.user.username;
