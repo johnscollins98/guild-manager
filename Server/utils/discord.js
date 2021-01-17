@@ -39,3 +39,4 @@ const getRoleInfo = (allRoles, memberRoles) => {
 };
 
 module.exports.formatMembers = formatMembers;
+module.exports.getRoleInfo = getRoleInfo;

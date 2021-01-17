@@ -10,6 +10,17 @@ const reqParams = {
   },
 };
 
+router.get("/roles", async (req, res) => {
+  const roles = await fetch(`${baseUrl}/roles`, reqParams);
+  const rolesData = await roles.json();
+  if (roles.status !== 200) {
+    res.status(roles.status).json(rolesData);
+    return;
+  }
+
+  res.status(200).json(DiscordUtils.getRoleInfo(rolesData, rolesData.sort((a,b) => b.position - a.position).map(r => r.id)));
+})
+
 router.get("/members", async (req, res) => {
   try {
     // fetch member data
@@ -34,6 +45,16 @@ router.get("/members", async (req, res) => {
   } catch (err) {
     res.status(400).json(`Error: ${err}`);
   }
+});
+
+router.put("/members/:memberId/roles/:roleId", async (req, res) => {
+  const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "PUT"})
+  res.status(response.status).json(req.params.roleId);
+});
+
+router.delete("/members/:memberId/roles/:roleId", async (req, res) => {
+  const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "DELETE" })
+  res.status(response.status).json(req.params.roleId);
 });
 
 router.delete("/members/:id", async (req, res) => {

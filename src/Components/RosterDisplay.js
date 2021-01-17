@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-
+import RoleEdit from "./RoleEdit";
 import Table from "./Table";
 import {
   formatRankId,
@@ -8,10 +8,13 @@ import {
   filterDataByString,
 } from "../utils/Helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import DataRetrieval from "../utils/DataRetrieval";
 
 const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
+  const [modalShow, setModalShow] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
   records = filterDataByString(records, filterString);
 
   const onKick = async (record) => {
@@ -29,6 +32,11 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
         openToast("Kick Failed", `Could not kick ${record.discordName}`);
       }
     }
+  };
+
+  const openEdit = (record) => {
+    setModalShow(true);
+    setSelectedRecord(record);
   };
 
   return (
@@ -64,6 +72,12 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
                   record.roleString.includes("General") ? null : (
                     <>
                       <FontAwesomeIcon
+                        icon={faPencilAlt}
+                        className="action"
+                        title="Edit Discord Roles"
+                        onClick={() => openEdit(record)}
+                      />
+                      <FontAwesomeIcon
                         icon={faTimes}
                         className="action"
                         title="Kick from Discord"
@@ -79,6 +93,13 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
           ))}
         </tbody>
       </Table>
+      <RoleEdit
+        modalShow={modalShow}
+        setModalShow={setModalShow}
+        selectedRecord={selectedRecord}
+        setSelectedRecord={setSelectedRecord}
+        refresh={refresh}
+      />
     </>
   );
 };
