@@ -12,6 +12,7 @@ const formatMember = (member, roles) => {
 
 const getRoleInfo = (allRoles, memberRoles) => {
   const validRoles = [
+    "Third Spear",
     "Second Spear",
     "First Spear",
     "Commander",
