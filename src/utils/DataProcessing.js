@@ -18,36 +18,29 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
     // special case for unique account name
     const testName = record.accountName.toLowerCase();
 
-    // check for whole word first
-    let discordMember = discordMembers.find((discordMember) =>
-      discordMember.name
-        .toLowerCase()
-        .match(new RegExp(`(?<!\\w)${testName}(?!\\w)`))
+    // then check for any inclusion.
+    const discordMember = discordMembers.find((discordMember) =>
+      discordMember.name.toLowerCase().includes(testName)
     );
 
-    // then check for any inclusion.
-    if (!discordMember) {
-      discordMember = discordMembers.find((discordMember) =>
-        discordMember.name.toLowerCase().includes(testName)
-      );
-    }
-
     if (discordMember) {
-      const roleString = discordMember.roles.map(r => r.name).join(", ")
+      const roleString = discordMember.roles.map((r) => r.name).join(", ");
 
-      record = { ...record,
+      record = {
+        ...record,
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles,
-        roleString: roleString.length ? roleString : "NOT FOUND"
-      }
+        roleString: roleString.length ? roleString : "NOT FOUND",
+      };
     } else {
-      record ={ ...record, 
+      record = {
+        ...record,
         discordName: "NOT FOUND",
         discordId: null,
         roles: [],
-        roleString: "NOT FOUND"
-      }
+        roleString: "NOT FOUND",
+      };
     }
 
     record.comments = record.rank !== record.roleString ? "UNMATCHING" : "";
@@ -66,11 +59,12 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
         const gw2Name = gw2Member.name.toLowerCase().split(".")[0];
 
         return discordName.includes(gw2Name);
-      })
+      });
     })
     .map((discordMember) => {
-      const roleString = discordMember.roles.map(r => r.name).join(", ") || "NOT FOUND";
-      return { ...discordMember, roleString }
+      const roleString =
+        discordMember.roles.map((r) => r.name).join(", ") || "NOT FOUND";
+      return { ...discordMember, roleString };
     })
     .sort((a, b) => compareRank(a.roleString, b.roleString));
 };
