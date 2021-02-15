@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import Toast from "react-bootstrap/Toast";
-import Spinner from "react-bootstrap/Spinner";
+import { FaSyncAlt, FaCheckCircle } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import DataRetrieval from "../utils/DataRetrieval";
@@ -87,23 +87,18 @@ const App = () => {
   const any = (arr) => arr.length > 0;
 
   const getTabTitle = (tab) => {
-    if (!loadingData) return tab;
+    let loaded = !loadingData;
 
     if (tab === TABS.LOG) {
-      if (any(gw2Log)) return tab;
+      loaded = any(gw2Log);
     } else {
-      if (any(gw2Members) && any(discordMembers)) return tab;
+      loaded = any(gw2Members) && any(discordMembers);
     }
     return (
-      <span>
+      <span className="tab-title">
+        {loaded ? <FaCheckCircle className="loaded" /> : <FaSyncAlt />}
+        &nbsp;
         {tab}
-        {"  "}
-        <Spinner
-          animation="border"
-          variant="primary"
-          className="refresh"
-          size="sm"
-        />
       </span>
     );
   };
