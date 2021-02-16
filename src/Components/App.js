@@ -132,8 +132,8 @@ const App = () => {
           />
         </Col>
       </Row>
-      <Row className="flex-grow-1 vh-100">
-        <Col className="vh-100">
+      <Row className="flex-grow-1">
+        <Col className="tab-container">
           <Tabs defaultActiveKey="roster" className="bg-dark">
             <Tab eventKey="roster" title={getTabTitle(TABS.ROSTER)}>
               <Roster
