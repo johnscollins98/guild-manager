@@ -11,39 +11,66 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
 
   const records = sortedGW2Members.map((gw2Member) => {
     let record = {};
-    record.accountName = gw2Member.name.split(".")[0];
+    record.accountName = gw2Member.name.split('.')[0];
     record.rank = gw2Member.rank;
-    record.joinDate = gw2Member.joined.split("T")[0].replace(/-/g, "/");
+    record.joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
 
     // special case for unique account name
     const testName = record.accountName.toLowerCase();
 
-    // then check for any inclusion.
-    const discordMember = discordMembers.find((discordMember) =>
-      discordMember.name.toLowerCase().includes(testName)
+    // check for exact match
+    let discordMember = discordMembers.find(
+      (m) => m.name.toLowerCase() === testName
     );
 
+    // check for name before are after a space
+    if (!discordMember) {
+      discordMember = discordMembers.find((m) => {
+        const testAfter = new RegExp(`${testName}\\s`);
+        const testBefore = new RegExp(`\\s${testName}`);
+        return (
+          m.name.toLowerCase().match(testAfter) ||
+          m.name.toLowerCase().match(testBefore)
+        );
+      });
+    }
+
+    // check for name inside parenthesis
+    if (!discordMember) {
+      discordMember = discordMembers.find((m) => {
+        const test = new RegExp(`\\(${testName}\\)`);
+        return m.name.toLowerCase().match(test);
+      });
+    }
+
+    // check for any inclusion
+    if (!discordMember) {
+      discordMember = discordMembers.find((m) =>
+        m.name.toLowerCase().includes(testName)
+      );
+    }
+
     if (discordMember) {
-      const roleString = discordMember.roles.map((r) => r.name).join(", ");
+      const roleString = discordMember.roles.map((r) => r.name).join(', ');
 
       record = {
         ...record,
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles,
-        roleString: roleString.length ? roleString : "NOT FOUND",
+        roleString: roleString.length ? roleString : 'NOT FOUND',
       };
     } else {
       record = {
         ...record,
-        discordName: "NOT FOUND",
+        discordName: 'NOT FOUND',
         discordId: null,
         roles: [],
-        roleString: "NOT FOUND",
+        roleString: 'NOT FOUND',
       };
     }
 
-    record.comments = record.rank !== record.roleString ? "UNMATCHING" : "";
+    record.comments = record.rank !== record.roleString ? 'UNMATCHING' : '';
 
     return record;
   });
@@ -56,14 +83,14 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
     .filter((discordMember) => {
       return !gw2Members.some((gw2Member) => {
         const discordName = discordMember.name.toLowerCase();
-        const gw2Name = gw2Member.name.toLowerCase().split(".")[0];
+        const gw2Name = gw2Member.name.toLowerCase().split('.')[0];
 
         return discordName.includes(gw2Name);
       });
     })
     .map((discordMember) => {
       const roleString =
-        discordMember.roles.map((r) => r.name).join(", ") || "NOT FOUND";
+        discordMember.roles.map((r) => r.name).join(', ') || 'NOT FOUND';
       return { ...discordMember, roleString };
     })
     .sort((a, b) => compareRank(a.roleString, b.roleString));
@@ -75,9 +102,9 @@ const compareRank = (aRank, bRank) => {
     General: 8,
     Commander: 7,
     Captain: 6,
-    "First Spear": 5,
-    "Second Spear": 4,
-    "Third Spear": 3,
+    'First Spear': 5,
+    'Second Spear': 4,
+    'Third Spear': 3,
     Guest: 2,
     Bots: 1,
   };
