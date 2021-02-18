@@ -12,7 +12,7 @@ export const isPromotionRequired = (rank, dateString) => {
 
   const date = new Date(dateString);
   const diffMilliseconds = Math.abs(Date.now() - date);
-  const diffDays = Math.ceil(diffMilliseconds / (1000 * 60 * 60 * 24));
+  const diffDays = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
 
   return diffDays >= 14 ? "Needs Promotion" : "";
 };
