@@ -16,7 +16,8 @@ router.get("/members", async (req, res) => {
     const data = await response.json();
 
     // unique cases for crazy account names 
-    data.find(m => m.name === "DD035413-353B-42A1-BAD4-EB58438860CE").name = "Berry";
+    const uniqueCase = data.find(m => m.name === "DD035413-353B-42A1-BAD4-EB58438860CE")
+    if (uniqueCase) uniqueCase.name = "Berry";
 
     res.status(response.status).json(data);
   } catch (err) {
