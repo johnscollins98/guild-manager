@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const fetch = require("node-fetch");
 const DiscordUtils = require("../utils/discord");
+const { getUserAuthInfo } = require("../utils/auth");
 
 const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
 const botToken = process.env.BOT_TOKEN;
@@ -48,17 +49,26 @@ router.get("/members", async (req, res) => {
 });
 
 router.put("/members/:memberId/roles/:roleId", async (req, res) => {
+  const authInfo = getUserAuthInfo(req);
+  if (!authInfo.authorized) return res.status(403).json("Forbidden")
+  
   const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "PUT"})
   res.status(response.status).json(req.params.roleId);
 });
 
 router.delete("/members/:memberId/roles/:roleId", async (req, res) => {
+  const authInfo = getUserAuthInfo(req);
+  if (!authInfo.authorized) return res.status(403).json("Forbidden")
+  
   const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "DELETE" })
   res.status(response.status).json(req.params.roleId);
 });
 
 router.delete("/members/:id", async (req, res) => {
-  const response = await fetch(`${baseUrl}/members/${req.params.id}`, {...reqParams, method: "DELETE"});
+  const authInfo = getUserAuthInfo(req);
+  if (!authInfo.authorized) return res.status(403).json("Forbidden")
+
+  const response = await fetch(`${baseUrl}/members/${req.params.id}`, {...reqParams, method: "DELETE" });
   res.status(response.status).json(req.params.id);
 });
 
