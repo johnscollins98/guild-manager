@@ -6,30 +6,39 @@ Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in
 
 To run this you do need to set up the following env variables:
 
-| value            | description                                              | default                          |
-| ---------------- | -------------------------------------------------------- | -------------------------------- |
-| BOT_TOKEN        | Discord bot access token from the Guild's discord server | null - will fail if not defined. |
-| DISCORD_GUILD_ID | ID of Guild's discord server                             | null - will fail if not defined. |
-| GW2_GUILD_ID     | ID of Guild Wars 2 guild                                 | null - will fail if not defined. |
-| GW2_API_TOKEN    | Guild Wars 2 API Token                                   | null - will fail if not defined  |
-| PORT             | Port to run Express server on                            | 5000 if not defined              |
+| value                 | description                                              |
+| --------------------- | -------------------------------------------------------- |
+| BOT_TOKEN             | Discord bot access token from the Guild's discord server |
+| DISCORD_GUILD_ID      | ID of Guild's discord server                             |
+| GW2_GUILD_ID          | ID of Guild Wars 2 guild                                 |
+| GW2_API_TOKEN         | Guild Wars 2 API Token                                   |
+| PORT                  | Port to run Express server on                            |
+| ATLAS_URI             | MongoDB Atlas URI                                        |
+| DISCORD_CLIENT_ID     | Client ID for Discord OAuth                              |
+| DISCORD_CLIENT_SECRET | Client Secret for Discord OAuth                          |
+| DISCORD_AUTH_REDIRECT | OAuth Redirect URL                                       |
+| VALID_ROLE            | Admin Discord Role                                       |
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm run start`
+### `yarn start`
 
 Starts the Express server with node.
 
-### `npm run dev-server`
+### `yarn dev-server`
 
 Run express server with nodemon.
 
-### `npm run dev-client`
+### `yarn dev-client`
 
 Run front end in local development server
 
-### `npm run build`
+### `yarn dev`
+
+Run both back-end and front-end concurrently
+
+### `yarn build`
 
 Builds the front end for production/deployment.
