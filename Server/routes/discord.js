@@ -49,7 +49,7 @@ router.get("/members", async (req, res) => {
 });
 
 router.put("/members/:memberId/roles/:roleId", async (req, res) => {
-  const authInfo = getUserAuthInfo(req);
+  const authInfo = await getUserAuthInfo(req);
   if (!authInfo.authorized) return res.status(403).json("Forbidden")
   
   const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "PUT"})
@@ -57,7 +57,7 @@ router.put("/members/:memberId/roles/:roleId", async (req, res) => {
 });
 
 router.delete("/members/:memberId/roles/:roleId", async (req, res) => {
-  const authInfo = getUserAuthInfo(req);
+  const authInfo = await getUserAuthInfo(req);
   if (!authInfo.authorized) return res.status(403).json("Forbidden")
   
   const response  = await fetch(`${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`, {...reqParams, method: "DELETE" })
@@ -65,7 +65,7 @@ router.delete("/members/:memberId/roles/:roleId", async (req, res) => {
 });
 
 router.delete("/members/:id", async (req, res) => {
-  const authInfo = getUserAuthInfo(req);
+  const authInfo = await getUserAuthInfo(req);
   if (!authInfo.authorized) return res.status(403).json("Forbidden")
 
   const response = await fetch(`${baseUrl}/members/${req.params.id}`, {...reqParams, method: "DELETE" });
