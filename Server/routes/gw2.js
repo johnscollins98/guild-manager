@@ -14,6 +14,10 @@ router.get("/members", async (req, res) => {
   try {
     const response = await fetch(`${baseUrl}/members`, reqParams);
     const data = await response.json();
+
+    // unique cases for crazy account names 
+    data.find(m => m.name === "DD035413-353B-42A1-BAD4-EB58438860CE").name = "Berry";
+
     res.status(response.status).json(data);
   } catch (err) {
     res.status(400).json(`Error: ${err}`)
