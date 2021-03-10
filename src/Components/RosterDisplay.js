@@ -48,13 +48,15 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
           <col />
           <col />
           <col />
+          <col />
           <col width="75px" />
         </colgroup>
         <thead>
           <tr>
             <th>Account</th>
             <th>Joined</th>
-            <th>Rank</th>
+            <th>GW2 Rank</th>
+            <th>Discord Role</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -67,6 +69,9 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
               <td>{record.joinDate}</td>
               <td className={`rank ${formatRankId(record.rank)}`}>
                 {record.rank}
+              </td>
+              <td className={`rank ${formatRankId(record.roles[0]?.name || "-")}`}>
+                {record.roles[0]?.name || "-"}
               </td>
               <td className="actions">
                 <div className="actions">

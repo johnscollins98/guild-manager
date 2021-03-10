@@ -84,10 +84,8 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
     .map((discordMember) => {
       return { 
         accountName: discordMember.name,
-        rank: discordMember.roles[0]?.name || "-",
+        rank: "-",
         joinDate: "-",
-        discordName: discordMember.name,
-        discordId: discordMember.id,
         roles: discordMember.roles || [],
         issues: {
           missingGW2: !(discordMember.roles.find(r => r.name === "Guest" || r.name === "Bots"))
