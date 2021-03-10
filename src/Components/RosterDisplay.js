@@ -43,6 +43,12 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
   return (
     <>
       <Table>
+        <colgroup>
+          <col />
+          <col />
+          <col />
+          <col width="75px" />
+        </colgroup>
         <thead>
           <tr>
             <th>Account</th>
@@ -63,8 +69,7 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
               </td>
               <td className="actions">
                 <div className="actions">
-                  {record.roles?.includes('Spearmarshal') ||
-                  record.roles?.includes('General') ? null : (
+                  {record.roles.find(r => r.name === "Spearmarshal" || r.name === "General") ? null : (
                     <>
                       <FontAwesomeIcon
                         icon={faPencilAlt}
