@@ -7,10 +7,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faTimes,
   faPencilAlt,
-  faChevronUp,
+  faAngleDoubleUp,
   faNotEqual,
 } from '@fortawesome/free-solid-svg-icons';
 import DataRetrieval from '../utils/DataRetrieval';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
   const [modalShow, setModalShow] = useState(false);
@@ -69,20 +70,30 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
               </td>
               <td className="actions">
                 <div className="actions">
-                  {record.roles.find(r => r.name === "Spearmarshal" || r.name === "General") ? null : (
+                  {record.roles.find(
+                    (r) => r.name === 'Spearmarshal' || r.name === 'General'
+                  ) ? null : (
                     <>
-                      <FontAwesomeIcon
-                        icon={faPencilAlt}
-                        className="action"
-                        title="Edit Discord Roles"
-                        onClick={() => openEdit(record)}
-                      />
-                      <FontAwesomeIcon
-                        icon={faTimes}
-                        className="action"
-                        title="Kick from Discord"
-                        onClick={() => onKick(record)}
-                      />
+                      <TooltipWrapper
+                        tooltip="Edit Discord Roles"
+                        placement="left"
+                      >
+                        <FontAwesomeIcon
+                          icon={faPencilAlt}
+                          className="action"
+                          onClick={() => openEdit(record)}
+                        />
+                      </TooltipWrapper>
+                      <TooltipWrapper
+                        tooltip="Kick from Discord"
+                        placement="left"
+                      >
+                        <FontAwesomeIcon
+                          icon={faTimes}
+                          className="action"
+                          onClick={() => onKick(record)}
+                        />
+                      </TooltipWrapper>
                     </>
                   )}
                 </div>
@@ -136,27 +147,24 @@ const AccountNameCell = ({ record }) => {
     <div className="account-name">
       {record.accountName}{' '}
       <div className="account-errors">
-        <img
-          src={accountImage}
-          width="20"
-          height="20"
-          className="icon"
-          alt="account icon"
-          title={accountTitle}
-        />
-        {record.issues.unmatchingRoles ? (
-          <FontAwesomeIcon
-            icon={faNotEqual}
-            title="Unmatching Roles"
-            className="icon error"
+        <TooltipWrapper tooltip={accountTitle}>
+          <img
+            src={accountImage}
+            width="20"
+            height="20"
+            className="icon"
+            alt="account icon"
           />
+        </TooltipWrapper>
+        {record.issues.unmatchingRoles ? (
+          <TooltipWrapper tooltip="Mismatched Roles">
+            <FontAwesomeIcon icon={faNotEqual} className="icon error" />
+          </TooltipWrapper>
         ) : null}
         {record.issues.promotionRequired ? (
-          <FontAwesomeIcon
-            icon={faChevronUp}
-            title="Promotion Required"
-            className="icon"
-          />
+          <TooltipWrapper tooltip="Promotion Required">
+            <FontAwesomeIcon icon={faAngleDoubleUp} className="icon" />
+          </TooltipWrapper>
         ) : null}
       </div>
     </div>
@@ -170,6 +178,24 @@ AccountNameCell.propTypes = {
     rank: PropTypes.string.isRequired,
     roles: PropTypes.array.isRequired,
   }).isRequired,
+};
+
+const TooltipWrapper = ({ tooltip, children, placement }) => {
+  placement = placement || 'right';
+  return (
+    <OverlayTrigger
+      placement={placement}
+      overlay={<Tooltip id={`tooltip-${placement}`}>{tooltip}</Tooltip>}
+    >
+      {children}
+    </OverlayTrigger>
+  );
+};
+
+TooltipWrapper.propTypes = {
+  tooltip: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  placement: PropTypes.string,
 };
 
 export default RosterDisplay;
