@@ -152,6 +152,8 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                refresh={refresh}
+                openToast={openToast}
               />
             </Tab>
             <Tab eventKey="actions" title={getTabTitle(TABS.REQUIRED_ACTIONS)}>

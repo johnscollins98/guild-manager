@@ -1,12 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Table from "./Table";
-
 import DataProcessing from "../utils/DataProcessing";
-import { filterDataByString } from "../utils/Helpers";
+import RosterDisplay from './RosterDisplay';
 
-const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
+const ExcessDiscord = ({ gw2Members, discordMembers, filterString, openToast, refresh }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = DataProcessing.getExcessDiscordRecords(
@@ -15,29 +13,13 @@ const ExcessDiscord = ({ gw2Members, discordMembers, filterString }) => {
     );
   }
 
-  records = filterDataByString(records, filterString);
-
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Role</th>
-        </tr>
-      </thead>
-      <tbody>
-        {records.map((record, i) => (
-          <tr key={i}>
-            <td>{record.name}</td>
-            <td
-              className={`rank ${record.roleString.toLowerCase()}`}
-            >
-              {record.roleString}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+    <RosterDisplay 
+      records={records}
+      filterString={filterString}
+      openToast={openToast}
+      refresh={refresh}
+    />
   );
 };
 

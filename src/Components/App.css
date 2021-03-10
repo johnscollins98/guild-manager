@@ -131,3 +131,27 @@ div.actions {
 .refresh-spinner {
   margin: 0em 1em;
 }
+
+.error {
+  color: #ff0033
+}
+
+.icon {
+  margin: 0px 5px;
+}
+
+.icon:hover {
+  cursor: pointer;
+}
+
+.account-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.account-errors {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

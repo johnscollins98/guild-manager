@@ -1,48 +1,30 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import DataProcessing from "../utils/DataProcessing";
-import { isPromotionRequired } from "../utils/Helpers";
+import DataProcessing from '../utils/DataProcessing';
 
-import RosterDisplay from "./RosterDisplay";
+import RosterDisplay from './RosterDisplay';
 
-const RequiredActions = ({ gw2Members, discordMembers, filterString, refresh, openToast }) => {
+const RequiredActions = ({
+  gw2Members,
+  discordMembers,
+  filterString,
+  refresh,
+  openToast,
+}) => {
   let records = [];
-  let excessDiscord = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = DataProcessing.generateGW2RosterRecords(
       gw2Members,
       discordMembers
-    );
-
-    excessDiscord = DataProcessing.getExcessDiscordRecords(
-      gw2Members,
-      discordMembers
     )
-      .filter((o) =>
-        ![
-          "Bots",
-          "Guest",
-        ].includes(o.roleString)
+      .concat(
+        DataProcessing.getExcessDiscordRecords(gw2Members, discordMembers)
       )
-      .map((o) => ({
-        accountName: "-",
-        rank: "-",
-        joinDate: "-",
-        discordName: o.name,
-        discordId: o.id,
-        roleString: o.roleString || "NOT FOUND",
-        roles: o.roles || [],
-        comments: "EXTRA DISCORD. NOT GUEST/BOT",
-      }));
+      .filter((record) =>
+        Object.keys(record.issues).some((k) => record.issues[k])
+      );
   }
-  records = records
-    .filter(
-      (record) =>
-        record.comments !== "" ||
-        isPromotionRequired(record.rank, record.joinDate)
-    )
-    .concat(excessDiscord);
 
   return (
     <RosterDisplay
@@ -69,6 +51,8 @@ RequiredActions.propTypes = {
     }).isRequired
   ),
   filterString: PropTypes.string.isRequired,
+  refresh: PropTypes.func.isRequired,
+  openToast: PropTypes.func.isRequired,
 };
 
 export default RequiredActions;

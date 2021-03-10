@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import RoleEdit from "./RoleEdit";
-import Table from "./Table";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import RoleEdit from './RoleEdit';
+import Table from './Table';
+import { formatRankId, filterDataByString } from '../utils/Helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  formatRankId,
-  isPromotionRequired,
-  filterDataByString,
-} from "../utils/Helpers";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
-import DataRetrieval from "../utils/DataRetrieval";
+  faTimes,
+  faPencilAlt,
+  faChevronUp,
+  faNotEqual,
+} from '@fortawesome/free-solid-svg-icons';
+import DataRetrieval from '../utils/DataRetrieval';
 
 const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
   const [modalShow, setModalShow] = useState(false);
@@ -26,10 +27,10 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
     if (res) {
       const success = await DataRetrieval.kickDiscordMember(record.discordId);
       if (success) {
-        openToast("Kicked", `Kicked ${record.discordName} from Discord.`);
+        openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
         refresh();
       } else {
-        openToast("Kick Failed", `Could not kick ${record.discordName}`);
+        openToast('Kick Failed', `Could not kick ${record.discordName}`);
       }
     }
   };
@@ -44,32 +45,26 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
       <Table>
         <thead>
           <tr>
-            <th>Account Name</th>
-            <th>Join Date</th>
+            <th>Account</th>
+            <th>Joined</th>
             <th>Rank</th>
-            <th>Discord Name</th>
-            <th>Role</th>
             <th>Actions</th>
-            <th>Comments</th>
-            <th>Promotion Required?</th>
           </tr>
         </thead>
         <tbody>
           {records.map((record, i) => (
             <tr key={i}>
-              <td>{record.accountName}</td>
+              <td>
+                <AccountNameCell record={record} />
+              </td>
               <td>{record.joinDate}</td>
               <td className={`rank ${formatRankId(record.rank)}`}>
                 {record.rank}
               </td>
-              <td>{record.discordName}</td>
-              <td className={`rank ${formatRankId(record.roleString)}`}>
-                {record.roleString}
-              </td>
               <td className="actions">
                 <div className="actions">
-                  {record.roleString.includes("Spearmarshal") ||
-                  record.roleString.includes("General") ? null : (
+                  {record.roles?.includes('Spearmarshal') ||
+                  record.roles?.includes('General') ? null : (
                     <>
                       <FontAwesomeIcon
                         icon={faPencilAlt}
@@ -87,8 +82,6 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
                   )}
                 </div>
               </td>
-              <td>{record.comments}</td>
-              <td>{isPromotionRequired(record.rank, record.joinDate)}</td>
             </tr>
           ))}
         </tbody>
@@ -110,14 +103,68 @@ RosterDisplay.propTypes = {
       accountName: PropTypes.string.isRequired,
       joinDate: PropTypes.string.isRequired,
       rank: PropTypes.string.isRequired,
-      roleString: PropTypes.string.isRequired,
       roles: PropTypes.array.isRequired,
-      comments: PropTypes.string.isRequired,
     })
   ).isRequired,
   filterString: PropTypes.string.isRequired,
   openToast: PropTypes.func,
   refresh: PropTypes.func,
+};
+
+const AccountNameCell = ({ record }) => {
+  const discordImage = require('../assets/images/discord-icon.png');
+  const discordErrorImage = require('../assets/images/discord-icon-red.png');
+  const gw2Image = require('../assets/images/gw2.png');
+
+  let accountImage = discordImage;
+  let accountTitle = record.discordName;
+
+  if (record.issues.missingGW2) {
+    accountImage = gw2Image;
+    accountTitle = "Can't find GW2 Account";
+  } else if (record.issues.missingDiscord) {
+    accountImage = discordErrorImage;
+    accountTitle = "Can't find Discord Account";
+  }
+
+  return (
+    <div className="account-name">
+      {record.accountName}{' '}
+      <div className="account-errors">
+        <img
+          src={accountImage}
+          width="20"
+          height="20"
+          className="icon"
+          alt="account icon"
+          title={accountTitle}
+        />
+        {record.issues.unmatchingRoles ? (
+          <FontAwesomeIcon
+            icon={faNotEqual}
+            title="Unmatching Roles"
+            className="icon error"
+          />
+        ) : null}
+        {record.issues.promotionRequired ? (
+          <FontAwesomeIcon
+            icon={faChevronUp}
+            title="Promotion Required"
+            className="icon"
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+AccountNameCell.propTypes = {
+  record: PropTypes.shape({
+    accountName: PropTypes.string.isRequired,
+    joinDate: PropTypes.string.isRequired,
+    rank: PropTypes.string.isRequired,
+    roles: PropTypes.array.isRequired,
+  }).isRequired,
 };
 
 export default RosterDisplay;

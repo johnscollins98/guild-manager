@@ -1,3 +1,5 @@
+import { isPromotionRequired } from './Helpers';
+
 const generateGW2RosterRecords = (gw2Members, discordMembers) => {
   const sortedGW2Members = gw2Members.sort((a, b) => {
     let value = compareRank(a.rank, b.rank);
@@ -50,27 +52,18 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
       );
     }
 
-    if (discordMember) {
-      const roleString = discordMember.roles.map((r) => r.name).join(', ');
+    record = {
+      ...record,
+      discordName: discordMember?.name,
+      discordId: discordMember?.id,
+      roles: discordMember?.roles || [],
+    };
 
-      record = {
-        ...record,
-        discordName: discordMember.name,
-        discordId: discordMember.id,
-        roles: discordMember.roles,
-        roleString: roleString.length ? roleString : 'NOT FOUND',
-      };
-    } else {
-      record = {
-        ...record,
-        discordName: 'NOT FOUND',
-        discordId: null,
-        roles: [],
-        roleString: 'NOT FOUND',
-      };
+    record.issues = {
+      missingDiscord: !record.discordName,
+      unmatchingRoles: record.discordName && record.rank !== record.roles[0]?.name,
+      promotionRequired: isPromotionRequired(record.rank, record.joinDate)
     }
-
-    record.comments = record.rank !== record.roleString ? 'UNMATCHING' : '';
 
     return record;
   });
@@ -89,11 +82,19 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
       });
     })
     .map((discordMember) => {
-      const roleString =
-        discordMember.roles.map((r) => r.name).join(', ') || 'NOT FOUND';
-      return { ...discordMember, roleString };
+      return { 
+        accountName: discordMember.name,
+        rank: discordMember.roles[0]?.name || "-",
+        joinDate: "-",
+        discordName: discordMember.name,
+        discordId: discordMember.id,
+        roles: discordMember.roles || [],
+        issues: {
+          missingGW2: !(discordMember.roles.find(r => r.name === "Guest" || r.name === "Bots"))
+        }
+      };
     })
-    .sort((a, b) => compareRank(a.roleString, b.roleString));
+    .sort((a, b) => compareRank(a.roles[0]?.name, b.roles[0]?.name ));
 };
 
 const compareRank = (aRank, bRank) => {
