@@ -61,6 +61,7 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
 
     record.issues = {
       missingDiscord: !record.discordName,
+      multipleRoles: record.roles?.length > 1,
       unmatchingRoles: record.discordName && record.rank !== record.roles[0]?.name,
       promotionRequired: isPromotionRequired(record.rank, record.joinDate)
     }
@@ -90,7 +91,8 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         issues: {
-          missingGW2: !(discordMember.roles.find(r => r.name === "Guest" || r.name === "Bots"))
+          missingGW2: !(discordMember.roles.find(r => r.name === "Guest" || r.name === "Bots")),
+          multipleRoles: discordMember.roles.length > 1
         }
       };
     })

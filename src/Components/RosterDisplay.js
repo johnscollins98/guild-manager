@@ -9,6 +9,7 @@ import {
   faPencilAlt,
   faAngleDoubleUp,
   faNotEqual,
+  faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import DataRetrieval from '../utils/DataRetrieval';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
@@ -161,8 +162,12 @@ const AccountNameCell = ({ record }) => {
             alt="account icon"
           />
         </TooltipWrapper>
-        {record.issues.unmatchingRoles ? (
-          <TooltipWrapper tooltip="Mismatched Roles">
+        {record.issues.multipleRoles ? (
+          <TooltipWrapper tooltip={`Multiple Roles: ${record.roles.map(r => r.name).join(", ")}`}>
+            <FontAwesomeIcon icon={faExclamationCircle} className="icon error" />
+          </TooltipWrapper>
+        ) : record.issues.unmatchingRoles ? (
+          <TooltipWrapper tooltip={`Mismatched Roles - ${record.rank}/${record.roles[0]?.name || "None"} (GW2/Discord)`}>
             <FontAwesomeIcon icon={faNotEqual} className="icon error" />
           </TooltipWrapper>
         ) : null}
