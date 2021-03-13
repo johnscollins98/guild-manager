@@ -26,11 +26,15 @@ export const filterDataByString = (data, filterString) => {
 
   const recursiveCheck = (object) => {
     let found = false;
-    const values = Object.values(object);
-    for (const value of values) {
-      found = typeof value === "string" ? stringCheck(value) : recursiveCheck(value);
-      if (found) return true;
+    
+    if (object) {
+      const values = Object.values(object);
+      for (const value of values) {
+        found = typeof value === "string" ? stringCheck(value) : recursiveCheck(value);
+        if (found) return true;
+      }
     }
+    
     return false;
   };
 

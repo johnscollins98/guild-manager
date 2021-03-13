@@ -73,14 +73,12 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
 };
 
 const getExcessDiscordRecords = (gw2Members, discordMembers) => {
+  const records = generateGW2RosterRecords(gw2Members, discordMembers);
   return discordMembers
     .filter((discordMember) => {
-      return !gw2Members.some((gw2Member) => {
-        const discordName = discordMember.name.toLowerCase();
-        const gw2Name = gw2Member.name.toLowerCase().split('.')[0];
-
-        return discordName.includes(gw2Name);
-      });
+      return !records.some(
+        (record) => record.discordName === discordMember.name
+      );
     })
     .map((discordMember) => {
       return { 
