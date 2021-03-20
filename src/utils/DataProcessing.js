@@ -22,35 +22,8 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
 
     // check for exact match
     let discordMember = discordMembers.find(
-      (m) => m.name.toLowerCase() === testName
+      (m) => m.name.toLowerCase() === testName ||  m.name.toLowerCase().includes(`(${testName})`)
     );
-
-    // check for name before are after a space
-    if (!discordMember) {
-      discordMember = discordMembers.find((m) => {
-        const testAfter = new RegExp(`${testName}\\s`);
-        const testBefore = new RegExp(`\\s${testName}`);
-        return (
-          m.name.toLowerCase().match(testAfter) ||
-          m.name.toLowerCase().match(testBefore)
-        );
-      });
-    }
-
-    // check for name inside parenthesis
-    if (!discordMember) {
-      discordMember = discordMembers.find((m) => {
-        const test = new RegExp(`\\(${testName}\\)`);
-        return m.name.toLowerCase().match(test);
-      });
-    }
-
-    // check for any inclusion
-    if (!discordMember) {
-      discordMember = discordMembers.find((m) =>
-        m.name.toLowerCase().includes(testName)
-      );
-    }
 
     record = {
       ...record,
@@ -60,7 +33,7 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
     };
 
     record.issues = {
-      missingDiscord: !record.discordName,
+      missingDiscord: record.rank !== "Alt" && !record.discordName,
       multipleRoles: record.roles?.length > 1,
       unmatchingRoles: record.discordName && record.rank !== record.roles[0]?.name,
       promotionRequired: isPromotionRequired(record.rank, record.joinDate)

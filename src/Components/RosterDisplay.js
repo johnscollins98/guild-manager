@@ -50,7 +50,7 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
           <col />
           <col />
           <col />
-          <col width="75px" />
+          <col width='75px' />
         </colgroup>
         <thead>
           <tr>
@@ -71,32 +71,34 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
               <td className={`rank ${formatRankId(record.rank)}`}>
                 {record.rank}
               </td>
-              <td className={`rank ${formatRankId(record.roles[0]?.name || "-")}`}>
-                {record.roles[0]?.name || "-"}
+              <td
+                className={`rank ${formatRankId(record.roles[0]?.name || '-')}`}
+              >
+                {record.roles[0]?.name || '-'}
               </td>
-              <td className="actions">
-                <div className="actions">
+              <td className='actions'>
+                <div className='actions'>
                   {record.roles.find(
                     (r) => r.name === 'Spearmarshal' || r.name === 'General'
                   ) ? null : (
                     <>
                       <TooltipWrapper
-                        tooltip="Edit Discord Roles"
-                        placement="left"
+                        tooltip='Edit Discord Roles'
+                        placement='left'
                       >
                         <FontAwesomeIcon
                           icon={faPencilAlt}
-                          className="action"
+                          className='action'
                           onClick={() => openEdit(record)}
                         />
                       </TooltipWrapper>
                       <TooltipWrapper
-                        tooltip="Kick from Discord"
-                        placement="left"
+                        tooltip='Kick from Discord'
+                        placement='left'
                       >
                         <FontAwesomeIcon
                           icon={faTimes}
-                          className="action"
+                          className='action'
                           onClick={() => onKick(record)}
                         />
                       </TooltipWrapper>
@@ -150,30 +152,43 @@ const AccountNameCell = ({ record }) => {
   }
 
   return (
-    <div className="account-name">
+    <div className='account-name'>
       {record.accountName}{' '}
-      <div className="account-errors">
-        <TooltipWrapper tooltip={accountTitle}>
-          <img
-            src={accountImage}
-            width="20"
-            height="20"
-            className="icon"
-            alt="account icon"
-          />
-        </TooltipWrapper>
+      <div className='account-errors'>
+        {record.rank !== 'Alt' ? (
+          <TooltipWrapper tooltip={accountTitle}>
+            <img
+              src={accountImage}
+              width='20'
+              height='20'
+              className='icon'
+              alt='account icon'
+            />
+          </TooltipWrapper>
+        ) : null}
         {record.issues.multipleRoles ? (
-          <TooltipWrapper tooltip={`Multiple Roles: ${record.roles.map(r => r.name).join(", ")}`}>
-            <FontAwesomeIcon icon={faExclamationCircle} className="icon error" />
+          <TooltipWrapper
+            tooltip={`Multiple Roles: ${record.roles
+              .map((r) => r.name)
+              .join(', ')}`}
+          >
+            <FontAwesomeIcon
+              icon={faExclamationCircle}
+              className='icon error'
+            />
           </TooltipWrapper>
         ) : record.issues.unmatchingRoles ? (
-          <TooltipWrapper tooltip={`Mismatched Roles - ${record.rank}/${record.roles[0]?.name || "None"} (GW2/Discord)`}>
-            <FontAwesomeIcon icon={faNotEqual} className="icon error" />
+          <TooltipWrapper
+            tooltip={`Mismatched Roles - ${record.rank}/${
+              record.roles[0]?.name || 'None'
+            } (GW2/Discord)`}
+          >
+            <FontAwesomeIcon icon={faNotEqual} className='icon error' />
           </TooltipWrapper>
         ) : null}
         {record.issues.promotionRequired ? (
-          <TooltipWrapper tooltip="Promotion Required">
-            <FontAwesomeIcon icon={faAngleDoubleUp} className="icon" />
+          <TooltipWrapper tooltip='Promotion Required'>
+            <FontAwesomeIcon icon={faAngleDoubleUp} className='icon' />
           </TooltipWrapper>
         ) : null}
       </div>
