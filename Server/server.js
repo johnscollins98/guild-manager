@@ -11,6 +11,7 @@ app.use(cors());
 
 const port = process.env.PORT || 5000;
 
+app.use(express.json())
 app.use(
   session({
     secret: "some random secret",

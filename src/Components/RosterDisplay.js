@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import Table from './Table';
@@ -10,15 +10,25 @@ import {
   faAngleDoubleUp,
   faNotEqual,
   faExclamationCircle,
+  faPlus,
+  faMinus,
 } from '@fortawesome/free-solid-svg-icons';
-import DataRetrieval from '../utils/DataRetrieval';
+import DataRetrieval, { setGuildMember } from '../utils/DataRetrieval';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
+  const [recordState, setRecordState] = useState(records);
+  const [filteredRecords, setFilteredRecords] = useState(recordState);
 
-  records = filterDataByString(records, filterString);
+  useEffect(() => {
+    setRecordState(records);
+  }, [records]);
+
+  useEffect(() => {
+    setFilteredRecords(filterDataByString(recordState, filterString));
+  }, [recordState, filterString]);
 
   const onKick = async (record) => {
     if (!record.discordId) return;
@@ -30,7 +40,9 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
       const success = await DataRetrieval.kickDiscordMember(record.discordId);
       if (success) {
         openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
-        refresh();
+        setRecordState(
+          recordState.filter((m) => m.discordId !== record.discordId)
+        );
       } else {
         openToast('Kick Failed', `Could not kick ${record.discordName}`);
       }
@@ -42,6 +54,36 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
     setSelectedRecord(record);
   };
 
+  const changeEventAttended = async (memberId, eventsAttended) => {
+    try {
+      const newObject = await setGuildMember({
+        memberId,
+        eventsAttended,
+      });
+
+      const recordsCopy = [...recordState];
+      const toEdit = recordsCopy.find((record) => {
+        return record.memberId === newObject.memberId;
+      });
+      toEdit.eventsAttended = newObject.eventsAttended;
+
+      setRecordState(recordsCopy);
+    } catch (err) {
+      console.error(err);
+      openToast('Error', 'There was an error updating attendance.')
+    }
+  };
+
+  const incrementEventAttended = (record) => {
+    const current = parseInt(record.eventsAttended);
+    changeEventAttended(record.memberId, current + 1);
+  };
+
+  const decrementEventAttended = (record) => {
+    const current = parseInt(record.eventsAttended);
+    changeEventAttended(record.memberId, current - 1);
+  };
+
   return (
     <>
       <Table>
@@ -50,7 +92,8 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
           <col />
           <col />
           <col />
-          <col width='75px' />
+          <col width="100px" />
+          <col width="100px" />
         </colgroup>
         <thead>
           <tr>
@@ -58,11 +101,12 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
             <th>Joined</th>
             <th>GW2 Rank</th>
             <th>Discord Role</th>
+            <th>Attendance</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {records.map((record, i) => (
+          {filteredRecords.map((record, i) => (
             <tr key={i}>
               <td>
                 <AccountNameCell record={record} />
@@ -76,29 +120,50 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
               >
                 {record.roles[0]?.name || '-'}
               </td>
-              <td className='actions'>
-                <div className='actions'>
+              <td>
+                <span className="events-attended">
+                  {record.eventsAttended}{' '}
+                  <span className="actions">
+                    <TooltipWrapper tooltip="Increase by one" placement="top">
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        className="action"
+                        onClick={() => incrementEventAttended(record)}
+                      />
+                    </TooltipWrapper>{' '}
+                    <TooltipWrapper tooltip="Decrease by one" placement="top">
+                      <FontAwesomeIcon
+                        icon={faMinus}
+                        className="action"
+                        onClick={() => decrementEventAttended(record)}
+                      />
+                    </TooltipWrapper>
+                  </span>
+                </span>
+              </td>
+              <td className="actions">
+                <div className="actions">
                   {record.roles.find(
                     (r) => r.name === 'Spearmarshal' || r.name === 'General'
                   ) ? null : (
                     <>
                       <TooltipWrapper
-                        tooltip='Edit Discord Roles'
-                        placement='left'
+                        tooltip="Edit Discord Roles"
+                        placement="left"
                       >
                         <FontAwesomeIcon
                           icon={faPencilAlt}
-                          className='action'
+                          className="action"
                           onClick={() => openEdit(record)}
                         />
                       </TooltipWrapper>
                       <TooltipWrapper
-                        tooltip='Kick from Discord'
-                        placement='left'
+                        tooltip="Kick from Discord"
+                        placement="left"
                       >
                         <FontAwesomeIcon
                           icon={faTimes}
-                          className='action'
+                          className="action"
                           onClick={() => onKick(record)}
                         />
                       </TooltipWrapper>
@@ -115,7 +180,8 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
         setModalShow={setModalShow}
         selectedRecord={selectedRecord}
         setSelectedRecord={setSelectedRecord}
-        refresh={refresh}
+        records={recordState}
+        setRecords={setRecordState}
       />
     </>
   );
@@ -152,17 +218,17 @@ const AccountNameCell = ({ record }) => {
   }
 
   return (
-    <div className='account-name'>
+    <div className="account-name">
       {record.accountName}{' '}
-      <div className='account-errors'>
+      <div className="account-errors">
         {record.rank !== 'Alt' ? (
           <TooltipWrapper tooltip={accountTitle}>
             <img
               src={accountImage}
-              width='20'
-              height='20'
-              className='icon'
-              alt='account icon'
+              width="20"
+              height="20"
+              className="icon"
+              alt="account icon"
             />
           </TooltipWrapper>
         ) : null}
@@ -174,7 +240,7 @@ const AccountNameCell = ({ record }) => {
           >
             <FontAwesomeIcon
               icon={faExclamationCircle}
-              className='icon error'
+              className="icon error"
             />
           </TooltipWrapper>
         ) : record.issues.unmatchingRoles ? (
@@ -183,12 +249,12 @@ const AccountNameCell = ({ record }) => {
               record.roles[0]?.name || 'None'
             } (GW2/Discord)`}
           >
-            <FontAwesomeIcon icon={faNotEqual} className='icon error' />
+            <FontAwesomeIcon icon={faNotEqual} className="icon error" />
           </TooltipWrapper>
         ) : null}
         {record.issues.promotionRequired ? (
-          <TooltipWrapper tooltip='Promotion Required'>
-            <FontAwesomeIcon icon={faAngleDoubleUp} className='icon' />
+          <TooltipWrapper tooltip="Promotion Required">
+            <FontAwesomeIcon icon={faAngleDoubleUp} className="icon" />
           </TooltipWrapper>
         ) : null}
       </div>

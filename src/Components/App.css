@@ -16,6 +16,12 @@
   align-items: center;
 }
 
+span.events-attended {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 5px;
+}
+
 td.actions {
   vertical-align: middle;
 }

@@ -57,6 +57,24 @@ export const fetchGW2Log = async () => {
   return data;
 };
 
+export const setGuildMember = async (newMember) => {
+  const response = await fetch(`/api/gw2/members/${newMember.memberId}`, { 
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: "PUT", 
+    body: JSON.stringify(newMember)
+  });
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return JSON.parse(data);
+}
+
 export default {
   fetchDiscordMembers: fetchDiscordMembers,
   kickDiscordMember: kickDiscordMember,
@@ -65,4 +83,5 @@ export default {
   removeDiscordRole: removeDiscordRole,
   fetchGW2Members: fetchGW2Members,
   fetchGW2Log: fetchGW2Log,
+  setGuildMember: setGuildMember
 };

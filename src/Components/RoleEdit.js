@@ -9,7 +9,8 @@ const RoleEdit = ({
   setSelectedRecord,
   modalShow,
   setModalShow,
-  refresh,
+  records,
+  setRecords,
 }) => {
   const [allRoles, setAllRoles] = useState([]);
   const [edittingRole, setEdittingRole] = useState(false);
@@ -50,7 +51,11 @@ const RoleEdit = ({
     }
 
     if (anyChanges) {
-      refresh();
+      const recordsCopy = [...records];
+      const toEdit = recordsCopy.find(record => record.discordId === selectedRecord.discordId);
+      toEdit.roles = selectedRecord.roles;
+
+      setRecords(recordsCopy);
       setAnyChanges(false);
     }
   };
@@ -87,7 +92,8 @@ RoleEdit.propTypes = {
   setSelectedRecord: PropTypes.func.isRequired,
   modalShow: PropTypes.bool.isRequired,
   setModalShow: PropTypes.func.isRequired,
-  refresh: PropTypes.func.isRequired,
+  records: PropTypes.array.isRequired,
+  setRecords: PropTypes.func.isRequired,
 };
 
 export default RoleEdit;

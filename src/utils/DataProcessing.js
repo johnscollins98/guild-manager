@@ -14,8 +14,10 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
   const records = sortedGW2Members.map((gw2Member) => {
     let record = {};
     record.accountName = gw2Member.name.split('.')[0];
+    record.memberId = gw2Member.name;
     record.rank = gw2Member.rank;
     record.joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
+    record.eventsAttended = gw2Member.eventsAttended;
 
     // special case for unique account name
     const testName = record.accountName.toLowerCase();
