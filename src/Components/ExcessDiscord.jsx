@@ -9,7 +9,6 @@ const ExcessDiscord = ({
   discordMembers,
   filterString,
   openToast,
-  refresh,
 }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
@@ -40,6 +39,7 @@ ExcessDiscord.propTypes = {
       roles: PropTypes.array.isRequired,
     }).isRequired
   ),
+  openToast: PropTypes.func.isRequired,
 };
 
 export default ExcessDiscord;

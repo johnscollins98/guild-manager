@@ -9,15 +9,12 @@ const RequiredActions = ({
   gw2Members,
   discordMembers,
   filterString,
-  refresh,
   openToast,
 }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = generateGW2RosterRecords(gw2Members, discordMembers)
-      .concat(
-        getExcessDiscordRecords(gw2Members, discordMembers)
-      )
+      .concat(getExcessDiscordRecords(gw2Members, discordMembers))
       .filter((record) =>
         Object.keys(record.issues).some((k) => record.issues[k])
       );
@@ -47,7 +44,6 @@ RequiredActions.propTypes = {
     }).isRequired
   ),
   filterString: PropTypes.string.isRequired,
-  refresh: PropTypes.func.isRequired,
   openToast: PropTypes.func.isRequired,
 };
 

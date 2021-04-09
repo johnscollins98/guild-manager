@@ -5,13 +5,7 @@ import { generateGW2RosterRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
-const Roster = ({
-  gw2Members,
-  discordMembers,
-  filterString,
-  openToast,
-  refresh,
-}) => {
+const Roster = ({ gw2Members, discordMembers, filterString, openToast }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = generateGW2RosterRecords(gw2Members, discordMembers);
@@ -42,7 +36,6 @@ Roster.propTypes = {
   ),
   filterString: PropTypes.string.isRequired,
   openToast: PropTypes.func,
-  refresh: PropTypes.func,
 };
 
 export default Roster;
