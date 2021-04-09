@@ -19,7 +19,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/authorization', async (req, res) => {
   if (req.user) {
-    res.json(...(await getUserAuthInfo(req)));
+    res.json(JSON.stringify(await getUserAuthInfo(req)));
   } else {
     res.redirect('/forbidden');
   }
