@@ -20,7 +20,7 @@ router.get('/authorization', async (req, res) => {
   if (req.user) {
     res.json(...(await getUserAuthInfo(req)));
   } else {
-    res.status(403).json('Forbidden');
+    res.redirect('/forbidden');
   }
 });
 
