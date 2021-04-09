@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const fetch = require('node-fetch');
-const { authenticate } = require('../middleware/auth')
+const { authenticate } = require('../middleware/auth');
 const GuildMember = require('../models/guildMember.model');
 const GW2Utils = require('../utils/gw2');
 
@@ -29,7 +29,7 @@ router.get('/members', async (req, res) => {
           { memberId: m.name },
           { memberId: m.name, eventsAttended: 0 }
         );
-        return { ...m, eventsAttended: record.eventsAttended }
+        return { ...m, eventsAttended: record.eventsAttended };
       })
     );
 

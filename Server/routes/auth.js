@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
-const { getUserAuthInfo } = require('../utils/auth')
+const { getUserAuthInfo } = require('../utils/auth');
 
 router.get('/', passport.authenticate('discord'));
 
