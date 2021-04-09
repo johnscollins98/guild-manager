@@ -16,6 +16,8 @@ import {
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
+import './RosterDisplay.scss';
+
 const RosterDisplay = ({ records, filterString, openToast }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
