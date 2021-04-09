@@ -1,9 +1,9 @@
 const { getUserAuthInfo } = require('../utils/auth');
 
-const authenticate = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   const authInfo = await getUserAuthInfo(req);
-  if (!!authInfo.authorized) return next();
+  if (!!authInfo.isAdmin) return next();
   return res.redirect(303, '/forbidden');
 };
 
-exports.authenticate = authenticate;
+exports.isAdmin = isAdmin;

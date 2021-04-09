@@ -8,10 +8,10 @@ const getUserAuthInfo = async (req) => {
     (g) => g.id === process.env.DISCORD_GUILD_ID
   );
   const roles = await getRoles(req.user.id);
-  const authorized = inGuild && roles.includes(process.env.VALID_ROLE);
+  const isAdmin = inGuild && roles.includes(process.env.ADMIN_ROLE);
 
   const username = req.user.username;
-  return { loggedIn, authorized, username };
+  return { loggedIn, isAdmin, username };
 };
 
 const getRoles = async (userId) => {

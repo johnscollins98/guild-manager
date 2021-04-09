@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const fetch = require('node-fetch');
-const { authenticate } = require('../middleware/auth');
+const { isAdmin } = require('../middleware/auth');
 const GuildMember = require('../models/guildMember.model');
 const GW2Utils = require('../utils/gw2');
 
@@ -39,7 +39,7 @@ router.get('/members', async (req, res) => {
   }
 });
 
-router.put('/members/:memberId', authenticate, async (req, res) => {
+router.put('/members/:memberId', isAdmin, async (req, res) => {
   const { memberId, eventsAttended } = req.body;
   const record = await GuildMember.findOneAndUpdate(
     { memberId: req.params.memberId },

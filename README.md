@@ -17,7 +17,7 @@ To run this you do need to set up the following env variables:
 | DISCORD_CLIENT_ID     | Client ID for Discord OAuth                              |
 | DISCORD_CLIENT_SECRET | Client Secret for Discord OAuth                          |
 | DISCORD_AUTH_REDIRECT | OAuth Redirect URL                                       |
-| VALID_ROLE            | Admin Discord Role                                       |
+| ADMIN_ROLE            | Admin Discord Role                                       |
 
 ## Available Scripts
 
