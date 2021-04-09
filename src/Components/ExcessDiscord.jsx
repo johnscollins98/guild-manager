@@ -13,9 +13,7 @@ const ExcessDiscord = ({
   const [records, setRecords] = useState([]);
   useEffect(() => {
     if (gw2Members.length > 0 && discordMembers.length > 0) {
-      setRecords(
-        getExcessDiscordRecords(gw2Members, discordMembers)
-      );
+      setRecords(getExcessDiscordRecords(gw2Members, discordMembers));
     }
   }, [gw2Members, discordMembers, setRecords]);
 
