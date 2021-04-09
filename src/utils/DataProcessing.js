@@ -1,6 +1,6 @@
 import { isPromotionRequired } from './Helpers';
 
-const generateGW2RosterRecords = (gw2Members, discordMembers) => {
+export const generateGW2RosterRecords = (gw2Members, discordMembers) => {
   const sortedGW2Members = gw2Members.sort((a, b) => {
     let value = compareRank(a.rank, b.rank);
     if (value === 0) {
@@ -56,7 +56,7 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
   return records;
 };
 
-const getExcessDiscordRecords = (gw2Members, discordMembers) => {
+export const getExcessDiscordRecords = (gw2Members, discordMembers) => {
   const records = generateGW2RosterRecords(gw2Members, discordMembers);
   return discordMembers
     .filter((discordMember) => {
@@ -100,9 +100,4 @@ const compareRank = (aRank, bRank) => {
   const bVal = rankSortValues[bRank] || 0;
 
   return bVal - aVal;
-};
-
-export default {
-  generateGW2RosterRecords: generateGW2RosterRecords,
-  getExcessDiscordRecords: getExcessDiscordRecords,
 };

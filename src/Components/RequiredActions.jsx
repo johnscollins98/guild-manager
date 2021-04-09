@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DataProcessing from '../utils/DataProcessing';
+import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
@@ -14,12 +14,9 @@ const RequiredActions = ({
 }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
-    records = DataProcessing.generateGW2RosterRecords(
-      gw2Members,
-      discordMembers
-    )
+    records = generateGW2RosterRecords(gw2Members, discordMembers)
       .concat(
-        DataProcessing.getExcessDiscordRecords(gw2Members, discordMembers)
+        getExcessDiscordRecords(gw2Members, discordMembers)
       )
       .filter((record) =>
         Object.keys(record.issues).some((k) => record.issues[k])

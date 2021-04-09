@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DataProcessing from '../utils/DataProcessing';
+import { getExcessDiscordRecords } from '../utils/DataProcessing';
 import RosterDisplay from './RosterDisplay';
 
 const ExcessDiscord = ({
@@ -13,10 +13,7 @@ const ExcessDiscord = ({
 }) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
-    records = DataProcessing.getExcessDiscordRecords(
-      gw2Members,
-      discordMembers
-    );
+    records = getExcessDiscordRecords(gw2Members, discordMembers);
   }
 
   return (
