@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const passport = require('passport');
+const { getUserAuthInfo } = require('../utils/auth')
 
 router.get('/', passport.authenticate('discord'));
 
@@ -20,7 +21,7 @@ router.get('/authorization', async (req, res) => {
   if (req.user) {
     res.json(...(await getUserAuthInfo(req)));
   } else {
-    res.status(403).json('Forbidden');
+    res.redirect('/forbidden');
   }
 });
 
