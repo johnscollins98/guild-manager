@@ -12,15 +12,15 @@ const formatMember = (member, roles) => {
 
 const getRoleInfo = (allRoles, memberRoles) => {
   const validRoles = [
-    "Third Spear",
-    "Second Spear",
-    "First Spear",
-    "Commander",
-    "Captain",
-    "General",
-    "Spearmarshal",
-    "Guest",
-    "Bots",
+    'Third Spear',
+    'Second Spear',
+    'First Spear',
+    'Commander',
+    'Captain',
+    'General',
+    'Spearmarshal',
+    'Guest',
+    'Bots',
   ];
 
   let roles = [];
@@ -29,10 +29,11 @@ const getRoleInfo = (allRoles, memberRoles) => {
     for (const discordRole of allRoles) {
       const match = memberRoleId === discordRole.id;
       const valid = validRoles.includes(discordRole.name);
-      if (match && valid) roles.push({
-        name: discordRole.name,
-        id: discordRole.id
-      });
+      if (match && valid)
+        roles.push({
+          name: discordRole.name,
+          id: discordRole.id,
+        });
     }
   }
 

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
@@ -7,6 +7,6 @@ const GuildMemberSchema = new Schema({
   eventsAttended: { type: Number, required: true },
 });
 
-const GuildMember = mongoose.model("GuildMember", GuildMemberSchema);
+const GuildMember = mongoose.model('GuildMember', GuildMemberSchema);
 
 module.exports = GuildMember;

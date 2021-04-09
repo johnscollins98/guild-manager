@@ -1,6 +1,6 @@
-const DiscordStrategy = require("passport-discord").Strategy;
-const passport = require("passport");
-const DiscordUser = require("../models/user.model");
+const DiscordStrategy = require('passport-discord').Strategy;
+const passport = require('passport');
+const DiscordUser = require('../models/user.model');
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -19,7 +19,7 @@ passport.use(
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
       callbackURL: process.env.DISCORD_AUTH_REDIRECT,
-      scope: ["identify", "guilds"],
+      scope: ['identify', 'guilds'],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

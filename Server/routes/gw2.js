@@ -1,8 +1,8 @@
-const router = require("express").Router();
-const fetch = require("node-fetch");
+const router = require('express').Router();
+const fetch = require('node-fetch');
 const GuildMember = require('../models/guildMember.model');
 const { getUserAuthInfo } = require('../utils/auth');
-const GW2Utils = require("../utils/gw2");
+const GW2Utils = require('../utils/gw2');
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
 const apiToken = process.env.GW2_API_TOKEN;
@@ -12,14 +12,16 @@ const reqParams = {
   },
 };
 
-router.get("/members", async (req, res) => {
+router.get('/members', async (req, res) => {
   try {
     const response = await fetch(`${baseUrl}/members`, reqParams);
     const data = await response.json();
 
-    // unique cases for crazy account names 
-    const uniqueCase = data.find(m => m.name === "DD035413-353B-42A1-BAD4-EB58438860CE")
-    if (uniqueCase) uniqueCase.name = "Berry";
+    // unique cases for crazy account names
+    const uniqueCase = data.find(
+      (m) => m.name === 'DD035413-353B-42A1-BAD4-EB58438860CE'
+    );
+    if (uniqueCase) uniqueCase.name = 'Berry';
 
     const transformed = await Promise.all(
       data.map(async (m) => {
@@ -28,7 +30,7 @@ router.get("/members", async (req, res) => {
         if (!record) {
           const toSave = new GuildMember({
             memberId: m.name,
-            eventsAttended: 0
+            eventsAttended: 0,
           });
           record = await toSave.save();
         }
@@ -40,16 +42,16 @@ router.get("/members", async (req, res) => {
 
     res.status(response.status).json(transformed);
   } catch (err) {
-    res.status(400).json(`Error: ${err}`)
+    res.status(400).json(`Error: ${err}`);
   }
 });
 
-router.put("/members/:memberId", async (req, res) => {
+router.put('/members/:memberId', async (req, res) => {
   const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.status(403).json("Forbidden")
+  if (!authInfo.authorized) return res.status(403).json('Forbidden');
 
   const newData = req.body;
-  
+
   const record = await GuildMember.findOne({ memberId: req.params.memberId });
   let response = null;
   if (record) {
@@ -62,9 +64,9 @@ router.put("/members/:memberId", async (req, res) => {
   }
 
   res.status(200).json(JSON.stringify(response));
-})
+});
 
-router.get("/log", async (req, res) => {
+router.get('/log', async (req, res) => {
   try {
     const response = await fetch(`${baseUrl}/log`, reqParams);
     const status = response.status;
@@ -75,7 +77,7 @@ router.get("/log", async (req, res) => {
       res.status(status).json(data);
     }
   } catch (err) {
-    res.status(400).json(`Error: ${err}`)
+    res.status(400).json(`Error: ${err}`);
   }
 });
 
