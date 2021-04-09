@@ -25,10 +25,11 @@ router.get('/members', async (req, res) => {
 
     const transformed = await Promise.all(
       data.map(async (m) => {
-        return GuildMember.findOneOrCreate(
+        const record = await GuildMember.findOneOrCreate(
           { memberId: m.name },
           { memberId: m.name, eventsAttended: 0 }
         );
+        return { ...m, eventsAttended: record.eventsAttended }
       })
     );
 
@@ -39,7 +40,7 @@ router.get('/members', async (req, res) => {
 });
 
 router.put('/members/:memberId', authenticate, async (req, res) => {
-  const { memberId, eventsAttended } = req.body.newData;
+  const { memberId, eventsAttended } = req.body;
   const record = await GuildMember.findOneAndUpdate(
     { memberId: req.params.memberId },
     { memberId, eventsAttended },
