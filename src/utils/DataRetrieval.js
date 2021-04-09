@@ -82,3 +82,14 @@ export const setGuildMember = async (newMember) => {
 
   return JSON.parse(data);
 };
+
+export const fetchAuthInfo = async () => {
+  const response = await fetch('/auth/authorization');
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return JSON.parse(data);
+};

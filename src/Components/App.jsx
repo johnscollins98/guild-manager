@@ -12,6 +12,7 @@ import {
   fetchGW2Members,
   fetchGW2Log,
   fetchDiscordMembers,
+  fetchAuthInfo,
 } from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
@@ -25,6 +26,7 @@ const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
+  const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
 
@@ -59,6 +61,7 @@ const App = () => {
         fetchGW2Members().then((r) => setGw2Members(r)),
         fetchGW2Log().then((r) => setGw2Log(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
+        fetchAuthInfo().then((r) => setAuthInfo(r)),
       ];
 
       await Promise.all(requests);
@@ -154,6 +157,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                authInfo={authInfo}
                 openToast={openToast}
               />
             </Tab>
@@ -165,6 +169,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                authInfo={authInfo}
                 openToast={openToast}
               />
             </Tab>
@@ -173,6 +178,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
+                authInfo={authInfo}
                 openToast={openToast}
               />
             </Tab>

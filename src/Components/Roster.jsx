@@ -5,7 +5,13 @@ import { generateGW2RosterRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
-const Roster = ({ gw2Members, discordMembers, filterString, openToast }) => {
+const Roster = ({
+  gw2Members,
+  discordMembers,
+  filterString,
+  authInfo,
+  openToast,
+}) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
@@ -18,6 +24,7 @@ const Roster = ({ gw2Members, discordMembers, filterString, openToast }) => {
     <RosterDisplay
       records={records}
       filterString={filterString}
+      authInfo={authInfo}
       openToast={openToast}
     />
   );
@@ -37,6 +44,7 @@ Roster.propTypes = {
       roles: PropTypes.array.isRequired,
     }).isRequired
   ),
+  authInfo: PropTypes.object.isRequired,
   filterString: PropTypes.string.isRequired,
   openToast: PropTypes.func,
 };

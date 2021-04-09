@@ -12,6 +12,7 @@ const RequiredActions = ({
   gw2Members,
   discordMembers,
   filterString,
+  authInfo,
   openToast,
 }) => {
   const [records, setRecords] = useState([]);
@@ -31,6 +32,7 @@ const RequiredActions = ({
     <RosterDisplay
       records={records}
       filterString={filterString}
+      authInfo={authInfo}
       openToast={openToast}
     />
   );
@@ -50,6 +52,7 @@ RequiredActions.propTypes = {
       roles: PropTypes.array.isRequired,
     }).isRequired
   ),
+  authInfo: PropTypes.object.isRequired,
   filterString: PropTypes.string.isRequired,
   openToast: PropTypes.func.isRequired,
 };

@@ -22,11 +22,17 @@ const discordImage = require('../assets/images/discord-icon.png');
 const discordErrorImage = require('../assets/images/discord-icon-red.png');
 const gw2Image = require('../assets/images/gw2.png');
 
-const RosterDisplay = ({ records, filterString, openToast }) => {
+const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
+
+  const [adminActionsEnabled, setAdminActionsEnabled] = useState(false);
+
+  useEffect(() => {
+    setAdminActionsEnabled(authInfo.isAdmin);
+  }, [authInfo]);
 
   useEffect(() => {
     setRecordState(records);
@@ -114,7 +120,7 @@ const RosterDisplay = ({ records, filterString, openToast }) => {
           <col />
           <col />
           <col width="100px" />
-          <col width="100px" />
+          {adminActionsEnabled ? <col width="100px" /> : null}
         </colgroup>
         <thead>
           <tr>
@@ -123,7 +129,7 @@ const RosterDisplay = ({ records, filterString, openToast }) => {
             <th>GW2 Rank</th>
             <th>Discord Role</th>
             <th>Attendance</th>
-            <th>Actions</th>
+            {adminActionsEnabled ? <th>Actions</th> : null}
           </tr>
         </thead>
         <tbody>
@@ -162,36 +168,39 @@ const RosterDisplay = ({ records, filterString, openToast }) => {
                   </span>
                 </span>
               </td>
-              <td className="actions">
-                <div className="actions">
-                  {record.roles.find(
-                    (r) => r.name === 'Spearmarshal' || r.name === 'General'
-                  ) ? null : (
-                    <>
-                      <TooltipWrapper
-                        tooltip="Edit Discord Roles"
-                        placement="left"
-                      >
-                        <FontAwesomeIcon
-                          icon={faPencilAlt}
-                          className="action"
-                          onClick={() => openEdit(record)}
-                        />
-                      </TooltipWrapper>
-                      <TooltipWrapper
-                        tooltip="Kick from Discord"
-                        placement="left"
-                      >
-                        <FontAwesomeIcon
-                          icon={faTimes}
-                          className="action"
-                          onClick={() => onKick(record)}
-                        />
-                      </TooltipWrapper>
-                    </>
-                  )}
-                </div>
-              </td>
+              {adminActionsEnabled ? (
+                <td className="actions">
+                  <div className="actions">
+                    {adminActionsEnabled &&
+                    record.roles.find(
+                      (r) => r.name === 'Spearmarshal' || r.name === 'General'
+                    ) ? null : (
+                      <>
+                        <TooltipWrapper
+                          tooltip="Edit Discord Roles"
+                          placement="left"
+                        >
+                          <FontAwesomeIcon
+                            icon={faPencilAlt}
+                            className="action"
+                            onClick={() => openEdit(record)}
+                          />
+                        </TooltipWrapper>
+                        <TooltipWrapper
+                          tooltip="Kick from Discord"
+                          placement="left"
+                        >
+                          <FontAwesomeIcon
+                            icon={faTimes}
+                            className="action"
+                            onClick={() => onKick(record)}
+                          />
+                        </TooltipWrapper>
+                      </>
+                    )}
+                  </div>
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>
@@ -218,6 +227,7 @@ RosterDisplay.propTypes = {
     })
   ).isRequired,
   filterString: PropTypes.string.isRequired,
+  authInfo: PropTypes.object.isRequired,
   openToast: PropTypes.func,
 };
 

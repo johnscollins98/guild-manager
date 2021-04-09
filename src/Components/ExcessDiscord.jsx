@@ -8,6 +8,7 @@ const ExcessDiscord = ({
   gw2Members,
   discordMembers,
   filterString,
+  authInfo,
   openToast,
 }) => {
   const [records, setRecords] = useState([]);
@@ -21,6 +22,7 @@ const ExcessDiscord = ({
     <RosterDisplay
       records={records}
       filterString={filterString}
+      authInfo={authInfo}
       openToast={openToast}
     />
   );
@@ -41,6 +43,7 @@ ExcessDiscord.propTypes = {
       roles: PropTypes.array.isRequired,
     }).isRequired
   ),
+  authInfo: PropTypes.object.isRequired,
   openToast: PropTypes.func.isRequired,
 };
 
