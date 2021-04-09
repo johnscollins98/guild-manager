@@ -4,6 +4,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Spinner from 'react-bootstrap/Spinner';
 import PropTypes from 'prop-types';
 
+import './Control.scss';
+
 const Control = ({ refresh, handleFilterChange, loadingData }) => {
   const onRefresh = async () => {
     await refresh();
