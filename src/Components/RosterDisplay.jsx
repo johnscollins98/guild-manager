@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import Table from './Table';
@@ -18,6 +18,10 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import './RosterDisplay.scss';
 
+const discordImage = require('../assets/images/discord-icon.png');
+const discordErrorImage = require('../assets/images/discord-icon-red.png');
+const gw2Image = require('../assets/images/gw2.png');
+
 const RosterDisplay = ({ records, filterString, openToast }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -32,59 +36,74 @@ const RosterDisplay = ({ records, filterString, openToast }) => {
     setFilteredRecords(filterDataByString(recordState, filterString));
   }, [recordState, filterString]);
 
-  const onKick = async (record) => {
-    if (!record.discordId) return;
+  const onKick = useCallback(
+    async (record) => {
+      if (!record.discordId) return;
 
-    const res = window.confirm(
-      `Are you sure you want to kick ${record.discordName}?`
-    );
-    if (res) {
-      const success = await kickDiscordMember(record.discordId);
-      if (success) {
-        openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
-        setRecordState(
-          recordState.filter((m) => m.discordId !== record.discordId)
-        );
-      } else {
-        openToast('Kick Failed', `Could not kick ${record.discordName}`);
+      const res = window.confirm(
+        `Are you sure you want to kick ${record.discordName}?`
+      );
+      if (res) {
+        const success = await kickDiscordMember(record.discordId);
+        if (success) {
+          openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
+          setRecordState(
+            recordState.filter((m) => m.discordId !== record.discordId)
+          );
+        } else {
+          openToast('Kick Failed', `Could not kick ${record.discordName}`);
+        }
       }
-    }
-  };
+    },
+    [recordState, setRecordState, openToast]
+  );
 
-  const openEdit = (record) => {
-    setModalShow(true);
-    setSelectedRecord(record);
-  };
+  const openEdit = useCallback(
+    (record) => {
+      setModalShow(true);
+      setSelectedRecord(record);
+    },
+    [setModalShow, setSelectedRecord]
+  );
 
-  const changeEventAttended = async (memberId, eventsAttended) => {
-    try {
-      const newObject = await setGuildMember({
-        memberId,
-        eventsAttended,
-      });
+  const changeEventAttended = useCallback(
+    async (memberId, eventsAttended) => {
+      try {
+        const newObject = await setGuildMember({
+          memberId,
+          eventsAttended,
+        });
 
-      const recordsCopy = [...recordState];
-      const toEdit = recordsCopy.find((record) => {
-        return record.memberId === newObject.memberId;
-      });
-      toEdit.eventsAttended = newObject.eventsAttended;
+        const recordsCopy = [...recordState];
+        const toEdit = recordsCopy.find((record) => {
+          return record.memberId === newObject.memberId;
+        });
+        toEdit.eventsAttended = newObject.eventsAttended;
 
-      setRecordState(recordsCopy);
-    } catch (err) {
-      console.error(err);
-      openToast('Error', 'There was an error updating attendance.');
-    }
-  };
+        setRecordState(recordsCopy);
+      } catch (err) {
+        console.error(err);
+        openToast('Error', 'There was an error updating attendance.');
+      }
+    },
+    [setRecordState, openToast, recordState]
+  );
 
-  const incrementEventAttended = (record) => {
-    const current = parseInt(record.eventsAttended);
-    changeEventAttended(record.memberId, current + 1);
-  };
+  const incrementEventAttended = useCallback(
+    (record) => {
+      const current = parseInt(record.eventsAttended);
+      changeEventAttended(record.memberId, current + 1);
+    },
+    [changeEventAttended]
+  );
 
-  const decrementEventAttended = (record) => {
-    const current = parseInt(record.eventsAttended);
-    changeEventAttended(record.memberId, current - 1);
-  };
+  const decrementEventAttended = useCallback(
+    (record) => {
+      const current = parseInt(record.eventsAttended);
+      changeEventAttended(record.memberId, current - 1);
+    },
+    [changeEventAttended]
+  );
 
   return (
     <>
@@ -203,10 +222,6 @@ RosterDisplay.propTypes = {
 };
 
 const AccountNameCell = ({ record }) => {
-  const discordImage = require('../assets/images/discord-icon.png');
-  const discordErrorImage = require('../assets/images/discord-icon-red.png');
-  const gw2Image = require('../assets/images/gw2.png');
-
   let accountImage = discordImage;
   let accountTitle = record.discordName;
 

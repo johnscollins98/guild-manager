@@ -18,28 +18,19 @@ export const isPromotionRequired = (rank, dateString) => {
 };
 
 export const filterDataByString = (data, filterString) => {
+  if (!filterString || filterString === '') return data;
+
   filterString = filterString.toLowerCase();
+  return data.filter(
+    (o) =>
+      o.accountName?.toLowerCase().includes(filterString) ||
+      o.discordName?.toLowerCase().includes(filterString)
+  );
+};
 
-  const stringCheck = (str) => {
-    return str.toLowerCase().includes(filterString);
-  };
-
-  const recursiveCheck = (object) => {
-    let found = false;
-
-    if (object) {
-      const values = Object.values(object);
-      for (const value of values) {
-        found =
-          typeof value === 'string'
-            ? stringCheck(value)
-            : recursiveCheck(value);
-        if (found) return true;
-      }
-    }
-
-    return false;
-  };
-
-  return data.filter(recursiveCheck);
+export const filterLogByString = (data, filterString) => {
+  filterString = filterString.toLowerCase();
+  return data.filter((entry) =>
+    entry.message.toLowerCase().includes(filterString)
+  );
 };

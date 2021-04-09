@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Toast from 'react-bootstrap/Toast';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { FaSyncAlt, FaCheckCircle } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -17,7 +20,6 @@ import ExcessDiscord from './ExcessDiscord';
 import RequiredActions from './RequiredActions';
 
 import './App.scss';
-import { Container, Row, Col } from 'react-bootstrap';
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
@@ -30,7 +32,22 @@ const App = () => {
   const [toastHeader, setToastHeader] = useState('');
   const [toastMessage, setToastMessage] = useState('');
 
-  const fetchData = async () => {
+  const openToast = useCallback(
+    (header, message) => {
+      setToastHeader(header);
+      setToastMessage(message);
+      setShowToast(true);
+    },
+    [setToastHeader, setToastMessage, setShowToast]
+  );
+
+  const closeToast = useCallback(() => {
+    setToastHeader('');
+    setToastMessage('');
+    setShowToast(false);
+  }, [setToastMessage, setToastHeader, setShowToast]);
+
+  const fetchData = useCallback(async () => {
     let success = false;
     try {
       setLoadingData(true);
@@ -55,33 +72,24 @@ const App = () => {
       setLoadingData(false);
       return success;
     }
-  };
+  }, [setLoadingData, setGw2Members, setGw2Log, setDiscordMembers, openToast]);
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const openToast = (header, message) => {
-    setToastHeader(header);
-    setToastMessage(message);
-    setShowToast(true);
-  };
-
-  const closeToast = () => {
-    setToastHeader('');
-    setToastMessage('');
-    setShowToast(false);
-  };
-
-  const refresh = async () => {
+  const refresh = useCallback(async () => {
     const success = await fetchData();
     if (success) openToast('Refresh', 'Successfully refreshed!');
-  };
+  }, [fetchData, openToast]);
 
-  const handleFilterChange = (event) => {
-    setFilterString(event.target.value);
-  };
+  const handleFilterChange = useCallback(
+    (event) => {
+      setFilterString(event.target.value);
+    },
+    [setFilterString]
+  );
 
   const TABS = {
     ROSTER: 'Roster',

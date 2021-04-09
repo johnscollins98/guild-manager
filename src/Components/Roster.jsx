@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { generateGW2RosterRecords } from '../utils/DataProcessing';
@@ -6,10 +6,13 @@ import { generateGW2RosterRecords } from '../utils/DataProcessing';
 import RosterDisplay from './RosterDisplay';
 
 const Roster = ({ gw2Members, discordMembers, filterString, openToast }) => {
-  let records = [];
-  if (gw2Members.length > 0 && discordMembers.length > 0) {
-    records = generateGW2RosterRecords(gw2Members, discordMembers);
-  }
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    if (gw2Members.length > 0 && discordMembers.length > 0) {
+      setRecords(generateGW2RosterRecords(gw2Members, discordMembers));
+    }
+  }, [gw2Members, discordMembers, setRecords]);
 
   return (
     <RosterDisplay

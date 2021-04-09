@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Table from './Table';
-import { filterDataByString } from '../utils/Helpers';
+import { filterLogByString } from '../utils/Helpers';
 
 const Log = ({ data, filterString }) => {
-  data = filterDataByString(data, filterString);
+  data = filterLogByString(data, filterString);
 
   return (
     <Table>

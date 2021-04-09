@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { getExcessDiscordRecords } from '../utils/DataProcessing';
@@ -10,10 +10,14 @@ const ExcessDiscord = ({
   filterString,
   openToast,
 }) => {
-  let records = [];
-  if (gw2Members.length > 0 && discordMembers.length > 0) {
-    records = getExcessDiscordRecords(gw2Members, discordMembers);
-  }
+  const [records, setRecords] = useState([]);
+  useEffect(() => {
+    if (gw2Members.length > 0 && discordMembers.length > 0) {
+      setRecords(
+        getExcessDiscordRecords(gw2Members, discordMembers)
+      );
+    }
+  }, [gw2Members, discordMembers, setRecords]);
 
   return (
     <RosterDisplay
