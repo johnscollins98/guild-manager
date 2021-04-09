@@ -16,7 +16,7 @@ import {
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
+const RosterDisplay = ({ records, filterString, openToast }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordState, setRecordState] = useState(records);
@@ -198,7 +198,6 @@ RosterDisplay.propTypes = {
   ).isRequired,
   filterString: PropTypes.string.isRequired,
   openToast: PropTypes.func,
-  refresh: PropTypes.func,
 };
 
 const AccountNameCell = ({ record }) => {

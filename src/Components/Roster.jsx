@@ -25,7 +25,6 @@ const Roster = ({
       records={records}
       filterString={filterString}
       openToast={openToast}
-      refresh={refresh}
     />
   );
 };

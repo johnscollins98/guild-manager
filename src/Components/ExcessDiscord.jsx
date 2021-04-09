@@ -24,7 +24,6 @@ const ExcessDiscord = ({
       records={records}
       filterString={filterString}
       openToast={openToast}
-      refresh={refresh}
     />
   );
 };

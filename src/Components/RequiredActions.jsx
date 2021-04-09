@@ -31,7 +31,6 @@ const RequiredActions = ({
       records={records}
       filterString={filterString}
       openToast={openToast}
-      refresh={refresh}
     />
   );
 };
