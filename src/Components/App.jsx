@@ -16,7 +16,7 @@ import Control from './Control';
 import ExcessDiscord from './ExcessDiscord';
 import RequiredActions from './RequiredActions';
 
-import './App.css';
+import './App.scss';
 import { Container, Row, Col } from 'react-bootstrap';
 
 const App = () => {
