@@ -25,18 +25,10 @@ router.get('/members', async (req, res) => {
 
     const transformed = await Promise.all(
       data.map(async (m) => {
-        let record = await GuildMember.findOne({ memberId: m.name });
-
-        if (!record) {
-          const toSave = new GuildMember({
-            memberId: m.name,
-            eventsAttended: 0,
-          });
-          record = await toSave.save();
-        }
-
-        const eventsAttended = record ? record.eventsAttended : 0;
-        return { ...m, eventsAttended };
+        return GuildMember.findOneOrCreate(
+          { memberId: m.name },
+          { memberId: m.name, eventsAttended: 0 }
+        );
       })
     );
 
@@ -48,22 +40,16 @@ router.get('/members', async (req, res) => {
 
 router.put('/members/:memberId', async (req, res) => {
   const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.redirect('/forbidden')
+  if (!authInfo.authorized) return res.redirect('/forbidden');
 
-  const newData = req.body;
+  const { memberId, eventsAttended } = req.body.newData;
+  const record = await GuildMember.findOneAndUpdate(
+    { memberId: req.params.memberId },
+    { memberId, eventsAttended },
+    { new: true, upsert: true }
+  );
 
-  const record = await GuildMember.findOne({ memberId: req.params.memberId });
-  let response = null;
-  if (record) {
-    record.memberId = newData.memberId;
-    record.eventsAttended = newData.eventsAttended;
-    response = await record.save();
-  } else {
-    const newRecord = new GuildMember(...newData);
-    response = await newRecord.save();
-  }
-
-  res.status(200).json(JSON.stringify(response));
+  res.status(200).json(JSON.stringify(record));
 });
 
 router.get('/log', async (req, res) => {
