@@ -18,22 +18,30 @@ export const fetchDiscordRoles = async () => {
   }
 
   return data;
-}
+};
 
 export const addDiscordRole = async (memberId, roleId) => {
-  const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, { method: "PUT" })
+  const response = await fetch(
+    `api/discord/members/${memberId}/roles/${roleId}`,
+    { method: 'PUT' }
+  );
   return response.status === 204;
-}
+};
 
 export const removeDiscordRole = async (memberId, roleId) => {
-  const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, { method: "DELETE" })
+  const response = await fetch(
+    `api/discord/members/${memberId}/roles/${roleId}`,
+    { method: 'DELETE' }
+  );
   return response.status === 204;
-}
+};
 
 export const kickDiscordMember = async (memberId) => {
-  const response = await fetch(`/api/discord/members/${memberId}`, { method: "DELETE" });
+  const response = await fetch(`/api/discord/members/${memberId}`, {
+    method: 'DELETE',
+  });
   return response.status === 204;
-}
+};
 
 export const fetchGW2Members = async () => {
   const response = await fetch(`/api/gw2/members`);
@@ -58,13 +66,13 @@ export const fetchGW2Log = async () => {
 };
 
 export const setGuildMember = async (newMember) => {
-  const response = await fetch(`/api/gw2/members/${newMember.memberId}`, { 
+  const response = await fetch(`/api/gw2/members/${newMember.memberId}`, {
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    method: "PUT", 
-    body: JSON.stringify(newMember)
+    method: 'PUT',
+    body: JSON.stringify(newMember),
   });
   const data = await response.json();
 
@@ -73,7 +81,7 @@ export const setGuildMember = async (newMember) => {
   }
 
   return JSON.parse(data);
-}
+};
 
 export default {
   fetchDiscordMembers: fetchDiscordMembers,
@@ -83,5 +91,5 @@ export default {
   removeDiscordRole: removeDiscordRole,
   fetchGW2Members: fetchGW2Members,
   fetchGW2Log: fetchGW2Log,
-  setGuildMember: setGuildMember
+  setGuildMember: setGuildMember,
 };

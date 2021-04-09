@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from "react";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
-import Toast from "react-bootstrap/Toast";
-import { FaSyncAlt, FaCheckCircle } from "react-icons/fa";
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from 'react';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import Toast from 'react-bootstrap/Toast';
+import { FaSyncAlt, FaCheckCircle } from 'react-icons/fa';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import DataRetrieval from "../utils/DataRetrieval";
+import DataRetrieval from '../utils/DataRetrieval';
 
-import Log from "./Log";
-import Roster from "./Roster";
-import Control from "./Control";
-import ExcessDiscord from "./ExcessDiscord";
-import RequiredActions from "./RequiredActions";
+import Log from './Log';
+import Roster from './Roster';
+import Control from './Control';
+import ExcessDiscord from './ExcessDiscord';
+import RequiredActions from './RequiredActions';
 
-import "./App.css";
-import { Container, Row, Col } from "react-bootstrap";
+import './App.css';
+import { Container, Row, Col } from 'react-bootstrap';
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
-  const [filterString, setFilterString] = useState("");
+  const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
 
   const [showToast, setShowToast] = useState(false);
-  const [toastHeader, setToastHeader] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
+  const [toastHeader, setToastHeader] = useState('');
+  const [toastMessage, setToastMessage] = useState('');
 
   const fetchData = async () => {
     let success = false;
@@ -36,15 +36,18 @@ const App = () => {
       setDiscordMembers([]);
 
       const requests = [
-        DataRetrieval.fetchGW2Members().then(r => setGw2Members(r)),
-        DataRetrieval.fetchGW2Log().then(r => setGw2Log(r)),
-        DataRetrieval.fetchDiscordMembers().then(r => setDiscordMembers(r))
+        DataRetrieval.fetchGW2Members().then((r) => setGw2Members(r)),
+        DataRetrieval.fetchGW2Log().then((r) => setGw2Log(r)),
+        DataRetrieval.fetchDiscordMembers().then((r) => setDiscordMembers(r)),
       ];
-  
+
       await Promise.all(requests);
       success = true;
     } catch (err) {
-      openToast("Error", "There was an error gathering data. See console for more information.");
+      openToast(
+        'Error',
+        'There was an error gathering data. See console for more information.'
+      );
     } finally {
       setLoadingData(false);
       return success;
@@ -60,17 +63,17 @@ const App = () => {
     setToastHeader(header);
     setToastMessage(message);
     setShowToast(true);
-  }
+  };
 
   const closeToast = () => {
-    setToastHeader("");
-    setToastMessage("");
+    setToastHeader('');
+    setToastMessage('');
     setShowToast(false);
-  }
+  };
 
   const refresh = async () => {
     const success = await fetchData();
-    if (success) openToast("Refresh", "Successfully refreshed!");
+    if (success) openToast('Refresh', 'Successfully refreshed!');
   };
 
   const handleFilterChange = (event) => {
@@ -78,10 +81,10 @@ const App = () => {
   };
 
   const TABS = {
-    ROSTER: "Roster",
-    EXCESS_DISCORD: "Excess Discord",
-    REQUIRED_ACTIONS: "Required Actions",
-    LOG: "Log",
+    ROSTER: 'Roster',
+    EXCESS_DISCORD: 'Excess Discord',
+    REQUIRED_ACTIONS: 'Required Actions',
+    LOG: 'Log',
   };
 
   const any = (arr) => arr.length > 0;
@@ -111,12 +114,12 @@ const App = () => {
         delay={2000}
         className="rounded"
         style={{
-          position: "absolute",
-          top: "15px",
-          left: "calc(50% - 150px)",
-          width: "300px",
-          margin: "auto",
-          zIndex: "5000",
+          position: 'absolute',
+          top: '15px',
+          left: 'calc(50% - 150px)',
+          width: '300px',
+          margin: 'auto',
+          zIndex: '5000',
         }}
         autohide
       >

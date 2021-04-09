@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
-import DataRetrieval from "../utils/DataRetrieval";
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import DataRetrieval from '../utils/DataRetrieval';
 
 const RoleEdit = ({
   selectedRecord,
@@ -52,7 +52,9 @@ const RoleEdit = ({
 
     if (anyChanges) {
       const recordsCopy = [...records];
-      const toEdit = recordsCopy.find(record => record.discordId === selectedRecord.discordId);
+      const toEdit = recordsCopy.find(
+        (record) => record.discordId === selectedRecord.discordId
+      );
       toEdit.roles = selectedRecord.roles;
 
       setRecords(recordsCopy);

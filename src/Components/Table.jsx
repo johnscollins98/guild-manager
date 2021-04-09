@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import BSTable from "react-bootstrap/Table";
+import React from 'react';
+import PropTypes from 'prop-types';
+import BSTable from 'react-bootstrap/Table';
 
 const Table = ({ children }) => (
   <BSTable striped bordered hover size="sm" variant="dark">

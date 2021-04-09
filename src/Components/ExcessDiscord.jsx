@@ -1,10 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import DataProcessing from "../utils/DataProcessing";
+import DataProcessing from '../utils/DataProcessing';
 import RosterDisplay from './RosterDisplay';
 
-const ExcessDiscord = ({ gw2Members, discordMembers, filterString, openToast, refresh }) => {
+const ExcessDiscord = ({
+  gw2Members,
+  discordMembers,
+  filterString,
+  openToast,
+  refresh,
+}) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = DataProcessing.getExcessDiscordRecords(
@@ -14,7 +20,7 @@ const ExcessDiscord = ({ gw2Members, discordMembers, filterString, openToast, re
   }
 
   return (
-    <RosterDisplay 
+    <RosterDisplay
       records={records}
       filterString={filterString}
       openToast={openToast}

@@ -23,18 +23,17 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
     const testName = record.accountName.toLowerCase();
 
     // check for exact match
-    let discordMember = discordMembers.find(
-      (m) => {
-        const discordName = m.name
+    let discordMember = discordMembers.find((m) => {
+      const discordName = m.name
         .toLowerCase()
-        .replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '') // strip any emojis
+        .replace(
+          /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+          ''
+        ) // strip any emojis
         .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
-  
+
       return discordName === testName || discordName.includes(`(${testName})`);
-      }
-    );
-
-
+    });
 
     record = {
       ...record,
@@ -44,11 +43,12 @@ const generateGW2RosterRecords = (gw2Members, discordMembers) => {
     };
 
     record.issues = {
-      missingDiscord: record.rank !== "Alt" && !record.discordName,
+      missingDiscord: record.rank !== 'Alt' && !record.discordName,
       multipleRoles: record.roles?.length > 1,
-      unmatchingRoles: record.discordName && record.rank !== record.roles[0]?.name,
-      promotionRequired: isPromotionRequired(record.rank, record.joinDate)
-    }
+      unmatchingRoles:
+        record.discordName && record.rank !== record.roles[0]?.name,
+      promotionRequired: isPromotionRequired(record.rank, record.joinDate),
+    };
 
     return record;
   });
@@ -65,20 +65,22 @@ const getExcessDiscordRecords = (gw2Members, discordMembers) => {
       );
     })
     .map((discordMember) => {
-      return { 
+      return {
         accountName: discordMember.name,
-        rank: "-",
-        joinDate: "-",
+        rank: '-',
+        joinDate: '-',
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         issues: {
-          missingGW2: !(discordMember.roles.find(r => r.name === "Guest" || r.name === "Bots")),
-          multipleRoles: discordMember.roles.length > 1
-        }
+          missingGW2: !discordMember.roles.find(
+            (r) => r.name === 'Guest' || r.name === 'Bots'
+          ),
+          multipleRoles: discordMember.roles.length > 1,
+        },
       };
     })
-    .sort((a, b) => compareRank(a.roles[0]?.name, b.roles[0]?.name ));
+    .sort((a, b) => compareRank(a.roles[0]?.name, b.roles[0]?.name));
 };
 
 const compareRank = (aRank, bRank) => {

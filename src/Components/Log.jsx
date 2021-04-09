@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import Table from "./Table";
-import { filterDataByString } from "../utils/Helpers";
+import Table from './Table';
+import { filterDataByString } from '../utils/Helpers';
 
 const Log = ({ data, filterString }) => {
   data = filterDataByString(data, filterString);
@@ -37,7 +37,7 @@ Log.propTypes = {
       message: PropTypes.string.isRequired,
     }).isRequired
   ),
-  filterString: PropTypes.string.isRequired
+  filterString: PropTypes.string.isRequired,
 };
 
 export default Log;

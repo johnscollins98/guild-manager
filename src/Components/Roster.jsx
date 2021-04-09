@@ -1,11 +1,17 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import DataProcessing from "../utils/DataProcessing";
+import DataProcessing from '../utils/DataProcessing';
 
-import RosterDisplay from "./RosterDisplay";
+import RosterDisplay from './RosterDisplay';
 
-const Roster = ({ gw2Members, discordMembers, filterString, openToast, refresh }) => {
+const Roster = ({
+  gw2Members,
+  discordMembers,
+  filterString,
+  openToast,
+  refresh,
+}) => {
   let records = [];
   if (gw2Members.length > 0 && discordMembers.length > 0) {
     records = DataProcessing.generateGW2RosterRecords(
@@ -15,11 +21,11 @@ const Roster = ({ gw2Members, discordMembers, filterString, openToast, refresh }
   }
 
   return (
-    <RosterDisplay 
-      records={records} 
-      filterString={filterString} 
-      openToast={openToast} 
-      refresh={refresh} 
+    <RosterDisplay
+      records={records}
+      filterString={filterString}
+      openToast={openToast}
+      refresh={refresh}
     />
   );
 };
