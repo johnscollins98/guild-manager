@@ -13,7 +13,7 @@ import {
   faPlus,
   faMinus,
 } from '@fortawesome/free-solid-svg-icons';
-import DataRetrieval, { setGuildMember } from '../utils/DataRetrieval';
+import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
@@ -37,7 +37,7 @@ const RosterDisplay = ({ records, filterString, openToast, refresh }) => {
       `Are you sure you want to kick ${record.discordName}?`
     );
     if (res) {
-      const success = await DataRetrieval.kickDiscordMember(record.discordId);
+      const success = await kickDiscordMember(record.discordId);
       if (success) {
         openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
         setRecordState(

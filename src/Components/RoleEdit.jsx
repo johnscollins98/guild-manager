@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import DataRetrieval from '../utils/DataRetrieval';
+import {
+  addDiscordRole,
+  fetchDiscordRoles,
+  removeDiscordRole,
+} from '../utils/DataRetrieval';
 
 const RoleEdit = ({
   selectedRecord,
@@ -18,7 +22,7 @@ const RoleEdit = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      setAllRoles(await DataRetrieval.fetchDiscordRoles());
+      setAllRoles(await fetchDiscordRoles());
     };
     fetchData();
   }, []);
@@ -27,13 +31,13 @@ const RoleEdit = ({
     setEdittingRole(true);
 
     if (e.target.checked) {
-      await DataRetrieval.addDiscordRole(selectedRecord.discordId, roleId);
+      await addDiscordRole(selectedRecord.discordId, roleId);
       setSelectedRecord({
         ...selectedRecord,
         roles: [...selectedRecord.roles, { id: roleId, name: roleName }],
       });
     } else {
-      await DataRetrieval.removeDiscordRole(selectedRecord.discordId, roleId);
+      await removeDiscordRole(selectedRecord.discordId, roleId);
       setSelectedRecord({
         ...selectedRecord,
         roles: selectedRecord.roles.filter((r) => r.id !== roleId),

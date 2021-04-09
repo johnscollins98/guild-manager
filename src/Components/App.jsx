@@ -5,8 +5,11 @@ import Toast from 'react-bootstrap/Toast';
 import { FaSyncAlt, FaCheckCircle } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import DataRetrieval from '../utils/DataRetrieval';
-
+import {
+  fetchGW2Members,
+  fetchGW2Log,
+  fetchDiscordMembers,
+} from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
@@ -36,9 +39,9 @@ const App = () => {
       setDiscordMembers([]);
 
       const requests = [
-        DataRetrieval.fetchGW2Members().then((r) => setGw2Members(r)),
-        DataRetrieval.fetchGW2Log().then((r) => setGw2Log(r)),
-        DataRetrieval.fetchDiscordMembers().then((r) => setDiscordMembers(r)),
+        fetchGW2Members().then((r) => setGw2Members(r)),
+        fetchGW2Log().then((r) => setGw2Log(r)),
+        fetchDiscordMembers().then((r) => setDiscordMembers(r)),
       ];
 
       await Promise.all(requests);

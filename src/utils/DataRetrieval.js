@@ -82,14 +82,3 @@ export const setGuildMember = async (newMember) => {
 
   return JSON.parse(data);
 };
-
-export default {
-  fetchDiscordMembers: fetchDiscordMembers,
-  kickDiscordMember: kickDiscordMember,
-  fetchDiscordRoles: fetchDiscordRoles,
-  addDiscordRole: addDiscordRole,
-  removeDiscordRole: removeDiscordRole,
-  fetchGW2Members: fetchGW2Members,
-  fetchGW2Log: fetchGW2Log,
-  setGuildMember: setGuildMember,
-};
