@@ -9,9 +9,11 @@ const getUserAuthInfo = async (req) => {
   );
   const roles = await getRoles(req.user.id);
   const isAdmin = inGuild && roles.includes(process.env.ADMIN_ROLE);
+  const isEventLeader =
+    inGuild && roles.includes(process.env.EVENT_LEADER_ROLE);
 
   const username = req.user.username;
-  return { loggedIn, isAdmin, username };
+  return { loggedIn, isAdmin, isEventLeader, username };
 };
 
 const getRoles = async (userId) => {
