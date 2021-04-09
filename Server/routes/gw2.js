@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const fetch = require('node-fetch');
+const { authenticate } = require('../middleware/auth')
 const GuildMember = require('../models/guildMember.model');
-const { getUserAuthInfo } = require('../utils/auth');
 const GW2Utils = require('../utils/gw2');
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
@@ -38,10 +38,7 @@ router.get('/members', async (req, res) => {
   }
 });
 
-router.put('/members/:memberId', async (req, res) => {
-  const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.redirect('/forbidden');
-
+router.put('/members/:memberId', authenticate, async (req, res) => {
   const { memberId, eventsAttended } = req.body.newData;
   const record = await GuildMember.findOneAndUpdate(
     { memberId: req.params.memberId },

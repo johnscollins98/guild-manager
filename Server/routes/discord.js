@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const fetch = require('node-fetch');
 const DiscordUtils = require('../utils/discord');
-const { getUserAuthInfo } = require('../utils/auth');
+const { authenticate } = require('../middleware/auth')
 
 const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
 const botToken = process.env.BOT_TOKEN;
@@ -53,10 +53,7 @@ router.get('/members', async (req, res) => {
   }
 });
 
-router.put('/members/:memberId/roles/:roleId', async (req, res) => {
-  const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.redirect('/forbidden')
-
+router.put('/members/:memberId/roles/:roleId', authenticate, async (req, res) => {
   const response = await fetch(
     `${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`,
     { ...reqParams, method: 'PUT' }
@@ -64,10 +61,7 @@ router.put('/members/:memberId/roles/:roleId', async (req, res) => {
   res.status(response.status).json(req.params.roleId);
 });
 
-router.delete('/members/:memberId/roles/:roleId', async (req, res) => {
-  const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.redirect('/forbidden')
-
+router.delete('/members/:memberId/roles/:roleId', authenticate, async (req, res) => {
   const response = await fetch(
     `${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`,
     { ...reqParams, method: 'DELETE' }
@@ -75,10 +69,7 @@ router.delete('/members/:memberId/roles/:roleId', async (req, res) => {
   res.status(response.status).json(req.params.roleId);
 });
 
-router.delete('/members/:id', async (req, res) => {
-  const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.redirect('/forbidden')
-
+router.delete('/members/:id', authenticate, async (req, res) => {
   const response = await fetch(`${baseUrl}/members/${req.params.id}`, {
     ...reqParams,
     method: 'DELETE',
