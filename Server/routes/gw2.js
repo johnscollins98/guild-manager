@@ -48,7 +48,7 @@ router.get('/members', async (req, res) => {
 
 router.put('/members/:memberId', async (req, res) => {
   const authInfo = await getUserAuthInfo(req);
-  if (!authInfo.authorized) return res.status(403).json('Forbidden');
+  if (!authInfo.authorized) return res.redirect('/forbidden')
 
   const newData = req.body;
 
