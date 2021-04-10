@@ -93,7 +93,6 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
 
         setRecordState(recordsCopy);
       } catch (err) {
-        console.error(err);
         openToast('There was an error updating attendance.', 'error');
       }
     },
@@ -207,6 +206,7 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
         setSelectedRecord={setSelectedRecord}
         records={recordState}
         setRecords={setRecordState}
+        openToast={openToast}
       />
     </>
   );

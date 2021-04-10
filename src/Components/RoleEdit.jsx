@@ -21,6 +21,7 @@ const RoleEdit = ({
   setModalShow,
   records,
   setRecords,
+  openToast,
 }) => {
   const [allRoles, setAllRoles] = useState([]);
   const [edittingRole, setEdittingRole] = useState(false);
@@ -37,17 +38,25 @@ const RoleEdit = ({
     setEdittingRole(true);
 
     if (e.target.checked) {
-      await addDiscordRole(selectedRecord.discordId, roleId);
-      setSelectedRecord({
-        ...selectedRecord,
-        roles: [...selectedRecord.roles, { id: roleId, name: roleName }],
-      });
+      const res = await addDiscordRole(selectedRecord.discordId, roleId);
+      if (res) {
+        setSelectedRecord({
+          ...selectedRecord,
+          roles: [...selectedRecord.roles, { id: roleId, name: roleName }],
+        });
+      } else {
+        openToast('Something went wrong changing roles', 'error');
+      }
     } else {
-      await removeDiscordRole(selectedRecord.discordId, roleId);
-      setSelectedRecord({
-        ...selectedRecord,
-        roles: selectedRecord.roles.filter((r) => r.id !== roleId),
-      });
+      const res = await removeDiscordRole(selectedRecord.discordId, roleId);
+      if (res) {
+        setSelectedRecord({
+          ...selectedRecord,
+          roles: selectedRecord.roles.filter((r) => r.id !== roleId),
+        });
+      } else {
+        openToast('Something went wrong changing roles', 'error');
+      }
     }
 
     setAnyChanges(true);

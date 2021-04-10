@@ -70,7 +70,14 @@ const App = () => {
         fetchGW2Members().then((r) => setGw2Members(r)),
         fetchGW2Log().then((r) => setGw2Log(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
-        fetchAuthInfo().then((r) => setAuthInfo(r)),
+        fetchAuthInfo()
+          .then((r) => setAuthInfo(r))
+          .catch((e) =>
+            openToast(
+              'There was an error getting authorization. See console for more information.',
+              'error'
+            )
+          ),
       ];
 
       await Promise.all(requests);

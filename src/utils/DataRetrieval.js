@@ -74,12 +74,12 @@ export const setGuildMember = async (newMember) => {
     method: 'PUT',
     body: JSON.stringify(newMember),
   });
-  const data = await response.json();
-
+  
   if (response.status !== 200) {
-    throw data;
+    throw response;
   }
-
+  
+  const data = await response.json();
   return JSON.parse(data);
 };
 
