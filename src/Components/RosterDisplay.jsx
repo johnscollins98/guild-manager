@@ -128,7 +128,7 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
             <th>Joined</th>
             <th>GW2 Rank</th>
             <th>Discord Role</th>
-            <th>Attendance</th>
+            <th>Points</th>
             {adminActionsEnabled ? <th>Actions</th> : null}
           </tr>
         </thead>
