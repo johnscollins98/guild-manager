@@ -19,6 +19,7 @@ import Roster from './Roster';
 import Control from './Control';
 import ExcessDiscord from './ExcessDiscord';
 import RequiredActions from './RequiredActions';
+import PointsLeaderboard from './PointsLeaderboard';
 
 import './App.scss';
 
@@ -98,6 +99,7 @@ const App = () => {
     ROSTER: 'Roster',
     EXCESS_DISCORD: 'Excess Discord',
     REQUIRED_ACTIONS: 'Required Actions',
+    LEADERBOARD: 'Points Leaderboard',
     LOG: 'Log',
   };
 
@@ -154,6 +156,15 @@ const App = () => {
           <Tabs defaultActiveKey="roster" className="bg-dark">
             <Tab eventKey="roster" title={getTabTitle(TABS.ROSTER)}>
               <Roster
+                gw2Members={gw2Members}
+                discordMembers={discordMembers}
+                filterString={filterString}
+                authInfo={authInfo}
+                openToast={openToast}
+              />
+            </Tab>
+            <Tab eventKey="leaderboard" title={getTabTitle(TABS.LEADERBOARD)}>
+              <PointsLeaderboard
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 filterString={filterString}
