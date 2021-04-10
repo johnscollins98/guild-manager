@@ -1,50 +1,48 @@
 import React from 'react';
-import InputGroup from 'react-bootstrap/InputGroup';
-import FormControl from 'react-bootstrap/FormControl';
-import Spinner from 'react-bootstrap/Spinner';
 import PropTypes from 'prop-types';
 
-import './Control.scss';
+import { Button, Grid, IconButton, TextField } from '@material-ui/core';
+import { Brightness3, Brightness6 } from '@material-ui/icons';
 
-const Control = ({ refresh, handleFilterChange, loadingData }) => {
+const Control = ({
+  refresh,
+  handleFilterChange,
+  loadingData,
+  theme,
+  toggleTheme,
+}) => {
   const onRefresh = async () => {
     await refresh();
   };
 
-  const refreshButton = () => {
-    if (loadingData) {
-      return (
-        <Spinner
-          animation="border"
-          variant="primary"
-          className="refresh-spinner"
-        />
-      );
-    } else {
-      return (
-        <button className="btn ml-2 btn-primary" onClick={() => onRefresh()}>
-          Refresh
-        </button>
-      );
-    }
-  };
-
   return (
-    <InputGroup className="mb-3">
-      <InputGroup.Prepend>
-        <InputGroup.Text id="basic-addon1" className="text-white">
-          Filter
-        </InputGroup.Text>
-      </InputGroup.Prepend>
-      <FormControl
-        placeholder="Type here to filter for any column..."
-        aria-label="Filter"
-        aria-describedby="basic-addon1"
-        className="bg-dark text-white"
-        onChange={handleFilterChange}
-      />
-      {refreshButton()}
-    </InputGroup>
+    <Grid
+      container
+      direction="row"
+      justify="flex-start"
+      alignItems="center"
+      spacing={3}
+    >
+      <Grid item xs>
+        <TextField
+          id="filter"
+          label="Filter"
+          type="text"
+          fullWidth
+          onChange={handleFilterChange}
+        />
+      </Grid>
+      <Grid item>
+        <Button onClick={onRefresh} disabled={loadingData}>
+          Refresh
+        </Button>
+      </Grid>
+      <Grid item>
+        <IconButton onClick={() => toggleTheme()}>
+          {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
+        </IconButton>
+      </Grid>
+    </Grid>
   );
 };
 

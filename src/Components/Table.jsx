@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BSTable from 'react-bootstrap/Table';
+import MUTable from '@material-ui/core/Table';
 
 const Table = ({ children }) => (
-  <BSTable striped bordered hover size="sm" variant="dark">
+  <MUTable size="small" stickyHeader>
     {children}
-  </BSTable>
+  </MUTable>
 );
 
 Table.propTypes = {

@@ -1,12 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import Toast from 'react-bootstrap/Toast';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { FaSyncAlt, FaCheckCircle } from 'react-icons/fa';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'fontsource-roboto';
 
 import {
   fetchGW2Members,
@@ -22,6 +15,10 @@ import RequiredActions from './RequiredActions';
 import PointsLeaderboard from './PointsLeaderboard';
 
 import './App.scss';
+import { Paper, Snackbar, Tab, Tabs } from '@material-ui/core';
+import { TabContext, TabPanel, Alert } from '@material-ui/lab';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { Refresh } from '@material-ui/icons';
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
@@ -30,25 +27,36 @@ const App = () => {
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
+  const [tab, setTab] = useState('roster');
 
   const [showToast, setShowToast] = useState(false);
-  const [toastHeader, setToastHeader] = useState('');
+  const [toastStatus, setToastStatus] = useState('info');
   const [toastMessage, setToastMessage] = useState('');
 
+  const [theme, setTheme] = useState('dark');
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
+  const darkTheme = createMuiTheme({
+    palette: {
+      type: theme,
+    },
+  });
+
   const openToast = useCallback(
-    (header, message) => {
-      setToastHeader(header);
+    (message, status = 'info') => {
+      setToastStatus(status);
       setToastMessage(message);
       setShowToast(true);
     },
-    [setToastHeader, setToastMessage, setShowToast]
+    [setToastMessage, setShowToast, setToastStatus]
   );
 
   const closeToast = useCallback(() => {
-    setToastHeader('');
     setToastMessage('');
     setShowToast(false);
-  }, [setToastMessage, setToastHeader, setShowToast]);
+  }, [setToastMessage, setShowToast]);
 
   const fetchData = useCallback(async () => {
     let success = false;
@@ -69,8 +77,8 @@ const App = () => {
       success = true;
     } catch (err) {
       openToast(
-        'Error',
-        'There was an error gathering data. See console for more information.'
+        'There was an error gathering data. See console for more information.',
+        'error'
       );
     } finally {
       setLoadingData(false);
@@ -85,7 +93,7 @@ const App = () => {
 
   const refresh = useCallback(async () => {
     const success = await fetchData();
-    if (success) openToast('Refresh', 'Successfully refreshed!');
+    if (success) openToast('Successfully refreshed!', 'success');
   }, [fetchData, openToast]);
 
   const handleFilterChange = useCallback(
@@ -105,7 +113,7 @@ const App = () => {
 
   const any = (arr) => arr.length > 0;
 
-  const getTabTitle = (tab) => {
+  const getTabIcon = (tab) => {
     let loaded = !loadingData;
 
     if (tab === TABS.LOG) {
@@ -113,48 +121,66 @@ const App = () => {
     } else {
       loaded = any(gw2Members) && any(discordMembers);
     }
-    return (
-      <span className="tab-title">
-        {loaded ? <FaCheckCircle className="loaded" /> : <FaSyncAlt />}
-        &nbsp;
-        {tab}
-      </span>
-    );
+    return loaded ? null : <Refresh />;
   };
 
   return (
-    <Container fluid className="app bg-dark vh-100">
-      <Toast
-        show={showToast}
-        onClose={() => closeToast()}
-        delay={2000}
-        className="rounded"
+    <MuiThemeProvider theme={darkTheme}>
+      <Paper
         style={{
-          position: 'absolute',
-          top: '15px',
-          left: 'calc(50% - 150px)',
-          width: '300px',
-          margin: 'auto',
-          zIndex: '5000',
+          height: '100vh',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+          padding: '16px',
         }}
-        autohide
+        square
       >
-        <Toast.Header>{toastHeader}</Toast.Header>
-        <Toast.Body>{toastMessage}</Toast.Body>
-      </Toast>
-      <Row>
-        <Col>
+        <Snackbar
+          open={showToast}
+          autoHideDuration={6000}
+          onClose={() => closeToast()}
+        >
+          <Alert onClose={() => closeToast()} severity={toastStatus}>
+            {toastMessage}
+          </Alert>
+        </Snackbar>
+        <div className="content">
           <Control
             refresh={refresh}
             handleFilterChange={handleFilterChange}
+            theme={theme}
+            toggleTheme={toggleTheme}
             loadingData={loadingData}
           />
-        </Col>
-      </Row>
-      <Row className="flex-grow-1">
-        <Col className="tab-container">
-          <Tabs defaultActiveKey="roster" className="bg-dark">
-            <Tab eventKey="roster" title={getTabTitle(TABS.ROSTER)}>
+          <TabContext value={tab}>
+            <Tabs
+              value={tab}
+              onChange={(e, v) => setTab(v)}
+              variant="fullWidth"
+            >
+              <Tab
+                icon={getTabIcon(TABS.ROSTER)}
+                label={TABS.ROSTER}
+                value="roster"
+              />
+              <Tab
+                icon={getTabIcon(TABS.LEADERBOARD)}
+                label={TABS.LEADERBOARD}
+                value="leaderboard"
+              />
+              <Tab
+                icon={getTabIcon(TABS.EXCESS_DISCORD)}
+                label={TABS.EXCESS_DISCORD}
+                value="excess-discord"
+              />
+              <Tab
+                icon={getTabIcon(TABS.REQUIRED_ACTIONS)}
+                label={TABS.REQUIRED_ACTIONS}
+                value="required-actions"
+              />
+              <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
+            </Tabs>
+            <TabPanel value="roster">
               <Roster
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
@@ -162,8 +188,8 @@ const App = () => {
                 authInfo={authInfo}
                 openToast={openToast}
               />
-            </Tab>
-            <Tab eventKey="leaderboard" title={getTabTitle(TABS.LEADERBOARD)}>
+            </TabPanel>
+            <TabPanel value="leaderboard">
               <PointsLeaderboard
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
@@ -171,11 +197,8 @@ const App = () => {
                 authInfo={authInfo}
                 openToast={openToast}
               />
-            </Tab>
-            <Tab
-              eventKey="excessDiscord"
-              title={getTabTitle(TABS.EXCESS_DISCORD)}
-            >
+            </TabPanel>
+            <TabPanel value="excess-discord">
               <ExcessDiscord
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
@@ -183,8 +206,8 @@ const App = () => {
                 authInfo={authInfo}
                 openToast={openToast}
               />
-            </Tab>
-            <Tab eventKey="actions" title={getTabTitle(TABS.REQUIRED_ACTIONS)}>
+            </TabPanel>
+            <TabPanel value="required-actions">
               <RequiredActions
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
@@ -192,14 +215,14 @@ const App = () => {
                 authInfo={authInfo}
                 openToast={openToast}
               />
-            </Tab>
-            <Tab eventKey="log" title={getTabTitle(TABS.LOG)}>
+            </TabPanel>
+            <TabPanel value="log">
               <Log data={gw2Log} filterString={filterString} />
-            </Tab>
-          </Tabs>
-        </Col>
-      </Row>
-    </Container>
+            </TabPanel>
+          </TabContext>
+        </div>
+      </Paper>
+    </MuiThemeProvider>
   );
 };
 

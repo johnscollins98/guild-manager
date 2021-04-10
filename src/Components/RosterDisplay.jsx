@@ -3,20 +3,25 @@ import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import Table from './Table';
 import { formatRankId, filterDataByString } from '../utils/Helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTimes,
-  faPencilAlt,
-  faAngleDoubleUp,
-  faNotEqual,
-  faExclamationCircle,
-  faPlus,
-  faMinus,
-} from '@fortawesome/free-solid-svg-icons';
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import './RosterDisplay.scss';
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+} from '@material-ui/core';
+import {
+  Add,
+  Close,
+  Create,
+  Error,
+  ExpandLess,
+  Remove,
+  SyncProblem,
+} from '@material-ui/icons';
 
 const discordImage = require('../assets/images/discord-icon.png');
 const discordErrorImage = require('../assets/images/discord-icon-red.png');
@@ -52,12 +57,12 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
       if (res) {
         const success = await kickDiscordMember(record.discordId);
         if (success) {
-          openToast('Kicked', `Kicked ${record.discordName} from Discord.`);
+          openToast(`Kicked ${record.discordName} from Discord.`, 'success');
           setRecordState(
             recordState.filter((m) => m.discordId !== record.discordId)
           );
         } else {
-          openToast('Kick Failed', `Could not kick ${record.discordName}`);
+          openToast(`Could not kick ${record.discordName}`, 'error');
         }
       }
     },
@@ -89,7 +94,7 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
         setRecordState(recordsCopy);
       } catch (err) {
         console.error(err);
-        openToast('Error', 'There was an error updating attendance.');
+        openToast('There was an error updating attendance.', 'error');
       }
     },
     [setRecordState, openToast, recordState]
@@ -119,91 +124,81 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
           <col />
           <col />
           <col />
-          <col width="100px" />
+          <col />
           {adminActionsEnabled ? <col width="100px" /> : null}
         </colgroup>
-        <thead>
-          <tr>
-            <th>Account</th>
-            <th>Joined</th>
-            <th>GW2 Rank</th>
-            <th>Discord Role</th>
-            <th>Points</th>
-            {adminActionsEnabled ? <th>Actions</th> : null}
-          </tr>
-        </thead>
-        <tbody>
+        <TableHead>
+          <TableRow>
+            <TableCell>Account</TableCell>
+            <TableCell>Joined</TableCell>
+            <TableCell>GW2 Rank</TableCell>
+            <TableCell>Discord Role</TableCell>
+            <TableCell>Points</TableCell>
+            {adminActionsEnabled ? <TableCell>Actions</TableCell> : null}
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {filteredRecords.map((record, i) => (
-            <tr key={i}>
-              <td>
+            <TableRow key={i}>
+              <TableCell>
                 <AccountNameCell record={record} />
-              </td>
-              <td>{record.joinDate}</td>
-              <td className={`rank ${formatRankId(record.rank)}`}>
+              </TableCell>
+              <TableCell>{record.joinDate}</TableCell>
+              <TableCell className={`rank ${formatRankId(record.rank)}`}>
                 {record.rank}
-              </td>
-              <td
+              </TableCell>
+              <TableCell
                 className={`rank ${formatRankId(record.roles[0]?.name || '-')}`}
               >
                 {record.roles[0]?.name || '-'}
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 <span className="events-attended">
                   {record.eventsAttended}{' '}
                   <span className="actions">
-                    <TooltipWrapper tooltip="Increase by one" placement="top">
-                      <FontAwesomeIcon
-                        icon={faPlus}
+                    <Tooltip title="Increase by one">
+                      <Add
                         className="action"
                         onClick={() => incrementEventAttended(record)}
                       />
-                    </TooltipWrapper>{' '}
-                    <TooltipWrapper tooltip="Decrease by one" placement="top">
-                      <FontAwesomeIcon
-                        icon={faMinus}
+                    </Tooltip>{' '}
+                    <Tooltip title="Decrease by one">
+                      <Remove
                         className="action"
                         onClick={() => decrementEventAttended(record)}
                       />
-                    </TooltipWrapper>
+                    </Tooltip>
                   </span>
                 </span>
-              </td>
+              </TableCell>
               {adminActionsEnabled ? (
-                <td className="actions">
+                <TableCell className="actions">
                   <div className="actions">
                     {adminActionsEnabled &&
                     record.roles.find(
                       (r) => r.name === 'Spearmarshal' || r.name === 'General'
                     ) ? null : (
                       <>
-                        <TooltipWrapper
-                          tooltip="Edit Discord Roles"
-                          placement="left"
-                        >
-                          <FontAwesomeIcon
-                            icon={faPencilAlt}
+                        <Tooltip title="Edit Discord Roles">
+                          <Create
                             className="action"
                             onClick={() => openEdit(record)}
                           />
-                        </TooltipWrapper>
-                        <TooltipWrapper
-                          tooltip="Kick from Discord"
-                          placement="left"
-                        >
-                          <FontAwesomeIcon
-                            icon={faTimes}
+                        </Tooltip>
+                        <Tooltip title="Kick from Discord">
+                          <Close
                             className="action"
                             onClick={() => onKick(record)}
                           />
-                        </TooltipWrapper>
+                        </Tooltip>
                       </>
                     )}
                   </div>
-                </td>
+                </TableCell>
               ) : null}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
+        </TableBody>
       </Table>
       <RoleEdit
         modalShow={modalShow}
@@ -248,7 +243,7 @@ const AccountNameCell = ({ record }) => {
       {record.accountName}{' '}
       <div className="account-errors">
         {record.rank !== 'Alt' ? (
-          <TooltipWrapper tooltip={accountTitle}>
+          <Tooltip title={accountTitle}>
             <img
               src={accountImage}
               width="20"
@@ -256,32 +251,29 @@ const AccountNameCell = ({ record }) => {
               className="icon"
               alt="account icon"
             />
-          </TooltipWrapper>
+          </Tooltip>
         ) : null}
         {record.issues.multipleRoles ? (
-          <TooltipWrapper
-            tooltip={`Multiple Roles: ${record.roles
+          <Tooltip
+            title={`Multiple Roles: ${record.roles
               .map((r) => r.name)
               .join(', ')}`}
           >
-            <FontAwesomeIcon
-              icon={faExclamationCircle}
-              className="icon error"
-            />
-          </TooltipWrapper>
+            <Error />
+          </Tooltip>
         ) : record.issues.unmatchingRoles ? (
-          <TooltipWrapper
-            tooltip={`Mismatched Roles - ${record.rank}/${
+          <Tooltip
+            title={`Mismatched Roles - ${record.rank}/${
               record.roles[0]?.name || 'None'
             } (GW2/Discord)`}
           >
-            <FontAwesomeIcon icon={faNotEqual} className="icon error" />
-          </TooltipWrapper>
+            <SyncProblem />
+          </Tooltip>
         ) : null}
         {record.issues.promotionRequired ? (
-          <TooltipWrapper tooltip="Promotion Required">
-            <FontAwesomeIcon icon={faAngleDoubleUp} className="icon" />
-          </TooltipWrapper>
+          <Tooltip title="Promotion Required">
+            <ExpandLess />
+          </Tooltip>
         ) : null}
       </div>
     </div>
@@ -298,14 +290,10 @@ AccountNameCell.propTypes = {
 };
 
 const TooltipWrapper = ({ tooltip, children, placement }) => {
-  placement = placement || 'right';
   return (
-    <OverlayTrigger
-      placement={placement}
-      overlay={<Tooltip id={`tooltip-${placement}`}>{tooltip}</Tooltip>}
-    >
+    <Tooltip title={tooltip} aria-label="add">
       {children}
-    </OverlayTrigger>
+    </Tooltip>
   );
 };
 

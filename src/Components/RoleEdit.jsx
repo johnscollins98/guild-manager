@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
+import {
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+} from '@material-ui/core';
 import {
   addDiscordRole,
   fetchDiscordRoles,
@@ -68,23 +74,26 @@ const RoleEdit = ({
 
   if (!selectedRecord) return null;
   return (
-    <Modal show={modalShow} onHide={closeEdit}>
-      <Modal.Header closeButton>
-        <Modal.Title>Edit Roles</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          {allRoles.map((role) => (
-            <Form.Check
-              key={role.id}
+    <Dialog open={modalShow} onClose={closeEdit}>
+      <DialogTitle>Edit Roles</DialogTitle>
+      <DialogContent>
+        {allRoles.map((role) => (
+          <FormGroup row key={role.id}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedRecord.roles
+                    .map((r) => r.id)
+                    .includes(role.id)}
+                  onChange={(e) => roleChangeHandler(e, role.id, role.name)}
+                />
+              }
               label={role.name}
-              checked={selectedRecord.roles.map((r) => r.id).includes(role.id)}
-              onChange={(e) => roleChangeHandler(e, role.id, role.name)}
             />
-          ))}
-        </Form>
-      </Modal.Body>
-    </Modal>
+          </FormGroup>
+        ))}
+      </DialogContent>
+    </Dialog>
   );
 };
 
