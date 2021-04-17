@@ -7,12 +7,14 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  withStyles,
 } from '@material-ui/core';
 import {
   addDiscordRole,
   fetchDiscordRoles,
   removeDiscordRole,
 } from '../utils/DataRetrieval';
+import { getColorFromRole } from '../utils/Helpers';
 
 const RoleEdit = ({
   selectedRecord,
@@ -90,7 +92,8 @@ const RoleEdit = ({
           <FormGroup row key={role.id}>
             <FormControlLabel
               control={
-                <Checkbox
+                <StyledCheckbox
+                  color={getColorFromRole(role.name, allRoles)}
                   checked={selectedRecord.roles
                     .map((r) => r.id)
                     .includes(role.id)}
@@ -121,3 +124,17 @@ RoleEdit.propTypes = {
 };
 
 export default RoleEdit;
+
+const StyledCheckbox = ({ color, ...props }) => {
+  const OurCheckbox = withStyles({
+    root: {
+      color: color,
+      '&$checked': {
+        color: color,
+      },
+    },
+    checked: {},
+  })((props) => <Checkbox color="default" {...props} />);
+
+  return <OurCheckbox {...props} />;
+};

@@ -27,3 +27,10 @@ export const filterLogByString = (data, filterString) => {
     entry.message.toLowerCase().includes(filterString)
   );
 };
+
+export const getColorFromRole = (rank, discordRoles) => {
+  const found = discordRoles.find((r) => r.name === rank);
+  if (found) {
+    return `#${found.color.toString(16)}`;
+  }
+};

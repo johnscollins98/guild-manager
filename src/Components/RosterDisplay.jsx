@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import Table from './Table';
-import { filterDataByString } from '../utils/Helpers';
+import { filterDataByString, getColorFromRole } from '../utils/Helpers';
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 
@@ -51,16 +51,6 @@ const RosterDisplay = ({
   useEffect(() => {
     setFilteredRecords(filterDataByString(recordState, filterString));
   }, [recordState, filterString]);
-
-  const getColor = useCallback(
-    (rank) => {
-      const found = discordRoles.find((r) => r.name === rank);
-      if (found) {
-        return `#${found.color.toString(16)}`;
-      }
-    },
-    [discordRoles]
-  );
 
   const onKick = useCallback(
     async (record) => {
@@ -160,13 +150,18 @@ const RosterDisplay = ({
               <TableCell>{record.joinDate}</TableCell>
               <TableCell
                 className="rank"
-                style={{ backgroundColor: getColor(record.rank) }}
+                style={{
+                  backgroundColor: getColorFromRole(record.rank, discordRoles),
+                }}
               >
                 {record.rank}
               </TableCell>
               <TableCell
                 style={{
-                  backgroundColor: getColor(record.roles[0]?.name),
+                  backgroundColor: getColorFromRole(
+                    record.roles[0]?.name,
+                    discordRoles
+                  ),
                 }}
                 className="rank"
               >
