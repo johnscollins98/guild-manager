@@ -4,6 +4,7 @@ import RoleEdit from './RoleEdit';
 import Table from './Table';
 import { filterDataByString } from '../utils/Helpers';
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
+import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 
 import './RosterDisplay.scss';
 import {
@@ -23,8 +24,6 @@ import {
   SyncProblem,
 } from '@material-ui/icons';
 
-const discordImage = require('../assets/images/discord-icon.png');
-const discordErrorImage = require('../assets/images/discord-icon-red.png');
 const gw2Image = require('../assets/images/gw2.png');
 
 const RosterDisplay = ({
@@ -249,14 +248,24 @@ RosterDisplay.propTypes = {
 };
 
 const AccountNameCell = ({ record }) => {
-  let accountImage = discordImage;
+  let accountImage = <DiscordLogo width="20" height="20" className="icon" />;
   let accountTitle = record.discordName;
 
   if (record.issues.missingGW2) {
-    accountImage = gw2Image;
+    accountImage = (
+      <img
+        src={gw2Image}
+        width="20"
+        height="20"
+        className="icon"
+        alt="account icon"
+      />
+    );
     accountTitle = "Can't find GW2 Account";
   } else if (record.issues.missingDiscord) {
-    accountImage = discordErrorImage;
+    accountImage = (
+      <DiscordLogo width="20" height="20" className="icon error" />
+    );
     accountTitle = "Can't find Discord Account";
   }
 
@@ -265,15 +274,7 @@ const AccountNameCell = ({ record }) => {
       {record.accountName}{' '}
       <div className="account-errors">
         {record.rank !== 'Alt' ? (
-          <Tooltip title={accountTitle}>
-            <img
-              src={accountImage}
-              width="20"
-              height="20"
-              className="icon"
-              alt="account icon"
-            />
-          </Tooltip>
+          <Tooltip title={accountTitle}>{accountImage}</Tooltip>
         ) : null}
         {record.issues.multipleRoles ? (
           <Tooltip
