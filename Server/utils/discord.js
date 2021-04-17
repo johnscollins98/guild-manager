@@ -33,6 +33,7 @@ const getRoleInfo = (allRoles, memberRoles) => {
         roles.push({
           name: discordRole.name,
           id: discordRole.id,
+          color: discordRole.color,
         });
     }
   }
