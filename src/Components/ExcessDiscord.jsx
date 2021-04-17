@@ -7,6 +7,7 @@ import RosterDisplay from './RosterDisplay';
 const ExcessDiscord = ({
   gw2Members,
   discordMembers,
+  discordRoles,
   filterString,
   authInfo,
   openToast,
@@ -21,6 +22,7 @@ const ExcessDiscord = ({
   return (
     <RosterDisplay
       records={records}
+      discordRoles={discordRoles}
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}

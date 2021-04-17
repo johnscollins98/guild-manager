@@ -11,6 +11,7 @@ import RosterDisplay from './RosterDisplay';
 const RequiredActions = ({
   gw2Members,
   discordMembers,
+  discordRoles,
   filterString,
   authInfo,
   openToast,
@@ -31,6 +32,7 @@ const RequiredActions = ({
   return (
     <RosterDisplay
       records={records}
+      discordRoles={discordRoles}
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}

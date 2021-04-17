@@ -5,7 +5,7 @@ import { generateGW2RosterRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
-const PointsLeaderboard = ({ gw2Members, discordMembers, filterString, authInfo, openToast }) => {
+const PointsLeaderboard = ({ gw2Members, discordMembers, discordRoles, filterString, authInfo, openToast }) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ const PointsLeaderboard = ({ gw2Members, discordMembers, filterString, authInfo,
   return (
     <RosterDisplay
       records={records}
+      discordRoles={discordRoles}
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}

@@ -1,10 +1,3 @@
-export const formatRankId = (rank) => {
-  if (rank == null || rank.length === 0) {
-    return 'not-found';
-  }
-  return rank.toLowerCase().split(' ').join('-');
-};
-
 export const isPromotionRequired = (rank, dateString) => {
   if (rank !== 'Second Spear') {
     return '';

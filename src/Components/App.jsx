@@ -6,6 +6,7 @@ import {
   fetchGW2Log,
   fetchDiscordMembers,
   fetchAuthInfo,
+  fetchDiscordRoles,
 } from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
@@ -24,6 +25,7 @@ const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
+  const [discordRoles, setDiscordRoles] = useState([]);
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
@@ -65,11 +67,13 @@ const App = () => {
       setGw2Members([]);
       setGw2Log([]);
       setDiscordMembers([]);
+      setDiscordRoles([]);
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
         fetchGW2Log().then((r) => setGw2Log(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
+        fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchAuthInfo()
           .then((r) => setAuthInfo(r))
           .catch((e) =>
@@ -191,6 +195,7 @@ const App = () => {
               <Roster
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
+                discordRoles={discordRoles}                
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -200,6 +205,7 @@ const App = () => {
               <PointsLeaderboard
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
+                discordRoles={discordRoles}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -209,6 +215,7 @@ const App = () => {
               <ExcessDiscord
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
+                discordRoles={discordRoles}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -218,6 +225,7 @@ const App = () => {
               <RequiredActions
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
+                discordRoles={discordRoles}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}

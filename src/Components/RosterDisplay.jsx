@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import Table from './Table';
-import { formatRankId, filterDataByString } from '../utils/Helpers';
+import { filterDataByString } from '../utils/Helpers';
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 
 import './RosterDisplay.scss';
@@ -27,7 +27,13 @@ const discordImage = require('../assets/images/discord-icon.png');
 const discordErrorImage = require('../assets/images/discord-icon-red.png');
 const gw2Image = require('../assets/images/gw2.png');
 
-const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
+const RosterDisplay = ({
+  records,
+  discordRoles,
+  filterString,
+  openToast,
+  authInfo,
+}) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordState, setRecordState] = useState(records);
@@ -46,6 +52,16 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
   useEffect(() => {
     setFilteredRecords(filterDataByString(recordState, filterString));
   }, [recordState, filterString]);
+
+  const getColor = useCallback(
+    (rank) => {
+      const found = discordRoles.find((r) => r.name === rank);
+      if (found) {
+        return `#${found.color.toString(16)}`;
+      }
+    },
+    [discordRoles]
+  );
 
   const onKick = useCallback(
     async (record) => {
@@ -143,11 +159,17 @@ const RosterDisplay = ({ records, filterString, openToast, authInfo }) => {
                 <AccountNameCell record={record} />
               </TableCell>
               <TableCell>{record.joinDate}</TableCell>
-              <TableCell className={`rank ${formatRankId(record.rank)}`}>
+              <TableCell
+                className="rank"
+                style={{ backgroundColor: getColor(record.rank) }}
+              >
                 {record.rank}
               </TableCell>
               <TableCell
-                className={`rank ${formatRankId(record.roles[0]?.name || '-')}`}
+                style={{
+                  backgroundColor: getColor(record.roles[0]?.name),
+                }}
+                className="rank"
               >
                 {record.roles[0]?.name || '-'}
               </TableCell>

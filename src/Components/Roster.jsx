@@ -8,6 +8,7 @@ import RosterDisplay from './RosterDisplay';
 const Roster = ({
   gw2Members,
   discordMembers,
+  discordRoles,
   filterString,
   authInfo,
   openToast,
@@ -23,6 +24,7 @@ const Roster = ({
   return (
     <RosterDisplay
       records={records}
+      discordRoles={discordRoles}
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}
