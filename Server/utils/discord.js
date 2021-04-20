@@ -29,7 +29,7 @@ const getRoleInfo = (allRoles, memberRoles, validRoles) => {
   for (const memberRoleId of memberRoles) {
     for (const discordRole of allRoles) {
       const match = memberRoleId === discordRole.id;
-      const valid = validRoles.includes(discordRole.name);
+      const valid = !validRoles || validRoles.includes(discordRole.name);
       if (match && valid)
         roles.push({
           name: discordRole.name,
