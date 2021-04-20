@@ -50,6 +50,16 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
   res.status(200).json(JSON.stringify(record));
 });
 
+router.get('/ranks', async (req, res) => {
+  try {
+    const response = await fetch(`${baseUrl}/ranks`, reqParams);
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+  }
+})
+
 router.get('/log', async (req, res) => {
   try {
     const response = await fetch(`${baseUrl}/log`, reqParams);

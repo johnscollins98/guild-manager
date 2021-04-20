@@ -54,6 +54,17 @@ export const fetchGW2Members = async () => {
   return data;
 };
 
+export const fetchGW2Ranks = async () => {
+  const response = await fetch(`/api/gw2/ranks`);
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return data;
+}
+
 export const fetchGW2Log = async () => {
   const response = await fetch(`/api/gw2/log`);
   const data = await response.json();
