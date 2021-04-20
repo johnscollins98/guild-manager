@@ -1,28 +1,29 @@
-const formatMembers = (members, roles) => {
-  return members.map((member) => formatMember(member, roles));
+const fetch = require('node-fetch');
+
+const formatMembers = async (members, roles) => {
+  const gwUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
+  const gwToken = process.env.GW2_API_TOKEN;
+  const gwParams = {
+    headers: {
+      Authorization: `Bearer ${gwToken}`,
+    },
+  };
+  
+  const response = await fetch(`${gwUrl}/ranks`, gwParams);
+  const guildRanks = await response.json();
+  const validRoles = guildRanks.map(r => r.id).concat(['Guest', 'Bots']);
+  return members.map((member) => formatMember(member, roles, validRoles));
 };
 
-const formatMember = (member, roles) => {
+const formatMember = (member, roles, validRoles) => {
   return {
     name: member.nick ? member.nick : member.user.username,
     id: member.user.id,
-    roles: getRoleInfo(roles, member.roles),
+    roles: getRoleInfo(roles, member.roles, validRoles),
   };
 };
 
-const getRoleInfo = (allRoles, memberRoles) => {
-  const validRoles = [
-    'Third Spear',
-    'Second Spear',
-    'First Spear',
-    'Commander',
-    'Captain',
-    'General',
-    'Spearmarshal',
-    'Guest',
-    'Bots',
-  ];
-
+const getRoleInfo = (allRoles, memberRoles, validRoles) => {
   let roles = [];
 
   for (const memberRoleId of memberRoles) {

@@ -20,7 +20,7 @@ router.get('/roles', async (req, res) => {
   }
 
   res.status(200).json(
-    DiscordUtils.getRoleInfo(
+    await DiscordUtils.getRoleInfo(
       rolesData,
       rolesData.sort((a, b) => b.position - a.position).map((r) => r.id)
     )
@@ -46,7 +46,7 @@ router.get('/members', async (req, res) => {
     }
 
     // format and return
-    const data = DiscordUtils.formatMembers(membersData, rolesData);
+    const data = await DiscordUtils.formatMembers(membersData, rolesData);
     res.status(200).json(data);
   } catch (err) {
     res.status(400).json(`Error: ${err}`);
