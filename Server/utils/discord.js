@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const formatMembers = async (members, roles) => {
+const getValidRoles = async () => {
   const gwUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
   const gwToken = process.env.GW2_API_TOKEN;
   const gwParams = {
@@ -11,7 +11,11 @@ const formatMembers = async (members, roles) => {
   
   const response = await fetch(`${gwUrl}/ranks`, gwParams);
   const guildRanks = await response.json();
-  const validRoles = guildRanks.map(r => r.id).concat(['Guest', 'Bots']);
+  return guildRanks.map(r => r.id).concat(['Guest', 'Bots']);
+}
+
+const formatMembers = async (members, roles) => {
+  const validRoles = getValidRoles();
   return members.map((member) => formatMember(member, roles, validRoles));
 };
 
@@ -44,3 +48,4 @@ const getRoleInfo = (allRoles, memberRoles, validRoles) => {
 
 module.exports.formatMembers = formatMembers;
 module.exports.getRoleInfo = getRoleInfo;
+module.exports.getValidRoles = getValidRoles;

@@ -22,7 +22,8 @@ router.get('/roles', async (req, res) => {
   res.status(200).json(
     await DiscordUtils.getRoleInfo(
       rolesData,
-      rolesData.sort((a, b) => b.position - a.position).map((r) => r.id)
+      rolesData.sort((a, b) => b.position - a.position).map((r) => r.id),
+      await DiscordUtils.getValidRoles(),
     )
   );
 });
