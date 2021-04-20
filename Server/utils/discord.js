@@ -15,7 +15,7 @@ const getValidRoles = async () => {
 }
 
 const formatMembers = async (members, roles) => {
-  const validRoles = getValidRoles();
+  const validRoles = await getValidRoles();
   return members.map((member) => formatMember(member, roles, validRoles));
 };
 
