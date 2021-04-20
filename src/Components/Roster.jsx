@@ -9,6 +9,7 @@ const Roster = ({
   gw2Members,
   discordMembers,
   discordRoles,
+  guildRanks,
   filterString,
   authInfo,
   openToast,
@@ -17,9 +18,9 @@ const Roster = ({
 
   useEffect(() => {
     if (gw2Members.length > 0 && discordMembers.length > 0) {
-      setRecords(generateGW2RosterRecords(gw2Members, discordMembers));
+      setRecords(generateGW2RosterRecords(gw2Members, discordMembers, guildRanks));
     }
-  }, [gw2Members, discordMembers, setRecords]);
+  }, [gw2Members, discordMembers, setRecords, guildRanks]);
 
   return (
     <RosterDisplay

@@ -5,18 +5,26 @@ import { generateGW2RosterRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
-const PointsLeaderboard = ({ gw2Members, discordMembers, discordRoles, filterString, authInfo, openToast }) => {
+const PointsLeaderboard = ({
+  gw2Members,
+  discordMembers,
+  discordRoles,
+  guildRanks,
+  filterString,
+  authInfo,
+  openToast,
+}) => {
   const [records, setRecords] = useState([]);
 
   useEffect(() => {
     if (gw2Members.length > 0 && discordMembers.length > 0) {
       setRecords(
-        generateGW2RosterRecords(gw2Members, discordMembers).sort(
+        generateGW2RosterRecords(gw2Members, discordMembers, guildRanks).sort(
           (a, b) => b.eventsAttended - a.eventsAttended
         )
       );
     }
-  }, [gw2Members, discordMembers, setRecords]);
+  }, [gw2Members, discordMembers, setRecords, guildRanks]);
 
   return (
     <RosterDisplay

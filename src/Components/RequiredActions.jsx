@@ -12,6 +12,7 @@ const RequiredActions = ({
   gw2Members,
   discordMembers,
   discordRoles,
+  guildRanks,
   filterString,
   authInfo,
   openToast,
@@ -20,14 +21,14 @@ const RequiredActions = ({
   useEffect(() => {
     if (gw2Members.length > 0 && discordMembers.length > 0) {
       setRecords(
-        generateGW2RosterRecords(gw2Members, discordMembers)
-          .concat(getExcessDiscordRecords(gw2Members, discordMembers))
+        generateGW2RosterRecords(gw2Members, discordMembers, guildRanks)
+          .concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks))
           .filter((record) =>
             Object.keys(record.issues).some((k) => record.issues[k])
           )
       );
     }
-  }, [gw2Members, discordMembers, setRecords]);
+  }, [gw2Members, discordMembers, setRecords, guildRanks]);
 
   return (
     <RosterDisplay

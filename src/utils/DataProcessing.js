@@ -1,8 +1,8 @@
 import { isPromotionRequired } from './Helpers';
 
-export const generateGW2RosterRecords = (gw2Members, discordMembers) => {
+export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
   const sortedGW2Members = gw2Members.sort((a, b) => {
-    let value = compareRank(a.rank, b.rank);
+    let value = compareRank(ranks, a.rank, b.rank);
     if (value === 0) {
       const bDate = new Date(b.joined);
       const aDate = new Date(a.joined);
@@ -56,8 +56,8 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers) => {
   return records;
 };
 
-export const getExcessDiscordRecords = (gw2Members, discordMembers) => {
-  const records = generateGW2RosterRecords(gw2Members, discordMembers);
+export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
+  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks);
   return discordMembers
     .filter((discordMember) => {
       return !records.some(
@@ -80,24 +80,14 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers) => {
         },
       };
     })
-    .sort((a, b) => compareRank(a.roles[0]?.name, b.roles[0]?.name));
+    .sort((a, b) => compareRank(ranks, a.roles[0]?.name, b.roles[0]?.name));
 };
 
-const compareRank = (aRank, bRank) => {
-  const rankSortValues = {
-    Spearmarshal: 9,
-    General: 8,
-    Commander: 7,
-    Captain: 6,
-    'First Spear': 5,
-    'Second Spear': 4,
-    'Third Spear': 3,
-    Guest: 2,
-    Bots: 1,
-  };
+const compareRank = (ranks, aRank, bRank) => {
+  ranks.push({ id: "Guest", order: ranks.length })
+  ranks.push({ id: "Bots", order: ranks.length })
+  const aObj = ranks.find(o => o.id === aRank) || { order: ranks.length };
+  const bObj = ranks.find(o => o.id === bRank) || { order: ranks.length };
 
-  const aVal = rankSortValues[aRank] || 0;
-  const bVal = rankSortValues[bRank] || 0;
-
-  return bVal - aVal;
+  return aObj.order - bObj.order;
 };

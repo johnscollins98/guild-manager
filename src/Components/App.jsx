@@ -7,6 +7,7 @@ import {
   fetchDiscordMembers,
   fetchAuthInfo,
   fetchDiscordRoles,
+  fetchGW2Ranks,
 } from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
@@ -26,6 +27,7 @@ const App = () => {
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
   const [discordRoles, setDiscordRoles] = useState([]);
+  const [guildRanks, setGuildRanks] = useState([]);
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
@@ -68,12 +70,14 @@ const App = () => {
       setGw2Log([]);
       setDiscordMembers([]);
       setDiscordRoles([]);
+      setGuildRanks([]);
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
         fetchGW2Log().then((r) => setGw2Log(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
+        fetchGW2Ranks().then((r) => setGuildRanks(r)),
         fetchAuthInfo()
           .then((r) => setAuthInfo(r))
           .catch((e) =>
@@ -195,7 +199,8 @@ const App = () => {
               <Roster
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
-                discordRoles={discordRoles}                
+                discordRoles={discordRoles}         
+                guildRanks={guildRanks}       
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -206,6 +211,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
+                guildRanks={guildRanks}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -216,6 +222,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
+                guildRanks={guildRanks}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -226,6 +233,7 @@ const App = () => {
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
+                guildRanks={guildRanks}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
