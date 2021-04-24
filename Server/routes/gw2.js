@@ -82,4 +82,13 @@ router.get('/log', async (req, res) => {
   }
 });
 
+router.get('/pointlog', async (req, res) => {
+  try {
+    const collection = await PointLog.find();
+    res.status(200).json(collection);
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+  }
+});
+
 module.exports = router;

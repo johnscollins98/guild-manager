@@ -124,6 +124,7 @@ const App = () => {
     REQUIRED_ACTIONS: 'Required Actions',
     LEADERBOARD: 'Points Leaderboard',
     LOG: 'Log',
+    POINT_LOG: 'Points Log',
   };
 
   const any = (arr) => arr.length > 0;
@@ -194,13 +195,18 @@ const App = () => {
                 value="required-actions"
               />
               <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
+              <Tab
+                icon={getTabIcon(TABS.POINT_LOG)}
+                label={TABS.POINT_LOG}
+                value="point-log"
+              />
             </Tabs>
             <TabPanel value="roster">
               <Roster
                 gw2Members={gw2Members}
                 discordMembers={discordMembers}
-                discordRoles={discordRoles}         
-                guildRanks={guildRanks}       
+                discordRoles={discordRoles}
+                guildRanks={guildRanks}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
