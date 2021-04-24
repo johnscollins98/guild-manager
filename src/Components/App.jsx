@@ -144,7 +144,11 @@ const App = () => {
     } else if (tab === TABS.POINT_LOG) {
       loaded = any(pointLog);
     } else {
-      loaded = any(gw2Members) && any(discordMembers);
+      loaded =
+        any(gw2Members) &&
+        any(discordMembers) &&
+        any(guildRanks) &&
+        any(discordRoles);
     }
     return loaded ? null : <Refresh />;
   };
