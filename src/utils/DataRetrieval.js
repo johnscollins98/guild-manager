@@ -63,7 +63,7 @@ export const fetchGW2Ranks = async () => {
   }
 
   return data;
-}
+};
 
 export const fetchGW2Log = async () => {
   const response = await fetch(`/api/gw2/log`);
@@ -85,11 +85,11 @@ export const setGuildMember = async (newMember) => {
     method: 'PUT',
     body: JSON.stringify(newMember),
   });
-  
+
   if (response.status !== 200) {
     throw response;
   }
-  
+
   const data = await response.json();
   return JSON.parse(data);
 };
@@ -103,4 +103,16 @@ export const fetchAuthInfo = async () => {
   }
 
   return JSON.parse(data);
+};
+
+export const fetchPointLog = async () => {
+  const response = await fetch('/api/gw2/pointlog');
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    console.log('throwing');
+    throw data;
+  }
+
+  return data.reverse();
 };

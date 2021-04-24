@@ -8,6 +8,7 @@ import {
   fetchAuthInfo,
   fetchDiscordRoles,
   fetchGW2Ranks,
+  fetchPointLog,
 } from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
@@ -21,6 +22,7 @@ import { Paper, Snackbar, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel, Alert } from '@material-ui/lab';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Refresh } from '@material-ui/icons';
+import PointLog from './PointLog';
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
@@ -28,6 +30,7 @@ const App = () => {
   const [discordMembers, setDiscordMembers] = useState([]);
   const [discordRoles, setDiscordRoles] = useState([]);
   const [guildRanks, setGuildRanks] = useState([]);
+  const [pointLog, setPointLog] = useState([]);
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
@@ -71,6 +74,7 @@ const App = () => {
       setDiscordMembers([]);
       setDiscordRoles([]);
       setGuildRanks([]);
+      setPointLog([]);
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
@@ -78,14 +82,16 @@ const App = () => {
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchGW2Ranks().then((r) => setGuildRanks(r)),
+        fetchPointLog().then((r) => setPointLog(r)),
         fetchAuthInfo()
           .then((r) => setAuthInfo(r))
-          .catch((e) =>
+          .catch((e) => {
+            console.error(e);
             openToast(
               'There was an error getting authorization. See console for more information.',
               'error'
-            )
-          ),
+            );
+          }),
       ];
 
       await Promise.all(requests);
@@ -95,6 +101,7 @@ const App = () => {
         'There was an error gathering data. See console for more information.',
         'error'
       );
+      console.error(err);
     } finally {
       setLoadingData(false);
       return success;
@@ -134,6 +141,8 @@ const App = () => {
 
     if (tab === TABS.LOG) {
       loaded = any(gw2Log);
+    } else if (tab === TABS.POINT_LOG) {
+      loaded = any(pointLog);
     } else {
       loaded = any(gw2Members) && any(discordMembers);
     }
@@ -198,7 +207,7 @@ const App = () => {
               <Tab
                 icon={getTabIcon(TABS.POINT_LOG)}
                 label={TABS.POINT_LOG}
-                value="point-log"
+                value="pointlog"
               />
             </Tabs>
             <TabPanel value="roster">
@@ -247,6 +256,9 @@ const App = () => {
             </TabPanel>
             <TabPanel value="log">
               <Log data={gw2Log} filterString={filterString} />
+            </TabPanel>
+            <TabPanel value="pointlog">
+              <PointLog data={pointLog} filterString={filterString} />
             </TabPanel>
           </TabContext>
         </div>
