@@ -2,6 +2,7 @@ const router = require('express').Router();
 const fetch = require('node-fetch');
 const { isEventLeader } = require('../middleware/auth');
 const GuildMember = require('../models/guildMember.model');
+const PointLog = require('../models/pointLog.model');
 const GW2Utils = require('../utils/gw2');
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
@@ -46,6 +47,12 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
     { memberId, eventsAttended },
     { new: true, upsert: true }
   );
+
+  await new PointLog({
+    givenBy: req.user.username,
+    givenTo: memberId,
+    newVal: eventsAttended,
+  }).save();
 
   res.status(200).json(JSON.stringify(record));
 });
