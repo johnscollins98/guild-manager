@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import Table from './Table';
 
 const PointLog = ({ data, filterString }) => {
-  console.log(data);
   const [ourData, setOurData] = useState([]);
 
   useEffect(() => {
