@@ -71,7 +71,7 @@ router.get('/ranks', async (req, res) => {
   } catch (err) {
     res.status(400).json(`Error: ${err}`);
   }
-})
+});
 
 router.get('/log', async (req, res) => {
   try {
