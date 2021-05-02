@@ -42,15 +42,21 @@ router.get('/members', async (req, res) => {
 
 router.put('/members/:memberId', isEventLeader, async (req, res) => {
   const { memberId, eventsAttended } = req.body;
-  const record = await GuildMember.findOneAndUpdate(
+
+  const record = await GuildMember.findOneOrCreate(
     { memberId: req.params.memberId },
-    { memberId, eventsAttended },
-    { new: true, upsert: true }
+    { memberId, eventsAttended }
   );
+
+  const oldAttendance = record.eventsAttended;
+
+  record.eventsAttended = eventsAttended;
+  await record.save();
 
   await new PointLog({
     givenBy: req.user.username,
     givenTo: memberId,
+    oldVal: oldAttendance,
     newVal: eventsAttended,
   }).save();
 
