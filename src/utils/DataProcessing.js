@@ -47,7 +47,11 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
       multipleRoles: record.roles?.length > 1,
       unmatchingRoles:
         record.discordName && record.rank !== record.roles[0]?.name,
-      promotionRequired: isPromotionRequired(record.rank, record.joinDate),
+      promotionRequired: isPromotionRequired(
+        record.rank,
+        record.joinDate,
+        record.eventsAttended
+      ),
     };
 
     return record;
@@ -84,10 +88,10 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
 };
 
 const compareRank = (ranks, aRank, bRank) => {
-  ranks.push({ id: "Guest", order: ranks.length })
-  ranks.push({ id: "Bots", order: ranks.length })
-  const aObj = ranks.find(o => o.id === aRank) || { order: ranks.length };
-  const bObj = ranks.find(o => o.id === bRank) || { order: ranks.length };
+  ranks.push({ id: 'Guest', order: ranks.length });
+  ranks.push({ id: 'Bots', order: ranks.length });
+  const aObj = ranks.find((o) => o.id === aRank) || { order: ranks.length };
+  const bObj = ranks.find((o) => o.id === bRank) || { order: ranks.length };
 
   return aObj.order - bObj.order;
 };
