@@ -31,10 +31,10 @@ const PointLog = ({ data, filterString }) => {
           <TableRow>
             <TableCell>{entry.givenBy}</TableCell>
             <TableCell>{entry.givenTo}</TableCell>
-            <TableCell>{entry.oldVal || '-'}</TableCell>
+            <TableCell>{entry.oldVal == null ? '-' : entry.oldVal}</TableCell>
             <TableCell>{entry.newVal}</TableCell>
             <TableCell>
-              {entry.oldVal && entry.newVal ? (
+              {entry.oldVal != null && entry.newVal != null ? (
                 <>
                   {entry.newVal - entry.oldVal > 0 ? '+' : null}
                   {entry.newVal - entry.oldVal}
