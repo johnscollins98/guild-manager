@@ -19,10 +19,17 @@ const RequiredActions = ({
 }) => {
   const [records, setRecords] = useState([]);
   useEffect(() => {
-    if (gw2Members.length > 0 && discordMembers.length > 0) {
+    setRecords([]);
+    if (
+      gw2Members.length > 0 &&
+      discordMembers.length > 0 &&
+      guildRanks.length > 0
+    ) {
       setRecords(
         generateGW2RosterRecords(gw2Members, discordMembers, guildRanks)
-          .concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks))
+          .concat(
+            getExcessDiscordRecords(gw2Members, discordMembers, guildRanks)
+          )
           .filter((record) =>
             Object.keys(record.issues).some((k) => record.issues[k])
           )
