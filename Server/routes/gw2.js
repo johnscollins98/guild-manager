@@ -48,7 +48,7 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
     { memberId, eventsAttended }
   );
 
-  const oldAttendance = record.eventsAttended;
+  const oldAttendance = record.eventsAttended || 0;
 
   record.eventsAttended = eventsAttended;
   await record.save();
