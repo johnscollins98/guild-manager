@@ -6,10 +6,11 @@ const PointLog = ({ data, filterString }) => {
   const [ourData, setOurData] = useState([]);
 
   useEffect(() => {
+    const testString = filterString.toLowerCase();
     const filtered = data.filter(
       (entry) =>
-        entry.givenBy.includes(filterString) ||
-        entry.givenTo.includes(filterString)
+        entry.givenBy.toLowerCase().includes(testString) ||
+        entry.givenTo.toLowerCase().includes(testString)
     );
     setOurData(filtered);
   }, [data, filterString]);
