@@ -1,6 +1,16 @@
 const router = require('express').Router();
 const { isAdmin } = require('../middleware/auth');
 const Event = require('../models/event.model');
+const EventPostSettings = require('../models/eventPostSettings.model');
+
+router.get('/settings', async (req, res) => {
+  try {
+    const settings = await EventPostSettings.findOne({ guildId: process.env.DISCORD_GUILD_ID });
+    return res.status(200).json(settings);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
+})
 
 router.get('/', async (req, res) => {
   try {

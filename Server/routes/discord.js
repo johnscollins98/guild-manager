@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const DiscordUtils = require('../utils/discord');
 const Event = require('../models/event.model');
 const { isAdmin } = require('../middleware/auth');
+const EventPostSettings = require('../models/eventPostSettings.model');
 
 const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
 const botToken = process.env.BOT_TOKEN;
@@ -82,6 +83,12 @@ router.delete('/members/:id', isAdmin, async (req, res) => {
 
 router.post('/eventUpdate', isAdmin, async (req, res) => {
   try {
+    await EventPostSettings.findOneAndUpdate(
+      { guildId: process.env.DISCORD_GUILD_ID },
+      { ...req.body, guildId: process.env.DISCORD_GUILD_ID },
+      { upsert: true }
+    );
+
     const channelId = req.body.channelId;
     const response = await fetch(
       `https://discord.com/api/channels/${channelId}`,
@@ -144,6 +151,7 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
 
     res.status(200).json('OK');
   } catch (err) {
+    console.error(err);
     res.status(400).json(err);
   }
 });

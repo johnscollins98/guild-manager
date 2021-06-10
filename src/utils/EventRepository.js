@@ -10,6 +10,16 @@ const getAll = async () => {
   }
 };
 
+const getSettings = async () => {
+  const response = await fetch('/api/events/settings');
+  const data = await response.json();
+  if (response.status === 200) {
+    return data;
+  } else {
+    throw data;
+  }
+}
+
 const create = async (event) => {
   const response = await fetch('/api/events', {
     headers: {
@@ -78,6 +88,7 @@ const postEventsToDiscord = async (channelData) => {
 
 export default {
   getAll,
+  getSettings,
   create,
   updateById,
   deleteById,
