@@ -50,10 +50,13 @@ const createEmbed = (day, events) => {
   return {
     color: '3447003',
     title: `${day} Events`,
-    fields: events.map((event) => ({
-      name: `📅 ${event.title}`,
-      value: `⏰ ${event.startTime} UTC\n⌛ ${event.duration}\n👑 <@${event.leaderId}>`,
-    })),
+    fields: events.map((event, i) => {
+      const timeLink = encodeURI(`https://www.starts-at.com/e/?t=${event.startTime}&tz=UTC&d=Next${event.day}&title=${event.title}`);
+      return {
+        name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
+        value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`,
+      }
+    }),
   };
 };
 
