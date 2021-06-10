@@ -23,6 +23,8 @@ import { TabContext, TabPanel, Alert } from '@material-ui/lab';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { Refresh } from '@material-ui/icons';
 import PointLog from './PointLog';
+import EventPage from './EventPage';
+import EventRepo from '../utils/EventRepository';
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
@@ -31,6 +33,8 @@ const App = () => {
   const [discordRoles, setDiscordRoles] = useState([]);
   const [guildRanks, setGuildRanks] = useState([]);
   const [pointLog, setPointLog] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [eventsLoaded, setEventsLoaded] = useState(false);
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
@@ -75,6 +79,8 @@ const App = () => {
       setDiscordRoles([]);
       setGuildRanks([]);
       setPointLog([]);
+      setEvents([]);
+      setEventsLoaded(false);
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
@@ -83,6 +89,10 @@ const App = () => {
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchGW2Ranks().then((r) => setGuildRanks(r)),
         fetchPointLog().then((r) => setPointLog(r)),
+        EventRepo.getAll().then((r) => {
+          setEvents(r);
+          setEventsLoaded(true);
+        }),
         fetchAuthInfo()
           .then((r) => setAuthInfo(r))
           .catch((e) => {
@@ -132,6 +142,7 @@ const App = () => {
     LEADERBOARD: 'Points Leaderboard',
     LOG: 'Log',
     POINT_LOG: 'Points Log',
+    EVENTS: 'Events',
   };
 
   const any = (arr) => arr.length > 0;
@@ -143,6 +154,8 @@ const App = () => {
       loaded = any(gw2Log);
     } else if (tab === TABS.POINT_LOG) {
       loaded = any(pointLog);
+    } else if (tab === TABS.EVENTS) {
+      loaded = eventsLoaded;
     } else {
       loaded =
         any(gw2Members) &&
@@ -213,6 +226,11 @@ const App = () => {
                 label={TABS.POINT_LOG}
                 value="pointlog"
               />
+              <Tab
+                icon={getTabIcon(TABS.EVENTS)}
+                label={TABS.EVENTS}
+                value="events"
+              />
             </Tabs>
             <TabPanel value="roster">
               <Roster
@@ -263,6 +281,14 @@ const App = () => {
             </TabPanel>
             <TabPanel value="pointlog">
               <PointLog data={pointLog} filterString={filterString} />
+            </TabPanel>
+            <TabPanel value="events">
+              <EventPage
+                events={events}
+                eventsLoaded={eventsLoaded}
+                filterString={filterString}
+                openToast={openToast}
+              />
             </TabPanel>
           </TabContext>
         </div>
