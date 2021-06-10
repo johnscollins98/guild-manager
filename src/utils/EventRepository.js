@@ -57,9 +57,29 @@ const deleteById = async (id) => {
   }
 };
 
+// this probably isn't the best place to put it - but will go here for now
+const postEventsToDiscord = async (channelData) => {
+  const response = await fetch(`/api/discord/eventUpdate`, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(channelData),
+  });
+
+  if (response.status === 200) {
+    return true;
+  } else {
+    const data = await response.json();
+    throw data;
+  }
+};
+
 export default {
   getAll,
   create,
   updateById,
   deleteById,
+  postEventsToDiscord,
 };

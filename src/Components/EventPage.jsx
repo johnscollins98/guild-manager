@@ -1,12 +1,23 @@
-import { TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
+import EventPosterForm from './EventPosterForm';
 import Table from './Table';
 
 const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
   const [localEvents, setLocalEvents] = useState([]);
   const [sortedEvents, setSortedEvents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setLocalEvents(events);
@@ -110,36 +121,58 @@ const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
   );
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Title</TableCell>
-          <TableCell>Day</TableCell>
-          <TableCell>Start Time (UTC)</TableCell>
-          <TableCell>Duration</TableCell>
-          <TableCell>Leader ID</TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {sortedEvents.map((event) => (
-          <EventEntry
-            event={event}
-            deleteEvent={deleteEvent}
-            updateEvent={updateEvent}
-            key={event._id}
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell>Day</TableCell>
+            <TableCell>Start Time (UTC)</TableCell>
+            <TableCell>Duration</TableCell>
+            <TableCell>Leader ID</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {sortedEvents.map((event) => (
+            <EventEntry
+              event={event}
+              deleteEvent={deleteEvent}
+              updateEvent={updateEvent}
+              key={event._id}
+              openToast={openToast}
+            />
+          ))}
+          {eventsLoaded ? (
+            <EventEntry
+              create={true}
+              createEvent={createEvent}
+              openToast={openToast}
+            />
+          ) : null}
+        </TableBody>
+      </Table>
+      {eventsLoaded ? (
+        <Button onClick={() => setShowModal(true)} variant="contained">
+          Post to Discord
+        </Button>
+      ) : null}
+      <Dialog
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        fullWidth={true}
+        maxWidth="sm"
+      >
+        <DialogTitle>Post to Discord</DialogTitle>
+        <DialogContent>
+          <EventPosterForm
+            events={events}
+            onClose={() => setShowModal(false)}
             openToast={openToast}
           />
-        ))}
-        {eventsLoaded ? (
-          <EventEntry
-            create={true}
-            createEvent={createEvent}
-            openToast={openToast}
-          />
-        ) : null}
-      </TableBody>
-    </Table>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

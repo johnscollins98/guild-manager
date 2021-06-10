@@ -8,11 +8,11 @@ const getValidRoles = async () => {
       Authorization: `Bearer ${gwToken}`,
     },
   };
-  
+
   const response = await fetch(`${gwUrl}/ranks`, gwParams);
   const guildRanks = await response.json();
-  return guildRanks.map(r => r.id).concat(['Guest', 'Bots']);
-}
+  return guildRanks.map((r) => r.id).concat(['Guest', 'Bots']);
+};
 
 const formatMembers = async (members, roles) => {
   const validRoles = await getValidRoles();
@@ -46,6 +46,18 @@ const getRoleInfo = (allRoles, memberRoles, validRoles) => {
   return roles;
 };
 
+const createEmbed = (day, events) => {
+  return {
+    color: '3447003',
+    title: `${day} Events`,
+    fields: events.map((event) => ({
+      name: `📅 ${event.title}`,
+      value: `⏰ ${event.startTime} UTC\n⌛ ${event.duration}\n👑 <@${event.leaderId}>`,
+    })),
+  };
+};
+
 module.exports.formatMembers = formatMembers;
 module.exports.getRoleInfo = getRoleInfo;
 module.exports.getValidRoles = getValidRoles;
+module.exports.createEmbed = createEmbed;

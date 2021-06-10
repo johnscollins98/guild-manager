@@ -91,18 +91,29 @@ const EventEntry = ({
     openToast,
   ]);
 
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      create ? onCreate() : onUpdate();
+    },
+    [create, onCreate, onUpdate]
+  );
+
   return (
     <TableRow>
       {['title', 'day', 'startTime', 'duration', 'leaderId'].map((k) => (
         <TableCell key={k}>
-          <TextField
-            variant="outlined"
-            size="small"
-            value={localEvent[k]}
-            onChange={(e) => {
-              onEdit(k, e.target.value);
-            }}
-          />
+          <form onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              size="small"
+              value={localEvent[k]}
+              onChange={(e) => {
+                onEdit(k, e.target.value);
+              }}
+              required
+            />
+          </form>
         </TableCell>
       ))}
       <TableCell>
