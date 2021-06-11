@@ -1,8 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   IconButton,
   MenuItem,
-  Select,
   TableCell,
   TableRow,
   TextField,
@@ -26,34 +25,40 @@ const EventEntry = ({
     leaderId: '',
   };
 
-  const daysOfWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
+  const [daysOfWeek, setDaysOfWeek] = useState([]);
 
-  const validationHelper = (event) => {
-    const anyEmpty = Object.keys(event)
-      .filter((k) => !k.startsWith('_'))
-      .some((k) => !event[k]);
-    if (anyEmpty) throw new Error('Ensure all fields have a value!');
+  useEffect(() => {
+    setDaysOfWeek([
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ]);
+  }, []);
 
-    if (!daysOfWeek.includes(event.day))
-      throw new Error(
-        "Day field must be a capitalised day of the week. e.g. 'Monday'"
-      );
-  };
+  const validationHelper = useCallback(
+    (event) => {
+      const anyEmpty = Object.keys(event)
+        .filter((k) => !k.startsWith('_'))
+        .some((k) => !event[k]);
+      if (anyEmpty) throw new Error('Ensure all fields have a value!');
+
+      if (!daysOfWeek.includes(event.day))
+        throw new Error(
+          "Day field must be a capitalised day of the week. e.g. 'Monday'"
+        );
+    },
+
+    [daysOfWeek]
+  );
 
   const onEdit = useCallback(
     (field, value) => {
-      console.log(field, value);
       setLocalEvent({ ...localEvent, [field]: value });
       setModified(true);
     },
@@ -77,7 +82,7 @@ const EventEntry = ({
     if (updatedEvent) {
       setModified(false);
     }
-  }, [updateEvent, localEvent, setModified, openToast]);
+  }, [updateEvent, validationHelper, localEvent, setModified, openToast]);
 
   const onCreate = useCallback(async () => {
     try {
@@ -95,6 +100,7 @@ const EventEntry = ({
   }, [
     createEvent,
     emptyEvent,
+    validationHelper,
     localEvent,
     setModified,
     setLocalEvent,
@@ -107,18 +113,11 @@ const EventEntry = ({
         <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
       </TableCell>
       <TableCell>
-        <TextField
-          value={localEvent.day}
-          onChange={(e) => onEdit('day', e.target.value)}
-          variant="outlined"
-          size="small"
-          select
-          fullWidth
-        >
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
           {daysOfWeek.map((day) => (
             <MenuItem value={day}>{day}</MenuItem>
           ))}
-        </TextField>
+        </EditField>
       </TableCell>
       <TableCell>
         <EditField
@@ -132,18 +131,16 @@ const EventEntry = ({
         <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
       </TableCell>
       <TableCell>
-          <TextField
-          value={localEvent.leaderId}
-          onChange={(e) => onEdit('leaderId', e.target.value)}
-          variant="outlined"
-          size="small"
+        <EditField
+          event={localEvent}
+          onEdit={onEdit}
+          fieldKey="leaderId"
           select
-          fullWidth
         >
           {possibleLeaders.map((leader) => (
             <MenuItem value={leader.id}>{leader.name}</MenuItem>
           ))}
-        </TextField>
+        </EditField>
       </TableCell>
       <TableCell>
         {create ? null : (
@@ -166,7 +163,7 @@ const EventEntry = ({
   );
 };
 
-const EditField = ({ event, onEdit, fieldKey, ...props }) => {
+const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
   return (
     <TextField
       variant="outlined"
@@ -178,7 +175,9 @@ const EditField = ({ event, onEdit, fieldKey, ...props }) => {
       fullWidth
       required
       {...props}
-    />
+    >
+      {children}
+    </TextField>
   );
 };
 
