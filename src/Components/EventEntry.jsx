@@ -1,10 +1,17 @@
-import React, { useCallback, useState } from 'react';
-import { IconButton, TableCell, TableRow, TextField } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  IconButton,
+  MenuItem,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@material-ui/core';
 import { Add, Close, Create, Refresh } from '@material-ui/icons';
 
 const EventEntry = ({
   create,
   event,
+  possibleLeaders,
   deleteEvent,
   updateEvent,
   createEvent,
@@ -20,14 +27,10 @@ const EventEntry = ({
 
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
+  const [daysOfWeek, setDaysOfWeek] = useState([]);
 
-  const validationHelper = (event) => {
-    const anyEmpty = Object.keys(event)
-      .filter((k) => !k.startsWith('_'))
-      .some((k) => !event[k]);
-    if (anyEmpty) throw new Error('Ensure all fields have a value!');
-
-    const daysOfWeek = [
+  useEffect(() => {
+    setDaysOfWeek([
       'Monday',
       'Tuesday',
       'Wednesday',
@@ -35,12 +38,24 @@ const EventEntry = ({
       'Friday',
       'Saturday',
       'Sunday',
-    ];
-    if (!daysOfWeek.includes(event.day))
-      throw new Error(
-        "Day field must be a capitalised day of the week. e.g. 'Monday'"
-      );
-  };
+    ]);
+  }, []);
+
+  const validationHelper = useCallback(
+    (event) => {
+      const anyEmpty = Object.keys(event)
+        .filter((k) => !k.startsWith('_'))
+        .some((k) => !event[k]);
+      if (anyEmpty) throw new Error('Ensure all fields have a value!');
+
+      if (!daysOfWeek.includes(event.day))
+        throw new Error(
+          "Day field must be a capitalised day of the week. e.g. 'Monday'"
+        );
+    },
+
+    [daysOfWeek]
+  );
 
   const onEdit = useCallback(
     (field, value) => {
@@ -67,7 +82,7 @@ const EventEntry = ({
     if (updatedEvent) {
       setModified(false);
     }
-  }, [updateEvent, localEvent, setModified, openToast]);
+  }, [updateEvent, validationHelper, localEvent, setModified, openToast]);
 
   const onCreate = useCallback(async () => {
     try {
@@ -85,37 +100,48 @@ const EventEntry = ({
   }, [
     createEvent,
     emptyEvent,
+    validationHelper,
     localEvent,
     setModified,
     setLocalEvent,
     openToast,
   ]);
 
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      create ? onCreate() : onUpdate();
-    },
-    [create, onCreate, onUpdate]
-  );
-
   return (
     <TableRow>
-      {['title', 'day', 'startTime', 'duration', 'leaderId'].map((k) => (
-        <TableCell key={k}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              variant="outlined"
-              size="small"
-              value={localEvent[k]}
-              onChange={(e) => {
-                onEdit(k, e.target.value);
-              }}
-              required
-            />
-          </form>
-        </TableCell>
-      ))}
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
+      </TableCell>
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
+          {daysOfWeek.map((day) => (
+            <MenuItem value={day}>{day}</MenuItem>
+          ))}
+        </EditField>
+      </TableCell>
+      <TableCell>
+        <EditField
+          event={localEvent}
+          onEdit={onEdit}
+          fieldKey="startTime"
+          type="time"
+        />
+      </TableCell>
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
+      </TableCell>
+      <TableCell>
+        <EditField
+          event={localEvent}
+          onEdit={onEdit}
+          fieldKey="leaderId"
+          select
+        >
+          {possibleLeaders.map((leader) => (
+            <MenuItem value={leader.id}>{leader.name}</MenuItem>
+          ))}
+        </EditField>
+      </TableCell>
       <TableCell>
         {create ? null : (
           <IconButton size="small" onClick={() => deleteEvent(event)}>
@@ -134,6 +160,24 @@ const EventEntry = ({
         ) : null}
       </TableCell>
     </TableRow>
+  );
+};
+
+const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
+  return (
+    <TextField
+      variant="outlined"
+      size="small"
+      value={event[fieldKey]}
+      onChange={(e) => {
+        onEdit(fieldKey, e.target.value);
+      }}
+      fullWidth
+      required
+      {...props}
+    >
+      {children}
+    </TextField>
   );
 };
 
