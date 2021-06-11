@@ -198,7 +198,8 @@ const App = () => {
             <Tabs
               value={tab}
               onChange={(e, v) => setTab(v)}
-              variant="fullWidth"
+              scrollButtons="auto"
+              variant="scrollable"
             >
               <Tab
                 icon={getTabIcon(TABS.ROSTER)}
