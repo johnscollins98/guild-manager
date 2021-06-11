@@ -286,6 +286,7 @@ const App = () => {
               <EventPage
                 events={events}
                 eventsLoaded={eventsLoaded}
+                discordMembers={discordMembers}
                 filterString={filterString}
                 openToast={openToast}
               />

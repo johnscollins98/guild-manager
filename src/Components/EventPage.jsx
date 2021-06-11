@@ -14,10 +14,32 @@ import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
 import Table from './Table';
 
-const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
+const EventPage = ({
+  events,
+  eventsLoaded,
+  discordMembers,
+  filterString,
+  openToast,
+}) => {
   const [localEvents, setLocalEvents] = useState([]);
   const [sortedEvents, setSortedEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const [possibleLeaders, setPossibleLeaders] = useState([]);
+
+  useEffect(() => {
+    setPossibleLeaders(
+      discordMembers.filter(
+        (member) =>
+          !!member.roles.find(
+            (r) =>
+              r.name === 'General' ||
+              r.name === 'Spearmarshal' ||
+              r.name === 'Commander'
+          ) // hardcoded for now, to be improved.
+      )
+    );
+  }, [discordMembers]);
 
   useEffect(() => {
     setLocalEvents(events);
@@ -147,6 +169,7 @@ const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
               event={event}
               deleteEvent={deleteEvent}
               updateEvent={updateEvent}
+              possibleLeaders={possibleLeaders}
               key={event._id}
               openToast={openToast}
             />
@@ -155,6 +178,7 @@ const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
             <EventEntry
               create={true}
               createEvent={createEvent}
+              possibleLeaders={possibleLeaders}
               openToast={openToast}
             />
           ) : null}

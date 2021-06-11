@@ -12,6 +12,7 @@ import { Add, Close, Create, Refresh } from '@material-ui/icons';
 const EventEntry = ({
   create,
   event,
+  possibleLeaders,
   deleteEvent,
   updateEvent,
   createEvent,
@@ -131,7 +132,18 @@ const EventEntry = ({
         <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
       </TableCell>
       <TableCell>
-        <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" />
+          <TextField
+          value={localEvent.leaderId}
+          onChange={(e) => onEdit('leaderId', e.target.value)}
+          variant="outlined"
+          size="small"
+          select
+          fullWidth
+        >
+          {possibleLeaders.map((leader) => (
+            <MenuItem value={leader.id}>{leader.name}</MenuItem>
+          ))}
+        </TextField>
       </TableCell>
       <TableCell>
         {create ? null : (
