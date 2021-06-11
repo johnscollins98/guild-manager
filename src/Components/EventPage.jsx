@@ -123,6 +123,14 @@ const EventPage = ({ events, eventsLoaded, filterString, openToast }) => {
   return (
     <>
       <Table>
+        <colgroup>
+          <col />
+          <col width="150px" />
+          <col width="165px" />
+          <col width="120px" />
+          <col />
+          <col width="140px" />
+        </colgroup>
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>

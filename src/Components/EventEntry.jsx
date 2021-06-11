@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { IconButton, TableCell, TableRow, TextField } from '@material-ui/core';
+import {
+  IconButton,
+  MenuItem,
+  Select,
+  TableCell,
+  TableRow,
+  TextField,
+} from '@material-ui/core';
 import { Add, Close, Create, Refresh } from '@material-ui/icons';
 
 const EventEntry = ({
@@ -18,6 +25,16 @@ const EventEntry = ({
     leaderId: '',
   };
 
+  const daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
 
@@ -27,15 +44,6 @@ const EventEntry = ({
       .some((k) => !event[k]);
     if (anyEmpty) throw new Error('Ensure all fields have a value!');
 
-    const daysOfWeek = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
     if (!daysOfWeek.includes(event.day))
       throw new Error(
         "Day field must be a capitalised day of the week. e.g. 'Monday'"
@@ -44,6 +52,7 @@ const EventEntry = ({
 
   const onEdit = useCallback(
     (field, value) => {
+      console.log(field, value);
       setLocalEvent({ ...localEvent, [field]: value });
       setModified(true);
     },
@@ -91,31 +100,39 @@ const EventEntry = ({
     openToast,
   ]);
 
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      create ? onCreate() : onUpdate();
-    },
-    [create, onCreate, onUpdate]
-  );
-
   return (
     <TableRow>
-      {['title', 'day', 'startTime', 'duration', 'leaderId'].map((k) => (
-        <TableCell key={k}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              variant="outlined"
-              size="small"
-              value={localEvent[k]}
-              onChange={(e) => {
-                onEdit(k, e.target.value);
-              }}
-              required
-            />
-          </form>
-        </TableCell>
-      ))}
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
+      </TableCell>
+      <TableCell>
+        <TextField
+          value={localEvent.day}
+          onChange={(e) => onEdit('day', e.target.value)}
+          variant="outlined"
+          size="small"
+          select
+          fullWidth
+        >
+          {daysOfWeek.map((day) => (
+            <MenuItem value={day}>{day}</MenuItem>
+          ))}
+        </TextField>
+      </TableCell>
+      <TableCell>
+        <EditField
+          event={localEvent}
+          onEdit={onEdit}
+          fieldKey="startTime"
+          type="time"
+        />
+      </TableCell>
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
+      </TableCell>
+      <TableCell>
+        <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" />
+      </TableCell>
       <TableCell>
         {create ? null : (
           <IconButton size="small" onClick={() => deleteEvent(event)}>
@@ -134,6 +151,22 @@ const EventEntry = ({
         ) : null}
       </TableCell>
     </TableRow>
+  );
+};
+
+const EditField = ({ event, onEdit, fieldKey, ...props }) => {
+  return (
+    <TextField
+      variant="outlined"
+      size="small"
+      value={event[fieldKey]}
+      onChange={(e) => {
+        onEdit(fieldKey, e.target.value);
+      }}
+      fullWidth
+      required
+      {...props}
+    />
   );
 };
 
