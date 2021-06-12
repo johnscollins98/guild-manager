@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { generateGW2RosterRecords } from '../utils/DataProcessing';
+import {
+  generateGW2RosterRecords,
+  getExcessDiscordRecords,
+} from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 
@@ -11,7 +14,6 @@ const Roster = ({
   discordRoles,
   guildRanks,
   filterString,
-  singleColumn,
   authInfo,
   openToast,
 }) => {
@@ -25,7 +27,9 @@ const Roster = ({
       guildRanks.length > 0
     ) {
       setRecords(
-        generateGW2RosterRecords(gw2Members, discordMembers, guildRanks)
+        generateGW2RosterRecords(gw2Members, discordMembers, guildRanks).concat(
+          getExcessDiscordRecords(gw2Members, discordMembers, guildRanks)
+        )
       );
     }
   }, [gw2Members, discordMembers, setRecords, guildRanks]);
@@ -34,8 +38,8 @@ const Roster = ({
     <RosterDisplay
       records={records}
       discordRoles={discordRoles}
+      guildRanks={guildRanks}
       filterString={filterString}
-      singleColumn={singleColumn}
       authInfo={authInfo}
       openToast={openToast}
     />

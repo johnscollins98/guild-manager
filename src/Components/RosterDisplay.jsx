@@ -6,12 +6,14 @@ import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
 import LoaderPage from './LoaderPage';
+import RosterControl from './RosterControl';
+import { compareRank } from '../utils/DataProcessing';
 
 const RosterDisplay = ({
   records,
   discordRoles,
   filterString,
-  singleColumn,
+  guildRanks,
   openToast,
   authInfo,
 }) => {
@@ -20,6 +22,7 @@ const RosterDisplay = ({
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
   const [allDataLoaded, setAllDataLoaded] = useState(false);
+  const [singleColumn, setSingleColumn] = useState(false);
 
   const [adminActionsEnabled, setAdminActionsEnabled] = useState(false);
 
@@ -111,15 +114,81 @@ const RosterDisplay = ({
     [changeEventAttended]
   );
 
+  const onSort = useCallback(
+    (sortBy) => {
+      let sorted = [...recordState];
+      switch (sortBy) {
+        case 'name':
+          sorted = sorted.sort((a, b) => {
+            const aName = a.accountName || a.discordName;
+            const bName = b.accountName || b.discordName;
+            return aName.toLowerCase().localeCompare(bName.toLowerCase());
+          });
+          break;
+        case 'points':
+          sorted = sorted.sort((a, b) => {
+            const aPoints = a.eventsAttended || -1;
+            const bPoints = b.eventsAttended || -1;
+            return bPoints - aPoints;
+          });
+          break;
+        case 'rank':
+          sorted = sorted.sort((a, b) => {
+            const aRank = a.rank || a.roles[0]?.name;
+            const bRank = b.rank || b.roles[0]?.name;
+            return compareRank(guildRanks, aRank, bRank);
+          });
+          break;
+        default:
+          break;
+      }
+      setRecordState(sorted);
+    },
+
+    [setRecordState, guildRanks, recordState]
+  );
+
+  const onFilter = useCallback(
+    (filterBy) => {
+      switch (filterBy) {
+        case 'has-gw2':
+          setRecordState(records.filter((record) => record.memberId));
+          break;
+        case 'excess-discord':
+          setRecordState(records.filter((record) => !record.memberId));
+          break;
+        case 'issues':
+          setRecordState(
+            records.filter((record) => {
+              return Object.keys(record.issues).some((k) => record.issues[k]);
+            })
+          );
+          break;
+        case 'none':
+          setRecordState(records);
+          break;
+        default:
+          break;
+      }
+    },
+    [records, setRecordState]
+  );
+
   return !allDataLoaded ? (
     <LoaderPage />
   ) : (
     <>
+      <RosterControl
+        singleColumn={singleColumn}
+        setSingleColumn={setSingleColumn}
+        onSort={onSort}
+        onFilter={onFilter}
+      />
       <div className="roster-container">
         {filteredRecords.map((record) => (
           <GuildMemberCard
             member={record}
-            key={record.memberId}
+            key={record.memberId || record.discordName}
             discordRoles={discordRoles}
             onKick={onKick}
             singleColumn={singleColumn}

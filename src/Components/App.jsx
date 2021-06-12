@@ -13,9 +13,6 @@ import {
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
-import ExcessDiscord from './ExcessDiscord';
-import RequiredActions from './RequiredActions';
-import PointsLeaderboard from './PointsLeaderboard';
 
 import './App.scss';
 import { Paper, Snackbar, Tab, Tabs } from '@material-ui/core';
@@ -43,8 +40,6 @@ const App = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastStatus, setToastStatus] = useState('info');
   const [toastMessage, setToastMessage] = useState('');
-
-  const [singleColumn, setSingleColumn] = useState(false);
 
   const [theme, setTheme] = useState('dark');
   const toggleTheme = useCallback(() => {
@@ -139,9 +134,6 @@ const App = () => {
 
   const TABS = {
     ROSTER: 'Roster',
-    EXCESS_DISCORD: 'Excess Discord',
-    REQUIRED_ACTIONS: 'Required Actions',
-    LEADERBOARD: 'Points Leaderboard',
     LOG: 'Log',
     POINT_LOG: 'Points Log',
     EVENTS: 'Events',
@@ -193,8 +185,6 @@ const App = () => {
             refresh={refresh}
             handleFilterChange={handleFilterChange}
             theme={theme}
-            singleColumn={singleColumn}
-            setSingleColumn={setSingleColumn}
             toggleTheme={toggleTheme}
             loadingData={loadingData}
           />
@@ -209,21 +199,6 @@ const App = () => {
                 icon={getTabIcon(TABS.ROSTER)}
                 label={TABS.ROSTER}
                 value="roster"
-              />
-              <Tab
-                icon={getTabIcon(TABS.LEADERBOARD)}
-                label={TABS.LEADERBOARD}
-                value="leaderboard"
-              />
-              <Tab
-                icon={getTabIcon(TABS.EXCESS_DISCORD)}
-                label={TABS.EXCESS_DISCORD}
-                value="excess-discord"
-              />
-              <Tab
-                icon={getTabIcon(TABS.REQUIRED_ACTIONS)}
-                label={TABS.REQUIRED_ACTIONS}
-                value="required-actions"
               />
               <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
               <Tab
@@ -243,43 +218,6 @@ const App = () => {
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
                 guildRanks={guildRanks}
-                filterString={filterString}
-                authInfo={authInfo}
-                singleColumn={singleColumn}
-                openToast={openToast}
-              />
-            </TabPanel>
-            <TabPanel value="leaderboard">
-              <PointsLeaderboard
-                gw2Members={gw2Members}
-                discordMembers={discordMembers}
-                discordRoles={discordRoles}
-                guildRanks={guildRanks}
-                singleColumn={singleColumn}
-                filterString={filterString}
-                authInfo={authInfo}
-                openToast={openToast}
-              />
-            </TabPanel>
-            <TabPanel value="excess-discord">
-              <ExcessDiscord
-                gw2Members={gw2Members}
-                discordMembers={discordMembers}
-                discordRoles={discordRoles}
-                guildRanks={guildRanks}
-                singleColumn={singleColumn}
-                filterString={filterString}
-                authInfo={authInfo}
-                openToast={openToast}
-              />
-            </TabPanel>
-            <TabPanel value="required-actions">
-              <RequiredActions
-                gw2Members={gw2Members}
-                discordMembers={discordMembers}
-                discordRoles={discordRoles}
-                guildRanks={guildRanks}
-                singleColumn={singleColumn}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}

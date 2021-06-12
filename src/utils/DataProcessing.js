@@ -92,9 +92,9 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
     .sort((a, b) => compareRank(ranks, a.roles[0]?.name, b.roles[0]?.name));
 };
 
-const compareRank = (ranks, aRank, bRank) => {
-  ranks.push({ id: 'Guest', order: ranks.length });
-  ranks.push({ id: 'Bots', order: ranks.length });
+export const compareRank = (ranks, aRank, bRank) => {
+  ranks.push({ id: 'Guest', order: ranks.length + 1 });
+  ranks.push({ id: 'Bots', order: ranks.length + 1 });
   const aObj = ranks.find((o) => o.id === aRank) || { order: ranks.length };
   const bObj = ranks.find((o) => o.id === bRank) || { order: ranks.length };
 
