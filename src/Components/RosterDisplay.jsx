@@ -5,6 +5,7 @@ import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
+import LoaderPage from './LoaderPage';
 
 const RosterDisplay = ({
   records,
@@ -17,8 +18,17 @@ const RosterDisplay = ({
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
+  const [allDataLoaded, setAllDataLoaded] = useState(false);
 
   const [adminActionsEnabled, setAdminActionsEnabled] = useState(false);
+
+  useEffect(() => {
+    if (authInfo && records.length && discordRoles.length) {
+      setAllDataLoaded(true);
+    } else {
+      setAllDataLoaded(false);
+    }
+  }, [authInfo, records, discordRoles, setAllDataLoaded]);
 
   useEffect(() => {
     setAdminActionsEnabled(authInfo.isAdmin);
@@ -100,7 +110,9 @@ const RosterDisplay = ({
     [changeEventAttended]
   );
 
-  return (
+  return !allDataLoaded ? (
+    <LoaderPage />
+  ) : (
     <>
       <div className="roster-container">
         {filteredRecords.map((record) => (
