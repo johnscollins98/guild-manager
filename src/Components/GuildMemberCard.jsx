@@ -123,7 +123,7 @@ const GuildMemberCard = ({
                   <DiscordLogo width="24" height="24" />
                 </Tooltip>
               ) : null}
-              {member.rank ? (
+              {member.rankImage ? (
                 <Tooltip title={member.rank}>
                   <img
                     alt={member.rank}

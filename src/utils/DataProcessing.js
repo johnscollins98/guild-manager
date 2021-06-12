@@ -17,7 +17,7 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
     record.memberId = gw2Member.name;
     record.rank = gw2Member.rank;
     
-    record.rankImage = ranks.find((r) => r.id === record.rank).icon;
+    record.rankImage = ranks.find((r) => r.id === record.rank)?.icon;
 
     record.joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
     record.eventsAttended = gw2Member.eventsAttended;
