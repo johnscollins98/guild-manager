@@ -94,7 +94,9 @@ const GuildMemberCard = ({
               ) : null}
               {member.issues.unmatchingRoles ? (
                 <Tooltip
-                  title={`Unmatching Roles (${member.rank} / ${member.roles[0].name})`}
+                  title={`Unmatching Roles (${member.rank} / ${
+                    member.roles[0]?.name || 'No Role'
+                  })`}
                 >
                   <SyncProblem className="error" />
                 </Tooltip>
