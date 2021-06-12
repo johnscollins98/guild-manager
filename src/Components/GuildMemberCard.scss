@@ -28,6 +28,11 @@
 
   .MuiCardContent-root {
     width: 100%;
+    padding: 12px;
+    
+    &:last-child {
+      padding-bottom: 12px;
+    }
 
     .top-row {
       display: flex;
