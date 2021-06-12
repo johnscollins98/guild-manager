@@ -14,6 +14,7 @@ const RequiredActions = ({
   discordRoles,
   guildRanks,
   filterString,
+  singleColumn,
   authInfo,
   openToast,
 }) => {
@@ -44,6 +45,7 @@ const RequiredActions = ({
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}
+      singleColumn={singleColumn}
     />
   );
 };

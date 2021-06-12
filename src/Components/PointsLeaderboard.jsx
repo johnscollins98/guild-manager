@@ -11,6 +11,7 @@ const PointsLeaderboard = ({
   discordRoles,
   guildRanks,
   filterString,
+  singleColumn,
   authInfo,
   openToast,
 }) => {
@@ -36,6 +37,7 @@ const PointsLeaderboard = ({
       records={records}
       discordRoles={discordRoles}
       filterString={filterString}
+      singleColumn={singleColumn}
       authInfo={authInfo}
       openToast={openToast}
     />

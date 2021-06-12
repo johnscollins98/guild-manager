@@ -1,12 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, IconButton, TextField } from '@material-ui/core';
+import {
+  Button,
+  Grid,
+  IconButton,
+  TextField,
+  Switch,
+  FormControlLabel,
+} from '@material-ui/core';
 import { Brightness3, Brightness6 } from '@material-ui/icons';
 
 const Control = ({
   refresh,
   handleFilterChange,
+  singleColumn,
+  setSingleColumn,
   loadingData,
   theme,
   toggleTheme,
@@ -30,6 +39,19 @@ const Control = ({
           type="text"
           fullWidth
           onChange={handleFilterChange}
+        />
+      </Grid>
+      <Grid item>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={singleColumn}
+              onChange={(e) => {
+                setSingleColumn(e.target.checked);
+              }}
+            />
+          }
+          label="Full Width Members?"
         />
       </Grid>
       <Grid item>

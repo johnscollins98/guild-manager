@@ -44,6 +44,8 @@ const App = () => {
   const [toastStatus, setToastStatus] = useState('info');
   const [toastMessage, setToastMessage] = useState('');
 
+  const [singleColumn, setSingleColumn] = useState(false);
+
   const [theme, setTheme] = useState('dark');
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -191,6 +193,8 @@ const App = () => {
             refresh={refresh}
             handleFilterChange={handleFilterChange}
             theme={theme}
+            singleColumn={singleColumn}
+            setSingleColumn={setSingleColumn}
             toggleTheme={toggleTheme}
             loadingData={loadingData}
           />
@@ -241,6 +245,7 @@ const App = () => {
                 guildRanks={guildRanks}
                 filterString={filterString}
                 authInfo={authInfo}
+                singleColumn={singleColumn}
                 openToast={openToast}
               />
             </TabPanel>
@@ -250,6 +255,7 @@ const App = () => {
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
                 guildRanks={guildRanks}
+                singleColumn={singleColumn}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -261,6 +267,7 @@ const App = () => {
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
                 guildRanks={guildRanks}
+                singleColumn={singleColumn}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}
@@ -272,6 +279,7 @@ const App = () => {
                 discordMembers={discordMembers}
                 discordRoles={discordRoles}
                 guildRanks={guildRanks}
+                singleColumn={singleColumn}
                 filterString={filterString}
                 authInfo={authInfo}
                 openToast={openToast}

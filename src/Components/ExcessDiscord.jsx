@@ -10,13 +10,16 @@ const ExcessDiscord = ({
   discordRoles,
   guildRanks,
   filterString,
+  singleColumn,
   authInfo,
   openToast,
 }) => {
   const [records, setRecords] = useState([]);
   useEffect(() => {
     if (gw2Members.length > 0 && discordMembers.length > 0) {
-      setRecords(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks));
+      setRecords(
+        getExcessDiscordRecords(gw2Members, discordMembers, guildRanks)
+      );
     }
   }, [gw2Members, discordMembers, setRecords, guildRanks]);
 
@@ -24,6 +27,7 @@ const ExcessDiscord = ({
     <RosterDisplay
       records={records}
       discordRoles={discordRoles}
+      singleColumn={singleColumn}
       filterString={filterString}
       authInfo={authInfo}
       openToast={openToast}

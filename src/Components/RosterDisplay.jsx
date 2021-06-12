@@ -11,6 +11,7 @@ const RosterDisplay = ({
   records,
   discordRoles,
   filterString,
+  singleColumn,
   openToast,
   authInfo,
 }) => {
@@ -121,6 +122,7 @@ const RosterDisplay = ({
             key={record.memberId}
             discordRoles={discordRoles}
             onKick={onKick}
+            singleColumn={singleColumn}
             onEdit={openEdit}
             isAdmin={adminActionsEnabled}
             addPoint={incrementEventAttended}

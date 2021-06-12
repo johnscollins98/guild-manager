@@ -11,6 +11,7 @@ const Roster = ({
   discordRoles,
   guildRanks,
   filterString,
+  singleColumn,
   authInfo,
   openToast,
 }) => {
@@ -34,6 +35,7 @@ const Roster = ({
       records={records}
       discordRoles={discordRoles}
       filterString={filterString}
+      singleColumn={singleColumn}
       authInfo={authInfo}
       openToast={openToast}
     />

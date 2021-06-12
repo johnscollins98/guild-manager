@@ -3,6 +3,11 @@
   width: 100%;
   display: flex;
 
+  &.fullWidth {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
   @media screen and (min-width: 600px) {
     flex-basis: 300px;
     flex-grow: 1;

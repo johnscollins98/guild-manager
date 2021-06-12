@@ -31,6 +31,7 @@ const GuildMemberCard = ({
   isAdmin,
   addPoint,
   removePoint,
+  singleColumn,
 }) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
@@ -60,7 +61,7 @@ const GuildMemberCard = ({
     <>
       <Card
         variant="outlined"
-        className="member-card"
+        className={`member-card ${singleColumn ? 'fullWidth' : ''}`}
         style={{ borderLeftColor: color }}
         onClick={handleClick}
         raised
