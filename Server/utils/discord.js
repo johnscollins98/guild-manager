@@ -24,7 +24,9 @@ const formatMember = (member, roles, validRoles) => {
     name: member.nick ? member.nick : member.user.username,
     id: member.user.id,
     roles: getRoleInfo(roles, member.roles, validRoles),
-    avatar: `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`,
+    avatar: member.user.avatar
+      ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`
+      : undefined,
   };
 };
 

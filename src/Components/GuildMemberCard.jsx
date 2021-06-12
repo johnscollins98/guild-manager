@@ -70,9 +70,15 @@ const GuildMemberCard = ({
             <div className="name">
               <Avatar
                 className="avatar"
-                alt={member.memberId}
+                alt={member.memberId || member.discordName}
                 src={member.avatar}
-              />
+              >
+                {member.memberId
+                  ? member.memberId[0]
+                  : member.discordName
+                  ? member.discordName[0]
+                  : null}
+              </Avatar>
               <Typography>{member.memberId || member.discordName}</Typography>
             </div>
             <div className="icons-container">
