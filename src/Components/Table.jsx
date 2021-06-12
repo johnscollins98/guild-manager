@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import MUTable from '@material-ui/core/Table';
 
 const Table = ({ children }) => (
-  <MUTable size="small" stickyHeader>
-    {children}
-  </MUTable>
+  <div style={{ flex: 'auto', overflow: 'auto' }}>
+    <MUTable size="small" stickyHeader>
+      {children}
+    </MUTable>
+  </div>
 );
 
 Table.propTypes = {

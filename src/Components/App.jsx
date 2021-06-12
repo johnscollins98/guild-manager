@@ -162,15 +162,7 @@ const App = () => {
 
   return (
     <MuiThemeProvider theme={darkTheme}>
-      <Paper
-        style={{
-          height: '100vh',
-          maxHeight: '100vh',
-          overflow: 'hidden',
-          padding: '16px',
-        }}
-        square
-      >
+      <Paper className="paper-container" square>
         <Snackbar
           open={showToast}
           autoHideDuration={6000}

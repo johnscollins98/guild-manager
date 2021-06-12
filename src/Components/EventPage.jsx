@@ -185,7 +185,11 @@ const EventPage = ({
         </TableBody>
       </Table>
       {eventsLoaded ? (
-        <Button onClick={() => setShowModal(true)} variant="contained">
+        <Button
+          onClick={() => setShowModal(true)}
+          style={{ width: 'fit-content', margin: '4px' }}
+          variant="contained"
+        >
           Post to Discord
         </Button>
       ) : null}
