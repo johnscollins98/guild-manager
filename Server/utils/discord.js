@@ -24,6 +24,7 @@ const formatMember = (member, roles, validRoles) => {
     name: member.nick ? member.nick : member.user.username,
     id: member.user.id,
     roles: getRoleInfo(roles, member.roles, validRoles),
+    avatar: `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`,
   };
 };
 
@@ -51,11 +52,15 @@ const createEmbed = (day, events) => {
     color: '3447003',
     title: `${day} Events`,
     fields: events.map((event, i) => {
-      const timeLink = encodeURI(`https://www.starts-at.com/e/?t=${event.startTime}&tz=UTC&d=Next${event.day}&title=${event.title}`);
+      const timeLink = encodeURI(
+        `https://www.starts-at.com/e/?t=${event.startTime}&tz=UTC&d=Next${event.day}&title=${event.title}`
+      );
       return {
         name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
-        value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`,
-      }
+        value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(
+          15
+        )}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`,
+      };
     }),
   };
 };

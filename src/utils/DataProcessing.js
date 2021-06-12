@@ -16,6 +16,9 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
     record.accountName = gw2Member.name.split('.')[0];
     record.memberId = gw2Member.name;
     record.rank = gw2Member.rank;
+    
+    record.rankImage = ranks.find((r) => r.id === record.rank).icon;
+
     record.joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
     record.eventsAttended = gw2Member.eventsAttended;
 
@@ -40,6 +43,7 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
       discordName: discordMember?.name,
       discordId: discordMember?.id,
       roles: discordMember?.roles || [],
+      avatar: discordMember?.avatar,
     };
 
     record.issues = {
@@ -71,11 +75,12 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
     .map((discordMember) => {
       return {
         accountName: discordMember.name,
-        rank: '-',
-        joinDate: '-',
+        rank: null,
+        joinDate: null,
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles || [],
+        avatar: discordMember.avatar,
         issues: {
           missingGW2: !discordMember.roles.find(
             (r) => r.name === 'Guest' || r.name === 'Bots'

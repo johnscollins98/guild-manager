@@ -1,0 +1,64 @@
+.member-card {
+  margin: 4px;
+  width: 100%;
+  display: flex;
+
+  @media screen and (min-width: 600px) {
+    flex-basis: 300px;
+    flex-grow: 1;
+  }
+
+  &.MuiPaper-outlined {
+    border-left: 4px solid;
+    transition: border-left 0.1s;
+
+    &:hover {
+      .MuiCardContent-root {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      border-left: 8px solid;
+      cursor: pointer;
+    }
+  }
+
+  .MuiCardContent-root {
+    width: 100%;
+
+    .top-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .name {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .avatar {
+          margin-right: 8px;
+          height: 32px;
+          width: 32px;
+        }
+      }
+
+      .icons-container {
+        display: flex;
+        align-items: center;
+
+        .error {
+          color: #ff0033;
+        }
+
+        .points {
+          height: 24px;
+          width: 24px;
+          font-size: 16px;
+          background-color: #009688;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
