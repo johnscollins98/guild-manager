@@ -11,7 +11,15 @@ import {
 } from '@material-ui/core';
 import { getColorFromRole } from '../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
-import { Error, ExpandLess, SyncProblem } from '@material-ui/icons';
+import {
+  Add,
+  Close,
+  Edit,
+  Error,
+  ExpandLess,
+  Remove,
+  SyncProblem,
+} from '@material-ui/icons';
 import gw2Image from '../assets/images/gw2.png';
 import { useState } from 'react';
 
@@ -125,31 +133,49 @@ const GuildMemberCard = ({
           </div>
         </CardContent>
       </Card>
-      <Menu
-        anchorEl={menuAnchor}
-        keepMounted
-        open={Boolean(menuAnchor)}
-        onClose={closeMenu}
-      >
-        <MenuItem disabled={!isAdmin} onClick={() => menuAction(onKick)}>
-          Kick
-        </MenuItem>
-        <MenuItem disabled={!isAdmin} onClick={() => menuAction(onEdit)}>
-          Edit Roles
-        </MenuItem>
-        <MenuItem
-          disabled={!member.memberId}
-          onClick={() => menuAction(addPoint)}
+      {menuAnchor ? (
+        <Menu
+          anchorEl={menuAnchor}
+          keepMounted
+          open={Boolean(menuAnchor)}
+          onClose={closeMenu}
         >
-          Add Point
-        </MenuItem>
-        <MenuItem
-          disabled={!member.memberId}
-          onClick={() => menuAction(removePoint)}
-        >
-          Remove Point
-        </MenuItem>
-      </Menu>
+          <MenuItem
+            disabled={!isAdmin}
+            onClick={() => menuAction(onKick)}
+            className="error"
+          >
+            <span className="menu-item error">
+              <Close className="icon" />
+              Kick
+            </span>
+          </MenuItem>
+          <MenuItem disabled={!isAdmin} onClick={() => menuAction(onEdit)}>
+            <span className="menu-item">
+              <Edit className="icon" />
+              Edit Roles
+            </span>
+          </MenuItem>
+          <MenuItem
+            disabled={!member.memberId}
+            onClick={() => menuAction(addPoint)}
+          >
+            <span className="menu-item">
+              <Add className="icon" />
+              Add Point
+            </span>
+          </MenuItem>
+          <MenuItem
+            disabled={!member.memberId}
+            onClick={() => menuAction(removePoint)}
+          >
+            <span className="menu-item">
+              <Remove className="icon" />
+              Remove Point
+            </span>
+          </MenuItem>
+        </Menu>
+      ) : null}
     </>
   );
 };

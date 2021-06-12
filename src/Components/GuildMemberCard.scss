@@ -47,10 +47,6 @@
         display: flex;
         align-items: center;
 
-        .error {
-          color: #ff0033;
-        }
-
         .points {
           height: 24px;
           width: 24px;
@@ -60,5 +56,19 @@
         }
       }
     }
+  }
+}
+
+.error {
+  color: #ff0033;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    font-size: 20px;
+    margin-right: 8px;
   }
 }
