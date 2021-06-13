@@ -126,7 +126,7 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
 
 
       const parseTime = (str) => {
-        return Date.parse(`1970/01/01 ${event.startTime}`);
+        return Date.parse(`1970/01/01 ${str}`);
       }
 
       const sorted = events.sort((a, b) => {
