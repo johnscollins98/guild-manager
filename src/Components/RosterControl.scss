@@ -6,7 +6,13 @@
   justify-content: space-between;
   align-items: center;
 
-  .left, .right {
+  
+  .left,
+  .right {
     align-items: center;
   }
+}
+
+.selected {
+  margin-right: 8px;
 }

@@ -24,6 +24,9 @@ const RosterDisplay = ({
   const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [singleColumn, setSingleColumn] = useState(false);
 
+  const [sortBy, setSortBy] = useState('rank');
+  const [filterBy, setFilterBy] = useState('none');
+
   const [adminActionsEnabled, setAdminActionsEnabled] = useState(false);
 
   useEffect(() => {
@@ -42,9 +45,68 @@ const RosterDisplay = ({
     setRecordState(records);
   }, [records]);
 
+  const onSort = useCallback(
+    (toSort, sortBy) => {
+      let sorted = [...toSort];
+      switch (sortBy) {
+        case 'name':
+          sorted = sorted.sort((a, b) => {
+            const aName = a.accountName || a.discordName;
+            const bName = b.accountName || b.discordName;
+            return aName.toLowerCase().localeCompare(bName.toLowerCase());
+          });
+          break;
+        case 'points':
+          sorted = sorted.sort((a, b) => {
+            const aPoints = a.eventsAttended || -1;
+            const bPoints = b.eventsAttended || -1;
+            return bPoints - aPoints;
+          });
+          break;
+        case 'rank':
+          sorted = sorted.sort((a, b) => {
+            const aRank = a.rank || a.roles[0]?.name;
+            const bRank = b.rank || b.roles[0]?.name;
+            return compareRank(guildRanks, aRank, bRank);
+          });
+          break;
+        default:
+          break;
+      }
+      return sorted;
+    },
+
+    [guildRanks]
+  );
+
+  const onFilter = useCallback((toFilter, filterBy) => {
+    let filtered = toFilter;
+    switch (filterBy) {
+      case 'has-gw2':
+        filtered = filtered.filter((record) => record.memberId);
+        break;
+      case 'excess-discord':
+        filtered = filtered.filter((record) => !record.memberId);
+        break;
+      case 'issues':
+        filtered = filtered.filter((record) => {
+          return Object.keys(record.issues).some((k) => record.issues[k]);
+        });
+        break;
+      case 'none':
+        break;
+      default:
+        break;
+    }
+    return filtered;
+  }, []);
+
   useEffect(() => {
-    setFilteredRecords(filterDataByString(recordState, filterString));
-  }, [recordState, filterString]);
+    const firstFilter = onFilter(recordState, filterBy);
+    const stringFilter = filterDataByString(firstFilter, filterString);
+    const sorted = onSort(stringFilter, sortBy);
+    setFilteredRecords(sorted);
+  }, [recordState, sortBy, filterBy, filterString, onFilter, onSort]);
 
   const onKick = useCallback(
     async (record) => {
@@ -114,66 +176,6 @@ const RosterDisplay = ({
     [changeEventAttended]
   );
 
-  const onSort = useCallback(
-    (sortBy) => {
-      let sorted = [...recordState];
-      switch (sortBy) {
-        case 'name':
-          sorted = sorted.sort((a, b) => {
-            const aName = a.accountName || a.discordName;
-            const bName = b.accountName || b.discordName;
-            return aName.toLowerCase().localeCompare(bName.toLowerCase());
-          });
-          break;
-        case 'points':
-          sorted = sorted.sort((a, b) => {
-            const aPoints = a.eventsAttended || -1;
-            const bPoints = b.eventsAttended || -1;
-            return bPoints - aPoints;
-          });
-          break;
-        case 'rank':
-          sorted = sorted.sort((a, b) => {
-            const aRank = a.rank || a.roles[0]?.name;
-            const bRank = b.rank || b.roles[0]?.name;
-            return compareRank(guildRanks, aRank, bRank);
-          });
-          break;
-        default:
-          break;
-      }
-      setRecordState(sorted);
-    },
-
-    [setRecordState, guildRanks, recordState]
-  );
-
-  const onFilter = useCallback(
-    (filterBy) => {
-      switch (filterBy) {
-        case 'has-gw2':
-          setRecordState(records.filter((record) => record.memberId));
-          break;
-        case 'excess-discord':
-          setRecordState(records.filter((record) => !record.memberId));
-          break;
-        case 'issues':
-          setRecordState(
-            records.filter((record) => {
-              return Object.keys(record.issues).some((k) => record.issues[k]);
-            })
-          );
-          break;
-        case 'none':
-          setRecordState(records);
-          break;
-        default:
-          break;
-      }
-    },
-    [records, setRecordState]
-  );
-
   return !allDataLoaded ? (
     <LoaderPage />
   ) : (
@@ -181,8 +183,10 @@ const RosterDisplay = ({
       <RosterControl
         singleColumn={singleColumn}
         setSingleColumn={setSingleColumn}
-        onSort={onSort}
-        onFilter={onFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        filterBy={filterBy}
+        setFilterBy={setFilterBy}
       />
       <div className="roster-container">
         {filteredRecords.map((record) => (

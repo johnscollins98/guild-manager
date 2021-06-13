@@ -6,13 +6,20 @@ import {
   Menu,
   MenuItem,
 } from '@material-ui/core';
-import { FilterList, ImportExport } from '@material-ui/icons';
+import { Check, FilterList, ImportExport } from '@material-ui/icons';
 import React, { useCallback } from 'react';
 import { useState } from 'react';
 
 import './RosterControl.scss';
 
-const RosterControl = ({ singleColumn, setSingleColumn, onSort, onFilter }) => {
+const RosterControl = ({
+  singleColumn,
+  setSingleColumn,
+  filterBy,
+  setFilterBy,
+  sortBy,
+  setSortBy,
+}) => {
   const [anchorElement, setAnchorElement] = useState(null);
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -41,18 +48,18 @@ const RosterControl = ({ singleColumn, setSingleColumn, onSort, onFilter }) => {
 
   const sortHandler = useCallback(
     (sortBy) => {
-      onSort(sortBy);
+      setSortBy(sortBy);
       closeMenu();
     },
-    [onSort, closeMenu]
+    [setSortBy, closeMenu]
   );
 
   const filterHandler = useCallback(
     (filterBy) => {
-      onFilter(filterBy);
+      setFilterBy(filterBy);
       closeMenu();
     },
-    [onFilter, closeMenu]
+    [setFilterBy, closeMenu]
   );
 
   return (
@@ -89,9 +96,18 @@ const RosterControl = ({ singleColumn, setSingleColumn, onSort, onFilter }) => {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={() => sortHandler('rank')}>Rank</MenuItem>
-        <MenuItem onClick={() => sortHandler('name')}>Name</MenuItem>
-        <MenuItem onClick={() => sortHandler('points')}>Points</MenuItem>
+        <MenuItem onClick={() => sortHandler('rank')}>
+          {sortBy === 'rank' ? <Check className='selected' /> : null}
+          Rank
+        </MenuItem>
+        <MenuItem onClick={() => sortHandler('name')}>
+          {sortBy === 'name' ? <Check className='selected' /> : null}
+          Name
+        </MenuItem>
+        <MenuItem onClick={() => sortHandler('points')}>
+          {sortBy === 'points' ? <Check className='selected' /> : null}
+          Points
+        </MenuItem>
       </Menu>
       <Menu
         open={filterOpen}
@@ -102,14 +118,22 @@ const RosterControl = ({ singleColumn, setSingleColumn, onSort, onFilter }) => {
           horizontal: 'right',
         }}
       >
-        <MenuItem onClick={() => filterHandler('none')}>No filters</MenuItem>
+        <MenuItem onClick={() => filterHandler('none')}>
+          {filterBy === 'none' ? <Check className='selected' /> : null}
+          No filters
+        </MenuItem>
         <MenuItem onClick={() => filterHandler('has-gw2')}>
+          {filterBy === 'has-gw2' ? <Check className='selected' /> : null}
           Has GW2 Account
         </MenuItem>
         <MenuItem onClick={() => filterHandler('excess-discord')}>
+          {filterBy === 'excess-discord' ? <Check className='selected' /> : null}
           Excess Discord
         </MenuItem>
-        <MenuItem onClick={() => filterHandler('issues')}>Any issues</MenuItem>
+        <MenuItem onClick={() => filterHandler('issues')}>
+          {filterBy === 'issues' ? <Check className='selected' /> : null}
+          Any issues
+        </MenuItem>
       </Menu>
     </>
   );
