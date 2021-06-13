@@ -124,7 +124,19 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
     for (day of daysOfWeek) {
       const events = await Event.find({ day }).exec();
 
-      const embed = DiscordUtils.createEmbed(day, events);
+
+      const parseTime = (str) => {
+        return Date.parse(`1970/01/01 ${event.startTime}`);
+      }
+
+      const sorted = events.sort((a, b) => {
+        const aTime = parseTime(a.startTime);
+        const bTime = parseTime(b.startTime);
+
+        return aTime -  bTime;
+      })
+
+      const embed = DiscordUtils.createEmbed(day, sorted);
       if (req.body.editMessages) {
         const messageId = req.body.existingMessageIds[day];
         if (!messageId) throw 'Invalid Message IDs';

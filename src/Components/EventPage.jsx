@@ -62,7 +62,19 @@ const EventPage = ({
             event.title.includes(filterString) ||
             event.day.includes(filterString)
         )
-        .sort((a, b) => (sorter[a.day] || 8) - (sorter[b.day] || 8))
+        .sort((a, b) => {
+          const dateSort = (sorter[a.day] || 8) - (sorter[b.day] || 8);
+          if (dateSort !== 0) return dateSort;
+
+          const parseTime = (startTime) => {
+            return Date.parse(`1970/01/01 ${startTime}`);
+          };
+
+          const aTime = parseTime(a.startTime);
+          const bTime = parseTime(b.startTime);
+
+          return aTime - bTime;
+        })
     );
   }, [localEvents, setSortedEvents, filterString]);
 
