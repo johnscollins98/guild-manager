@@ -1,0 +1,30 @@
+.point-log-entry {
+  display: flex;
+  flex-flow: row wrap;
+  flex: 0 0 auto;
+  justify-content: space-between;
+  margin: 4px;
+
+  .transfer {
+    width: 300px;
+  }
+
+  .values,
+  .transfer {
+    display: flex;
+    align-items: center;
+    margin: 12px;
+
+    .MuiSvgIcon-root {
+      margin: 0 8px;
+    }
+
+    .point-value {
+      font-size: 16px;
+      width: 24px;
+      height: 24px;
+      margin: 0 8px;
+      background-color: #009688;
+    }
+  }
+}

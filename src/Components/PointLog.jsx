@@ -1,6 +1,6 @@
-import { TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import Table from './Table';
+import './PointLog.scss';
+import PointLogEntry from './PointLogEntry';
 
 const PointLog = ({ data, filterString }) => {
   const [ourData, setOurData] = useState([]);
@@ -16,35 +16,11 @@ const PointLog = ({ data, filterString }) => {
   }, [data, filterString]);
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>Changed by</TableCell>
-          <TableCell>Change to</TableCell>
-          <TableCell>Old Point Value</TableCell>
-          <TableCell>New Point Value</TableCell>
-          <TableCell>Change</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {ourData.map((entry) => (
-          <TableRow>
-            <TableCell>{entry.givenBy}</TableCell>
-            <TableCell>{entry.givenTo}</TableCell>
-            <TableCell>{entry.oldVal == null ? '-' : entry.oldVal}</TableCell>
-            <TableCell>{entry.newVal}</TableCell>
-            <TableCell>
-              {entry.oldVal != null && entry.newVal != null ? (
-                <>
-                  {entry.newVal - entry.oldVal > 0 ? '+' : null}
-                  {entry.newVal - entry.oldVal}
-                </>
-              ) : null}
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="point-log-container">
+      {ourData.map((entry) => (
+        <PointLogEntry entry={entry} />
+      ))}
+    </div>
   );
 };
 
