@@ -1,0 +1,16 @@
+.log-entry {
+  display: flex;
+  align-items: center;
+  margin: 4px;
+  flex-wrap: wrap;
+
+  div {
+    display: flex;
+    align-items: center;
+    margin: 12px;
+
+    .MuiSvgIcon-root {
+      margin-right: 4px;
+    }
+  }
+}
