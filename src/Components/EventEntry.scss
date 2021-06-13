@@ -1,0 +1,38 @@
+.event-entry {
+  margin: 8px;
+  padding: 8px;
+
+  .event-form {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-end;
+
+    .field {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      margin: 8px;
+      min-width: 120px;
+
+      &.long {
+        flex: 2;
+        min-width: 300px;
+      }
+
+      &.buttons {
+        flex-grow: 0;
+        min-width: auto;
+        justify-content: flex-end;
+      }
+
+      .field-label {
+        margin-right: 4px;
+      }
+
+      .entry-input {
+        width: auto;
+        flex: 1;
+      }
+    }
+  }
+}

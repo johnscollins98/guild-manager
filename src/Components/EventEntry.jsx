@@ -1,12 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { Card, IconButton, MenuItem, TextField } from '@material-ui/core';
 import {
-  IconButton,
-  MenuItem,
-  TableCell,
-  TableRow,
-  TextField,
-} from '@material-ui/core';
-import { Add, Close, Create, Refresh } from '@material-ui/icons';
+  Add,
+  Assignment,
+  CalendarToday,
+  Close,
+  Create,
+  HourglassFull,
+  Person,
+  Refresh,
+  WatchLater,
+} from '@material-ui/icons';
+import './EventEntry.scss';
 
 const EventEntry = ({
   create,
@@ -19,7 +24,7 @@ const EventEntry = ({
 }) => {
   const emptyEvent = {
     title: '',
-    day: '',
+    day: 'Monday',
     startTime: '',
     duration: '',
     leaderId: '',
@@ -27,19 +32,16 @@ const EventEntry = ({
 
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
-  const [daysOfWeek, setDaysOfWeek] = useState([]);
 
-  useEffect(() => {
-    setDaysOfWeek([
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ]);
-  }, []);
+  const daysOfWeek = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
 
   const validationHelper = useCallback(
     (event) => {
@@ -107,59 +109,78 @@ const EventEntry = ({
     openToast,
   ]);
 
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      create ? onCreate() : onUpdate();
+    },
+    [create, onCreate, onUpdate]
+  );
+
   return (
-    <TableRow>
-      <TableCell>
-        <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
-      </TableCell>
-      <TableCell>
-        <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
-          {daysOfWeek.map((day) => (
-            <MenuItem value={day}>{day}</MenuItem>
-          ))}
-        </EditField>
-      </TableCell>
-      <TableCell>
-        <EditField
-          event={localEvent}
-          onEdit={onEdit}
-          fieldKey="startTime"
-          type="time"
-        />
-      </TableCell>
-      <TableCell>
-        <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
-      </TableCell>
-      <TableCell>
-        <EditField
-          event={localEvent}
-          onEdit={onEdit}
-          fieldKey="leaderId"
-          select
-        >
-          {possibleLeaders.map((leader) => (
-            <MenuItem value={leader.id}>{leader.name}</MenuItem>
-          ))}
-        </EditField>
-      </TableCell>
-      <TableCell>
-        {create ? null : (
-          <IconButton size="small" onClick={() => deleteEvent(event)}>
-            <Close />
-          </IconButton>
-        )}
-        {modified ? (
-          <>
-            <IconButton size="small" onClick={create ? onCreate : onUpdate}>
-              {create ? <Add /> : <Create />}
+    <Card variant="outlined" className="event-entry">
+      <form onSubmit={onSubmit} className="event-form">
+        <div className="field long">
+          <Assignment className="field-label" />
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
+        </div>
+        <div className="field">
+          <CalendarToday className="field-label" />
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
+            {daysOfWeek.map((day) => (
+              <MenuItem value={day} key={day}>
+                {day}
+              </MenuItem>
+            ))}
+          </EditField>
+        </div>
+        <div className="field">
+          <WatchLater className="field-label" />
+          <EditField
+            event={localEvent}
+            onEdit={onEdit}
+            fieldKey="startTime"
+            type="time"
+          />
+        </div>
+        <div className="field">
+          <HourglassFull className="field-label" />
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
+        </div>
+        <div className="field long">
+          <Person className="field-label" />
+          <EditField
+            event={localEvent}
+            onEdit={onEdit}
+            fieldKey="leaderId"
+            select
+          >
+            {possibleLeaders.map((leader) => (
+              <MenuItem value={leader.id} key={leader.id}>
+                {leader.name}
+              </MenuItem>
+            ))}
+          </EditField>
+        </div>
+        <div className="field buttons">
+          {create ? null : (
+            <IconButton size="small" onClick={() => deleteEvent(event)}>
+              <Close />
             </IconButton>
-            <IconButton size="small" onClick={onReset}>
-              <Refresh />
-            </IconButton>
-          </>
-        ) : null}
-      </TableCell>
-    </TableRow>
+          )}
+          {modified ? (
+            <>
+              <IconButton size="small" onClick={create ? onCreate : onUpdate}>
+                {create ? <Add /> : <Create />}
+              </IconButton>
+              <IconButton size="small" onClick={onReset}>
+                <Refresh />
+              </IconButton>
+            </>
+          ) : null}
+        </div>
+      </form>
+    </Card>
   );
 };
 
@@ -168,6 +189,7 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
     <TextField
       variant="outlined"
       size="small"
+      className="entry-input"
       value={event[fieldKey]}
       onChange={(e) => {
         onEdit(fieldKey, e.target.value);

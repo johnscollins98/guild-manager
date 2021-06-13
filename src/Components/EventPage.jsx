@@ -1,18 +1,9 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import { Button, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
-import Table from './Table';
+import './EventPage.scss';
 
 const EventPage = ({
   events,
@@ -156,46 +147,26 @@ const EventPage = ({
 
   return (
     <>
-      <Table>
-        <colgroup>
-          <col />
-          <col width="150px" />
-          <col width="165px" />
-          <col width="120px" />
-          <col />
-          <col width="140px" />
-        </colgroup>
-        <TableHead>
-          <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell>Day</TableCell>
-            <TableCell>Start Time (UTC)</TableCell>
-            <TableCell>Duration</TableCell>
-            <TableCell>Leader ID</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sortedEvents.map((event) => (
-            <EventEntry
-              event={event}
-              deleteEvent={deleteEvent}
-              updateEvent={updateEvent}
-              possibleLeaders={possibleLeaders}
-              key={event._id}
-              openToast={openToast}
-            />
-          ))}
-          {eventsLoaded ? (
-            <EventEntry
-              create={true}
-              createEvent={createEvent}
-              possibleLeaders={possibleLeaders}
-              openToast={openToast}
-            />
-          ) : null}
-        </TableBody>
-      </Table>
+      <div className="event-page">
+        {sortedEvents.map((event) => (
+          <EventEntry
+            event={event}
+            deleteEvent={deleteEvent}
+            updateEvent={updateEvent}
+            possibleLeaders={possibleLeaders}
+            key={event._id}
+            openToast={openToast}
+          />
+        ))}
+        {eventsLoaded ? (
+          <EventEntry
+            create={true}
+            createEvent={createEvent}
+            possibleLeaders={possibleLeaders}
+            openToast={openToast}
+          />
+        ) : null}
+      </div>
       {eventsLoaded ? (
         <Button
           onClick={() => setShowModal(true)}
