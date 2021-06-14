@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import { fetchPointLog } from '../utils/DataRetrieval';
+import LoaderPage from './LoaderPage';
 import './PointLog.scss';
 import PointLogEntry from './PointLogEntry';
 
-const PointLog = ({ data, filterString }) => {
+const PointLog = ({ filterString, openToast }) => {
   const [ourData, setOurData] = useState([]);
 
+  const { isLoading, error, data } = useQuery('pointLogData', () =>
+    fetchPointLog()
+  );
+
   useEffect(() => {
+    if (!data) return;
+
     const testString = filterString.toLowerCase();
     const filtered = data.filter(
       (entry) =>
@@ -14,6 +23,13 @@ const PointLog = ({ data, filterString }) => {
     );
     setOurData(filtered);
   }, [data, filterString]);
+
+  if (error) {
+    openToast('There was an error getting the point log', 'error');
+    console.log(error);
+    return null;
+  }
+  if (isLoading) return <LoaderPage />;
 
   return (
     <div className="point-log-container">

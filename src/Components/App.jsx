@@ -8,7 +8,6 @@ import {
   fetchAuthInfo,
   fetchDiscordRoles,
   fetchGW2Ranks,
-  fetchPointLog,
 } from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
@@ -22,6 +21,9 @@ import { Refresh } from '@material-ui/icons';
 import PointLog from './PointLog';
 import EventPage from './EventPage';
 import EventRepo from '../utils/EventRepository';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const App = () => {
   const [gw2Log, setGw2Log] = useState([]);
@@ -29,7 +31,6 @@ const App = () => {
   const [discordMembers, setDiscordMembers] = useState([]);
   const [discordRoles, setDiscordRoles] = useState([]);
   const [guildRanks, setGuildRanks] = useState([]);
-  const [pointLog, setPointLog] = useState([]);
   const [events, setEvents] = useState([]);
   const [eventsLoaded, setEventsLoaded] = useState(false);
   const [authInfo, setAuthInfo] = useState({});
@@ -75,7 +76,6 @@ const App = () => {
       setDiscordMembers([]);
       setDiscordRoles([]);
       setGuildRanks([]);
-      setPointLog([]);
       setEvents([]);
       setEventsLoaded(false);
 
@@ -85,7 +85,6 @@ const App = () => {
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchGW2Ranks().then((r) => setGuildRanks(r)),
-        fetchPointLog().then((r) => setPointLog(r)),
         EventRepo.getAll().then((r) => {
           setEvents(r);
           setEventsLoaded(true);
@@ -146,8 +145,6 @@ const App = () => {
 
     if (tab === TABS.LOG) {
       loaded = any(gw2Log);
-    } else if (tab === TABS.POINT_LOG) {
-      loaded = any(pointLog);
     } else if (tab === TABS.EVENTS) {
       loaded = eventsLoaded;
     } else {
@@ -161,79 +158,81 @@ const App = () => {
   };
 
   return (
-    <MuiThemeProvider theme={darkTheme}>
-      <Paper className="paper-container" square>
-        <Snackbar
-          open={showToast}
-          autoHideDuration={6000}
-          onClose={() => closeToast()}
-        >
-          <Alert onClose={() => closeToast()} severity={toastStatus}>
-            {toastMessage}
-          </Alert>
-        </Snackbar>
-        <div className="content">
-          <Control
-            refresh={refresh}
-            handleFilterChange={handleFilterChange}
-            theme={theme}
-            toggleTheme={toggleTheme}
-            loadingData={loadingData}
-          />
-          <TabContext value={tab}>
-            <Tabs
-              value={tab}
-              onChange={(e, v) => setTab(v)}
-              scrollButtons="auto"
-              variant="scrollable"
-            >
-              <Tab
-                icon={getTabIcon(TABS.ROSTER)}
-                label={TABS.ROSTER}
-                value="roster"
-              />
-              <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
-              <Tab
-                icon={getTabIcon(TABS.POINT_LOG)}
-                label={TABS.POINT_LOG}
-                value="pointlog"
-              />
-              <Tab
-                icon={getTabIcon(TABS.EVENTS)}
-                label={TABS.EVENTS}
-                value="events"
-              />
-            </Tabs>
-            <TabPanel value="roster">
-              <Roster
-                gw2Members={gw2Members}
-                discordMembers={discordMembers}
-                discordRoles={discordRoles}
-                guildRanks={guildRanks}
-                filterString={filterString}
-                authInfo={authInfo}
-                openToast={openToast}
-              />
-            </TabPanel>
-            <TabPanel value="log">
-              <Log data={gw2Log} filterString={filterString} />
-            </TabPanel>
-            <TabPanel value="pointlog">
-              <PointLog data={pointLog} filterString={filterString} />
-            </TabPanel>
-            <TabPanel value="events">
-              <EventPage
-                events={events}
-                eventsLoaded={eventsLoaded}
-                discordMembers={discordMembers}
-                filterString={filterString}
-                openToast={openToast}
-              />
-            </TabPanel>
-          </TabContext>
-        </div>
-      </Paper>
-    </MuiThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <MuiThemeProvider theme={darkTheme}>
+        <Paper className="paper-container" square>
+          <Snackbar
+            open={showToast}
+            autoHideDuration={6000}
+            onClose={() => closeToast()}
+          >
+            <Alert onClose={() => closeToast()} severity={toastStatus}>
+              {toastMessage}
+            </Alert>
+          </Snackbar>
+          <div className="content">
+            <Control
+              refresh={refresh}
+              handleFilterChange={handleFilterChange}
+              theme={theme}
+              toggleTheme={toggleTheme}
+              loadingData={loadingData}
+            />
+            <TabContext value={tab}>
+              <Tabs
+                value={tab}
+                onChange={(e, v) => setTab(v)}
+                scrollButtons="auto"
+                variant="scrollable"
+              >
+                <Tab
+                  icon={getTabIcon(TABS.ROSTER)}
+                  label={TABS.ROSTER}
+                  value="roster"
+                />
+                <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
+                <Tab
+                  icon={getTabIcon(TABS.POINT_LOG)}
+                  label={TABS.POINT_LOG}
+                  value="pointlog"
+                />
+                <Tab
+                  icon={getTabIcon(TABS.EVENTS)}
+                  label={TABS.EVENTS}
+                  value="events"
+                />
+              </Tabs>
+              <TabPanel value="roster">
+                <Roster
+                  gw2Members={gw2Members}
+                  discordMembers={discordMembers}
+                  discordRoles={discordRoles}
+                  guildRanks={guildRanks}
+                  filterString={filterString}
+                  authInfo={authInfo}
+                  openToast={openToast}
+                />
+              </TabPanel>
+              <TabPanel value="log">
+                <Log data={gw2Log} filterString={filterString} />
+              </TabPanel>
+              <TabPanel value="pointlog">
+                <PointLog filterString={filterString} openToast={openToast} />
+              </TabPanel>
+              <TabPanel value="events">
+                <EventPage
+                  events={events}
+                  eventsLoaded={eventsLoaded}
+                  discordMembers={discordMembers}
+                  filterString={filterString}
+                  openToast={openToast}
+                />
+              </TabPanel>
+            </TabContext>
+          </div>
+        </Paper>
+      </MuiThemeProvider>
+    </QueryClientProvider>
   );
 };
 
