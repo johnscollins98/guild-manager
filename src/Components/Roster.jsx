@@ -98,7 +98,7 @@ const Roster = ({ filterString, openToast }) => {
       discordRoles={discordRoles.data}
       guildRanks={guildRanks.data}
       filterString={filterString}
-      authInfo={authInfo}
+      authInfo={authInfo.data}
       openToast={openToast}
     />
   );
