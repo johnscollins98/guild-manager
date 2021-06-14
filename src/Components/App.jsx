@@ -1,13 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import 'fontsource-roboto';
 
-import {
-  fetchGW2Members,
-  fetchDiscordMembers,
-  fetchAuthInfo,
-  fetchDiscordRoles,
-  fetchGW2Ranks,
-} from '../utils/DataRetrieval';
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
@@ -23,13 +16,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [gw2Members, setGw2Members] = useState([]);
-  const [discordMembers, setDiscordMembers] = useState([]);
-  const [discordRoles, setDiscordRoles] = useState([]);
-  const [guildRanks, setGuildRanks] = useState([]);
-  const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
-  const [loadingData, setLoadingData] = useState(true);
   const [tab, setTab] = useState('roster');
 
   const [showToast, setShowToast] = useState(false);
@@ -60,50 +47,6 @@ const App = () => {
     setToastMessage('');
     setShowToast(false);
   }, [setToastMessage, setShowToast]);
-
-  const fetchData = useCallback(async () => {
-    let success = false;
-    try {
-      setLoadingData(true);
-      setGw2Members([]);
-      setDiscordMembers([]);
-      setDiscordRoles([]);
-      setGuildRanks([]);
-
-      const requests = [
-        fetchGW2Members().then((r) => setGw2Members(r)),
-        fetchDiscordMembers().then((r) => setDiscordMembers(r)),
-        fetchDiscordRoles().then((r) => setDiscordRoles(r)),
-        fetchGW2Ranks().then((r) => setGuildRanks(r)),
-        fetchAuthInfo()
-          .then((r) => setAuthInfo(r))
-          .catch((e) => {
-            console.error(e);
-            openToast(
-              'There was an error getting authorization. See console for more information.',
-              'error'
-            );
-          }),
-      ];
-
-      await Promise.all(requests);
-      success = true;
-    } catch (err) {
-      openToast(
-        'There was an error gathering data. See console for more information.',
-        'error'
-      );
-      console.error(err);
-    } finally {
-      setLoadingData(false);
-      return success;
-    }
-  }, [setLoadingData, setGw2Members, setDiscordMembers, openToast]);
-
-  useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleFilterChange = useCallback(
     (event) => {
@@ -137,7 +80,6 @@ const App = () => {
               handleFilterChange={handleFilterChange}
               theme={theme}
               toggleTheme={toggleTheme}
-              loadingData={loadingData}
             />
             <TabContext value={tab}>
               <Tabs
@@ -152,15 +94,7 @@ const App = () => {
                 <Tab label={TABS.EVENTS} value="events" />
               </Tabs>
               <TabPanel value="roster">
-                <Roster
-                  gw2Members={gw2Members}
-                  discordMembers={discordMembers}
-                  discordRoles={discordRoles}
-                  guildRanks={guildRanks}
-                  filterString={filterString}
-                  authInfo={authInfo}
-                  openToast={openToast}
-                />
+                <Roster filterString={filterString} openToast={openToast} />
               </TabPanel>
               <TabPanel value="log">
                 <Log filterString={filterString} openToast={openToast} />
@@ -169,11 +103,7 @@ const App = () => {
                 <PointLog filterString={filterString} openToast={openToast} />
               </TabPanel>
               <TabPanel value="events">
-                <EventPage
-                  discordMembers={discordMembers}
-                  filterString={filterString}
-                  openToast={openToast}
-                />
+                <EventPage filterString={filterString} openToast={openToast} />
               </TabPanel>
             </TabContext>
           </div>

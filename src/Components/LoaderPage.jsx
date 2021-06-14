@@ -12,7 +12,7 @@ const LoaderPage = () => {
         justifyContent: 'center',
       }}
     >
-      <CircularProgress size={100}/>
+      <CircularProgress size={100} />
     </div>
   );
 };

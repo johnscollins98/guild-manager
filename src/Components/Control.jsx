@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import { Grid, IconButton, TextField } from '@material-ui/core';
 import { Brightness3, Brightness6 } from '@material-ui/icons';
 
-const Control = ({
-  handleFilterChange,
-  theme,
-  toggleTheme,
-}) => {
+const Control = ({ handleFilterChange, theme, toggleTheme }) => {
   return (
     <Grid
       container
@@ -36,7 +32,6 @@ const Control = ({
 };
 
 Control.propTypes = {
-  refresh: PropTypes.func.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
 };
 

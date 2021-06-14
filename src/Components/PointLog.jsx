@@ -34,7 +34,7 @@ const PointLog = ({ filterString, openToast }) => {
   return (
     <div className="point-log-container">
       {ourData.map((entry) => (
-        <PointLogEntry entry={entry} />
+        <PointLogEntry entry={entry} key={entry._id} />
       ))}
     </div>
   );
