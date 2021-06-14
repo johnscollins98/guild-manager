@@ -16,10 +16,8 @@ import './App.scss';
 import { Paper, Snackbar, Tab, Tabs } from '@material-ui/core';
 import { TabContext, TabPanel, Alert } from '@material-ui/lab';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { Refresh } from '@material-ui/icons';
 import PointLog from './PointLog';
 import EventPage from './EventPage';
-import EventRepo from '../utils/EventRepository';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
@@ -29,8 +27,6 @@ const App = () => {
   const [discordMembers, setDiscordMembers] = useState([]);
   const [discordRoles, setDiscordRoles] = useState([]);
   const [guildRanks, setGuildRanks] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [eventsLoaded, setEventsLoaded] = useState(false);
   const [authInfo, setAuthInfo] = useState({});
   const [filterString, setFilterString] = useState('');
   const [loadingData, setLoadingData] = useState(true);
@@ -73,18 +69,12 @@ const App = () => {
       setDiscordMembers([]);
       setDiscordRoles([]);
       setGuildRanks([]);
-      setEvents([]);
-      setEventsLoaded(false);
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchGW2Ranks().then((r) => setGuildRanks(r)),
-        EventRepo.getAll().then((r) => {
-          setEvents(r);
-          setEventsLoaded(true);
-        }),
         fetchAuthInfo()
           .then((r) => setAuthInfo(r))
           .catch((e) => {
@@ -115,11 +105,6 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const refresh = useCallback(async () => {
-    const success = await fetchData();
-    if (success) openToast('Successfully refreshed!', 'success');
-  }, [fetchData, openToast]);
-
   const handleFilterChange = useCallback(
     (event) => {
       setFilterString(event.target.value);
@@ -132,23 +117,6 @@ const App = () => {
     LOG: 'Log',
     POINT_LOG: 'Points Log',
     EVENTS: 'Events',
-  };
-
-  const any = (arr) => arr.length > 0;
-
-  const getTabIcon = (tab) => {
-    let loaded = !loadingData;
-
-    if (tab === TABS.EVENTS) {
-      loaded = eventsLoaded;
-    } else {
-      loaded =
-        any(gw2Members) &&
-        any(discordMembers) &&
-        any(guildRanks) &&
-        any(discordRoles);
-    }
-    return loaded ? null : <Refresh />;
   };
 
   return (
@@ -166,7 +134,6 @@ const App = () => {
           </Snackbar>
           <div className="content">
             <Control
-              refresh={refresh}
               handleFilterChange={handleFilterChange}
               theme={theme}
               toggleTheme={toggleTheme}
@@ -179,22 +146,10 @@ const App = () => {
                 scrollButtons="auto"
                 variant="scrollable"
               >
-                <Tab
-                  icon={getTabIcon(TABS.ROSTER)}
-                  label={TABS.ROSTER}
-                  value="roster"
-                />
-                <Tab icon={getTabIcon(TABS.LOG)} label={TABS.LOG} value="log" />
-                <Tab
-                  icon={getTabIcon(TABS.POINT_LOG)}
-                  label={TABS.POINT_LOG}
-                  value="pointlog"
-                />
-                <Tab
-                  icon={getTabIcon(TABS.EVENTS)}
-                  label={TABS.EVENTS}
-                  value="events"
-                />
+                <Tab label={TABS.ROSTER} value="roster" />
+                <Tab label={TABS.LOG} value="log" />
+                <Tab label={TABS.POINT_LOG} value="pointlog" />
+                <Tab label={TABS.EVENTS} value="events" />
               </Tabs>
               <TabPanel value="roster">
                 <Roster
@@ -215,8 +170,6 @@ const App = () => {
               </TabPanel>
               <TabPanel value="events">
                 <EventPage
-                  events={events}
-                  eventsLoaded={eventsLoaded}
                   discordMembers={discordMembers}
                   filterString={filterString}
                   openToast={openToast}

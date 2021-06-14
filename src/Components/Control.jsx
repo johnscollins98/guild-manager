@@ -1,20 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Button, Grid, IconButton, TextField } from '@material-ui/core';
+import { Grid, IconButton, TextField } from '@material-ui/core';
 import { Brightness3, Brightness6 } from '@material-ui/icons';
 
 const Control = ({
-  refresh,
   handleFilterChange,
-  loadingData,
   theme,
   toggleTheme,
 }) => {
-  const onRefresh = async () => {
-    await refresh();
-  };
-
   return (
     <Grid
       container
@@ -31,11 +25,6 @@ const Control = ({
           fullWidth
           onChange={handleFilterChange}
         />
-      </Grid>
-      <Grid item>
-        <Button onClick={onRefresh} disabled={loadingData}>
-          Refresh
-        </Button>
       </Grid>
       <Grid item>
         <IconButton onClick={() => toggleTheme()}>
