@@ -3,7 +3,6 @@ import 'fontsource-roboto';
 
 import {
   fetchGW2Members,
-  fetchGW2Log,
   fetchDiscordMembers,
   fetchAuthInfo,
   fetchDiscordRoles,
@@ -26,7 +25,6 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [gw2Log, setGw2Log] = useState([]);
   const [gw2Members, setGw2Members] = useState([]);
   const [discordMembers, setDiscordMembers] = useState([]);
   const [discordRoles, setDiscordRoles] = useState([]);
@@ -72,7 +70,6 @@ const App = () => {
     try {
       setLoadingData(true);
       setGw2Members([]);
-      setGw2Log([]);
       setDiscordMembers([]);
       setDiscordRoles([]);
       setGuildRanks([]);
@@ -81,7 +78,6 @@ const App = () => {
 
       const requests = [
         fetchGW2Members().then((r) => setGw2Members(r)),
-        fetchGW2Log().then((r) => setGw2Log(r)),
         fetchDiscordMembers().then((r) => setDiscordMembers(r)),
         fetchDiscordRoles().then((r) => setDiscordRoles(r)),
         fetchGW2Ranks().then((r) => setGuildRanks(r)),
@@ -112,7 +108,7 @@ const App = () => {
       setLoadingData(false);
       return success;
     }
-  }, [setLoadingData, setGw2Members, setGw2Log, setDiscordMembers, openToast]);
+  }, [setLoadingData, setGw2Members, setDiscordMembers, openToast]);
 
   useEffect(() => {
     fetchData();
@@ -143,9 +139,7 @@ const App = () => {
   const getTabIcon = (tab) => {
     let loaded = !loadingData;
 
-    if (tab === TABS.LOG) {
-      loaded = any(gw2Log);
-    } else if (tab === TABS.EVENTS) {
+    if (tab === TABS.EVENTS) {
       loaded = eventsLoaded;
     } else {
       loaded =
@@ -214,7 +208,7 @@ const App = () => {
                 />
               </TabPanel>
               <TabPanel value="log">
-                <Log data={gw2Log} filterString={filterString} />
+                <Log filterString={filterString} openToast={openToast} />
               </TabPanel>
               <TabPanel value="pointlog">
                 <PointLog filterString={filterString} openToast={openToast} />
