@@ -1,9 +1,10 @@
 import { Button, FormControlLabel, Switch, TextField } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import EventRepository from '../utils/EventRepository';
+import LoaderPage from './LoaderPage';
 
 const EventPosterForm = ({ onClose, openToast }) => {
-  const [loadingSettings, setLoadingSettings] = useState(true);
   const [editMessages, setEditMessages] = useState(false);
   const [postChannel, setPostChannel] = useState('');
   const [existingMessageIds, setExistingMessageIds] = useState({
@@ -16,36 +17,28 @@ const EventPosterForm = ({ onClose, openToast }) => {
     Sunday: '',
   });
   const [posting, setPosting] = useState(false);
+  const { isLoading, error, data } = useQuery('event-settings', () =>
+    EventRepository.getSettings()
+  );
 
   useEffect(() => {
-    const setupSettings = async () => {
-      try {
-        const settings = await EventRepository.getSettings();
-        if (settings) {
-          setPostChannel(settings.channelId || '');
-          setEditMessages(settings.editMessages || false);
+    if (data) {
+      setPostChannel(data.channelId || '');
+      setEditMessages(data.editMessages || false);
 
-          if (settings.existingMessageIds) {
-            setExistingMessageIds({
-              Monday: settings.existingMessageIds.Monday || '',
-              Tuesday: settings.existingMessageIds.Tuesday || '',
-              Wednesday: settings.existingMessageIds.Wednesday || '',
-              Thursday: settings.existingMessageIds.Thursday || '',
-              Friday: settings.existingMessageIds.Friday || '',
-              Saturday: settings.existingMessageIds.Saturday || '',
-              Sunday: settings.existingMessageIds.Sunday || '',
-            });
-          }
-        }
-      } catch (err) {
-        console.error(err);
-        openToast('Error getting event settings', 'error');
-      } finally {
-        setLoadingSettings(false);
+      if (data.existingMessageIds) {
+        setExistingMessageIds({
+          Monday: data.existingMessageIds.Monday || '',
+          Tuesday: data.existingMessageIds.Tuesday || '',
+          Wednesday: data.existingMessageIds.Wednesday || '',
+          Thursday: data.existingMessageIds.Thursday || '',
+          Friday: data.existingMessageIds.Friday || '',
+          Saturday: data.existingMessageIds.Saturday || '',
+          Sunday: data.existingMessageIds.Sunday || '',
+        });
       }
-    };
-    setupSettings();
-  }, [openToast]);
+    }
+  }, [data]);
 
   const submitHandler = useCallback(
     async (e) => {
@@ -85,6 +78,18 @@ const EventPosterForm = ({ onClose, openToast }) => {
     [existingMessageIds, setExistingMessageIds]
   );
 
+  if (error) {
+    openToast('There was an error getting the log', 'error');
+    console.log(error);
+    return null;
+  }
+  if (isLoading || posting)
+    return (
+      <div style={{ height: '300px' }}>
+        <LoaderPage />;
+      </div>
+    );
+  //
   return (
     <form onSubmit={submitHandler}>
       <div>
@@ -92,7 +97,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
           onChange={(e) => setPostChannel(e.target.value)}
           value={postChannel}
           label="Channel ID to post to"
-          disabled={posting || loadingSettings}
+          disabled={posting}
           required
         />
       </div>
@@ -103,7 +108,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
             onChange={(e) => {
               setEditMessages(e.target.checked);
             }}
-            disabled={posting || loadingSettings}
+            disabled={posting}
           />
         }
         label="Edit existing messages?"
@@ -121,7 +126,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
               InputLabelProps={{ shrink: true }}
               value={existingMessageIds[day]}
               onChange={(e) => handleChange(e, day)}
-              disabled={posting || loadingSettings}
+              disabled={posting}
               required
             />
           ))}
@@ -138,7 +143,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
           variant="contained"
           onClick={onClose}
           style={{ marginRight: '8px' }}
-          disabled={posting || loadingSettings}
+          disabled={posting}
         >
           Close
         </Button>
@@ -146,7 +151,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
           variant="contained"
           color="primary"
           type="submit"
-          disabled={posting || loadingSettings}
+          disabled={posting}
         >
           Submit
         </Button>

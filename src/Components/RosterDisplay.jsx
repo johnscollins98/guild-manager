@@ -5,7 +5,6 @@ import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
-import LoaderPage from './LoaderPage';
 import RosterControl from './RosterControl';
 import { compareRank } from '../utils/DataProcessing';
 
@@ -21,25 +20,10 @@ const RosterDisplay = ({
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
-  const [allDataLoaded, setAllDataLoaded] = useState(false);
   const [singleColumn, setSingleColumn] = useState(false);
 
   const [sortBy, setSortBy] = useState('rank');
   const [filterBy, setFilterBy] = useState('none');
-
-  const [adminActionsEnabled, setAdminActionsEnabled] = useState(false);
-
-  useEffect(() => {
-    if (authInfo && records.length && discordRoles.length) {
-      setAllDataLoaded(true);
-    } else {
-      setAllDataLoaded(false);
-    }
-  }, [authInfo, records, discordRoles, setAllDataLoaded]);
-
-  useEffect(() => {
-    setAdminActionsEnabled(authInfo.isAdmin);
-  }, [authInfo]);
 
   useEffect(() => {
     setRecordState(records);
@@ -176,9 +160,7 @@ const RosterDisplay = ({
     [changeEventAttended]
   );
 
-  return !allDataLoaded ? (
-    <LoaderPage />
-  ) : (
+  return (
     <>
       <RosterControl
         singleColumn={singleColumn}
@@ -197,7 +179,7 @@ const RosterDisplay = ({
             onKick={onKick}
             singleColumn={singleColumn}
             onEdit={openEdit}
-            isAdmin={adminActionsEnabled}
+            isAdmin={authInfo.isAdmin}
             addPoint={incrementEventAttended}
             removePoint={decrementEventAttended}
           />

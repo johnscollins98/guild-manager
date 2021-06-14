@@ -97,15 +97,15 @@ const RosterControl = ({
         }}
       >
         <MenuItem onClick={() => sortHandler('rank')}>
-          {sortBy === 'rank' ? <Check className='selected' /> : null}
+          {sortBy === 'rank' ? <Check className="selected" /> : null}
           Rank
         </MenuItem>
         <MenuItem onClick={() => sortHandler('name')}>
-          {sortBy === 'name' ? <Check className='selected' /> : null}
+          {sortBy === 'name' ? <Check className="selected" /> : null}
           Name
         </MenuItem>
         <MenuItem onClick={() => sortHandler('points')}>
-          {sortBy === 'points' ? <Check className='selected' /> : null}
+          {sortBy === 'points' ? <Check className="selected" /> : null}
           Points
         </MenuItem>
       </Menu>
@@ -119,19 +119,21 @@ const RosterControl = ({
         }}
       >
         <MenuItem onClick={() => filterHandler('none')}>
-          {filterBy === 'none' ? <Check className='selected' /> : null}
+          {filterBy === 'none' ? <Check className="selected" /> : null}
           No filters
         </MenuItem>
         <MenuItem onClick={() => filterHandler('has-gw2')}>
-          {filterBy === 'has-gw2' ? <Check className='selected' /> : null}
+          {filterBy === 'has-gw2' ? <Check className="selected" /> : null}
           Has GW2 Account
         </MenuItem>
         <MenuItem onClick={() => filterHandler('excess-discord')}>
-          {filterBy === 'excess-discord' ? <Check className='selected' /> : null}
+          {filterBy === 'excess-discord' ? (
+            <Check className="selected" />
+          ) : null}
           Excess Discord
         </MenuItem>
         <MenuItem onClick={() => filterHandler('issues')}>
-          {filterBy === 'issues' ? <Check className='selected' /> : null}
+          {filterBy === 'issues' ? <Check className="selected" /> : null}
           Any issues
         </MenuItem>
       </Menu>

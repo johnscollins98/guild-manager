@@ -4,14 +4,14 @@ import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
 import './EventPage.scss';
+import { useQuery } from 'react-query';
+import LoaderPage from './LoaderPage';
+import { fetchDiscordMembers } from '../utils/DataRetrieval';
 
-const EventPage = ({
-  events,
-  eventsLoaded,
-  discordMembers,
-  filterString,
-  openToast,
-}) => {
+const EventPage = ({ filterString, openToast }) => {
+  const eventsQuery = useQuery('eventsData', () => EventRepo.getAll());
+  const discordQuery = useQuery('discordMembers', () => fetchDiscordMembers());
+
   const [localEvents, setLocalEvents] = useState([]);
   const [sortedEvents, setSortedEvents] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -19,8 +19,9 @@ const EventPage = ({
   const [possibleLeaders, setPossibleLeaders] = useState([]);
 
   useEffect(() => {
+    if (!discordQuery.data) return;
     setPossibleLeaders(
-      discordMembers.filter(
+      discordQuery.data.filter(
         (member) =>
           !!member.roles.find(
             (r) =>
@@ -30,11 +31,13 @@ const EventPage = ({
           ) // hardcoded for now, to be improved.
       )
     );
-  }, [discordMembers]);
+  }, [discordQuery.data]);
 
   useEffect(() => {
-    setLocalEvents(events);
-  }, [events, setLocalEvents]);
+    if (eventsQuery.data) {
+      setLocalEvents(eventsQuery.data);
+    }
+  }, [eventsQuery.data, setLocalEvents]);
 
   useEffect(() => {
     const sorter = {
@@ -145,6 +148,19 @@ const EventPage = ({
     [localEvents, setLocalEvents, openToast]
   );
 
+  if (discordQuery.error) {
+    openToast('There was an error getting discord data', 'error');
+    console.log(discordQuery.error);
+    return null;
+  }
+
+  if (eventsQuery.error) {
+    openToast('There was an error getting event data', 'error');
+    console.log(eventsQuery.error);
+    return null;
+  }
+
+  if (discordQuery.isLoading || eventsQuery.isLoading) return <LoaderPage />;
   return (
     <>
       <div className="event-page">
@@ -158,24 +174,20 @@ const EventPage = ({
             openToast={openToast}
           />
         ))}
-        {eventsLoaded ? (
-          <EventEntry
-            create={true}
-            createEvent={createEvent}
-            possibleLeaders={possibleLeaders}
-            openToast={openToast}
-          />
-        ) : null}
+        <EventEntry
+          create={true}
+          createEvent={createEvent}
+          possibleLeaders={possibleLeaders}
+          openToast={openToast}
+        />
       </div>
-      {eventsLoaded ? (
-        <Button
-          onClick={() => setShowModal(true)}
-          style={{ width: 'fit-content', margin: '4px' }}
-          variant="contained"
-        >
-          Post to Discord
-        </Button>
-      ) : null}
+      <Button
+        onClick={() => setShowModal(true)}
+        style={{ width: 'fit-content', margin: '4px' }}
+        variant="contained"
+      >
+        Post to Discord
+      </Button>
       <Dialog
         open={showModal}
         onClose={() => setShowModal(false)}
@@ -185,7 +197,6 @@ const EventPage = ({
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
           <EventPosterForm
-            events={events}
             onClose={() => setShowModal(false)}
             openToast={openToast}
           />
