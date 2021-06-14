@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import './GuildMemberCard.scss';
 import {
   Avatar,
@@ -37,6 +37,13 @@ const GuildMemberCard = ({
   const color = getColorFromRole(rank, discordRoles);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [memberIsAdmin, setMemberIsAdmin] = useState(true);
+
+  useEffect(() => {
+    setMemberIsAdmin(
+      member.rank === 'General' || member.rank === 'Spearmarshal'
+    );
+  }, [member]);
 
   const handleClick = useCallback(
     (e) => {
@@ -150,7 +157,7 @@ const GuildMemberCard = ({
           onClose={closeMenu}
         >
           <MenuItem
-            disabled={!isAdmin}
+            disabled={!isAdmin || memberIsAdmin}
             onClick={() => menuAction(onKick)}
             className="error"
           >
@@ -159,7 +166,10 @@ const GuildMemberCard = ({
               Kick
             </span>
           </MenuItem>
-          <MenuItem disabled={!isAdmin} onClick={() => menuAction(onEdit)}>
+          <MenuItem
+            disabled={!isAdmin || memberIsAdmin}
+            onClick={() => menuAction(onEdit)}
+          >
             <span className="menu-item">
               <Edit className="icon" />
               Edit Roles
