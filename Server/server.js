@@ -61,7 +61,7 @@ app.use(async (req, res, next) => {
     res.redirect('/auth');
   }
 });
-app.use(express.static(path.join(__dirname, '..', 'Client', 'build')));
+app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.get('*', (req, res) => {
   res.redirect('/');
