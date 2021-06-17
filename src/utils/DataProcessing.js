@@ -76,7 +76,7 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
       return {
         accountName: discordMember.name,
         rank: null,
-        joinDate: null,
+        joinDate: discordMember.joined.split('T')[0].replace(/-/g, '/'),
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles || [],

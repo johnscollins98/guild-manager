@@ -54,6 +54,13 @@ const RosterDisplay = ({
             return compareRank(guildRanks, aRank, bRank);
           });
           break;
+        case 'date':
+          sorted = sorted.sort((a, b) => {
+            const aDate = a.joinDate || "1970-01-01T00:00:00.000Z";
+            const bDate = b.joinDate || "1970-01-01T00:00:00.000Z";
+            return new Date(aDate) - new Date(bDate);
+          })
+          break;
         default:
           break;
       }

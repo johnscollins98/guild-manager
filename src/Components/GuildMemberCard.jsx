@@ -13,6 +13,7 @@ import { getColorFromRole } from '../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 import {
   Add,
+  CalendarToday,
   Close,
   Edit,
   Error,
@@ -87,7 +88,15 @@ const GuildMemberCard = ({
                   ? member.discordName[0]
                   : null}
               </Avatar>
-              <Typography>{member.memberId || member.discordName}</Typography>
+              <span className="details">
+                <Typography>{member.memberId || member.discordName}</Typography>
+                {member.joinDate ? (
+                  <span className="date">
+                    <CalendarToday />
+                    <Typography>{member.joinDate}</Typography>
+                  </span>
+                ) : null}
+              </span>
             </div>
             <div className="icons-container">
               {member.issues.promotionRequired ? (
