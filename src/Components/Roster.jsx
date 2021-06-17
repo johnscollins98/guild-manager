@@ -54,6 +54,7 @@ const Roster = ({ filterString, openToast }) => {
     const getIsLoading = () => {
       if (gw2Members.isLoading) return true;
       if (discordMembers.isLoading) return true;
+      if (discordRoles.isLoading) return true;
       if (guildRanks.isLoading) return true;
       if (authInfo.isLoading) return true;
     };
