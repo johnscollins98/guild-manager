@@ -29,7 +29,7 @@
   .MuiCardContent-root {
     width: 100%;
     padding: 12px;
-    
+
     &:last-child {
       padding-bottom: 12px;
     }
@@ -45,6 +45,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        overflow: hidden;
 
         .avatar {
           margin-right: 8px;
@@ -52,22 +53,29 @@
           width: 32px;
         }
 
-        .date {
-          display: flex;
-          align-items: center;
-          .MuiSvgIcon-root, .MuiTypography-root {
-            font-size: 12px;
-            opacity: 0.8;
-            font-weight: 200;
+        .details {
+          .name {
+            white-space: nowrap;
           }
 
-          .MuiSvgIcon-root {
-            margin-right: 4px;
-          }
-
-          .MuiTypography-root {
+          .date {
             display: flex;
             align-items: center;
+            .MuiSvgIcon-root,
+            .MuiTypography-root {
+              font-size: 12px;
+              opacity: 0.8;
+              font-weight: 200;
+            }
+
+            .MuiSvgIcon-root {
+              margin-right: 4px;
+            }
+
+            .MuiTypography-root {
+              display: flex;
+              align-items: center;
+            }
           }
         }
       }
