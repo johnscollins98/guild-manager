@@ -21,6 +21,7 @@ export const generateGW2RosterRecords = (gw2Members, discordMembers, ranks) => {
 
     record.joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
     record.eventsAttended = gw2Member.eventsAttended;
+    record.warnings = gw2Member.warnings;
 
     // special case for unique account name
     const testName = record.accountName.toLowerCase();
@@ -81,6 +82,7 @@ export const getExcessDiscordRecords = (gw2Members, discordMembers, ranks) => {
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         avatar: discordMember.avatar,
+        warnings: [],
         issues: {
           missingGW2: !discordMember.roles.find(
             (r) => r.name === 'Guest' || r.name === 'Bots'

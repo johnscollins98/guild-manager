@@ -31,6 +31,7 @@ router.post('/', isAdmin, async (req, res) => {
     const member = req.member;
     const newWarning = req.body;
 
+    newWarning.givenBy = req.user.username;
     member.warnings.push(newWarning);
     const newMember = await member.save();
     res.status(200).json(newMember);
@@ -64,7 +65,6 @@ router.put('/:warning_id', isAdmin, async (req, res) => {
 
     const toUpdate = member.warnings.id(warningId);
     if (req.body.reason) toUpdate.reason = req.body.reason;
-    if (req.body.givenBy) toUpdate.givenBy = req.body.givenBy;
 
     const newMember = await member.save();
     res.status(200).json(newMember);

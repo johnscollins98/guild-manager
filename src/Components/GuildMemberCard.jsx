@@ -20,15 +20,18 @@ import {
   ExpandLess,
   Remove,
   SyncProblem,
+  Warning,
 } from '@material-ui/icons';
 import gw2Image from '../assets/images/gw2.png';
 import { useState } from 'react';
+import WarningForm from './WarningForm';
 
 const GuildMemberCard = ({
   member,
   discordRoles,
   onKick,
   onEdit,
+  onGiveWarning,
   isAdmin,
   addPoint,
   removePoint,
@@ -39,6 +42,7 @@ const GuildMemberCard = ({
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [memberIsAdmin, setMemberIsAdmin] = useState(true);
+  const [warningOpen, setWarningOpen] = useState(false);
 
   useEffect(() => {
     setMemberIsAdmin(
@@ -65,6 +69,13 @@ const GuildMemberCard = ({
     [member, closeMenu]
   );
 
+  const warningSubmitHandler = useCallback(
+    async (warningObject) => {
+      await onGiveWarning(member.memberId, warningObject);
+    },
+    [onGiveWarning, member]
+  );
+
   return (
     <>
       <Card
@@ -89,7 +100,9 @@ const GuildMemberCard = ({
                   : null}
               </Avatar>
               <span className="details">
-                <Typography className="name">{member.memberId || member.discordName}</Typography>
+                <Typography className="name">
+                  {member.memberId || member.discordName}
+                </Typography>
                 {member.joinDate ? (
                   <span className="date">
                     <CalendarToday />
@@ -150,9 +163,20 @@ const GuildMemberCard = ({
                   />
                 </Tooltip>
               ) : null}
+              {member.warnings.length ? (
+                <Tooltip title="Number of warnings">
+                  <Avatar className="number warnings">
+                    {member.warnings.length}
+                  </Avatar>
+                </Tooltip>
+              ) : null}
               {member.eventsAttended !== null &&
               member.eventsAttended !== undefined ? (
-                <Avatar className="points">{member.eventsAttended}</Avatar>
+                <Tooltip title="Number of points">
+                  <Avatar className="number points">
+                    {member.eventsAttended}
+                  </Avatar>
+                </Tooltip>
               ) : null}
             </div>
           </div>
@@ -173,6 +197,16 @@ const GuildMemberCard = ({
             <span className="menu-item error">
               <Close className="icon" />
               Kick
+            </span>
+          </MenuItem>
+          <MenuItem
+            disabled={!isAdmin || !member.memberId}
+            onClick={() => menuAction(() => setWarningOpen(true))}
+            className="warning"
+          >
+            <span className="menu-item warning">
+              <Warning className="icon" />
+              Give Warning
             </span>
           </MenuItem>
           <MenuItem
@@ -204,6 +238,11 @@ const GuildMemberCard = ({
           </MenuItem>
         </Menu>
       ) : null}
+      <WarningForm
+        isOpen={warningOpen}
+        onClose={() => setWarningOpen(false)}
+        onSubmit={warningSubmitHandler}
+      />
     </>
   );
 };

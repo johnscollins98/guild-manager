@@ -7,6 +7,7 @@ import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
 import RosterControl from './RosterControl';
 import { compareRank } from '../utils/DataProcessing';
+import WarningRepository from '../utils/WarningRepository';
 
 const RosterDisplay = ({
   records,
@@ -129,6 +130,27 @@ const RosterDisplay = ({
     [setModalShow, setSelectedRecord]
   );
 
+  const onGiveWarning = useCallback(
+    async (memberId, warningObject) => {
+      try {
+        const newMember = await WarningRepository.addWarning(
+          memberId,
+          warningObject
+        );
+        const recordsCopy = [...recordState];
+        const toEdit = recordsCopy.find((record) => {
+          return record.memberId === newMember.memberId;
+        });
+        toEdit.warnings = newMember.warnings;
+        setRecordState(recordsCopy);
+        openToast('Successfully gave warning', 'success');
+      } catch (err) {
+        openToast('There was an error creating the warning', 'error');
+      }
+    },
+    [openToast, recordState]
+  );
+
   const changeEventAttended = useCallback(
     async (memberId, eventsAttended) => {
       try {
@@ -184,6 +206,7 @@ const RosterDisplay = ({
             key={record.memberId || record.discordName}
             discordRoles={discordRoles}
             onKick={onKick}
+            onGiveWarning={onGiveWarning}
             singleColumn={singleColumn}
             onEdit={openEdit}
             isAdmin={authInfo.isAdmin}
