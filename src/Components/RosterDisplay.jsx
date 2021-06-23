@@ -62,6 +62,9 @@ const RosterDisplay = ({
             return new Date(aDate) - new Date(bDate);
           });
           break;
+        case 'warnings':
+          sorted = sorted.sort((a, b) => b.warnings.length - a.warnings.length);
+          break;
         default:
           break;
       }
@@ -84,6 +87,9 @@ const RosterDisplay = ({
         filtered = filtered.filter((record) => {
           return Object.keys(record.issues).some((k) => record.issues[k]);
         });
+        break;
+      case 'warnings':
+        filtered = filtered.filter((record) => record.warnings.length);
         break;
       case 'none':
         break;
