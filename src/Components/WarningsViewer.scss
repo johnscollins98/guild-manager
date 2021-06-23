@@ -5,6 +5,7 @@
   .warning-card {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     flex: 1;
     align-items: center;
     margin: 8px;
@@ -13,8 +14,11 @@
     .field {
       display: flex;
       flex: 1;
-      flex-wrap: nowrap;
       align-items: center;
+
+      .MuiTypography-root {
+        white-space: nowrap;
+      }
 
       &.actions {
         justify-self: flex-end;
