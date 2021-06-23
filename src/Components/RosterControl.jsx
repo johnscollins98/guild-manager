@@ -112,6 +112,10 @@ const RosterControl = ({
           {sortBy === 'date' ? <Check className="selected" /> : null}
           Join Date
         </MenuItem>
+        <MenuItem onClick={() => sortHandler('warnings')}>
+          {sortBy === 'warnings' ? <Check className="selected" /> : null}
+          Warnings
+        </MenuItem>
       </Menu>
       <Menu
         open={filterOpen}
@@ -139,6 +143,10 @@ const RosterControl = ({
         <MenuItem onClick={() => filterHandler('issues')}>
           {filterBy === 'issues' ? <Check className="selected" /> : null}
           Any issues
+        </MenuItem>
+        <MenuItem onClick={() => filterHandler('warnings')}>
+          {filterBy === 'warnings' ? <Check className="selected" /> : null}
+          Any warnings
         </MenuItem>
       </Menu>
     </>

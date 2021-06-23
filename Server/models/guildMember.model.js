@@ -2,9 +2,16 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const WarningSchema = new Schema({
+  reason: { type: String, required: true },
+  givenBy: { type: String, required: true },
+  timestamp: { type: Date, default: Date.now, required: true },
+});
+
 const GuildMemberSchema = new Schema({
   memberId: { type: String, required: true },
   eventsAttended: { type: Number, required: true },
+  warnings: [WarningSchema],
 });
 
 GuildMemberSchema.static(

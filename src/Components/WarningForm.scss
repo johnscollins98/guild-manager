@@ -1,0 +1,9 @@
+.warning-form {
+  display: flex;
+  align-items: center;
+
+  .MuiFormControl-root {
+    flex: 1;
+    margin-right: 4px;
+  }
+}

@@ -7,6 +7,7 @@ import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
 import RosterControl from './RosterControl';
 import { compareRank } from '../utils/DataProcessing';
+import WarningRepository from '../utils/WarningRepository';
 
 const RosterDisplay = ({
   records,
@@ -56,10 +57,13 @@ const RosterDisplay = ({
           break;
         case 'date':
           sorted = sorted.sort((a, b) => {
-            const aDate = a.joinDate || "1970-01-01T00:00:00.000Z";
-            const bDate = b.joinDate || "1970-01-01T00:00:00.000Z";
+            const aDate = a.joinDate || '1970-01-01T00:00:00.000Z';
+            const bDate = b.joinDate || '1970-01-01T00:00:00.000Z';
             return new Date(aDate) - new Date(bDate);
-          })
+          });
+          break;
+        case 'warnings':
+          sorted = sorted.sort((a, b) => b.warnings.length - a.warnings.length);
           break;
         default:
           break;
@@ -83,6 +87,9 @@ const RosterDisplay = ({
         filtered = filtered.filter((record) => {
           return Object.keys(record.issues).some((k) => record.issues[k]);
         });
+        break;
+      case 'warnings':
+        filtered = filtered.filter((record) => record.warnings.length);
         break;
       case 'none':
         break;
@@ -127,6 +134,49 @@ const RosterDisplay = ({
       setSelectedRecord(record);
     },
     [setModalShow, setSelectedRecord]
+  );
+
+  const onGiveWarning = useCallback(
+    async (memberId, warningObject) => {
+      try {
+        const newMember = await WarningRepository.addWarning(
+          memberId,
+          warningObject
+        );
+        const recordsCopy = [...recordState];
+        const toEdit = recordsCopy.find((record) => {
+          return record.memberId === newMember.memberId;
+        });
+        toEdit.warnings = newMember.warnings;
+        setRecordState(recordsCopy);
+        openToast('Successfully gave warning', 'success');
+      } catch (err) {
+        openToast('There was an error creating the warning', 'error');
+      }
+    },
+    [openToast, recordState]
+  );
+
+  const onDeleteWarning = useCallback(
+    async (memberId, warningId) => {
+      try {
+        const newMember = await WarningRepository.deleteWarning(
+          memberId,
+          warningId
+        );
+        const recordsCopy = [...recordState];
+        const toEdit = recordsCopy.find((record) => {
+          return record.memberId === newMember.memberId;
+        });
+        toEdit.warnings = newMember.warnings;
+        setRecordState(recordsCopy);
+        openToast('Successfully removed warning', 'success');
+      } catch (err) {
+        console.error(err);
+        openToast('There was an error deleting the warning', 'error');
+      }
+    },
+    [openToast, recordState]
   );
 
   const changeEventAttended = useCallback(
@@ -184,6 +234,8 @@ const RosterDisplay = ({
             key={record.memberId || record.discordName}
             discordRoles={discordRoles}
             onKick={onKick}
+            onGiveWarning={onGiveWarning}
+            onDeleteWarning={onDeleteWarning}
             singleColumn={singleColumn}
             onEdit={openEdit}
             isAdmin={authInfo.isAdmin}

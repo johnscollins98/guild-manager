@@ -84,12 +84,26 @@
         display: flex;
         align-items: center;
 
-        .points {
+        img,
+        .MuiAvatar-root,
+        .MuiSvgIcon-root {
+          margin: 0 2px;
+        }
+
+        .number {
           height: 24px;
           width: 24px;
           font-size: 16px;
-          background-color: #009688;
           text-align: center;
+          color: black;
+
+          &.points {
+            background-color: #009688;
+          }
+
+          &.warnings {
+            background-color: #ffea00;
+          }
         }
       }
     }
@@ -98,6 +112,10 @@
 
 .error {
   color: #ff0033;
+}
+
+.warning {
+  color: #ffea00;
 }
 
 .menu-item {

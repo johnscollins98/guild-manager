@@ -4,6 +4,7 @@ const { isEventLeader } = require('../middleware/auth');
 const GuildMember = require('../models/guildMember.model');
 const PointLog = require('../models/pointLog.model');
 const GW2Utils = require('../utils/gw2');
+const warningRoute = require('./warnings');
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
 const apiToken = process.env.GW2_API_TOKEN;
@@ -12,6 +13,23 @@ const reqParams = {
     Authorization: `Bearer ${apiToken}`,
   },
 };
+
+const gatherMember = async (req, res, next) => {
+  try {
+    const memberId = req.params.member_id;
+    const member = await GuildMember.findOne({ memberId });
+    if (member) {
+      req.member = member;
+      return next();
+    } else {
+      return res.status(404).json('Not found');
+    }
+  } catch (err) {
+    return res.status(400).json(`Error: ${err}`);
+  }
+};
+
+router.use('/members/:member_id/warnings/', gatherMember, warningRoute);
 
 router.get('/members', async (req, res) => {
   try {
@@ -30,7 +48,11 @@ router.get('/members', async (req, res) => {
           { memberId: m.name },
           { memberId: m.name, eventsAttended: 0 }
         );
-        return { ...m, eventsAttended: record.eventsAttended };
+        return {
+          ...m,
+          eventsAttended: record.eventsAttended,
+          warnings: record.warnings,
+        };
       })
     );
 

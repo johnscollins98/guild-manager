@@ -8,6 +8,7 @@ import {
   Tooltip,
   Menu,
   MenuItem,
+  Divider,
 } from '@material-ui/core';
 import { getColorFromRole } from '../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
@@ -19,16 +20,22 @@ import {
   Error,
   ExpandLess,
   Remove,
+  Search,
   SyncProblem,
+  Warning,
 } from '@material-ui/icons';
 import gw2Image from '../assets/images/gw2.png';
 import { useState } from 'react';
+import WarningForm from './WarningForm';
+import WarningsViewer from './WarningsViewer';
 
 const GuildMemberCard = ({
   member,
   discordRoles,
   onKick,
   onEdit,
+  onGiveWarning,
+  onDeleteWarning,
   isAdmin,
   addPoint,
   removePoint,
@@ -39,6 +46,8 @@ const GuildMemberCard = ({
 
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [memberIsAdmin, setMemberIsAdmin] = useState(true);
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
   useEffect(() => {
     setMemberIsAdmin(
@@ -65,6 +74,13 @@ const GuildMemberCard = ({
     [member, closeMenu]
   );
 
+  const warningSubmitHandler = useCallback(
+    async (warningObject) => {
+      await onGiveWarning(member.memberId, warningObject);
+    },
+    [onGiveWarning, member]
+  );
+
   return (
     <>
       <Card
@@ -89,7 +105,9 @@ const GuildMemberCard = ({
                   : null}
               </Avatar>
               <span className="details">
-                <Typography className="name">{member.memberId || member.discordName}</Typography>
+                <Typography className="name">
+                  {member.memberId || member.discordName}
+                </Typography>
                 {member.joinDate ? (
                   <span className="date">
                     <CalendarToday />
@@ -150,9 +168,20 @@ const GuildMemberCard = ({
                   />
                 </Tooltip>
               ) : null}
+              {member.warnings.length ? (
+                <Tooltip title="Number of warnings">
+                  <Avatar className="number warnings">
+                    {member.warnings.length}
+                  </Avatar>
+                </Tooltip>
+              ) : null}
               {member.eventsAttended !== null &&
               member.eventsAttended !== undefined ? (
-                <Avatar className="points">{member.eventsAttended}</Avatar>
+                <Tooltip title="Number of points">
+                  <Avatar className="number points">
+                    {member.eventsAttended}
+                  </Avatar>
+                </Tooltip>
               ) : null}
             </div>
           </div>
@@ -184,6 +213,27 @@ const GuildMemberCard = ({
               Edit Roles
             </span>
           </MenuItem>
+          <Divider />
+          <MenuItem
+            disabled={!isAdmin || !member.memberId}
+            onClick={() => menuAction(() => setWarningOpen(true))}
+            className="warning"
+          >
+            <span className="menu-item warning">
+              <Warning className="icon" />
+              Give Warning
+            </span>
+          </MenuItem>
+          <MenuItem
+            disabled={!member.memberId || member.warnings.length < 1}
+            onClick={() => menuAction(() => setWarningViewerOpen(true))}
+          >
+            <span className="menu-item">
+              <Search className="icon" />
+              View Warnings
+            </span>
+          </MenuItem>
+          <Divider />
           <MenuItem
             disabled={!member.memberId}
             onClick={() => menuAction(addPoint)}
@@ -204,6 +254,17 @@ const GuildMemberCard = ({
           </MenuItem>
         </Menu>
       ) : null}
+      <WarningForm
+        isOpen={warningOpen}
+        onClose={() => setWarningOpen(false)}
+        onSubmit={warningSubmitHandler}
+      />
+      <WarningsViewer
+        isOpen={warningViewerOpen}
+        onClose={() => setWarningViewerOpen(false)}
+        onDeleteWarning={onDeleteWarning}
+        member={member}
+      />
     </>
   );
 };
