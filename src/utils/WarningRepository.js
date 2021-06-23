@@ -43,7 +43,7 @@ const addWarning = async (memberId, warningObject) => {
 
 const deleteWarning = async (memberId, warningId) => {
   const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
-  const response = await fetch(url, { method: 'DELETE ' });
+  const response = await fetch(url, { method: 'DELETE' });
   const data = await response.json();
 
   if (response.status === 200) {
@@ -60,7 +60,7 @@ const updateWarning = async (memberId, warningId, warningObject) => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    method: 'POST',
+    method: 'PUT',
     body: JSON.stringify(warningObject),
   });
   const data = await response.json();

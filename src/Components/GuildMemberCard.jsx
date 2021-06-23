@@ -8,6 +8,7 @@ import {
   Tooltip,
   Menu,
   MenuItem,
+  Divider,
 } from '@material-ui/core';
 import { getColorFromRole } from '../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
@@ -19,12 +20,14 @@ import {
   Error,
   ExpandLess,
   Remove,
+  Search,
   SyncProblem,
   Warning,
 } from '@material-ui/icons';
 import gw2Image from '../assets/images/gw2.png';
 import { useState } from 'react';
 import WarningForm from './WarningForm';
+import WarningsViewer from './WarningsViewer';
 
 const GuildMemberCard = ({
   member,
@@ -32,6 +35,7 @@ const GuildMemberCard = ({
   onKick,
   onEdit,
   onGiveWarning,
+  onDeleteWarning,
   isAdmin,
   addPoint,
   removePoint,
@@ -43,6 +47,7 @@ const GuildMemberCard = ({
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [memberIsAdmin, setMemberIsAdmin] = useState(true);
   const [warningOpen, setWarningOpen] = useState(false);
+  const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
   useEffect(() => {
     setMemberIsAdmin(
@@ -200,6 +205,16 @@ const GuildMemberCard = ({
             </span>
           </MenuItem>
           <MenuItem
+            disabled={!isAdmin || memberIsAdmin}
+            onClick={() => menuAction(onEdit)}
+          >
+            <span className="menu-item">
+              <Edit className="icon" />
+              Edit Roles
+            </span>
+          </MenuItem>
+          <Divider />
+          <MenuItem
             disabled={!isAdmin || !member.memberId}
             onClick={() => menuAction(() => setWarningOpen(true))}
             className="warning"
@@ -210,14 +225,15 @@ const GuildMemberCard = ({
             </span>
           </MenuItem>
           <MenuItem
-            disabled={!isAdmin || memberIsAdmin}
-            onClick={() => menuAction(onEdit)}
+            disabled={!member.memberId || member.warnings.length < 1}
+            onClick={() => menuAction(() => setWarningViewerOpen(true))}
           >
             <span className="menu-item">
-              <Edit className="icon" />
-              Edit Roles
+              <Search className="icon" />
+              View Warnings
             </span>
           </MenuItem>
+          <Divider />
           <MenuItem
             disabled={!member.memberId}
             onClick={() => menuAction(addPoint)}
@@ -242,6 +258,12 @@ const GuildMemberCard = ({
         isOpen={warningOpen}
         onClose={() => setWarningOpen(false)}
         onSubmit={warningSubmitHandler}
+      />
+      <WarningsViewer
+        isOpen={warningViewerOpen}
+        onClose={() => setWarningViewerOpen(false)}
+        onDeleteWarning={onDeleteWarning}
+        member={member}
       />
     </>
   );

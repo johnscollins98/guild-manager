@@ -57,10 +57,10 @@ const RosterDisplay = ({
           break;
         case 'date':
           sorted = sorted.sort((a, b) => {
-            const aDate = a.joinDate || "1970-01-01T00:00:00.000Z";
-            const bDate = b.joinDate || "1970-01-01T00:00:00.000Z";
+            const aDate = a.joinDate || '1970-01-01T00:00:00.000Z';
+            const bDate = b.joinDate || '1970-01-01T00:00:00.000Z';
             return new Date(aDate) - new Date(bDate);
-          })
+          });
           break;
         default:
           break;
@@ -151,6 +151,28 @@ const RosterDisplay = ({
     [openToast, recordState]
   );
 
+  const onDeleteWarning = useCallback(
+    async (memberId, warningId) => {
+      try {
+        const newMember = await WarningRepository.deleteWarning(
+          memberId,
+          warningId
+        );
+        const recordsCopy = [...recordState];
+        const toEdit = recordsCopy.find((record) => {
+          return record.memberId === newMember.memberId;
+        });
+        toEdit.warnings = newMember.warnings;
+        setRecordState(recordsCopy);
+        openToast('Successfully removed warning', 'success');
+      } catch (err) {
+        console.error(err);
+        openToast('There was an error deleting the warning', 'error');
+      }
+    },
+    [openToast, recordState]
+  );
+
   const changeEventAttended = useCallback(
     async (memberId, eventsAttended) => {
       try {
@@ -207,6 +229,7 @@ const RosterDisplay = ({
             discordRoles={discordRoles}
             onKick={onKick}
             onGiveWarning={onGiveWarning}
+            onDeleteWarning={onDeleteWarning}
             singleColumn={singleColumn}
             onEdit={openEdit}
             isAdmin={authInfo.isAdmin}

@@ -1,0 +1,29 @@
+.warning-content {
+  display: flex;
+  flex-direction: column;
+
+  .warning-card {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    margin: 8px;
+    padding: 8px;
+
+    .field {
+      display: flex;
+      flex: 1;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      &.actions {
+        justify-self: flex-end;
+        flex-grow: 0;
+      }
+
+      .icon {
+        margin: 0 4px;
+      }
+    }
+  }
+}
