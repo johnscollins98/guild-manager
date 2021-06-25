@@ -1,6 +1,7 @@
 import { Avatar, Card, Typography } from '@material-ui/core';
 import {
   ArrowForward,
+  CalendarToday,
   ExposureNeg1,
   ExposurePlus1,
   Person,
@@ -17,6 +18,12 @@ const PointLogEntry = ({ entry }) => {
         <ArrowForward />
         <Typography>{entry.givenTo}</Typography>
       </div>
+      {entry.timestamp ? (
+        <div className="timestamp">
+          <CalendarToday />
+          <Typography>{new Date(entry.timestamp).toLocaleString()}</Typography>
+        </div>
+      ) : null}
       <div className="values">
         <Avatar className="point-value">{entry.oldVal}</Avatar>
         {entry.newVal - entry.oldVal >= 0 ? (
