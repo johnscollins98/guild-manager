@@ -13,6 +13,24 @@ import {
 } from '@material-ui/icons';
 import './EventEntry.scss';
 
+const emptyEvent = {
+  title: '',
+  day: 'Monday',
+  startTime: '',
+  duration: '',
+  leaderId: '',
+};
+
+const daysOfWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
 const EventEntry = ({
   create,
   event,
@@ -22,26 +40,8 @@ const EventEntry = ({
   createEvent,
   openToast,
 }) => {
-  const emptyEvent = {
-    title: '',
-    day: 'Monday',
-    startTime: '',
-    duration: '',
-    leaderId: '',
-  };
-
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
-
-  const daysOfWeek = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
 
   const validationHelper = useCallback(
     (event) => {
@@ -56,7 +56,7 @@ const EventEntry = ({
         );
     },
 
-    [daysOfWeek]
+    []
   );
 
   const onEdit = useCallback(
@@ -70,7 +70,7 @@ const EventEntry = ({
   const onReset = useCallback(() => {
     setLocalEvent(create ? emptyEvent : event);
     setModified(false);
-  }, [event, create, emptyEvent, setLocalEvent, setModified]);
+  }, [event, create, setLocalEvent, setModified]);
 
   const onUpdate = useCallback(async () => {
     try {
@@ -101,7 +101,6 @@ const EventEntry = ({
     }
   }, [
     createEvent,
-    emptyEvent,
     validationHelper,
     localEvent,
     setModified,
