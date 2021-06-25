@@ -215,6 +215,25 @@ const GuildMemberCard = ({
           </MenuItem>
           <Divider />
           <MenuItem
+            disabled={!member.memberId}
+            onClick={() => menuAction(addPoint)}
+          >
+            <span className="menu-item">
+              <Add className="icon" />
+              Add Point
+            </span>
+          </MenuItem>
+          <MenuItem
+            disabled={!member.memberId}
+            onClick={() => menuAction(removePoint)}
+          >
+            <span className="menu-item">
+              <Remove className="icon" />
+              Remove Point
+            </span>
+          </MenuItem>
+          <Divider />
+          <MenuItem
             disabled={!isAdmin || !member.memberId}
             onClick={() => menuAction(() => setWarningOpen(true))}
             className="warning"
@@ -231,25 +250,6 @@ const GuildMemberCard = ({
             <span className="menu-item">
               <Search className="icon" />
               View Warnings
-            </span>
-          </MenuItem>
-          <Divider />
-          <MenuItem
-            disabled={!member.memberId}
-            onClick={() => menuAction(addPoint)}
-          >
-            <span className="menu-item">
-              <Add className="icon" />
-              Add Point
-            </span>
-          </MenuItem>
-          <MenuItem
-            disabled={!member.memberId}
-            onClick={() => menuAction(removePoint)}
-          >
-            <span className="menu-item">
-              <Remove className="icon" />
-              Remove Point
             </span>
           </MenuItem>
         </Menu>
