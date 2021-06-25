@@ -56,7 +56,6 @@ const Roster = ({ filterString, openToast }) => {
       if (discordMembers.isLoading) return true;
       if (discordRoles.isLoading) return true;
       if (guildRanks.isLoading) return true;
-      if (authInfo.isLoading) return true;
     };
     setIsLoading(getIsLoading());
   }, [
@@ -64,7 +63,6 @@ const Roster = ({ filterString, openToast }) => {
     discordMembers.isLoading,
     discordRoles.isLoading,
     guildRanks.isLoading,
-    authInfo.isLoading,
   ]);
 
   useEffect(() => {
@@ -89,7 +87,6 @@ const Roster = ({ filterString, openToast }) => {
   if (error) {
     openToast(`There was an error getting ${error.data} data`, 'error');
     console.error(error.error);
-    return null;
   }
 
   if (isLoading) return <LoaderPage />;

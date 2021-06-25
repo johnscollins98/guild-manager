@@ -5,18 +5,22 @@ const EventPostSettings = require('../models/eventPostSettings.model');
 
 router.get('/settings', async (req, res) => {
   try {
-    const settings = await EventPostSettings.findOne({ guildId: process.env.DISCORD_GUILD_ID });
+    const settings = await EventPostSettings.findOne({
+      guildId: process.env.DISCORD_GUILD_ID,
+    });
     return res.status(200).json(settings);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
-})
+});
 
 router.get('/', async (req, res) => {
   try {
     const events = await Event.find({}).exec();
     return res.status(200).json(events);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -30,6 +34,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -40,6 +45,7 @@ router.post('/', isAdmin, async (req, res) => {
     const event = await new Event({ ...body }).save();
     return res.status(201).json(event);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -54,6 +60,7 @@ router.delete('/:id', isAdmin, async (req, res) => {
       return res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
 });
@@ -61,13 +68,18 @@ router.delete('/:id', isAdmin, async (req, res) => {
 router.put('/:id', isAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const event = await Event.findByIdAndUpdate(id, { ...req.body }, { new: true }).exec();
+    const event = await Event.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true }
+    ).exec();
     if (event) {
       return res.status(200).json(event);
     } else {
       return res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(err);
   }
 });

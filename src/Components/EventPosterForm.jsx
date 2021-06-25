@@ -80,7 +80,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
 
   if (error) {
     openToast('There was an error getting the log', 'error');
-    console.log(error);
+    console.error(error);
     return null;
   }
   if (isLoading || posting)

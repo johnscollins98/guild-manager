@@ -1,7 +1,13 @@
 const fetch = require('node-fetch');
 
 const getUserAuthInfo = async (req) => {
-  if (!req.user) return { loggedIn: false, authorized: false, username: null };
+  if (!req.user)
+    return {
+      loggedIn: false,
+      isAdmin: false,
+      isEventLeader: false,
+      username: null,
+    };
   const loggedIn = true;
 
   const inGuild = req.user.guilds.some(

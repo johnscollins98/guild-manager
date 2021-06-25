@@ -25,6 +25,7 @@ const gatherMember = async (req, res, next) => {
       return res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 };
@@ -58,6 +59,7 @@ router.get('/members', async (req, res) => {
 
     res.status(response.status).json(transformed);
   } catch (err) {
+    console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
 });
@@ -91,6 +93,7 @@ router.get('/ranks', async (req, res) => {
     const data = await response.json();
     res.status(200).json(data);
   } catch (err) {
+    console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
 });
@@ -106,6 +109,7 @@ router.get('/log', async (req, res) => {
       res.status(status).json(data);
     }
   } catch (err) {
+    console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
 });
@@ -115,6 +119,7 @@ router.get('/pointlog', async (req, res) => {
     const collection = await PointLog.find();
     res.status(200).json(collection);
   } catch (err) {
+    console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
 });

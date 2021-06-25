@@ -6,6 +6,7 @@ router.get('/', async (req, res) => {
     const member = req.member;
     return res.status(200).json(member.warnings);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 });
@@ -22,6 +23,7 @@ router.get('/:warning_id', async (req, res) => {
       res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 });
@@ -36,6 +38,7 @@ router.post('/', isAdmin, async (req, res) => {
     const newMember = await member.save();
     res.status(200).json(newMember);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 });
@@ -54,6 +57,7 @@ router.delete('/:warning_id', isAdmin, async (req, res) => {
       return res.status(404).json('Not found');
     }
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 });
@@ -69,6 +73,7 @@ router.put('/:warning_id', isAdmin, async (req, res) => {
     const newMember = await member.save();
     res.status(200).json(newMember);
   } catch (err) {
+    console.error(err);
     return res.status(400).json(`Error: ${err}`);
   }
 });

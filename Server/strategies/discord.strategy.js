@@ -40,7 +40,7 @@ passport.use(
           done(null, savedUser);
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
         done(err, null);
       }
     }

@@ -53,6 +53,7 @@ router.get('/members', async (req, res) => {
     const data = await DiscordUtils.formatMembers(membersData, rolesData);
     res.status(200).json(data);
   } catch (err) {
+    console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
 });

@@ -26,7 +26,7 @@ const PointLog = ({ filterString, openToast }) => {
 
   if (error) {
     openToast('There was an error getting the point log', 'error');
-    console.log(error);
+    console.error(error);
     return null;
   }
   if (isLoading) return <LoaderPage />;

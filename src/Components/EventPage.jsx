@@ -150,13 +150,13 @@ const EventPage = ({ filterString, openToast }) => {
 
   if (discordQuery.error) {
     openToast('There was an error getting discord data', 'error');
-    console.log(discordQuery.error);
+    console.error(discordQuery.error);
     return null;
   }
 
   if (eventsQuery.error) {
     openToast('There was an error getting event data', 'error');
-    console.log(eventsQuery.error);
+    console.error(eventsQuery.error);
     return null;
   }
 

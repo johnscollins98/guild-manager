@@ -15,7 +15,7 @@ const RosterDisplay = ({
   filterString,
   guildRanks,
   openToast,
-  authInfo,
+  authInfo = { isAdmin: false },
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -151,6 +151,7 @@ const RosterDisplay = ({
         setRecordState(recordsCopy);
         openToast('Successfully gave warning', 'success');
       } catch (err) {
+        console.error(err);
         openToast('There was an error creating the warning', 'error');
       }
     },
@@ -195,6 +196,7 @@ const RosterDisplay = ({
 
         setRecordState(recordsCopy);
       } catch (err) {
+        console.error(err);
         openToast('There was an error updating attendance.', 'error');
       }
     },
