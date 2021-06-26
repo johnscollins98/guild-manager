@@ -1,33 +1,31 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import './GuildMemberCard.scss';
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Typography,
-  Tooltip,
-  Menu,
-  MenuItem,
-  Divider,
-} from '@material-ui/core';
 import { getColorFromRole } from '../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
-import {
-  Add,
-  CalendarToday,
-  Close,
-  Edit,
-  Error,
-  ExpandLess,
-  Remove,
-  Search,
-  SyncProblem,
-  Warning,
-} from '@material-ui/icons';
-import gw2Image from '../assets/images/gw2.png';
-import { useState } from 'react';
 import WarningForm from './WarningForm';
 import WarningsViewer from './WarningsViewer';
+import gw2Image from '../assets/images/gw2.png';
+
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
+
+import Add from '@material-ui/icons/Add';
+import CalendarToday from '@material-ui/icons/CalendarToday';
+import Close from '@material-ui/icons/Close';
+import Edit from '@material-ui/icons/Edit';
+import Error from '@material-ui/icons/Error';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import Remove from '@material-ui/icons/Remove';
+import Search from '@material-ui/icons/Search';
+import SyncProblem from '@material-ui/icons/SyncProblem';
+import Warning from '@material-ui/icons/Warning';
 
 const GuildMemberCard = ({
   member,

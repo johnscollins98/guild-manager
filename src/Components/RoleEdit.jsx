@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-  Checkbox,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  FormGroup,
-  withStyles,
-} from '@material-ui/core';
+
+import { getColorFromRole } from '../utils/Helpers';
 import {
   addDiscordRole,
   fetchDiscordRoles,
   removeDiscordRole,
 } from '../utils/DataRetrieval';
-import { getColorFromRole } from '../utils/Helpers';
+
+import Checkbox from '@material-ui/core/Checkbox';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 const RoleEdit = ({
   selectedRecord,
@@ -107,20 +106,6 @@ const RoleEdit = ({
       </DialogContent>
     </Dialog>
   );
-};
-
-RoleEdit.propTypes = {
-  selectedRecord: PropTypes.shape({
-    accountName: PropTypes.string.isRequired,
-    joinDate: PropTypes.string.isRequired,
-    rank: PropTypes.string.isRequired,
-    roles: PropTypes.array.isRequired,
-  }),
-  setSelectedRecord: PropTypes.func.isRequired,
-  modalShow: PropTypes.bool.isRequired,
-  setModalShow: PropTypes.func.isRequired,
-  records: PropTypes.array.isRequired,
-  setRecords: PropTypes.func.isRequired,
 };
 
 export default RoleEdit;

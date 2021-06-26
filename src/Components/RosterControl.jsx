@@ -1,16 +1,17 @@
-import {
-  FormControlLabel,
-  IconButton,
-  Paper,
-  Switch,
-  Menu,
-  MenuItem,
-} from '@material-ui/core';
-import { Check, FilterList, ImportExport } from '@material-ui/icons';
-import React, { useCallback } from 'react';
-import { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import './RosterControl.scss';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import Switch from '@material-ui/core/Switch';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import Check from '@material-ui/icons/Check';
+import FilterList from '@material-ui/icons/FilterList';
+import ImportExport from '@material-ui/icons/ImportExport';
 
 const RosterControl = ({
   singleColumn,

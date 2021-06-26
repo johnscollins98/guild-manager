@@ -1,8 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-import { Grid, IconButton, TextField } from '@material-ui/core';
-import { Brightness3, Brightness6 } from '@material-ui/icons';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
+
+import Brightness3 from '@material-ui/icons/Brightness3';
+import Brightness6 from '@material-ui/icons/Brightness6';
 
 const Control = ({ handleFilterChange, theme, toggleTheme }) => {
   return (
@@ -29,10 +32,6 @@ const Control = ({ handleFilterChange, theme, toggleTheme }) => {
       </Grid>
     </Grid>
   );
-};
-
-Control.propTypes = {
-  handleFilterChange: PropTypes.func.isRequired,
 };
 
 export default Control;

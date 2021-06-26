@@ -1,12 +1,18 @@
-import { Button, Dialog, DialogContent, DialogTitle } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
+import './EventPage.scss';
+
 import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
-import './EventPage.scss';
-import { useQuery } from 'react-query';
 import LoaderPage from './LoaderPage';
 import { fetchDiscordMembers } from '../utils/DataRetrieval';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { useQuery } from 'react-query';
 
 const EventPage = ({ filterString, openToast }) => {
   const eventsQuery = useQuery('eventsData', () => EventRepo.getAll());

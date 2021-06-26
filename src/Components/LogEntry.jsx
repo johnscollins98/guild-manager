@@ -1,7 +1,12 @@
-import { Card, Typography } from '@material-ui/core';
-import { AccessTime, CalendarToday } from '@material-ui/icons';
 import React from 'react';
+
 import './LogEntry.scss';
+
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+
+import AccessTime from '@material-ui/icons/AccessTime';
+import CalendarToday from '@material-ui/icons/CalendarToday';
 
 const LogEntry = ({ entryData }) => {
   return (

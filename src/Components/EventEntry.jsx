@@ -1,17 +1,20 @@
 import React, { useCallback, useState } from 'react';
-import { Card, IconButton, MenuItem, TextField } from '@material-ui/core';
-import {
-  Add,
-  Assignment,
-  CalendarToday,
-  Close,
-  Create,
-  HourglassFull,
-  Person,
-  Refresh,
-  WatchLater,
-} from '@material-ui/icons';
 import './EventEntry.scss';
+
+import Card from '@material-ui/core/Card';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+
+import Add from '@material-ui/icons/Add';
+import Assignment from '@material-ui/icons/Assignment';
+import CalendarToday from '@material-ui/icons/CalendarToday';
+import Close from '@material-ui/icons/Close';
+import Create from '@material-ui/icons/Create';
+import HourglassFull from '@material-ui/icons/HourglassFull';
+import Person from '@material-ui/icons/Person';
+import Refresh from '@material-ui/icons/Refresh';
+import WatchLater from '@material-ui/icons/WatchLater';
 
 const emptyEvent = {
   title: '',

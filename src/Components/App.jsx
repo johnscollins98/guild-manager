@@ -1,16 +1,22 @@
 import React, { useCallback, useState } from 'react';
-import 'fontsource-roboto';
 
+import './App.scss';
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
-
-import './App.scss';
-import { Paper, Snackbar, Tab, Tabs } from '@material-ui/core';
-import { TabContext, TabPanel, Alert } from '@material-ui/lab';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PointLog from './PointLog';
 import EventPage from './EventPage';
+
+import 'fontsource-roboto';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import TabContext from '@material-ui/lab/TabContext';
+import TabPanel from '@material-ui/lab/TabPanel';
+import Alert from '@material-ui/lab/Alert';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
