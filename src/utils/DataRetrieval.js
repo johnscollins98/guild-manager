@@ -97,6 +97,11 @@ export const setGuildMember = async (newMember) => {
 export const fetchAuthInfo = async () => {
   const response = await fetch('/auth/authorization');
   const data = await response.json();
+  
+  if (response.status === 303) {
+    window.location.href = data.redirectUrl;
+    return;
+  }
 
   if (response.status !== 200) {
     throw data;

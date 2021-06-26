@@ -52,11 +52,13 @@ app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 app.use('/forbidden', forbiddenRoute);
 app.use(async (req, res, next) => {
-  const authInfo = await getUserAuthInfo(req);
-  if (authInfo.isAdmin || authInfo.isEventLeader) {
-    next();
-  } else if (authInfo.loggedIn) {
-    res.redirect('/forbidden');
+  if (req.user) {
+    const authInfo = await getUserAuthInfo(req);
+    if (authInfo.isAdmin || authInfo.isEventLeader) {
+      next();
+    } else {
+      res.redirect('/forbidden');
+    }
   } else {
     res.redirect('/auth');
   }

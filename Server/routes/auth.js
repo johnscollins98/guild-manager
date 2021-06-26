@@ -21,7 +21,7 @@ router.get('/authorization', async (req, res) => {
   if (req.user) {
     res.json(JSON.stringify(await getUserAuthInfo(req)));
   } else {
-    res.status(303).json('Forbidden');
+    res.status(303).json({ redirectUrl: `http://${req.headers.host}/auth`});
   }
 });
 
