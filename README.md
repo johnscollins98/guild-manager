@@ -6,19 +6,20 @@ Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in
 
 To run this you do need to set up the following env variables:
 
-| value                 | description                                              |
-| --------------------- | -------------------------------------------------------- |
-| BOT_TOKEN             | Discord bot access token from the Guild's discord server |
-| DISCORD_GUILD_ID      | ID of Guild's discord server                             |
-| GW2_GUILD_ID          | ID of Guild Wars 2 guild                                 |
-| GW2_API_TOKEN         | Guild Wars 2 API Token                                   |
-| PORT                  | Port to run Express server on                            |
-| ATLAS_URI             | MongoDB Atlas URI                                        |
-| DISCORD_CLIENT_ID     | Client ID for Discord OAuth                              |
-| DISCORD_CLIENT_SECRET | Client Secret for Discord OAuth                          |
-| DISCORD_AUTH_REDIRECT | OAuth Redirect URL                                       |
-| ADMIN_ROLE            | Admin Discord Role                                       |
-| EVENT_LEADER_ROLE     | Event Leade Discord Role                                 |
+| value                      | description                                              |
+| -------------------------- | -------------------------------------------------------- |
+| BOT_TOKEN                  | Discord bot access token from the Guild's discord server |
+| DISCORD_GUILD_ID           | ID of Guild's discord server                             |
+| GW2_GUILD_ID               | ID of Guild Wars 2 guild                                 |
+| GW2_API_TOKEN              | Guild Wars 2 API Token                                   |
+| PORT                       | Port to run Express server on                            |
+| ATLAS_URI                  | MongoDB Atlas URI                                        |
+| DISCORD_CLIENT_ID          | Client ID for Discord OAuth                              |
+| DISCORD_CLIENT_SECRET      | Client Secret for Discord OAuth                          |
+| DISCORD_AUTH_REDIRECT      | OAuth Redirect URL                                       |
+| ADMIN_ROLE                 | Admin Discord Role                                       |
+| EVENT_LEADER_ROLE          | Event Leader Discord Role                                |
+| REACT_APP_BACKEND_BASE_URL | Backend URL for React to point to                        |
 
 ## Available Scripts
 
