@@ -22,7 +22,7 @@ const LoginPage = ({ isLoading, authInfo }) => {
         <>
           <img src={SOLogo} alt="logo" />
           <Button
-            href={`${process.env.REACT_APP_BACKEND_BASE_URL}/auth`}
+            href={`${process.env.REACT_APP_BACKEND_BASE_URL || ''}/auth`}
             variant="contained"
             color="primary"
           >
