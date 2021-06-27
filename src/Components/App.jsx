@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import './App.scss';
 import Log from './Log';
@@ -6,6 +6,8 @@ import Roster from './Roster';
 import Control from './Control';
 import PointLog from './PointLog';
 import EventPage from './EventPage';
+import LoginPage from './LoginPage';
+import { fetchAuthInfo } from '../utils/DataRetrieval';
 
 import 'fontsource-roboto';
 import Paper from '@material-ui/core/Paper';
@@ -17,9 +19,7 @@ import TabPanel from '@material-ui/lab/TabPanel';
 import Alert from '@material-ui/lab/Alert';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import { QueryClient, QueryClientProvider } from 'react-query';
-
-const queryClient = new QueryClient();
+import { useQuery } from 'react-query';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -61,6 +61,24 @@ const App = () => {
     [setFilterString]
   );
 
+  const [authInfo, setAuthInfo] = useState({
+    loggedIn: false,
+    isAdmin: false,
+    isEventLeader: false,
+    username: null,
+  });
+  const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
+  useEffect(() => {
+    if (authInfoQuery.isLoading) return;
+
+    if (authInfoQuery.error) {
+      console.error(authInfoQuery.error);
+      openToast('There was an error getting authentication info', 'error');
+    }
+
+    setAuthInfo(authInfoQuery.data);
+  }, [authInfoQuery, openToast]);
+
   const TABS = {
     ROSTER: 'Roster',
     LOG: 'Log',
@@ -69,53 +87,60 @@ const App = () => {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <MuiThemeProvider theme={darkTheme}>
-        <Paper className="paper-container" square>
-          <Snackbar
-            open={showToast}
-            autoHideDuration={6000}
-            onClose={() => closeToast()}
-          >
-            <Alert onClose={() => closeToast()} severity={toastStatus}>
-              {toastMessage}
-            </Alert>
-          </Snackbar>
-          <div className="content">
-            <Control
-              handleFilterChange={handleFilterChange}
-              theme={theme}
-              toggleTheme={toggleTheme}
-            />
-            <TabContext value={tab}>
-              <Tabs
-                value={tab}
-                onChange={(e, v) => setTab(v)}
-                scrollButtons="auto"
-                variant="scrollable"
-              >
-                <Tab label={TABS.ROSTER} value="roster" />
-                <Tab label={TABS.LOG} value="log" />
-                <Tab label={TABS.POINT_LOG} value="pointlog" />
-                <Tab label={TABS.EVENTS} value="events" />
-              </Tabs>
-              <TabPanel value="roster">
-                <Roster filterString={filterString} openToast={openToast} />
-              </TabPanel>
-              <TabPanel value="log">
-                <Log filterString={filterString} openToast={openToast} />
-              </TabPanel>
-              <TabPanel value="pointlog">
-                <PointLog filterString={filterString} openToast={openToast} />
-              </TabPanel>
-              <TabPanel value="events">
-                <EventPage filterString={filterString} openToast={openToast} />
-              </TabPanel>
-            </TabContext>
-          </div>
-        </Paper>
-      </MuiThemeProvider>
-    </QueryClientProvider>
+    <MuiThemeProvider theme={darkTheme}>
+      <Paper className="paper-container" square>
+        <Snackbar
+          open={showToast}
+          autoHideDuration={6000}
+          onClose={() => closeToast()}
+        >
+          <Alert onClose={() => closeToast()} severity={toastStatus}>
+            {toastMessage}
+          </Alert>
+        </Snackbar>
+        <div className="content">
+          {authInfo.loggedIn && (authInfo.isAdmin || authInfo.isEventLeader) ? (
+            <>
+              <Control
+                handleFilterChange={handleFilterChange}
+                theme={theme}
+                toggleTheme={toggleTheme}
+              />
+              <TabContext value={tab}>
+                <Tabs
+                  value={tab}
+                  onChange={(e, v) => setTab(v)}
+                  scrollButtons="auto"
+                  variant="scrollable"
+                >
+                  <Tab label={TABS.ROSTER} value="roster" />
+                  <Tab label={TABS.LOG} value="log" />
+                  <Tab label={TABS.POINT_LOG} value="pointlog" />
+                  <Tab label={TABS.EVENTS} value="events" />
+                </Tabs>
+                <TabPanel value="roster">
+                  <Roster filterString={filterString} openToast={openToast} />
+                </TabPanel>
+                <TabPanel value="log">
+                  <Log filterString={filterString} openToast={openToast} />
+                </TabPanel>
+                <TabPanel value="pointlog">
+                  <PointLog filterString={filterString} openToast={openToast} />
+                </TabPanel>
+                <TabPanel value="events">
+                  <EventPage
+                    filterString={filterString}
+                    openToast={openToast}
+                  />
+                </TabPanel>
+              </TabContext>
+            </>
+          ) : (
+            <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
+          )}
+        </div>
+      </Paper>
+    </MuiThemeProvider>
   );
 };
 
