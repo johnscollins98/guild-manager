@@ -43,26 +43,12 @@ const discordRoute = require('./routes/discord');
 const gw2Route = require('./routes/gw2');
 const authRoute = require('./routes/auth');
 const eventsRoute = require('./routes/events');
-const forbiddenRoute = require('./routes/forbidden');
-const { getUserAuthInfo } = require('./utils/auth');
 
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
-app.use('/forbidden', forbiddenRoute);
-app.use(async (req, res, next) => {
-  if (req.user) {
-    const authInfo = await getUserAuthInfo(req);
-    if (authInfo.isAdmin || authInfo.isEventLeader) {
-      next();
-    } else {
-      res.redirect('/forbidden');
-    }
-  } else {
-    res.redirect('/auth');
-  }
-});
+
 app.use(express.static(path.join(__dirname, '..', 'build')));
 
 app.get('*', (req, res) => {

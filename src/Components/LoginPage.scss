@@ -1,0 +1,25 @@
+.loader-page {
+  height: 100%;
+  max-width: 300px;
+  align-self: center;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+
+  flex-shrink: 1;
+
+  img {
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .discord-logo {
+    margin-right: 8px;
+  }
+
+  .warning {
+    margin-top: 24px;
+  }
+}
