@@ -17,9 +17,7 @@ import Person from '@material-ui/icons/Person';
 const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }) => {
   const handleDeleteWarning = useCallback(
     async (warning) => {
-      const res = window.confirm(
-        'Are you sure you want to delete this warning?'
-      );
+      const res = window.confirm('Are you sure you want to delete this warning?');
       if (res) {
         await onDeleteWarning(member.memberId, warning._id);
       }
@@ -36,9 +34,7 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }) => {
           <Card variant="outlined" className="warning-card" key={warning._id}>
             <span className="date field">
               <CalendarToday className="icon" />
-              <Typography>
-                {new Date(warning.timestamp).toDateString()}
-              </Typography>
+              <Typography>{new Date(warning.timestamp).toDateString()}</Typography>
             </span>
             <span className="given-by field">
               <Person className="icon" />

@@ -10,7 +10,7 @@ const LoaderPage = () => {
         width: '100%',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
     >
       <CircularProgress size={100} />

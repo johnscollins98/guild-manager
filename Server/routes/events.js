@@ -6,7 +6,7 @@ const EventPostSettings = require('../models/eventPostSettings.model');
 router.get('/settings', async (req, res) => {
   try {
     const settings = await EventPostSettings.findOne({
-      guildId: process.env.DISCORD_GUILD_ID,
+      guildId: process.env.DISCORD_GUILD_ID
     });
     return res.status(200).json(settings);
   } catch (err) {
@@ -68,11 +68,7 @@ router.delete('/:id', isAdmin, async (req, res) => {
 router.put('/:id', isAdmin, async (req, res) => {
   try {
     const id = req.params.id;
-    const event = await Event.findByIdAndUpdate(
-      id,
-      { ...req.body },
-      { new: true }
-    ).exec();
+    const event = await Event.findByIdAndUpdate(id, { ...req.body }, { new: true }).exec();
     if (event) {
       return res.status(200).json(event);
     } else {

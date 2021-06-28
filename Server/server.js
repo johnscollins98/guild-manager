@@ -16,11 +16,11 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     cookie: {
-      maxAge: 60000 * 60 * 24,
+      maxAge: 60000 * 60 * 24
     },
     resave: true,
     saveUninitialized: false,
-    name: 'discord.oauth2',
+    name: 'discord.oauth2'
   })
 );
 app.use(passport.initialize());
@@ -31,7 +31,7 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
-  useFindAndModify: false,
+  useFindAndModify: false
 });
 
 const connection = mongoose.connection;

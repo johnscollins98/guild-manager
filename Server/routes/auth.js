@@ -8,7 +8,7 @@ router.get(
   '/redirect',
   passport.authenticate('discord', {
     failureRedirect: '/',
-    successRedirect: '/',
+    successRedirect: '/'
   })
 );
 

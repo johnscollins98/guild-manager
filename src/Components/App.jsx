@@ -36,8 +36,8 @@ const App = () => {
 
   const darkTheme = createMuiTheme({
     palette: {
-      type: theme,
-    },
+      type: theme
+    }
   });
 
   const openToast = useCallback(
@@ -65,7 +65,7 @@ const App = () => {
     loggedIn: false,
     isAdmin: false,
     isEventLeader: false,
-    username: null,
+    username: null
   });
   const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
   useEffect(() => {
@@ -83,17 +83,13 @@ const App = () => {
     ROSTER: 'Roster',
     LOG: 'Log',
     POINT_LOG: 'Points Log',
-    EVENTS: 'Events',
+    EVENTS: 'Events'
   };
 
   return (
     <MuiThemeProvider theme={darkTheme}>
       <Paper className="paper-container" square>
-        <Snackbar
-          open={showToast}
-          autoHideDuration={6000}
-          onClose={() => closeToast()}
-        >
+        <Snackbar open={showToast} autoHideDuration={6000} onClose={() => closeToast()}>
           <Alert onClose={() => closeToast()} severity={toastStatus}>
             {toastMessage}
           </Alert>
@@ -128,10 +124,7 @@ const App = () => {
                   <PointLog filterString={filterString} openToast={openToast} />
                 </TabPanel>
                 <TabPanel value="events">
-                  <EventPage
-                    filterString={filterString}
-                    openToast={openToast}
-                  />
+                  <EventPage filterString={filterString} openToast={openToast} />
                 </TabPanel>
               </TabContext>
             </>

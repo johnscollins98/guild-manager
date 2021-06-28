@@ -15,7 +15,7 @@ const RosterDisplay = ({
   filterString,
   guildRanks,
   openToast,
-  authInfo = { isAdmin: false },
+  authInfo = { isAdmin: false }
 }) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -110,16 +110,12 @@ const RosterDisplay = ({
     async (record) => {
       if (!record.discordId) return;
 
-      const res = window.confirm(
-        `Are you sure you want to kick ${record.discordName}?`
-      );
+      const res = window.confirm(`Are you sure you want to kick ${record.discordName}?`);
       if (res) {
         const success = await kickDiscordMember(record.discordId);
         if (success) {
           openToast(`Kicked ${record.discordName} from Discord.`, 'success');
-          setRecordState(
-            recordState.filter((m) => m.discordId !== record.discordId)
-          );
+          setRecordState(recordState.filter((m) => m.discordId !== record.discordId));
         } else {
           openToast(`Could not kick ${record.discordName}`, 'error');
         }
@@ -139,10 +135,7 @@ const RosterDisplay = ({
   const onGiveWarning = useCallback(
     async (memberId, warningObject) => {
       try {
-        const newMember = await WarningRepository.addWarning(
-          memberId,
-          warningObject
-        );
+        const newMember = await WarningRepository.addWarning(memberId, warningObject);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
@@ -161,10 +154,7 @@ const RosterDisplay = ({
   const onDeleteWarning = useCallback(
     async (memberId, warningId) => {
       try {
-        const newMember = await WarningRepository.deleteWarning(
-          memberId,
-          warningId
-        );
+        const newMember = await WarningRepository.deleteWarning(memberId, warningId);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
@@ -185,7 +175,7 @@ const RosterDisplay = ({
       try {
         const newObject = await setGuildMember({
           memberId,
-          eventsAttended,
+          eventsAttended
         });
 
         const recordsCopy = [...recordState];

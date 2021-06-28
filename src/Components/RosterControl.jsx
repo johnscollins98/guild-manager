@@ -19,7 +19,7 @@ const RosterControl = ({
   filterBy,
   setFilterBy,
   sortBy,
-  setSortBy,
+  setSortBy
 }) => {
   const [anchorElement, setAnchorElement] = useState(null);
   const [sortOpen, setSortOpen] = useState(false);
@@ -94,7 +94,7 @@ const RosterControl = ({
         onClose={closeMenu}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right',
+          horizontal: 'right'
         }}
       >
         <MenuItem onClick={() => sortHandler('rank')}>
@@ -124,7 +124,7 @@ const RosterControl = ({
         onClose={closeMenu}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right',
+          horizontal: 'right'
         }}
       >
         <MenuItem onClick={() => filterHandler('none')}>
@@ -136,9 +136,7 @@ const RosterControl = ({
           Has GW2 Account
         </MenuItem>
         <MenuItem onClick={() => filterHandler('excess-discord')}>
-          {filterBy === 'excess-discord' ? (
-            <Check className="selected" />
-          ) : null}
+          {filterBy === 'excess-discord' ? <Check className="selected" /> : null}
           Excess Discord
         </MenuItem>
         <MenuItem onClick={() => filterHandler('issues')}>

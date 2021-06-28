@@ -21,24 +21,22 @@ export const fetchDiscordRoles = async () => {
 };
 
 export const addDiscordRole = async (memberId, roleId) => {
-  const response = await fetch(
-    `api/discord/members/${memberId}/roles/${roleId}`,
-    { method: 'PUT' }
-  );
+  const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
+    method: 'PUT'
+  });
   return response.status === 204;
 };
 
 export const removeDiscordRole = async (memberId, roleId) => {
-  const response = await fetch(
-    `api/discord/members/${memberId}/roles/${roleId}`,
-    { method: 'DELETE' }
-  );
+  const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
+    method: 'DELETE'
+  });
   return response.status === 204;
 };
 
 export const kickDiscordMember = async (memberId) => {
   const response = await fetch(`/api/discord/members/${memberId}`, {
-    method: 'DELETE',
+    method: 'DELETE'
   });
   return response.status === 204;
 };
@@ -80,10 +78,10 @@ export const setGuildMember = async (newMember) => {
   const response = await fetch(`/api/gw2/members/${newMember.memberId}`, {
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     method: 'PUT',
-    body: JSON.stringify(newMember),
+    body: JSON.stringify(newMember)
   });
 
   if (response.status !== 200) {
@@ -97,7 +95,7 @@ export const setGuildMember = async (newMember) => {
 export const fetchAuthInfo = async () => {
   const response = await fetch('/auth/authorization');
   const data = await response.json();
-  
+
   if (response.status === 303) {
     window.location.href = data.redirectUrl;
     return;

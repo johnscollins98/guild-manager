@@ -30,10 +30,7 @@ const EventPage = ({ filterString, openToast }) => {
       discordQuery.data.filter(
         (member) =>
           !!member.roles.find(
-            (r) =>
-              r.name === 'General' ||
-              r.name === 'Spearmarshal' ||
-              r.name === 'Commander'
+            (r) => r.name === 'General' || r.name === 'Spearmarshal' || r.name === 'Commander'
           ) // hardcoded for now, to be improved.
       )
     );
@@ -53,15 +50,11 @@ const EventPage = ({ filterString, openToast }) => {
       Thursday: 4,
       Friday: 5,
       Saturday: 6,
-      Sunday: 7,
+      Sunday: 7
     };
     setSortedEvents(
       [...localEvents]
-        .filter(
-          (event) =>
-            event.title.includes(filterString) ||
-            event.day.includes(filterString)
-        )
+        .filter((event) => event.title.includes(filterString) || event.day.includes(filterString))
         .sort((a, b) => {
           const dateSort = (sorter[a.day] || 8) - (sorter[b.day] || 8);
           if (dateSort !== 0) return dateSort;
@@ -81,16 +74,12 @@ const EventPage = ({ filterString, openToast }) => {
   const deleteEvent = useCallback(
     async (eventToDelete) => {
       try {
-        const res = window.confirm(
-          `Are you sure you want to delete '${eventToDelete.title}'?`
-        );
+        const res = window.confirm(`Are you sure you want to delete '${eventToDelete.title}'?`);
         if (!res) return;
 
         const deletedEvent = await EventRepo.deleteById(eventToDelete._id);
         if (deletedEvent) {
-          setLocalEvents(
-            localEvents.filter((event) => event._id !== eventToDelete._id)
-          );
+          setLocalEvents(localEvents.filter((event) => event._id !== eventToDelete._id));
           openToast('Successfully deleted event!', 'success');
         } else {
           throw new Error('Could not delete event');
@@ -106,15 +95,10 @@ const EventPage = ({ filterString, openToast }) => {
   const updateEvent = useCallback(
     async (eventToUpdate) => {
       try {
-        const updatedEvent = await EventRepo.updateById(
-          eventToUpdate._id,
-          eventToUpdate
-        );
+        const updatedEvent = await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
         if (updatedEvent) {
           const eventsCopy = [...localEvents];
-          const index = eventsCopy.findIndex(
-            (event) => event._id === updatedEvent._id
-          );
+          const index = eventsCopy.findIndex((event) => event._id === updatedEvent._id);
 
           if (index !== null && index !== undefined) {
             eventsCopy[index] = updatedEvent;
@@ -194,18 +178,10 @@ const EventPage = ({ filterString, openToast }) => {
       >
         Post to Discord
       </Button>
-      <Dialog
-        open={showModal}
-        onClose={() => setShowModal(false)}
-        fullWidth={true}
-        maxWidth="sm"
-      >
+      <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth={true} maxWidth="sm">
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
-          <EventPosterForm
-            onClose={() => setShowModal(false)}
-            openToast={openToast}
-          />
+          <EventPosterForm onClose={() => setShowModal(false)} openToast={openToast} />
         </DialogContent>
       </Dialog>
     </>

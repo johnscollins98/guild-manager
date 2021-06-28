@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { getColorFromRole } from '../utils/Helpers';
-import {
-  addDiscordRole,
-  fetchDiscordRoles,
-  removeDiscordRole,
-} from '../utils/DataRetrieval';
+import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../utils/DataRetrieval';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
@@ -22,7 +18,7 @@ const RoleEdit = ({
   setModalShow,
   records,
   setRecords,
-  openToast,
+  openToast
 }) => {
   const [allRoles, setAllRoles] = useState([]);
   const [edittingRole, setEdittingRole] = useState(false);
@@ -43,7 +39,7 @@ const RoleEdit = ({
       if (res) {
         setSelectedRecord({
           ...selectedRecord,
-          roles: [...selectedRecord.roles, { id: roleId, name: roleName }],
+          roles: [...selectedRecord.roles, { id: roleId, name: roleName }]
         });
       } else {
         openToast('Something went wrong changing roles', 'error');
@@ -53,7 +49,7 @@ const RoleEdit = ({
       if (res) {
         setSelectedRecord({
           ...selectedRecord,
-          roles: selectedRecord.roles.filter((r) => r.id !== roleId),
+          roles: selectedRecord.roles.filter((r) => r.id !== roleId)
         });
       } else {
         openToast('Something went wrong changing roles', 'error');
@@ -72,9 +68,7 @@ const RoleEdit = ({
 
     if (anyChanges) {
       const recordsCopy = [...records];
-      const toEdit = recordsCopy.find(
-        (record) => record.discordId === selectedRecord.discordId
-      );
+      const toEdit = recordsCopy.find((record) => record.discordId === selectedRecord.discordId);
       toEdit.roles = selectedRecord.roles;
 
       setRecords(recordsCopy);
@@ -93,9 +87,7 @@ const RoleEdit = ({
               control={
                 <StyledCheckbox
                   color={getColorFromRole(role.name, allRoles)}
-                  checked={selectedRecord.roles
-                    .map((r) => r.id)
-                    .includes(role.id)}
+                  checked={selectedRecord.roles.map((r) => r.id).includes(role.id)}
                   onChange={(e) => roleChangeHandler(e, role.id, role.name)}
                 />
               }
@@ -115,10 +107,10 @@ const StyledCheckbox = ({ color, ...props }) => {
     root: {
       color: color,
       '&$checked': {
-        color: color,
-      },
+        color: color
+      }
     },
-    checked: {},
+    checked: {}
   })((props) => <Checkbox color="default" {...props} />);
 
   return <OurCheckbox {...props} />;

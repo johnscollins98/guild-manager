@@ -29,11 +29,7 @@ const PointLogEntry = ({ entry }) => {
       ) : null}
       <div className="values">
         <Avatar className="point-value">{entry.oldVal}</Avatar>
-        {entry.newVal - entry.oldVal >= 0 ? (
-          <ExposurePlus1 />
-        ) : (
-          <ExposureNeg1 />
-        )}
+        {entry.newVal - entry.oldVal >= 0 ? <ExposurePlus1 /> : <ExposureNeg1 />}
         <Avatar className="point-value">{entry.newVal}</Avatar>
       </div>
     </Card>

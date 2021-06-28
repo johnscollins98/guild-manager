@@ -20,7 +20,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
     Thursday: '',
     Friday: '',
     Saturday: '',
-    Sunday: '',
+    Sunday: ''
   });
   const [posting, setPosting] = useState(false);
   const { isLoading, error, data } = useQuery('event-settings', () =>
@@ -40,7 +40,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
           Thursday: data.existingMessageIds.Thursday || '',
           Friday: data.existingMessageIds.Friday || '',
           Saturday: data.existingMessageIds.Saturday || '',
-          Sunday: data.existingMessageIds.Sunday || '',
+          Sunday: data.existingMessageIds.Sunday || ''
         });
       }
     }
@@ -55,7 +55,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
         await EventRepository.postEventsToDiscord({
           channelId: postChannel,
           editMessages,
-          existingMessageIds,
+          existingMessageIds
         });
         openToast('Posted!', 'success');
         onClose();
@@ -66,14 +66,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
         setPosting(false);
       }
     },
-    [
-      postChannel,
-      editMessages,
-      existingMessageIds,
-      setPosting,
-      openToast,
-      onClose,
-    ]
+    [postChannel, editMessages, existingMessageIds, setPosting, openToast, onClose]
   );
 
   const handleChange = useCallback(
@@ -142,7 +135,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
         style={{
           display: 'flex',
           justifyContent: 'flex-end',
-          marginTop: '16px',
+          marginTop: '16px'
         }}
       >
         <Button
@@ -153,12 +146,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
         >
           Close
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          disabled={posting}
-        >
+        <Button variant="contained" color="primary" type="submit" disabled={posting}>
           Submit
         </Button>
       </div>

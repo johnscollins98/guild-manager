@@ -26,9 +26,7 @@ export const filterDataByString = (data, filterString) => {
 
 export const filterLogByString = (data, filterString) => {
   filterString = filterString.toLowerCase();
-  return data.filter((entry) =>
-    entry.message.toLowerCase().includes(filterString)
-  );
+  return data.filter((entry) => entry.message.toLowerCase().includes(filterString));
 };
 
 export const getColorFromRole = (rank, discordRoles) => {

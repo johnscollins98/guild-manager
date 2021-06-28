@@ -10,8 +10,8 @@ const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}
 const apiToken = process.env.GW2_API_TOKEN;
 const reqParams = {
   headers: {
-    Authorization: `Bearer ${apiToken}`,
-  },
+    Authorization: `Bearer ${apiToken}`
+  }
 };
 
 const gatherMember = async (req, res, next) => {
@@ -38,9 +38,7 @@ router.get('/members', async (req, res) => {
     const data = await response.json();
 
     // unique cases for crazy account names
-    const uniqueCase = data.find(
-      (m) => m.name === 'DD035413-353B-42A1-BAD4-EB58438860CE'
-    );
+    const uniqueCase = data.find((m) => m.name === 'DD035413-353B-42A1-BAD4-EB58438860CE');
     if (uniqueCase) uniqueCase.name = 'Berry';
 
     const transformed = await Promise.all(
@@ -52,7 +50,7 @@ router.get('/members', async (req, res) => {
         return {
           ...m,
           eventsAttended: record.eventsAttended,
-          warnings: record.warnings,
+          warnings: record.warnings
         };
       })
     );
@@ -81,7 +79,7 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
     givenBy: req.user.username,
     givenTo: memberId,
     oldVal: oldAttendance,
-    newVal: eventsAttended,
+    newVal: eventsAttended
   }).save();
 
   res.status(200).json(JSON.stringify(record));

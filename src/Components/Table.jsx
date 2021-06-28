@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import MUTable from '@material-ui/core/Table';
 
 const Table = ({ children }) => (
@@ -9,12 +8,5 @@ const Table = ({ children }) => (
     </MUTable>
   </div>
 );
-
-Table.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]).isRequired,
-};
 
 export default Table;

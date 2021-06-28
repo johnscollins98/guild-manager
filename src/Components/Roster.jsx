@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
-import {
-  generateGW2RosterRecords,
-  getExcessDiscordRecords,
-} from '../utils/DataProcessing';
+import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 import { useQuery } from 'react-query';
@@ -13,15 +9,13 @@ import {
   fetchDiscordMembers,
   fetchDiscordRoles,
   fetchGW2Members,
-  fetchGW2Ranks,
+  fetchGW2Ranks
 } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
 
 const Roster = ({ filterString, openToast }) => {
   const gw2Members = useQuery('gw2Members', () => fetchGW2Members());
-  const discordMembers = useQuery('discordMembers', () =>
-    fetchDiscordMembers()
-  );
+  const discordMembers = useQuery('discordMembers', () => fetchDiscordMembers());
   const guildRanks = useQuery('guildRanks', () => fetchGW2Ranks());
   const discordRoles = useQuery('discordRoles', () => fetchDiscordRoles());
   const authInfo = useQuery('authInfo', () => fetchAuthInfo());
@@ -32,14 +26,10 @@ const Roster = ({ filterString, openToast }) => {
 
   useEffect(() => {
     const getError = () => {
-      if (gw2Members.error)
-        return { data: 'guild wars member', error: gw2Members.error };
-      if (discordMembers.error)
-        return { data: 'discord member', error: discordMembers.error };
-      if (guildRanks.error)
-        return { data: 'guild rank', error: guildRanks.error };
-      if (authInfo.error)
-        return { data: 'authorisation', error: authInfo.error };
+      if (gw2Members.error) return { data: 'guild wars member', error: gw2Members.error };
+      if (discordMembers.error) return { data: 'discord member', error: discordMembers.error };
+      if (guildRanks.error) return { data: 'guild rank', error: guildRanks.error };
+      if (authInfo.error) return { data: 'authorisation', error: authInfo.error };
     };
     setError(getError());
   }, [
@@ -47,7 +37,7 @@ const Roster = ({ filterString, openToast }) => {
     discordMembers.error,
     discordRoles.error,
     guildRanks.error,
-    authInfo.error,
+    authInfo.error
   ]);
 
   useEffect(() => {
@@ -62,23 +52,15 @@ const Roster = ({ filterString, openToast }) => {
     gw2Members.isLoading,
     discordMembers.isLoading,
     discordRoles.isLoading,
-    guildRanks.isLoading,
+    guildRanks.isLoading
   ]);
 
   useEffect(() => {
     setRecords([]);
     if (!isLoading) {
       setRecords(
-        generateGW2RosterRecords(
-          gw2Members.data,
-          discordMembers.data,
-          guildRanks.data
-        ).concat(
-          getExcessDiscordRecords(
-            gw2Members.data,
-            discordMembers.data,
-            guildRanks.data
-          )
+        generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data).concat(
+          getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data)
         )
       );
     }
@@ -100,11 +82,6 @@ const Roster = ({ filterString, openToast }) => {
       openToast={openToast}
     />
   );
-};
-
-Roster.propTypes = {
-  filterString: PropTypes.string.isRequired,
-  openToast: PropTypes.func,
 };
 
 export default Roster;

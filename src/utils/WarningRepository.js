@@ -28,10 +28,10 @@ const WarningRepository = {
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'POST',
-      body: JSON.stringify(warningObject),
+      body: JSON.stringify(warningObject)
     });
     const data = await response.json();
 
@@ -59,10 +59,10 @@ const WarningRepository = {
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'PUT',
-      body: JSON.stringify(warningObject),
+      body: JSON.stringify(warningObject)
     });
     const data = await response.json();
     if (response.status === 200) {
@@ -70,7 +70,7 @@ const WarningRepository = {
     } else {
       throw data;
     }
-  },
+  }
 };
 
 export default WarningRepository;

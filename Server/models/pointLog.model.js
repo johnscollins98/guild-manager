@@ -8,7 +8,7 @@ const PointLogSchema = new Schema(
     givenTo: { type: String, required: true },
     oldVal: { type: Number, required: true },
     newVal: { type: Number, required: true },
-    timestamp: { type: Date, default: Date.now, required: true },
+    timestamp: { type: Date, default: Date.now, required: true }
   },
   { capped: 10000 }
 );

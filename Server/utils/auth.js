@@ -6,18 +6,15 @@ const getUserAuthInfo = async (req) => {
       loggedIn: false,
       isAdmin: false,
       isEventLeader: false,
-      username: null,
+      username: null
     };
   }
   const loggedIn = true;
 
-  const inGuild = req.user.guilds.some(
-    (g) => g.id === process.env.DISCORD_GUILD_ID
-  );
+  const inGuild = req.user.guilds.some((g) => g.id === process.env.DISCORD_GUILD_ID);
   const roles = await getRoles(req.user.id);
   const isAdmin = inGuild && roles.includes(process.env.ADMIN_ROLE);
-  const isEventLeader =
-    inGuild && roles.includes(process.env.EVENT_LEADER_ROLE);
+  const isEventLeader = inGuild && roles.includes(process.env.EVENT_LEADER_ROLE);
 
   const username = req.user.username;
   return { loggedIn, isAdmin, isEventLeader, username };

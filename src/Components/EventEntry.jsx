@@ -21,18 +21,10 @@ const emptyEvent = {
   day: 'Monday',
   startTime: '',
   duration: '',
-  leaderId: '',
+  leaderId: ''
 };
 
-const daysOfWeek = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-];
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const EventEntry = ({
   create,
@@ -41,7 +33,7 @@ const EventEntry = ({
   deleteEvent,
   updateEvent,
   createEvent,
-  openToast,
+  openToast
 }) => {
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
   const [modified, setModified] = useState(false);
@@ -54,9 +46,7 @@ const EventEntry = ({
       if (anyEmpty) throw new Error('Ensure all fields have a value!');
 
       if (!daysOfWeek.includes(event.day))
-        throw new Error(
-          "Day field must be a capitalised day of the week. e.g. 'Monday'"
-        );
+        throw new Error("Day field must be a capitalised day of the week. e.g. 'Monday'");
     },
 
     []
@@ -102,14 +92,7 @@ const EventEntry = ({
       setModified(false);
       setLocalEvent(emptyEvent);
     }
-  }, [
-    createEvent,
-    validationHelper,
-    localEvent,
-    setModified,
-    setLocalEvent,
-    openToast,
-  ]);
+  }, [createEvent, validationHelper, localEvent, setModified, setLocalEvent, openToast]);
 
   const onSubmit = useCallback(
     (e) => {
@@ -138,12 +121,7 @@ const EventEntry = ({
         </div>
         <div className="field">
           <WatchLater className="field-label" />
-          <EditField
-            event={localEvent}
-            onEdit={onEdit}
-            fieldKey="startTime"
-            type="time"
-          />
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="startTime" type="time" />
         </div>
         <div className="field">
           <HourglassFull className="field-label" />
@@ -151,12 +129,7 @@ const EventEntry = ({
         </div>
         <div className="field long">
           <Person className="field-label" />
-          <EditField
-            event={localEvent}
-            onEdit={onEdit}
-            fieldKey="leaderId"
-            select
-          >
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" select>
             {possibleLeaders.map((leader) => (
               <MenuItem value={leader.id} key={leader.id}>
                 {leader.name}

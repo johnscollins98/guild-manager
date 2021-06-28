@@ -10,8 +10,8 @@ const botToken = process.env.BOT_TOKEN;
 const reqParams = {
   headers: {
     Authorization: `Bot ${botToken}`,
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 };
 
 router.get('/roles', async (req, res) => {
@@ -77,7 +77,7 @@ router.delete('/members/:memberId/roles/:roleId', isAdmin, async (req, res) => {
 router.delete('/members/:id', isAdmin, async (req, res) => {
   const response = await fetch(`${baseUrl}/members/${req.params.id}`, {
     ...reqParams,
-    method: 'DELETE',
+    method: 'DELETE'
   });
   res.status(response.status).json(req.params.id);
 });
@@ -91,10 +91,7 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
     );
 
     const channelId = req.body.channelId;
-    const response = await fetch(
-      `https://discord.com/api/channels/${channelId}`,
-      { ...reqParams }
-    );
+    const response = await fetch(`https://discord.com/api/channels/${channelId}`, { ...reqParams });
     if (response.status !== 200) throw await response.json();
     // we have found the channel
 
@@ -120,22 +117,21 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
       'Thursday',
       'Friday',
       'Saturday',
-      'Sunday',
+      'Sunday'
     ];
     for (day of daysOfWeek) {
       const events = await Event.find({ day }).exec();
 
-
       const parseTime = (str) => {
         return Date.parse(`1970/01/01 ${str}`);
-      }
+      };
 
       const sorted = events.sort((a, b) => {
         const aTime = parseTime(a.startTime);
         const bTime = parseTime(b.startTime);
 
-        return aTime -  bTime;
-      })
+        return aTime - bTime;
+      });
 
       const embed = DiscordUtils.createEmbed(day, sorted);
       if (req.body.editMessages) {

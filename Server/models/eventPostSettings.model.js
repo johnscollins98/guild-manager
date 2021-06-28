@@ -9,8 +9,8 @@ const MessgeIDSchema = new Schema({
   Thursday: { type: String, required: true },
   Friday: { type: String, required: true },
   Saturday: { type: String, required: true },
-  Sunday: { type: String, required: true },
-})
+  Sunday: { type: String, required: true }
+});
 
 const EventPostSettingsSchema = new Schema({
   guildId: { type: String, required: true },

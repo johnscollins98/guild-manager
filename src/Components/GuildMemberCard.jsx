@@ -37,7 +37,7 @@ const GuildMemberCard = ({
   isAdmin,
   addPoint,
   removePoint,
-  singleColumn,
+  singleColumn
 }) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
@@ -48,9 +48,7 @@ const GuildMemberCard = ({
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
   useEffect(() => {
-    setMemberIsAdmin(
-      member.rank === 'General' || member.rank === 'Spearmarshal'
-    );
+    setMemberIsAdmin(member.rank === 'General' || member.rank === 'Spearmarshal');
   }, [member]);
 
   const handleClick = useCallback(
@@ -103,9 +101,7 @@ const GuildMemberCard = ({
                   : null}
               </Avatar>
               <span className="details">
-                <Typography className="name">
-                  {member.memberId || member.discordName}
-                </Typography>
+                <Typography className="name">{member.memberId || member.discordName}</Typography>
                 {member.joinDate ? (
                   <span className="date">
                     <CalendarToday />
@@ -136,13 +132,7 @@ const GuildMemberCard = ({
               ) : null}
               {member.issues.missingGW2 ? (
                 <Tooltip title="GW2 Account Not Found">
-                  <img
-                    src={gw2Image}
-                    alt="missing gw2"
-                    width="24"
-                    height="24"
-                    className="error"
-                  />
+                  <img src={gw2Image} alt="missing gw2" width="24" height="24" className="error" />
                 </Tooltip>
               ) : null}
               {member.issues.missingDiscord ? (
@@ -168,17 +158,12 @@ const GuildMemberCard = ({
               ) : null}
               {member.warnings.length ? (
                 <Tooltip title="Number of warnings">
-                  <Avatar className="number warnings">
-                    {member.warnings.length}
-                  </Avatar>
+                  <Avatar className="number warnings">{member.warnings.length}</Avatar>
                 </Tooltip>
               ) : null}
-              {member.eventsAttended !== null &&
-              member.eventsAttended !== undefined ? (
+              {member.eventsAttended !== null && member.eventsAttended !== undefined ? (
                 <Tooltip title="Number of points">
-                  <Avatar className="number points">
-                    {member.eventsAttended}
-                  </Avatar>
+                  <Avatar className="number points">{member.eventsAttended}</Avatar>
                 </Tooltip>
               ) : null}
             </div>
@@ -186,12 +171,7 @@ const GuildMemberCard = ({
         </CardContent>
       </Card>
       {menuAnchor ? (
-        <Menu
-          anchorEl={menuAnchor}
-          keepMounted
-          open={Boolean(menuAnchor)}
-          onClose={closeMenu}
-        >
+        <Menu anchorEl={menuAnchor} keepMounted open={Boolean(menuAnchor)} onClose={closeMenu}>
           <MenuItem
             disabled={!isAdmin || memberIsAdmin}
             onClick={() => menuAction(onKick)}
@@ -202,29 +182,20 @@ const GuildMemberCard = ({
               Kick
             </span>
           </MenuItem>
-          <MenuItem
-            disabled={!isAdmin || memberIsAdmin}
-            onClick={() => menuAction(onEdit)}
-          >
+          <MenuItem disabled={!isAdmin || memberIsAdmin} onClick={() => menuAction(onEdit)}>
             <span className="menu-item">
               <Edit className="icon" />
               Edit Roles
             </span>
           </MenuItem>
           <Divider />
-          <MenuItem
-            disabled={!member.memberId}
-            onClick={() => menuAction(addPoint)}
-          >
+          <MenuItem disabled={!member.memberId} onClick={() => menuAction(addPoint)}>
             <span className="menu-item">
               <Add className="icon" />
               Add Point
             </span>
           </MenuItem>
-          <MenuItem
-            disabled={!member.memberId}
-            onClick={() => menuAction(removePoint)}
-          >
+          <MenuItem disabled={!member.memberId} onClick={() => menuAction(removePoint)}>
             <span className="menu-item">
               <Remove className="icon" />
               Remove Point

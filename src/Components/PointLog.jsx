@@ -8,9 +8,7 @@ import PointLogEntry from './PointLogEntry';
 const PointLog = ({ filterString, openToast }) => {
   const [ourData, setOurData] = useState([]);
 
-  const { isLoading, error, data } = useQuery('pointLogData', () =>
-    fetchPointLog()
-  );
+  const { isLoading, error, data } = useQuery('pointLogData', () => fetchPointLog());
 
   useEffect(() => {
     if (!data) return;

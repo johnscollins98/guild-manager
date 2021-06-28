@@ -19,7 +19,7 @@ passport.use(
       clientID: process.env.DISCORD_CLIENT_ID,
       clientSecret: process.env.DISCORD_CLIENT_SECRET,
       callbackURL: process.env.DISCORD_AUTH_REDIRECT,
-      scope: ['identify', 'guilds'],
+      scope: ['identify', 'guilds']
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -34,7 +34,7 @@ passport.use(
           const newUser = await DiscordUser.create({
             id: profile.id,
             username: profile.username,
-            guilds: profile.guilds,
+            guilds: profile.guilds
           });
           const savedUser = await newUser.save();
           done(null, savedUser);

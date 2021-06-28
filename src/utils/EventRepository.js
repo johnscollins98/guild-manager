@@ -25,10 +25,10 @@ const EventRepository = {
     const response = await fetch('/api/events', {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'POST',
-      body: JSON.stringify(event),
+      body: JSON.stringify(event)
     });
     const data = await response.json();
 
@@ -43,10 +43,10 @@ const EventRepository = {
     const response = await fetch(`/api/events/${id}`, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'PUT',
-      body: JSON.stringify(event),
+      body: JSON.stringify(event)
     });
     const data = await response.json();
 
@@ -73,10 +73,10 @@ const EventRepository = {
     const response = await fetch(`/api/discord/eventUpdate`, {
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       method: 'POST',
-      body: JSON.stringify(channelData),
+      body: JSON.stringify(channelData)
     });
 
     if (response.status === 200) {
@@ -85,7 +85,7 @@ const EventRepository = {
       const data = await response.json();
       throw data;
     }
-  },
+  }
 };
 
 export default EventRepository;

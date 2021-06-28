@@ -5,8 +5,8 @@ const getValidRoles = async () => {
   const gwToken = process.env.GW2_API_TOKEN;
   const gwParams = {
     headers: {
-      Authorization: `Bearer ${gwToken}`,
-    },
+      Authorization: `Bearer ${gwToken}`
+    }
   };
 
   const response = await fetch(`${gwUrl}/ranks`, gwParams);
@@ -27,7 +27,7 @@ const formatMember = (member, roles, validRoles) => {
     joined: member.joined_at,
     avatar: member.user.avatar
       ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`
-      : undefined,
+      : undefined
   };
 };
 
@@ -42,7 +42,7 @@ const getRoleInfo = (allRoles, memberRoles, validRoles) => {
         roles.push({
           name: discordRole.name,
           id: discordRole.id,
-          color: discordRole.color,
+          color: discordRole.color
         });
     }
   }
@@ -60,11 +60,11 @@ const createEmbed = (day, events) => {
       );
       return {
         name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
-        value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(
-          15
-        )}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`,
+        value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(15)}\n⏳ ${
+          event.duration
+        }\n👑 <@${event.leaderId}>`
       };
-    }),
+    })
   };
 };
 
