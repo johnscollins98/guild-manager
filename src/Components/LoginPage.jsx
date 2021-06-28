@@ -3,7 +3,7 @@ import React from 'react';
 import './LoginPage.scss';
 
 import LoaderPage from './LoaderPage';
-import SOLogo from '../assets/images/SO_Logo.webm';
+import SOLogo from '../assets/images/SO_Logo.gif';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 
 import Button from '@material-ui/core/Button';
@@ -20,14 +20,7 @@ const LoginPage = ({ isLoading, authInfo }) => {
         <LoaderPage />
       ) : (
         <>
-          <video
-            controls={false}
-            autoPlay
-            muted
-            onMouseEnter={(e) => e.target.play()}
-          >
-            <source src={SOLogo} type="video/webm" />
-          </video>
+          <img src={SOLogo} alt="logo" />
           <Button
             href={`${process.env.REACT_APP_BACKEND_BASE_URL || ''}/auth`}
             variant="contained"
