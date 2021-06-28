@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './LoginPage.scss';
 
 import LoaderPage from './LoaderPage';
-import SOLogo from '../assets/images/SO_Logo.gif';
+import SOGif from '../assets/images/SO_Logo.gif';
+import SOStatic from '../assets/images/SO_Static.gif';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 
 import Button from '@material-ui/core/Button';
@@ -11,6 +12,8 @@ import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 
 const LoginPage = ({ isLoading, authInfo }) => {
+  const [logo, setLogo] = useState(SOStatic);
+
   if (isLoading) {
     return <LoaderPage />;
   }
@@ -20,7 +23,12 @@ const LoginPage = ({ isLoading, authInfo }) => {
         <LoaderPage />
       ) : (
         <>
-          <img src={SOLogo} alt="logo" />
+          <img
+            src={logo}
+            alt="logo"
+            onMouseEnter={() => setLogo(SOGif)}
+            onMouseLeave={() => setLogo(SOStatic)}
+          />
           <Button
             href={`${process.env.REACT_APP_BACKEND_BASE_URL || ''}/auth`}
             variant="contained"
