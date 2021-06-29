@@ -3,11 +3,14 @@ import Warning from './Warning';
 
 export default interface MemberRecord {
   accountName: string;
+  memberId?: string;
   rank?: string;
+  rankImage?: string;
+  eventsAttended?: number;
   joinDate: string;
   discordName?: string;
   discordId?: string;
-  roles?: DiscordRole[];
+  roles: DiscordRole[];
   avatar?: string;
   warnings: Warning[];
   issues: {
