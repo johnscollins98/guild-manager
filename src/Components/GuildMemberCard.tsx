@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import './GuildMemberCard.scss';
 import { getColorFromRole } from '../utils/Helpers';
@@ -27,6 +26,22 @@ import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import Warning from '@material-ui/icons/Warning';
+import MemberRecord from '../Interfaces/MemberRecord';
+import DiscordRole from '../Interfaces/DiscordRole';
+import { WarningPost } from '../Interfaces/Warning';
+
+interface Props {
+  member: MemberRecord;
+  discordRoles: DiscordRole[];
+  isAdmin: boolean;
+  singleColumn: boolean;
+  onKick: (member: MemberRecord) => Promise<any>;
+  onEdit: (member: MemberRecord) => Promise<any>;
+  onGiveWarning: (memberId: string, warning: WarningPost) => Promise<any>;
+  onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
+  addPoint: (member: MemberRecord) => Promise<any>;
+  removePoint: (member: MemberRecord) => Promise<any>;
+}
 
 const GuildMemberCard = ({
   member,
@@ -39,7 +54,7 @@ const GuildMemberCard = ({
   addPoint,
   removePoint,
   singleColumn
-}) => {
+}: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
@@ -73,6 +88,7 @@ const GuildMemberCard = ({
 
   const warningSubmitHandler = useCallback(
     async (warningObject) => {
+      if (!member.memberId) throw 'Cannot give warning: No memberId for chosen member';
       await onGiveWarning(member.memberId, warningObject);
     },
     [onGiveWarning, member]
@@ -146,7 +162,7 @@ const GuildMemberCard = ({
                   <DiscordLogo width="24" height="24" />
                 </Tooltip>
               ) : null}
-              {member.rankImage ? (
+              {member.rankImage && member.rank ? (
                 <Tooltip title={member.rank}>
                   <img
                     alt={member.rank}
@@ -237,38 +253,6 @@ const GuildMemberCard = ({
       />
     </>
   );
-};
-
-GuildMemberCard.propTypes = {
-  /* Object representing member to display */
-  member: PropTypes.object.isRequired,
-
-  /* Array of discord roles */
-  discordRoles: PropTypes.array.isRequired,
-
-  /* Function to kick member */
-  onKick: PropTypes.func.isRequired,
-
-  /* Function to edit member */
-  onEdit: PropTypes.func.isRequired,
-
-  /* Function to give warning */
-  onGiveWarning: PropTypes.func.isRequired,
-
-  /* Function to remove warning */
-  onDeleteWarning: PropTypes.func.isRequired,
-
-  /* True if user is admin */
-  isAdmin: PropTypes.bool.isRequired,
-
-  /* Function to add a point to member */
-  addPoint: PropTypes.func.isRequired,
-
-  /* Function to remove point from member */
-  removePoint: PropTypes.func.isRequired,
-
-  /* True if members should be displayed in a single column */
-  singleColumn: PropTypes.bool.isRequired
 };
 
 export default GuildMemberCard;
