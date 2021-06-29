@@ -14,7 +14,7 @@ export const generateGW2RosterRecords = (
     if (value === 0) {
       const bDate = new Date(b.joined);
       const aDate = new Date(a.joined);
-      value = aDate.getUTCMilliseconds() - bDate.getUTCMilliseconds();
+      value = aDate.valueOf() - bDate.valueOf();
     }
     return value;
   });

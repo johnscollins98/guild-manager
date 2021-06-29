@@ -73,7 +73,7 @@ const RosterDisplay = ({
           sorted = sorted.sort((a, b) => {
             const aDate = a.joinDate || '1970-01-01T00:00:00.000Z';
             const bDate = b.joinDate || '1970-01-01T00:00:00.000Z';
-            return new Date(aDate).getUTCMilliseconds() - new Date(bDate).getUTCMilliseconds();
+            return new Date(aDate).valueOf() - new Date(bDate).valueOf();
           });
           break;
         case 'warnings':
@@ -99,7 +99,7 @@ const RosterDisplay = ({
         break;
       case 'issues':
         filtered = filtered.filter((record) => {
-          return Object.keys(record.issues).some((k) => (record.issues as any)[k]);
+          return Object.values(record.issues).some((k) => k);
         });
         break;
       case 'warnings':

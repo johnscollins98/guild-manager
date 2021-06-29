@@ -8,7 +8,7 @@ export const isPromotionRequired = (
   eventsAttended: number
 ): boolean => {
   const date = new Date(dateString);
-  const diffMilliseconds = Math.abs(Date.now() - date.getUTCMilliseconds());
+  const diffMilliseconds = Math.abs(Date.now() - date.valueOf());
   const diffDays = Math.floor(diffMilliseconds / (1000 * 60 * 60 * 24));
   if (rank === 'Second Spear') {
     return diffDays >= 14;
