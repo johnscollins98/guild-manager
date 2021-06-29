@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { getColorFromRole } from '../utils/Helpers';
 import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../utils/DataRetrieval';
@@ -100,6 +101,29 @@ const RoleEdit = ({
   );
 };
 
+RoleEdit.propTypes = {
+  /* currently selected record to edit */
+  selectedRecord: PropTypes.object,
+
+  /* function to set selected record */
+  setSelectedRecord: PropTypes.func.isRequired,
+
+  /* true if modal should be showing */
+  modalShow: PropTypes.bool.isRequired,
+
+  /* function to set 'modalShow' state */
+  setModalShow: PropTypes.func.isRequired,
+
+  /* current records state */
+  records: PropTypes.array.isRequired,
+
+  /* function to set record state */
+  setRecords: PropTypes.func.isRequired,
+
+  /* function to open toast */
+  openToast: PropTypes.func.isRequired
+};
+
 export default RoleEdit;
 
 const StyledCheckbox = ({ color, ...props }) => {
@@ -114,4 +138,8 @@ const StyledCheckbox = ({ color, ...props }) => {
   })((props) => <Checkbox color="default" {...props} />);
 
   return <OurCheckbox {...props} />;
+};
+
+StyledCheckbox.propTypes = {
+  color: PropTypes.string.isRequired
 };

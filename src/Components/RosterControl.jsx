@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import './RosterControl.scss';
 
@@ -150,6 +151,26 @@ const RosterControl = ({
       </Menu>
     </>
   );
+};
+
+RosterControl.propTypes = {
+  /* true if roster should be displayed as single column */
+  singleColumn: PropTypes.bool.isRequired,
+
+  /* function to set 'singleColumn' state */
+  setSingleColumn: PropTypes.func.isRequired,
+
+  /* which key to filter data by */
+  filterBy: PropTypes.string.isRequired,
+
+  /* function to set 'filterBy' state */
+  setFilterBy: PropTypes.func.isRequired,
+
+  /* key to sort by */
+  sortBy: PropTypes.string.isRequired,
+
+  /* function to set 'sortBy' state */
+  setSortBy: PropTypes.func.isRequired
 };
 
 export default RosterControl;

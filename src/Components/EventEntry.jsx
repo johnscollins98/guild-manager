@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import './EventEntry.scss';
 
 import Card from '@material-ui/core/Card';
@@ -27,12 +28,12 @@ const emptyEvent = {
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const EventEntry = ({
-  create,
+  create = false,
   event,
   possibleLeaders,
-  deleteEvent,
-  updateEvent,
-  createEvent,
+  deleteEvent = () => {},
+  updateEvent = () => {},
+  createEvent = () => {},
   openToast
 }) => {
   const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
@@ -159,6 +160,29 @@ const EventEntry = ({
   );
 };
 
+EventEntry.propTypes = {
+  /* if true we are creating an event */
+  create: PropTypes.bool,
+
+  /* object to edit */
+  event: PropTypes.object,
+
+  /* list of possible event leaders */
+  possibleLeaders: PropTypes.array.isRequired,
+
+  /* function to delete an event */
+  deleteEvent: PropTypes.func,
+
+  /* function to update an event */
+  updateEvent: PropTypes.func,
+
+  /* function to create an event */
+  createEvent: PropTypes.func,
+
+  /* function to open a toast */
+  openToast: PropTypes.func.isRequired
+};
+
 const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
   return (
     <TextField
@@ -176,6 +200,20 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
       {children}
     </TextField>
   );
+};
+
+EditField.propTypes = {
+  /* event to edit */
+  event: PropTypes.object.isRequired,
+
+  /* function to call when field is edited */
+  onEdit: PropTypes.func.isRequired,
+
+  /* key for field to edit */
+  fieldKey: PropTypes.string.isRequired,
+
+  /* child content */
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
 };
 
 export default EventEntry;

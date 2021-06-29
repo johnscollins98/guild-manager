@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import EventRepository from '../utils/EventRepository';
 import LoaderPage from './LoaderPage';
@@ -152,6 +153,14 @@ const EventPosterForm = ({ onClose, openToast }) => {
       </div>
     </form>
   );
+};
+
+EventPosterForm.propTypes = {
+  /* Function to call when close is clicked */
+  onClose: PropTypes.func.isRequired,
+
+  /* Function to open toast */
+  openToast: PropTypes.func.isRequired
 };
 
 export default EventPosterForm;

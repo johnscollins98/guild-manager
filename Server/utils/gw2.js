@@ -2,7 +2,7 @@ const formatLog = (data) => {
   const filtered = data.filter((o) =>
     ['joined', 'invited', 'kick', 'rank_change'].includes(o.type)
   );
-  formattedLogs = filtered.map((entry) => formatLogEntry(entry));
+  const formattedLogs = filtered.map((entry) => formatLogEntry(entry));
   return formattedLogs;
 };
 

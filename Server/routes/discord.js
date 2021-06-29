@@ -119,7 +119,7 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
       'Saturday',
       'Sunday'
     ];
-    for (day of daysOfWeek) {
+    for (const day of daysOfWeek) {
       const events = await Event.find({ day }).exec();
 
       const parseTime = (str) => {

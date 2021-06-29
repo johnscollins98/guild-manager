@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
 
@@ -82,6 +83,14 @@ const Roster = ({ filterString, openToast }) => {
       openToast={openToast}
     />
   );
+};
+
+Roster.propTypes = {
+  /* string to filter data */
+  filterString: PropTypes.string.isRequired,
+
+  /* function to open toast */
+  openToast: PropTypes.func.isRequired
 };
 
 export default Roster;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,6 +21,17 @@ const Control = ({ handleFilterChange, theme, toggleTheme }) => {
       </Grid>
     </Grid>
   );
+};
+
+Control.propTypes = {
+  /* Function to call when filter text changes */
+  handleFilterChange: PropTypes.func.isRequired,
+
+  /* Current selected theme */
+  theme: PropTypes.string.isRequired,
+
+  /* Function to toggle selected theme */
+  toggleTheme: PropTypes.func.isRequired
 };
 
 export default Control;
