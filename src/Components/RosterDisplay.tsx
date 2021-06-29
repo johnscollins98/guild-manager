@@ -9,6 +9,20 @@ import './RosterDisplay.scss';
 import RosterControl from './RosterControl';
 import { compareRank } from '../utils/DataProcessing';
 import WarningRepository from '../utils/WarningRepository';
+import MemberRecord from '../Interfaces/MemberRecord';
+import DiscordRole from '../Interfaces/DiscordRole';
+import GW2Rank from '../Interfaces/GW2Rank';
+import AuthInfo from '../Interfaces/AuthInfo';
+import { WarningPost } from '../Interfaces/Warning';
+
+interface Props {
+  records: MemberRecord[];
+  discordRoles: DiscordRole[];
+  filterString: string;
+  guildRanks: GW2Rank[];
+  openToast: (msg: string, status: string) => void;
+  authInfo?: AuthInfo;
+}
 
 const RosterDisplay = ({
   records,
@@ -16,10 +30,10 @@ const RosterDisplay = ({
   filterString,
   guildRanks,
   openToast,
-  authInfo = { isAdmin: false }
-}) => {
+  authInfo = { isAdmin: false, loggedIn: true, isEventLeader: false, username: '' }
+}: Props) => {
   const [modalShow, setModalShow] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [selectedRecord, setSelectedRecord] = useState<MemberRecord | null>(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
   const [singleColumn, setSingleColumn] = useState(false);
@@ -32,13 +46,13 @@ const RosterDisplay = ({
   }, [records]);
 
   const onSort = useCallback(
-    (toSort, sortBy) => {
+    (toSort: MemberRecord[], sortBy: string) => {
       let sorted = [...toSort];
       switch (sortBy) {
         case 'name':
           sorted = sorted.sort((a, b) => {
-            const aName = a.accountName || a.discordName;
-            const bName = b.accountName || b.discordName;
+            const aName = a.accountName || a.discordName || '';
+            const bName = b.accountName || b.discordName || '';
             return aName.toLowerCase().localeCompare(bName.toLowerCase());
           });
           break;
@@ -60,7 +74,7 @@ const RosterDisplay = ({
           sorted = sorted.sort((a, b) => {
             const aDate = a.joinDate || '1970-01-01T00:00:00.000Z';
             const bDate = b.joinDate || '1970-01-01T00:00:00.000Z';
-            return new Date(aDate) - new Date(bDate);
+            return new Date(aDate).getUTCMilliseconds() - new Date(bDate).getUTCMilliseconds();
           });
           break;
         case 'warnings':
@@ -75,7 +89,7 @@ const RosterDisplay = ({
     [guildRanks]
   );
 
-  const onFilter = useCallback((toFilter, filterBy) => {
+  const onFilter = useCallback((toFilter: MemberRecord[], filterBy: string) => {
     let filtered = toFilter;
     switch (filterBy) {
       case 'has-gw2':
@@ -86,7 +100,7 @@ const RosterDisplay = ({
         break;
       case 'issues':
         filtered = filtered.filter((record) => {
-          return Object.keys(record.issues).some((k) => record.issues[k]);
+          return Object.keys(record.issues).some((k) => (record.issues as any)[k]);
         });
         break;
       case 'warnings':
@@ -108,7 +122,7 @@ const RosterDisplay = ({
   }, [recordState, sortBy, filterBy, filterString, onFilter, onSort]);
 
   const onKick = useCallback(
-    async (record) => {
+    async (record: MemberRecord) => {
       if (!record.discordId) return;
 
       const res = window.confirm(`Are you sure you want to kick ${record.discordName}?`);
@@ -126,21 +140,23 @@ const RosterDisplay = ({
   );
 
   const openEdit = useCallback(
-    (record) => {
-      setSelectedRecord(record);
+    (member: MemberRecord) => {
+      setSelectedRecord(member);
       setModalShow(true);
     },
     [setModalShow, setSelectedRecord]
   );
 
   const onGiveWarning = useCallback(
-    async (memberId, warningObject) => {
+    async (memberId: string, warningObject: WarningPost) => {
       try {
         const newMember = await WarningRepository.addWarning(memberId, warningObject);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
         });
+        if (!toEdit) throw 'Cannot find given member';
+
         toEdit.warnings = newMember.warnings;
         setRecordState(recordsCopy);
         openToast('Successfully gave warning', 'success');
@@ -153,13 +169,15 @@ const RosterDisplay = ({
   );
 
   const onDeleteWarning = useCallback(
-    async (memberId, warningId) => {
+    async (memberId: string, warningId: string) => {
       try {
         const newMember = await WarningRepository.deleteWarning(memberId, warningId);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
         });
+        if (!toEdit) throw 'Cannot find given member';
+
         toEdit.warnings = newMember.warnings;
         setRecordState(recordsCopy);
         openToast('Successfully removed warning', 'success');
@@ -172,7 +190,7 @@ const RosterDisplay = ({
   );
 
   const changeEventAttended = useCallback(
-    async (memberId, eventsAttended) => {
+    async (memberId: string, eventsAttended: number) => {
       try {
         const newObject = await setGuildMember({
           memberId,
@@ -183,6 +201,8 @@ const RosterDisplay = ({
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newObject.memberId;
         });
+        if (!toEdit) throw 'Cannot find given member';
+
         toEdit.eventsAttended = newObject.eventsAttended;
 
         setRecordState(recordsCopy);
@@ -195,17 +215,25 @@ const RosterDisplay = ({
   );
 
   const incrementEventAttended = useCallback(
-    async (record) => {
-      const current = parseInt(record.eventsAttended);
-      await changeEventAttended(record.memberId, current + 1);
+    async (record: MemberRecord) => {
+      if (record.eventsAttended && record.memberId) {
+        const current = record.eventsAttended;
+        await changeEventAttended(record.memberId, current + 1);
+      } else {
+        throw 'Cannot increment points for this member';
+      }
     },
     [changeEventAttended]
   );
 
   const decrementEventAttended = useCallback(
-    async (record) => {
-      const current = parseInt(record.eventsAttended);
-      await changeEventAttended(record.memberId, current - 1);
+    async (record: MemberRecord) => {
+      if (record.eventsAttended && record.memberId) {
+        const current = record.eventsAttended;
+        await changeEventAttended(record.memberId, current - 1);
+      } else {
+        throw 'Cannot decrement points for this member';
+      }
     },
     [changeEventAttended]
   );

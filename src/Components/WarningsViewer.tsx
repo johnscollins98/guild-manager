@@ -14,6 +14,7 @@ import CalendarToday from '@material-ui/icons/CalendarToday';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
 import MemberRecord from '../Interfaces/MemberRecord';
+import Warning from '../Interfaces/Warning';
 
 interface Props {
   isOpen: boolean;
@@ -24,7 +25,7 @@ interface Props {
 
 const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => {
   const handleDeleteWarning = useCallback(
-    async (warning) => {
+    async (warning: Warning) => {
       const res = window.confirm('Are you sure you want to delete this warning?');
       if (res) {
         if (member.memberId) {

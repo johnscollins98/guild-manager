@@ -18,8 +18,8 @@ interface Props {
 const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
   const [warningReason, setWarningReason] = useState('');
 
-  const submitHandler = useCallback(
-    async (e) => {
+  const submitHandler: React.FormEventHandler = useCallback(
+    async (e: React.FormEvent) => {
       e.preventDefault();
       await onSubmit({ reason: warningReason });
       setWarningReason('');

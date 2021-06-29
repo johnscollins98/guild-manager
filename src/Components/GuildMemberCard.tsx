@@ -36,7 +36,7 @@ interface Props {
   isAdmin: boolean;
   singleColumn: boolean;
   onKick: (member: MemberRecord) => Promise<any>;
-  onEdit: (member: MemberRecord) => Promise<any>;
+  onEdit: (member: MemberRecord) => void;
   onGiveWarning: (memberId: string, warning: WarningPost) => Promise<any>;
   onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
   addPoint: (member: MemberRecord) => Promise<any>;
@@ -79,7 +79,7 @@ const GuildMemberCard = ({
   }, [setMenuAnchor]);
 
   const menuAction = useCallback(
-    async (func) => {
+    async (func: Function) => {
       await func(member);
       closeMenu();
     },
@@ -87,7 +87,7 @@ const GuildMemberCard = ({
   );
 
   const warningSubmitHandler = useCallback(
-    async (warningObject) => {
+    async (warningObject: WarningPost) => {
       if (!member.memberId) throw 'Cannot give warning: No memberId for chosen member';
       await onGiveWarning(member.memberId, warningObject);
     },
