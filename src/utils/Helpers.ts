@@ -1,5 +1,5 @@
 import DiscordRole from '../Interfaces/DiscordRole';
-import LogEntry from '../Interfaces/LogEntry';
+import GW2LogEntry from '../Interfaces/GW2LogEntry';
 import MemberRecord from '../Interfaces/MemberRecord';
 
 export const isPromotionRequired = (
@@ -32,7 +32,7 @@ export const filterDataByString = (data: MemberRecord[], filterString: string): 
   );
 };
 
-export const filterLogByString = (data: LogEntry[], filterString: string): LogEntry[] => {
+export const filterLogByString = (data: GW2LogEntry[], filterString: string): GW2LogEntry[] => {
   filterString = filterString.toLowerCase();
   return data.filter((entry) => entry.message.toLowerCase().includes(filterString));
 };
