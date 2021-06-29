@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
+import MemberInfo from '../Interfaces/MemberInfo';
+import Warning from '../Interfaces/Warning';
 
 const WarningRepository = {
-  getWarnings: async (memberId) => {
+  getWarnings: async (memberId: string): Promise<[Warning]> => {
     const url = `/api/gw2/members/${memberId}/warnings`;
     const response = await fetch(url);
     const data = await response.json();
@@ -12,7 +14,7 @@ const WarningRepository = {
     }
   },
 
-  getWarning: async (memberId, warningId) => {
+  getWarning: async (memberId: string, warningId: string): Promise<Warning> => {
     const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
     const response = await fetch(url);
     const data = await response.json();
@@ -23,7 +25,7 @@ const WarningRepository = {
     }
   },
 
-  addWarning: async (memberId, warningObject) => {
+  addWarning: async (memberId: string, warningObject: string): Promise<MemberInfo> => {
     const url = `/api/gw2/members/${memberId}/warnings`;
     const response = await fetch(url, {
       headers: {
@@ -34,7 +36,6 @@ const WarningRepository = {
       body: JSON.stringify(warningObject)
     });
     const data = await response.json();
-
     if (response.status === 200) {
       return data;
     } else {
@@ -42,7 +43,7 @@ const WarningRepository = {
     }
   },
 
-  deleteWarning: async (memberId, warningId) => {
+  deleteWarning: async (memberId: string, warningId: string): Promise<MemberInfo> => {
     const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
     const response = await fetch(url, { method: 'DELETE' });
     const data = await response.json();
@@ -54,7 +55,11 @@ const WarningRepository = {
     }
   },
 
-  updateWarning: async (memberId, warningId, warningObject) => {
+  updateWarning: async (
+    memberId: string,
+    warningId: string,
+    warningObject: Warning
+  ): Promise<MemberInfo> => {
     const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
     const response = await fetch(url, {
       headers: {
