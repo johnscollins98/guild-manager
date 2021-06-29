@@ -16,7 +16,7 @@ import MemberRecord from '../Interfaces/MemberRecord';
 
 interface CustomError {
   data: string;
-  error: unknown;
+  error: any;
 }
 
 interface Props {
