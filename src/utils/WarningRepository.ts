@@ -3,7 +3,7 @@ import MemberInfo from '../Interfaces/MemberInfo';
 import Warning from '../Interfaces/Warning';
 
 const WarningRepository = {
-  getWarnings: async (memberId: string): Promise<[Warning]> => {
+  getWarnings: async (memberId: string): Promise<Warning[]> => {
     const url = `/api/gw2/members/${memberId}/warnings`;
     const response = await fetch(url);
     const data = await response.json();

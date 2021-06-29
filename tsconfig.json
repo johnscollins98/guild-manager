@@ -13,6 +13,8 @@
     ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
