@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import MemberInfo from '../Interfaces/MemberInfo';
-import Warning from '../Interfaces/Warning';
+import Warning, { WarningPost } from '../Interfaces/Warning';
 
 const WarningRepository = {
   getWarnings: async (memberId: string): Promise<Warning[]> => {
@@ -25,7 +25,7 @@ const WarningRepository = {
     }
   },
 
-  addWarning: async (memberId: string, warningObject: string): Promise<MemberInfo> => {
+  addWarning: async (memberId: string, warningObject: WarningPost): Promise<MemberInfo> => {
     const url = `/api/gw2/members/${memberId}/warnings`;
     const response = await fetch(url, {
       headers: {
@@ -58,7 +58,7 @@ const WarningRepository = {
   updateWarning: async (
     memberId: string,
     warningId: string,
-    warningObject: Warning
+    warningObject: WarningPost
   ): Promise<MemberInfo> => {
     const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
     const response = await fetch(url, {

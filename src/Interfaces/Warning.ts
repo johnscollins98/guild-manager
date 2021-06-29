@@ -4,3 +4,7 @@ export default interface Warning {
   timestamp: string;
   _id: string;
 }
+
+export interface WarningPost {
+  reason: string;
+}

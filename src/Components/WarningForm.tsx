@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import './WarningForm.scss';
 
@@ -8,8 +7,15 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { WarningPost } from '../Interfaces/Warning';
 
-const WarningForm = ({ isOpen, onClose, onSubmit }) => {
+interface Props {
+  isOpen: boolean;
+  onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
+  onSubmit: (warning: WarningPost) => Promise<any>;
+}
+
+const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
   const [warningReason, setWarningReason] = useState('');
 
   const submitHandler = useCallback(
@@ -42,17 +48,6 @@ const WarningForm = ({ isOpen, onClose, onSubmit }) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-WarningForm.propTypes = {
-  /* true if modal is open */
-  isOpen: PropTypes.bool.isRequired,
-
-  /* function to close modal */
-  onClose: PropTypes.func.isRequired,
-
-  /* funciton to call on submit */
-  onSubmit: PropTypes.func.isRequired
 };
 
 export default WarningForm;
