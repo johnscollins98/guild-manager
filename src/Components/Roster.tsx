@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
 
@@ -13,17 +12,28 @@ import {
   fetchGW2Ranks
 } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
+import MemberRecord from '../Interfaces/MemberRecord';
 
-const Roster = ({ filterString, openToast }) => {
+interface CustomError {
+  data: string;
+  error: unknown;
+}
+
+interface Props {
+  filterString: string;
+  openToast: (msg: string, status: string) => void;
+}
+
+const Roster = ({ filterString, openToast }: Props) => {
   const gw2Members = useQuery('gw2Members', () => fetchGW2Members());
   const discordMembers = useQuery('discordMembers', () => fetchDiscordMembers());
   const guildRanks = useQuery('guildRanks', () => fetchGW2Ranks());
   const discordRoles = useQuery('discordRoles', () => fetchDiscordRoles());
   const authInfo = useQuery('authInfo', () => fetchAuthInfo());
 
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<MemberRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<CustomError | null>(null);
 
   useEffect(() => {
     const getError = () => {
@@ -31,6 +41,7 @@ const Roster = ({ filterString, openToast }) => {
       if (discordMembers.error) return { data: 'discord member', error: discordMembers.error };
       if (guildRanks.error) return { data: 'guild rank', error: guildRanks.error };
       if (authInfo.error) return { data: 'authorisation', error: authInfo.error };
+      return null;
     };
     setError(getError());
   }, [
@@ -47,6 +58,7 @@ const Roster = ({ filterString, openToast }) => {
       if (discordMembers.isLoading) return true;
       if (discordRoles.isLoading) return true;
       if (guildRanks.isLoading) return true;
+      return false;
     };
     setIsLoading(getIsLoading());
   }, [
@@ -58,7 +70,7 @@ const Roster = ({ filterString, openToast }) => {
 
   useEffect(() => {
     setRecords([]);
-    if (!isLoading) {
+    if (!isLoading && gw2Members.data && discordMembers.data && guildRanks.data) {
       setRecords(
         generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data).concat(
           getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data)
@@ -72,7 +84,7 @@ const Roster = ({ filterString, openToast }) => {
     console.error(error.error);
   }
 
-  if (isLoading) return <LoaderPage />;
+  if (isLoading || !discordRoles.data || !guildRanks.data) return <LoaderPage />;
   return (
     <RosterDisplay
       records={records}
@@ -83,14 +95,6 @@ const Roster = ({ filterString, openToast }) => {
       openToast={openToast}
     />
   );
-};
-
-Roster.propTypes = {
-  /* string to filter data */
-  filterString: PropTypes.string.isRequired,
-
-  /* function to open toast */
-  openToast: PropTypes.func.isRequired
 };
 
 export default Roster;
