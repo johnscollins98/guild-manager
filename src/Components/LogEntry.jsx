@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './LogEntry.scss';
 
@@ -24,6 +25,11 @@ const LogEntry = ({ entryData }) => {
       </div>
     </Card>
   );
+};
+
+LogEntry.propTypes = {
+  /* object containing entry data */
+  entryData: PropTypes.object.isRequired
 };
 
 export default LogEntry;

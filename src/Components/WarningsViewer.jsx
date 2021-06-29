@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 import './WarningsViewer.scss';
 
@@ -54,6 +55,20 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+WarningsViewer.propTypes = {
+  /* true if modal is open */
+  isOpen: PropTypes.bool.isRequired,
+
+  /* func to close modal */
+  onClose: PropTypes.func.isRequired,
+
+  /* func to delete warning */
+  onDeleteWarning: PropTypes.func.isRequired,
+
+  /* member object to display from */
+  member: PropTypes.object.isRequired
 };
 
 export default WarningsViewer;

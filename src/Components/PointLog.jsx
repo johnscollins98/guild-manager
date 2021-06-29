@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { fetchPointLog } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
@@ -36,6 +37,14 @@ const PointLog = ({ filterString, openToast }) => {
       ))}
     </div>
   );
+};
+
+PointLog.propTypes = {
+  /* string to filter data */
+  filterString: PropTypes.string.isRequired,
+
+  /* Function to open toast */
+  openToast: PropTypes.func.isRequired
 };
 
 export default PointLog;

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import './GuildMemberCard.scss';
 import { getColorFromRole } from '../utils/Helpers';
@@ -236,6 +237,38 @@ const GuildMemberCard = ({
       />
     </>
   );
+};
+
+GuildMemberCard.propTypes = {
+  /* Object representing member to display */
+  member: PropTypes.object.isRequired,
+
+  /* Array of discord roles */
+  discordRoles: PropTypes.array.isRequired,
+
+  /* Function to kick member */
+  onKick: PropTypes.func.isRequired,
+
+  /* Function to edit member */
+  onEdit: PropTypes.func.isRequired,
+
+  /* Function to give warning */
+  onGiveWarning: PropTypes.func.isRequired,
+
+  /* Function to remove warning */
+  onDeleteWarning: PropTypes.func.isRequired,
+
+  /* True if user is admin */
+  isAdmin: PropTypes.bool.isRequired,
+
+  /* Function to add a point to member */
+  addPoint: PropTypes.func.isRequired,
+
+  /* Function to remove point from member */
+  removePoint: PropTypes.func.isRequired,
+
+  /* True if members should be displayed in a single column */
+  singleColumn: PropTypes.bool.isRequired
 };
 
 export default GuildMemberCard;

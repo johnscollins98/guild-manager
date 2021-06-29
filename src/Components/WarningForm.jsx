@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 import './WarningForm.scss';
 
@@ -41,6 +42,17 @@ const WarningForm = ({ isOpen, onClose, onSubmit }) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+WarningForm.propTypes = {
+  /* true if modal is open */
+  isOpen: PropTypes.bool.isRequired,
+
+  /* function to close modal */
+  onClose: PropTypes.func.isRequired,
+
+  /* funciton to call on submit */
+  onSubmit: PropTypes.func.isRequired
 };
 
 export default WarningForm;

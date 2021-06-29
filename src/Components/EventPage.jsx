@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import './EventPage.scss';
 
 import EventRepo from '../utils/EventRepository';
@@ -186,6 +187,14 @@ const EventPage = ({ filterString, openToast }) => {
       </Dialog>
     </>
   );
+};
+
+EventPage.propTypes = {
+  /* filter string provided from Control to filter data */
+  filterString: PropTypes.string.isRequired,
+
+  /* function to open toast */
+  openToast: PropTypes.func.isRequired
 };
 
 export default EventPage;

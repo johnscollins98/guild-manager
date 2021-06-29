@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import RoleEdit from './RoleEdit';
 import { filterDataByString } from '../utils/Helpers';
 import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
@@ -126,8 +127,8 @@ const RosterDisplay = ({
 
   const openEdit = useCallback(
     (record) => {
-      setModalShow(true);
       setSelectedRecord(record);
+      setModalShow(true);
     },
     [setModalShow, setSelectedRecord]
   );
@@ -247,6 +248,26 @@ const RosterDisplay = ({
       />
     </>
   );
+};
+
+RosterDisplay.propTypes = {
+  /* list of records to display */
+  records: PropTypes.array.isRequired,
+
+  /* array of discord roles */
+  discordRoles: PropTypes.array.isRequired,
+
+  /* string to filter data by */
+  filterString: PropTypes.string.isRequired,
+
+  /* array of guild ranks */
+  guildRanks: PropTypes.array.isRequired,
+
+  /* function to open toast */
+  openToast: PropTypes.func.isRequired,
+
+  /* auth info object */
+  authInfo: PropTypes.object.isRequired
 };
 
 export default RosterDisplay;

@@ -4,7 +4,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
-const discordStrategy = require('./strategies/discord.strategy');
+require('./strategies/discord.strategy');
 const path = require('path');
 const app = express();
 app.use(cors());

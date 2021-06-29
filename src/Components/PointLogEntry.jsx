@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './PointLogEntry.scss';
 
@@ -34,6 +35,11 @@ const PointLogEntry = ({ entry }) => {
       </div>
     </Card>
   );
+};
+
+PointLogEntry.propTypes = {
+  /* point log entry object to display */
+  entry: PropTypes.object.isRequired
 };
 
 export default PointLogEntry;

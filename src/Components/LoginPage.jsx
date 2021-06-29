@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import './LoginPage.scss';
 
@@ -47,6 +48,14 @@ const LoginPage = ({ isLoading, authInfo }) => {
       )}
     </div>
   );
+};
+
+LoginPage.propTypes = {
+  /* True if data is loading */
+  isLoading: PropTypes.bool.isRequired,
+
+  /* Auth Info of logged in user */
+  authInfo: PropTypes.object.isRequired
 };
 
 export default LoginPage;

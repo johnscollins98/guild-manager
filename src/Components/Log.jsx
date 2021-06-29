@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import { filterLogByString } from '../utils/Helpers';
 import './Log.scss';
@@ -30,6 +31,14 @@ const Log = ({ filterString, openToast }) => {
       ))}
     </div>
   );
+};
+
+Log.propTypes = {
+  /* String to filter data */
+  filterString: PropTypes.string.isRequired,
+
+  /* Function to open toast */
+  openToast: PropTypes.func.isRequired
 };
 
 export default Log;
