@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
+import Entry from '../Interfaces/PointLogEntry';
 import { fetchPointLog } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
 import './PointLog.scss';
 import PointLogEntry from './PointLogEntry';
 
-const PointLog = ({ filterString, openToast }) => {
-  const [ourData, setOurData] = useState([]);
+interface Props {
+  filterString: string;
+  openToast: (msg: string, status: string) => void;
+}
+
+const PointLog = ({ filterString, openToast }: Props) => {
+  const [ourData, setOurData] = useState<Entry[]>([]);
 
   const { isLoading, error, data } = useQuery('pointLogData', () => fetchPointLog());
 
@@ -37,14 +42,6 @@ const PointLog = ({ filterString, openToast }) => {
       ))}
     </div>
   );
-};
-
-PointLog.propTypes = {
-  /* string to filter data */
-  filterString: PropTypes.string.isRequired,
-
-  /* Function to open toast */
-  openToast: PropTypes.func.isRequired
 };
 
 export default PointLog;
