@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './LogEntry.scss';
+
+import GW2LogEntry from '../Interfaces/GW2LogEntry';
 
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
@@ -9,7 +10,11 @@ import Typography from '@material-ui/core/Typography';
 import AccessTime from '@material-ui/icons/AccessTime';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 
-const LogEntry = ({ entryData }) => {
+interface Props {
+  entryData: GW2LogEntry;
+}
+
+const LogEntry = ({ entryData }: Props) => {
   return (
     <Card variant="outlined" className="log-entry">
       <div>
@@ -25,11 +30,6 @@ const LogEntry = ({ entryData }) => {
       </div>
     </Card>
   );
-};
-
-LogEntry.propTypes = {
-  /* object containing entry data */
-  entryData: PropTypes.object.isRequired
 };
 
 export default LogEntry;
