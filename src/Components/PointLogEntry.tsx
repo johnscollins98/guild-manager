@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import './PointLogEntry.scss';
+
+import  EntryInterface from '../Interfaces/PointLogEntry';
 
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -13,7 +14,11 @@ import ExposureNeg1 from '@material-ui/icons/ExposureNeg1';
 import ExposurePlus1 from '@material-ui/icons/ExposurePlus1';
 import Person from '@material-ui/icons/Person';
 
-const PointLogEntry = ({ entry }) => {
+interface Props {
+  entry: EntryInterface;
+}
+
+const PointLogEntry = ({ entry }: Props) => {
   return (
     <Card variant="outlined" className="point-log-entry">
       <div className="transfer">
@@ -35,11 +40,6 @@ const PointLogEntry = ({ entry }) => {
       </div>
     </Card>
   );
-};
-
-PointLogEntry.propTypes = {
-  /* point log entry object to display */
-  entry: PropTypes.object.isRequired
 };
 
 export default PointLogEntry;
