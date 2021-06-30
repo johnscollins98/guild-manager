@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 import './LoginPage.scss';
+
+import AuthInfo from '../Interfaces/AuthInfo';
 
 import LoaderPage from './LoaderPage';
 import SOGif from '../assets/images/SO_Logo.gif';
@@ -12,7 +13,12 @@ import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
 import AlertTitle from '@material-ui/lab/AlertTitle';
 
-const LoginPage = ({ isLoading, authInfo }) => {
+interface Props {
+  isLoading: boolean;
+  authInfo: AuthInfo;
+}
+
+const LoginPage = ({ isLoading, authInfo }: Props) => {
   const [logo, setLogo] = useState(SOStatic);
 
   if (isLoading) {
@@ -48,14 +54,6 @@ const LoginPage = ({ isLoading, authInfo }) => {
       )}
     </div>
   );
-};
-
-LoginPage.propTypes = {
-  /* True if data is loading */
-  isLoading: PropTypes.bool.isRequired,
-
-  /* Auth Info of logged in user */
-  authInfo: PropTypes.object.isRequired
 };
 
 export default LoginPage;

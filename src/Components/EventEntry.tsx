@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
+
 import './EventEntry.scss';
+
+import DiscordMember from '../Interfaces/DiscordMember';
+import Event from '../Interfaces/Event';
 
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,27 +19,39 @@ import HourglassFull from '@material-ui/icons/HourglassFull';
 import Person from '@material-ui/icons/Person';
 import Refresh from '@material-ui/icons/Refresh';
 import WatchLater from '@material-ui/icons/WatchLater';
+import { Color } from '@material-ui/lab/Alert';
 
-const emptyEvent = {
+const emptyEvent: Event = {
   title: '',
   day: 'Monday',
   startTime: '',
   duration: '',
-  leaderId: ''
+  leaderId: '',
+  _id: ''
 };
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+interface Props {
+  create?: boolean;
+  event?: Event;
+  possibleLeaders: DiscordMember[];
+  deleteEvent?: (e: Event) => Promise<void>;
+  updateEvent?: (e: Event) => Promise<Event | undefined>;
+  createEvent?: (e: Event) => Promise<Event | undefined>;
+  openToast: (msg: string, status: Color) => void;
+}
 
 const EventEntry = ({
   create = false,
   event,
   possibleLeaders,
-  deleteEvent = () => {},
-  updateEvent = () => {},
-  createEvent = () => {},
+  deleteEvent,
+  updateEvent,
+  createEvent,
   openToast
-}) => {
-  const [localEvent, setLocalEvent] = useState(create ? emptyEvent : event);
+}: Props) => {
+  const [localEvent, setLocalEvent] = useState(event ? event : emptyEvent);
   const [modified, setModified] = useState(false);
 
   const validationHelper = useCallback(
@@ -54,7 +69,7 @@ const EventEntry = ({
   );
 
   const onEdit = useCallback(
-    (field, value) => {
+    (field: string, value: string) => {
       setLocalEvent({ ...localEvent, [field]: value });
       setModified(true);
     },
@@ -62,7 +77,7 @@ const EventEntry = ({
   );
 
   const onReset = useCallback(() => {
-    setLocalEvent(create ? emptyEvent : event);
+    setLocalEvent(event ? event : emptyEvent);
     setModified(false);
   }, [event, create, setLocalEvent, setModified]);
 
@@ -72,6 +87,10 @@ const EventEntry = ({
     } catch (err) {
       openToast(err.message, 'warning');
       return;
+    }
+
+    if (!updateEvent) {
+      throw 'No update event function passed in';
     }
 
     const updatedEvent = await updateEvent(localEvent);
@@ -88,12 +107,24 @@ const EventEntry = ({
       return;
     }
 
+    if (!createEvent) {
+      throw 'No create event function passed in';
+    }
+
     const createdEvent = await createEvent(localEvent);
     if (createdEvent) {
       setModified(false);
       setLocalEvent(emptyEvent);
     }
   }, [createEvent, validationHelper, localEvent, setModified, setLocalEvent, openToast]);
+
+  const onDelete = useCallback(() => {
+    if (deleteEvent) {
+      deleteEvent(localEvent);
+    } else {
+      throw 'No Delete event function passed in';
+    }
+  }, [localEvent])
 
   const onSubmit = useCallback(
     (e) => {
@@ -140,7 +171,7 @@ const EventEntry = ({
         </div>
         <div className="field buttons">
           {create ? null : (
-            <IconButton size="small" onClick={() => deleteEvent(event)}>
+            <IconButton size="small" onClick={onDelete}>
               <Close />
             </IconButton>
           )}
@@ -160,30 +191,16 @@ const EventEntry = ({
   );
 };
 
-EventEntry.propTypes = {
-  /* if true we are creating an event */
-  create: PropTypes.bool,
+interface EditFieldProps {
+  event: Event;
+  onEdit: (key: string, value: string) => void;
+  fieldKey: string;
+  children?: React.ReactNode;
+  select?: boolean;
+  type?: string;
+}
 
-  /* object to edit */
-  event: PropTypes.object,
-
-  /* list of possible event leaders */
-  possibleLeaders: PropTypes.array.isRequired,
-
-  /* function to delete an event */
-  deleteEvent: PropTypes.func,
-
-  /* function to update an event */
-  updateEvent: PropTypes.func,
-
-  /* function to create an event */
-  createEvent: PropTypes.func,
-
-  /* function to open a toast */
-  openToast: PropTypes.func.isRequired
-};
-
-const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
+const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldProps) => {
   return (
     <TextField
       variant="outlined"
@@ -200,20 +217,6 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }) => {
       {children}
     </TextField>
   );
-};
-
-EditField.propTypes = {
-  /* event to edit */
-  event: PropTypes.object.isRequired,
-
-  /* function to call when field is edited */
-  onEdit: PropTypes.func.isRequired,
-
-  /* key for field to edit */
-  fieldKey: PropTypes.string.isRequired,
-
-  /* child content */
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
 };
 
 export default EventEntry;

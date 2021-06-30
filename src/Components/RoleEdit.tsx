@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import { getColorFromRole } from '../utils/Helpers';
 import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../utils/DataRetrieval';
+
+import MemberRecord from '../Interfaces/MemberRecord';
+import DiscordRole from '../Interfaces/DiscordRole';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,6 +13,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Color } from '@material-ui/lab/Alert';
+
+interface Props {
+  selectedRecord: MemberRecord | null;
+  setSelectedRecord: (member: MemberRecord | null) => void;
+  modalShow: boolean;
+  setModalShow: (val: boolean) => void;
+  records: MemberRecord[];
+  setRecords: (members: MemberRecord[]) => void;
+  openToast: (msg: string, status: Color) => void;
+}
 
 const RoleEdit = ({
   selectedRecord,
@@ -20,8 +33,8 @@ const RoleEdit = ({
   records,
   setRecords,
   openToast
-}) => {
-  const [allRoles, setAllRoles] = useState([]);
+}: Props) => {
+  const [allRoles, setAllRoles] = useState<DiscordRole[]>([]);
   const [edittingRole, setEdittingRole] = useState(false);
   const [anyChanges, setAnyChanges] = useState(false);
 
@@ -32,15 +45,24 @@ const RoleEdit = ({
     fetchData();
   }, []);
 
-  const roleChangeHandler = async (e, roleId, roleName) => {
+  const roleChangeHandler = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    roleId: string,
+    roleName: string,
+    roleColor: number
+  ) => {
     setEdittingRole(true);
+
+    if (!selectedRecord || !selectedRecord.discordId) {
+      throw 'Cannot change roles for this member - no discord id';
+    }
 
     if (e.target.checked) {
       const res = await addDiscordRole(selectedRecord.discordId, roleId);
       if (res) {
         setSelectedRecord({
           ...selectedRecord,
-          roles: [...selectedRecord.roles, { id: roleId, name: roleName }]
+          roles: [...(selectedRecord.roles || []), { id: roleId, name: roleName, color: roleColor }]
         });
       } else {
         openToast('Something went wrong changing roles', 'error');
@@ -67,12 +89,13 @@ const RoleEdit = ({
       setSelectedRecord(null);
     }
 
-    if (anyChanges) {
+    if (anyChanges && selectedRecord) {
       const recordsCopy = [...records];
       const toEdit = recordsCopy.find((record) => record.discordId === selectedRecord.discordId);
-      toEdit.roles = selectedRecord.roles;
-
-      setRecords(recordsCopy);
+      if (toEdit) {
+        toEdit.roles = selectedRecord.roles;
+        setRecords(recordsCopy);
+      }
       setAnyChanges(false);
     }
   };
@@ -87,9 +110,11 @@ const RoleEdit = ({
             <FormControlLabel
               control={
                 <StyledCheckbox
-                  color={getColorFromRole(role.name, allRoles)}
+                  color={getColorFromRole(role.name, allRoles) || ''}
                   checked={selectedRecord.roles.map((r) => r.id).includes(role.id)}
-                  onChange={(e) => roleChangeHandler(e, role.id, role.name)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    roleChangeHandler(e, role.id, role.name, role.color)
+                  }
                 />
               }
               label={role.name}
@@ -101,32 +126,15 @@ const RoleEdit = ({
   );
 };
 
-RoleEdit.propTypes = {
-  /* currently selected record to edit */
-  selectedRecord: PropTypes.object,
-
-  /* function to set selected record */
-  setSelectedRecord: PropTypes.func.isRequired,
-
-  /* true if modal should be showing */
-  modalShow: PropTypes.bool.isRequired,
-
-  /* function to set 'modalShow' state */
-  setModalShow: PropTypes.func.isRequired,
-
-  /* current records state */
-  records: PropTypes.array.isRequired,
-
-  /* function to set record state */
-  setRecords: PropTypes.func.isRequired,
-
-  /* function to open toast */
-  openToast: PropTypes.func.isRequired
-};
-
 export default RoleEdit;
 
-const StyledCheckbox = ({ color, ...props }) => {
+interface StyleProps {
+  color: string;
+  checked: boolean;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+const StyledCheckbox = ({ color, ...props }: StyleProps) => {
   const OurCheckbox = withStyles({
     root: {
       color: color,
@@ -138,8 +146,4 @@ const StyledCheckbox = ({ color, ...props }) => {
   })((props) => <Checkbox color="default" {...props} />);
 
   return <OurCheckbox {...props} />;
-};
-
-StyledCheckbox.propTypes = {
-  color: PropTypes.string.isRequired
 };

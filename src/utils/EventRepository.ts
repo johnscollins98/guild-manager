@@ -1,7 +1,9 @@
 import fetch from 'node-fetch';
+import Event from '../Interfaces/Event';
+import EventSettings from '../Interfaces/EventSettings';
 
 const EventRepository = {
-  getAll: async () => {
+  getAll: async (): Promise<Event[]> => {
     const response = await fetch('/api/events');
     const data = await response.json();
     if (response.status === 200) {
@@ -11,7 +13,7 @@ const EventRepository = {
     }
   },
 
-  getSettings: async () => {
+  getSettings: async (): Promise<EventSettings> => {
     const response = await fetch('/api/events/settings');
     const data = await response.json();
     if (response.status === 200) {
@@ -21,7 +23,7 @@ const EventRepository = {
     }
   },
 
-  create: async (event) => {
+  create: async (event: Event): Promise<Event> => {
     const response = await fetch('/api/events', {
       headers: {
         Accept: 'application/json',
@@ -39,7 +41,7 @@ const EventRepository = {
     }
   },
 
-  updateById: async (id, event) => {
+  updateById: async (id: string, event: Event): Promise<Event> => {
     const response = await fetch(`/api/events/${id}`, {
       headers: {
         Accept: 'application/json',
@@ -57,7 +59,7 @@ const EventRepository = {
     }
   },
 
-  deleteById: async (id) => {
+  deleteById: async (id: string): Promise<boolean> => {
     const response = await fetch(`/api/events/${id}`, { method: 'DELETE' });
 
     if (response.status === 204) {
@@ -69,7 +71,7 @@ const EventRepository = {
   },
 
   // this probably isn't the best place to put it - but will go here for now
-  postEventsToDiscord: async (channelData) => {
+  postEventsToDiscord: async (channelData: EventSettings) => {
     const response = await fetch(`/api/discord/eventUpdate`, {
       headers: {
         Accept: 'application/json',

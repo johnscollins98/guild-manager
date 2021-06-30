@@ -1,4 +1,13 @@
-export const fetchDiscordMembers = async () => {
+import AuthInfo from '../Interfaces/AuthInfo';
+import DiscordMember from '../Interfaces/DiscordMember';
+import DiscordRole from '../Interfaces/DiscordRole';
+import GW2Member from '../Interfaces/GW2Member';
+import GW2Rank from '../Interfaces/GW2Rank';
+import GW2LogEntry from '../Interfaces/GW2LogEntry';
+import { MemberInfoPost } from '../Interfaces/MemberInfo';
+import PointLogEntry from '../Interfaces/PointLogEntry';
+
+export const fetchDiscordMembers = async (): Promise<DiscordMember[]> => {
   const response = await fetch(`/api/discord/members`);
   const data = await response.json();
 
@@ -9,7 +18,7 @@ export const fetchDiscordMembers = async () => {
   return data;
 };
 
-export const fetchDiscordRoles = async () => {
+export const fetchDiscordRoles = async (): Promise<DiscordRole[]> => {
   const response = await fetch(`api/discord/roles`);
   const data = await response.json();
 
@@ -20,28 +29,28 @@ export const fetchDiscordRoles = async () => {
   return data;
 };
 
-export const addDiscordRole = async (memberId, roleId) => {
+export const addDiscordRole = async (memberId: string, roleId: string): Promise<boolean> => {
   const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
     method: 'PUT'
   });
   return response.status === 204;
 };
 
-export const removeDiscordRole = async (memberId, roleId) => {
+export const removeDiscordRole = async (memberId: string, roleId: string): Promise<boolean> => {
   const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
     method: 'DELETE'
   });
   return response.status === 204;
 };
 
-export const kickDiscordMember = async (memberId) => {
+export const kickDiscordMember = async (memberId: string): Promise<boolean> => {
   const response = await fetch(`/api/discord/members/${memberId}`, {
     method: 'DELETE'
   });
   return response.status === 204;
 };
 
-export const fetchGW2Members = async () => {
+export const fetchGW2Members = async (): Promise<GW2Member[]> => {
   const response = await fetch(`/api/gw2/members`);
   const data = await response.json();
 
@@ -52,7 +61,7 @@ export const fetchGW2Members = async () => {
   return data;
 };
 
-export const fetchGW2Ranks = async () => {
+export const fetchGW2Ranks = async (): Promise<GW2Rank[]> => {
   const response = await fetch(`/api/gw2/ranks`);
   const data = await response.json();
 
@@ -63,7 +72,7 @@ export const fetchGW2Ranks = async () => {
   return data;
 };
 
-export const fetchGW2Log = async () => {
+export const fetchGW2Log = async (): Promise<GW2LogEntry[]> => {
   const response = await fetch(`/api/gw2/log`);
   const data = await response.json();
 
@@ -74,7 +83,7 @@ export const fetchGW2Log = async () => {
   return data;
 };
 
-export const setGuildMember = async (newMember) => {
+export const setGuildMember = async (newMember: MemberInfoPost) => {
   const response = await fetch(`/api/gw2/members/${newMember.memberId}`, {
     headers: {
       Accept: 'application/json',
@@ -92,13 +101,12 @@ export const setGuildMember = async (newMember) => {
   return JSON.parse(data);
 };
 
-export const fetchAuthInfo = async () => {
+export const fetchAuthInfo = async (): Promise<AuthInfo> => {
   const response = await fetch('/auth/authorization');
   const data = await response.json();
 
   if (response.status === 303) {
     window.location.href = data.redirectUrl;
-    return;
   }
 
   if (response.status !== 200) {
@@ -108,7 +116,7 @@ export const fetchAuthInfo = async () => {
   return JSON.parse(data);
 };
 
-export const fetchPointLog = async () => {
+export const fetchPointLog = async (): Promise<PointLogEntry[]> => {
   const response = await fetch('/api/gw2/pointlog');
   const data = await response.json();
 

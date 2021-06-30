@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import './WarningsViewer.scss';
+
+import MemberRecord from '../Interfaces/MemberRecord';
+import Warning from '../Interfaces/Warning';
 
 import Card from '@material-ui/core/Card';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,12 +17,23 @@ import CalendarToday from '@material-ui/icons/CalendarToday';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
 
-const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }) => {
+interface Props {
+  isOpen: boolean;
+  onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
+  onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
+  member: MemberRecord;
+}
+
+const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => {
   const handleDeleteWarning = useCallback(
-    async (warning) => {
+    async (warning: Warning) => {
       const res = window.confirm('Are you sure you want to delete this warning?');
       if (res) {
-        await onDeleteWarning(member.memberId, warning._id);
+        if (member.memberId) {
+          await onDeleteWarning(member.memberId, warning._id);
+        } else {
+          throw 'Chosen member has no memberId';
+        }
       }
       onClose();
     },
@@ -55,20 +68,6 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-WarningsViewer.propTypes = {
-  /* true if modal is open */
-  isOpen: PropTypes.bool.isRequired,
-
-  /* func to close modal */
-  onClose: PropTypes.func.isRequired,
-
-  /* func to delete warning */
-  onDeleteWarning: PropTypes.func.isRequired,
-
-  /* member object to display from */
-  member: PropTypes.object.isRequired
 };
 
 export default WarningsViewer;

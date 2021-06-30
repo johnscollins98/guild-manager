@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import AuthInfo from '../Interfaces/AuthInfo';
+
 import './App.scss';
 import Log from './Log';
 import Roster from './Roster';
@@ -16,8 +18,9 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import TabContext from '@material-ui/lab/TabContext';
 import TabPanel from '@material-ui/lab/TabPanel';
-import Alert from '@material-ui/lab/Alert';
+import Alert, { Color } from '@material-ui/lab/Alert';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { PaletteType } from '@material-ui/core';
 
 import { useQuery } from 'react-query';
 
@@ -26,10 +29,10 @@ const App = () => {
   const [tab, setTab] = useState('roster');
 
   const [showToast, setShowToast] = useState(false);
-  const [toastStatus, setToastStatus] = useState('info');
+  const [toastStatus, setToastStatus] = useState<Color>('info');
   const [toastMessage, setToastMessage] = useState('');
 
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState<PaletteType>('dark');
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
@@ -41,7 +44,7 @@ const App = () => {
   });
 
   const openToast = useCallback(
-    (message, status = 'info') => {
+    (message: string, status: Color = 'info') => {
       setToastStatus(status);
       setToastMessage(message);
       setShowToast(true);
@@ -55,17 +58,17 @@ const App = () => {
   }, [setToastMessage, setShowToast]);
 
   const handleFilterChange = useCallback(
-    (event) => {
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFilterString(event.target.value);
     },
     [setFilterString]
   );
 
-  const [authInfo, setAuthInfo] = useState({
+  const [authInfo, setAuthInfo] = useState<AuthInfo>({
     loggedIn: false,
     isAdmin: false,
     isEventLeader: false,
-    username: null
+    username: ''
   });
   const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
   useEffect(() => {
@@ -76,7 +79,9 @@ const App = () => {
       openToast('There was an error getting authentication info', 'error');
     }
 
-    setAuthInfo(authInfoQuery.data);
+    if (authInfoQuery.data) {
+      setAuthInfo(authInfoQuery.data);
+    }
   }, [authInfoQuery, openToast]);
 
   const TABS = {
@@ -105,7 +110,7 @@ const App = () => {
               <TabContext value={tab}>
                 <Tabs
                   value={tab}
-                  onChange={(e, v) => setTab(v)}
+                  onChange={(_, v) => setTab(v)}
                   scrollButtons="auto"
                   variant="scrollable"
                 >

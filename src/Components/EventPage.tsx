@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import './EventPage.scss';
+
+import Event from '../Interfaces/Event';
+import DiscordMember from '../Interfaces/DiscordMember';
 
 import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
@@ -12,18 +14,24 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Color } from '@material-ui/lab/Alert';
 
 import { useQuery } from 'react-query';
 
-const EventPage = ({ filterString, openToast }) => {
+interface Props {
+  filterString: string;
+  openToast: (msg: string, status: Color) => void;
+}
+
+const EventPage = ({ filterString, openToast }: Props) => {
   const eventsQuery = useQuery('eventsData', () => EventRepo.getAll());
   const discordQuery = useQuery('discordMembers', () => fetchDiscordMembers());
 
-  const [localEvents, setLocalEvents] = useState([]);
-  const [sortedEvents, setSortedEvents] = useState([]);
+  const [localEvents, setLocalEvents] = useState<Event[]>([]);
+  const [sortedEvents, setSortedEvents] = useState<Event[]>([]);
   const [showModal, setShowModal] = useState(false);
 
-  const [possibleLeaders, setPossibleLeaders] = useState([]);
+  const [possibleLeaders, setPossibleLeaders] = useState<DiscordMember[]>([]);
 
   useEffect(() => {
     if (!discordQuery.data) return;
@@ -44,23 +52,23 @@ const EventPage = ({ filterString, openToast }) => {
   }, [eventsQuery.data, setLocalEvents]);
 
   useEffect(() => {
-    const sorter = {
-      Monday: 1,
-      Tuesday: 2,
-      Wednesday: 3,
-      Thursday: 4,
-      Friday: 5,
-      Saturday: 6,
-      Sunday: 7
-    };
+    const sorter = new Map<string, number>([
+      ['Monday', 1],
+      ['Tuesday', 2],
+      ['Wednesday', 3],
+      ['Thursday', 4],
+      ['Friday', 5],
+      ['Saturday', 6],
+      ['Sunday', 7]
+    ]);
     setSortedEvents(
       [...localEvents]
         .filter((event) => event.title.includes(filterString) || event.day.includes(filterString))
         .sort((a, b) => {
-          const dateSort = (sorter[a.day] || 8) - (sorter[b.day] || 8);
+          const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
           if (dateSort !== 0) return dateSort;
 
-          const parseTime = (startTime) => {
+          const parseTime = (startTime: string) => {
             return Date.parse(`1970/01/01 ${startTime}`);
           };
 
@@ -73,7 +81,7 @@ const EventPage = ({ filterString, openToast }) => {
   }, [localEvents, setSortedEvents, filterString]);
 
   const deleteEvent = useCallback(
-    async (eventToDelete) => {
+    async (eventToDelete: Event) => {
       try {
         const res = window.confirm(`Are you sure you want to delete '${eventToDelete.title}'?`);
         if (!res) return;
@@ -94,7 +102,7 @@ const EventPage = ({ filterString, openToast }) => {
   );
 
   const updateEvent = useCallback(
-    async (eventToUpdate) => {
+    async (eventToUpdate: Event) : Promise<Event | undefined> => {
       try {
         const updatedEvent = await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
         if (updatedEvent) {
@@ -115,13 +123,14 @@ const EventPage = ({ filterString, openToast }) => {
       } catch (err) {
         console.error(err);
         openToast('There was an error updating the event', 'error');
+        return undefined;
       }
     },
     [localEvents, setLocalEvents, openToast]
   );
 
   const createEvent = useCallback(
-    async (eventToCreate) => {
+    async (eventToCreate: Event) : Promise<Event | undefined> => {
       try {
         const createdEvent = await EventRepo.create(eventToCreate);
         if (createdEvent) {
@@ -134,6 +143,7 @@ const EventPage = ({ filterString, openToast }) => {
       } catch (err) {
         console.error(err);
         openToast('There was an error creating the event', 'error');
+        return undefined;
       }
     },
     [localEvents, setLocalEvents, openToast]
@@ -187,14 +197,6 @@ const EventPage = ({ filterString, openToast }) => {
       </Dialog>
     </>
   );
-};
-
-EventPage.propTypes = {
-  /* filter string provided from Control to filter data */
-  filterString: PropTypes.string.isRequired,
-
-  /* function to open toast */
-  openToast: PropTypes.func.isRequired
 };
 
 export default EventPage;

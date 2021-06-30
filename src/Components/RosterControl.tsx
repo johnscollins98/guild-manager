@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import './RosterControl.scss';
 
@@ -14,6 +13,15 @@ import Check from '@material-ui/icons/Check';
 import FilterList from '@material-ui/icons/FilterList';
 import ImportExport from '@material-ui/icons/ImportExport';
 
+interface Props {
+  singleColumn: boolean;
+  setSingleColumn: (val: boolean) => void;
+  filterBy: string;
+  setFilterBy: (val: string) => void;
+  sortBy: string;
+  setSortBy: (val: string) => void;
+}
+
 const RosterControl = ({
   singleColumn,
   setSingleColumn,
@@ -21,22 +29,22 @@ const RosterControl = ({
   setFilterBy,
   sortBy,
   setSortBy
-}) => {
-  const [anchorElement, setAnchorElement] = useState(null);
+}: Props) => {
+  const [anchorElement, setAnchorElement] = useState<(EventTarget & Element) | null>(null);
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
 
   const onSortOpen = useCallback(
-    (e) => {
-      setAnchorElement(e.target);
+    (e: React.MouseEvent) => {
+      setAnchorElement(e.currentTarget);
       setSortOpen(true);
     },
     [setAnchorElement, setSortOpen]
   );
 
   const onFilterOpen = useCallback(
-    (e) => {
-      setAnchorElement(e.target);
+    (e: React.MouseEvent) => {
+      setAnchorElement(e.currentTarget);
       setFilterOpen(true);
     },
     [setAnchorElement, setFilterOpen]
@@ -49,7 +57,7 @@ const RosterControl = ({
   }, [setSortOpen, setFilterOpen, setAnchorElement]);
 
   const sortHandler = useCallback(
-    (sortBy) => {
+    (sortBy: string) => {
       setSortBy(sortBy);
       closeMenu();
     },
@@ -57,7 +65,7 @@ const RosterControl = ({
   );
 
   const filterHandler = useCallback(
-    (filterBy) => {
+    (filterBy: string) => {
       setFilterBy(filterBy);
       closeMenu();
     },
@@ -151,26 +159,6 @@ const RosterControl = ({
       </Menu>
     </>
   );
-};
-
-RosterControl.propTypes = {
-  /* true if roster should be displayed as single column */
-  singleColumn: PropTypes.bool.isRequired,
-
-  /* function to set 'singleColumn' state */
-  setSingleColumn: PropTypes.func.isRequired,
-
-  /* which key to filter data by */
-  filterBy: PropTypes.string.isRequired,
-
-  /* function to set 'filterBy' state */
-  setFilterBy: PropTypes.func.isRequired,
-
-  /* key to sort by */
-  sortBy: PropTypes.string.isRequired,
-
-  /* function to set 'sortBy' state */
-  setSortBy: PropTypes.func.isRequired
 };
 
 export default RosterControl;
