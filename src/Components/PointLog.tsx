@@ -5,10 +5,11 @@ import { fetchPointLog } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
 import './PointLog.scss';
 import PointLogEntry from './PointLogEntry';
+import { Color } from '@material-ui/lab/Alert';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const PointLog = ({ filterString, openToast }: Props) => {

@@ -14,12 +14,13 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { Color } from '@material-ui/lab/Alert';
 
 import { useQuery } from 'react-query';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const EventPage = ({ filterString, openToast }: Props) => {

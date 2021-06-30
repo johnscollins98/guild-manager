@@ -14,6 +14,7 @@ import {
 import LoaderPage from './LoaderPage';
 
 import MemberRecord from '../Interfaces/MemberRecord';
+import { Color } from '@material-ui/lab/Alert';
 
 interface CustomError {
   data: string;
@@ -22,7 +23,7 @@ interface CustomError {
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const Roster = ({ filterString, openToast }: Props) => {

@@ -13,6 +13,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Color } from '@material-ui/lab/Alert';
 
 interface Props {
   selectedRecord: MemberRecord | null;
@@ -21,7 +22,7 @@ interface Props {
   setModalShow: (val: boolean) => void;
   records: MemberRecord[];
   setRecords: (members: MemberRecord[]) => void;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const RoleEdit = ({

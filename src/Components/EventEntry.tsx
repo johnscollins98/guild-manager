@@ -19,6 +19,7 @@ import HourglassFull from '@material-ui/icons/HourglassFull';
 import Person from '@material-ui/icons/Person';
 import Refresh from '@material-ui/icons/Refresh';
 import WatchLater from '@material-ui/icons/WatchLater';
+import { Color } from '@material-ui/lab/Alert';
 
 const emptyEvent: Event = {
   title: '',
@@ -38,7 +39,7 @@ interface Props {
   deleteEvent?: (e: Event) => Promise<void>;
   updateEvent?: (e: Event) => Promise<Event | undefined>;
   createEvent?: (e: Event) => Promise<Event | undefined>;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const EventEntry = ({

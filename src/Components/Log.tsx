@@ -9,11 +9,13 @@ import { fetchGW2Log } from '../utils/DataRetrieval';
 import LogEntry from './LogEntry';
 import LoaderPage from './LoaderPage';
 
+import { Color } from '@material-ui/lab/Alert';
+
 import { useQuery } from 'react-query';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
 }
 
 const Log = ({ filterString, openToast }: Props) => {

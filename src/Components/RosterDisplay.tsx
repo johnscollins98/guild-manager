@@ -15,12 +15,14 @@ import GW2Rank from '../Interfaces/GW2Rank';
 import AuthInfo from '../Interfaces/AuthInfo';
 import { WarningPost } from '../Interfaces/Warning';
 
+import { Color } from '@material-ui/lab/Alert';
+
 interface Props {
   records: MemberRecord[];
   discordRoles: DiscordRole[];
   filterString: string;
   guildRanks: GW2Rank[];
-  openToast: (msg: string, status: string) => void;
+  openToast: (msg: string, status: Color) => void;
   authInfo?: AuthInfo;
 }
 

@@ -3,13 +3,14 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
+import { PaletteType } from '@material-ui/core';
 
 import Brightness3 from '@material-ui/icons/Brightness3';
 import Brightness6 from '@material-ui/icons/Brightness6';
 
 interface Props {
   handleFilterChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  theme: string;
+  theme: PaletteType;
   toggleTheme: () => void;
 }
 
