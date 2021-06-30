@@ -1,60 +1,20 @@
 {
-  "name": "my-guild-manager",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^4.11.4",
-    "@material-ui/icons": "^4.11.2",
-    "@material-ui/lab": "^4.0.0-alpha.58",
-    "@types/node": "^15.12.5",
-    "@types/react": "^17.0.11",
-    "@types/react-dom": "^17.0.8",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-session": "^1.17.2",
-    "fontsource-roboto": "^4.0.0",
-    "mongoose": "^5.12.14",
-    "node-fetch": "^2.6.0",
-    "node-sass": "6.0.1",
-    "passport": "^0.4.1",
-    "passport-discord": "^0.1.4",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-icons": "^4.2.0",
-    "react-query": "^3.17.2",
-    "react-scripts": "4.0.3",
-    "typescript": "^4.3.4"
-  },
-  "proxy": "http://localhost:5000",
+  "name": "guild-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/johnscollins98/guild-manager",
+  "author": "John Collins <johnscollins98@gmail.com>",
+  "license": "MIT",
   "scripts": {
-    "start": "node ./Server/server.js",
-    "dev-server": "nodemon ./Server/server.js",
-    "dev-client": "react-scripts start",
-    "dev": "concurrently \"npm run dev-server\" \"set PORT=5001 && npm run dev-client\"",
-    "build": "react-scripts build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "postinstall": "yarn --cwd Client && yarn --cwd Server",
+    "build": "yarn --cwd Client build",
+    "start": "yarn --cwd Server start",
+    "dev-server": "yarn --cwd Server dev",
+    "dev-client": "yarn --cwd Client start",
+    "dev": "concurrently \"yarn dev-server\" \"set PORT=5001 && yarn dev-client\""
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.10",
     "concurrently": "^6.2.0",
-    "eslint": "^7.29.0",
-    "eslint-plugin-react": "^7.24.0",
-    "lint-staged": "^11.0.0",
-    "nodemon": "^2.0.4",
     "prettier": "^2.3.2"
   }
 }

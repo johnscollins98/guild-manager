@@ -1,0 +1,25 @@
+{
+  "name": "guild-manager-server",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^15.12.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "mongoose": "^5.12.14",
+    "node-fetch": "^2.6.0",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4"
+  },
+  "scripts": {
+    "start": "node ./server.js",
+    "dev": "nodemon ./server.js"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.10",
+    "lint-staged": "^11.0.0",
+    "nodemon": "^2.0.4"
+  }
+}
