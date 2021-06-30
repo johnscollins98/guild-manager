@@ -12,6 +12,7 @@ import {
   fetchGW2Ranks
 } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
+
 import MemberRecord from '../Interfaces/MemberRecord';
 
 interface CustomError {

@@ -2,6 +2,9 @@ import React, { useCallback } from 'react';
 
 import './WarningsViewer.scss';
 
+import MemberRecord from '../Interfaces/MemberRecord';
+import Warning from '../Interfaces/Warning';
+
 import Card from '@material-ui/core/Card';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,8 +16,6 @@ import Assignment from '@material-ui/icons/Assignment';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
-import MemberRecord from '../Interfaces/MemberRecord';
-import Warning from '../Interfaces/Warning';
 
 interface Props {
   isOpen: boolean;

@@ -8,6 +8,7 @@ import './RosterDisplay.scss';
 import RosterControl from './RosterControl';
 import { compareRank } from '../utils/DataProcessing';
 import WarningRepository from '../utils/WarningRepository';
+
 import MemberRecord from '../Interfaces/MemberRecord';
 import DiscordRole from '../Interfaces/DiscordRole';
 import GW2Rank from '../Interfaces/GW2Rank';

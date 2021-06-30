@@ -7,6 +7,10 @@ import WarningForm from './WarningForm';
 import WarningsViewer from './WarningsViewer';
 import gw2Image from '../assets/images/gw2.png';
 
+import MemberRecord from '../Interfaces/MemberRecord';
+import DiscordRole from '../Interfaces/DiscordRole';
+import { WarningPost } from '../Interfaces/Warning';
+
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -26,9 +30,6 @@ import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import Warning from '@material-ui/icons/Warning';
-import MemberRecord from '../Interfaces/MemberRecord';
-import DiscordRole from '../Interfaces/DiscordRole';
-import { WarningPost } from '../Interfaces/Warning';
 
 interface Props {
   member: MemberRecord;
