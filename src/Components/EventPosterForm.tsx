@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
 import EventRepository from '../utils/EventRepository';
 import LoaderPage from './LoaderPage';
@@ -11,7 +10,12 @@ import TextField from '@material-ui/core/TextField';
 
 import { useQuery } from 'react-query';
 
-const EventPosterForm = ({ onClose, openToast }) => {
+interface Props {
+  onClose: () => void;
+  openToast: (msg: string, status: string) => void;
+}
+
+const EventPosterForm = ({ onClose, openToast }: Props) => {
   const [editMessages, setEditMessages] = useState(false);
   const [postChannel, setPostChannel] = useState('');
   const [existingMessageIds, setExistingMessageIds] = useState({
@@ -48,7 +52,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
   }, [data]);
 
   const submitHandler = useCallback(
-    async (e) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
       try {
@@ -71,7 +75,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
   );
 
   const handleChange = useCallback(
-    (e, day) => {
+    (e: React.ChangeEvent<HTMLInputElement>, day: string) => {
       e.preventDefault();
       setExistingMessageIds({ ...existingMessageIds, [day]: e.target.value });
     },
@@ -115,7 +119,7 @@ const EventPosterForm = ({ onClose, openToast }) => {
       />
       {editMessages ? (
         <div style={{ marginTop: '16px' }}>
-          {Object.keys(existingMessageIds).map((day) => (
+          {Object.entries(existingMessageIds).map(([day, value]) => (
             <TextField
               fullWidth
               key={day}
@@ -124,8 +128,8 @@ const EventPosterForm = ({ onClose, openToast }) => {
               placeholder="Enter Message ID"
               label={day}
               InputLabelProps={{ shrink: true }}
-              value={existingMessageIds[day]}
-              onChange={(e) => handleChange(e, day)}
+              value={value}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, day)}
               disabled={posting}
               required
             />
@@ -153,14 +157,6 @@ const EventPosterForm = ({ onClose, openToast }) => {
       </div>
     </form>
   );
-};
-
-EventPosterForm.propTypes = {
-  /* Function to call when close is clicked */
-  onClose: PropTypes.func.isRequired,
-
-  /* Function to open toast */
-  openToast: PropTypes.func.isRequired
 };
 
 export default EventPosterForm;
