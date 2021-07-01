@@ -218,7 +218,7 @@ const RosterDisplay = ({
 
   const incrementEventAttended = useCallback(
     async (record: MemberRecord) => {
-      if (record.eventsAttended && record.memberId) {
+      if (record.memberId && record.eventsAttended !== undefined) {
         const current = record.eventsAttended;
         await changeEventAttended(record.memberId, current + 1);
       } else {
@@ -230,7 +230,7 @@ const RosterDisplay = ({
 
   const decrementEventAttended = useCallback(
     async (record: MemberRecord) => {
-      if (record.eventsAttended && record.memberId) {
+      if (record.memberId && record.eventsAttended !== undefined) {
         const current = record.eventsAttended;
         await changeEventAttended(record.memberId, current - 1);
       } else {
