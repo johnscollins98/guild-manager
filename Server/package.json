@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/node": "^15.12.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -18,7 +17,6 @@
     "dev": "nodemon ./server.js"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.5.10",
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.4"
   }
