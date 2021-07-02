@@ -1,9 +1,10 @@
 const router = require('express').Router();
-const { isAdmin } = require('../middleware/auth');
-const Event = require('../models/event.model');
-const EventPostSettings = require('../models/eventPostSettings.model');
+import { Request, Response } from 'express';
+import { isAdmin } from '../middleware/auth';
+import Event from '../models/event.model';
+import EventPostSettings from '../models/eventPostSettings.model';
 
-router.get('/settings', async (req, res) => {
+router.get('/settings', async (_req: Request, res: Response) => {
   try {
     const settings = await EventPostSettings.findOne({
       guildId: process.env.DISCORD_GUILD_ID
@@ -15,7 +16,7 @@ router.get('/settings', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req: Request, res: Response) => {
   try {
     const events = await Event.find({}).exec();
     return res.status(200).json(events);
@@ -25,7 +26,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const event = await Event.findById(req.params.id).exec();
     if (event) {
@@ -39,7 +40,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', isAdmin, async (req, res) => {
+router.post('/', isAdmin, async (req: Request, res: Response) => {
   try {
     const body = req.body;
     const event = await new Event({ ...body }).save();
@@ -50,7 +51,7 @@ router.post('/', isAdmin, async (req, res) => {
   }
 });
 
-router.delete('/:id', isAdmin, async (req, res) => {
+router.delete('/:id', isAdmin, async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const event = await Event.findByIdAndDelete(id);
@@ -65,7 +66,7 @@ router.delete('/:id', isAdmin, async (req, res) => {
   }
 });
 
-router.put('/:id', isAdmin, async (req, res) => {
+router.put('/:id', isAdmin, async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const event = await Event.findByIdAndUpdate(id, { ...req.body }, { new: true }).exec();
