@@ -1,6 +1,7 @@
 const router = require('express').Router();
-const passport = require('passport');
-const { getUserAuthInfo } = require('../utils/auth');
+import { Request, Response } from 'express';
+import passport from 'passport';
+import { getUserAuthInfo } from '../utils/auth';
 
 router.get('/', passport.authenticate('discord'));
 
@@ -12,12 +13,12 @@ router.get(
   })
 );
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (req: Request, res: Response) => {
   req.logout();
   res.redirect('/');
 });
 
-router.get('/authorization', async (req, res) => {
+router.get('/authorization', async (req: Request, res: Response) => {
   res.json(JSON.stringify(await getUserAuthInfo(req)));
 });
 
