@@ -1,10 +1,10 @@
 import { GuildInfo } from 'passport-discord';
-import MemberInfo from './Interfaces/MemberInfo';
+import { GuildMemberInterface } from './models/guildMember.model';
 
 declare global {
   namespace Express {
     export interface Request {
-      member: MemberInfo;
+      member: GuildMemberInterface;
     }
     export interface User {
       guilds: GuildInfo[];

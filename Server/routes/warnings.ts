@@ -1,7 +1,8 @@
-const { isAdmin } = require('../middleware/auth');
+import { Request, Response } from 'express';
+import { isAdmin } from '../middleware/auth';
 const router = require('express').Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const member = req.member;
     return res.status(200).json(member.warnings);
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:warning_id', async (req, res) => {
+router.get('/:warning_id', async (req: Request, res: Response) => {
   try {
     const member = req.member;
     const warningId = req.params.warning_id;
@@ -24,26 +25,26 @@ router.get('/:warning_id', async (req, res) => {
     }
   } catch (err) {
     console.error(err);
-    return res.status(400).json(`Error: ${err}`);
+    res.status(400).json(`Error: ${err}`);
   }
 });
 
-router.post('/', isAdmin, async (req, res) => {
+router.post('/', isAdmin, async (req: Request, res: Response) => {
   try {
     const member = req.member;
     const newWarning = req.body;
 
-    newWarning.givenBy = req.user.username;
+    newWarning.givenBy = req?.user?.username;
     member.warnings.push(newWarning);
     const newMember = await member.save();
     res.status(200).json(newMember);
   } catch (err) {
     console.error(err);
-    return res.status(400).json(`Error: ${err}`);
+    res.status(400).json(`Error: ${err}`);
   }
 });
 
-router.delete('/:warning_id', isAdmin, async (req, res) => {
+router.delete('/:warning_id', isAdmin, async (req: Request, res: Response) => {
   try {
     const member = req.member;
     const warningId = req.params.warning_id;
@@ -54,27 +55,27 @@ router.delete('/:warning_id', isAdmin, async (req, res) => {
       const newMember = await member.save();
       res.status(200).json(newMember);
     } else {
-      return res.status(404).json('Not found');
+      res.status(404).json('Not found');
     }
   } catch (err) {
     console.error(err);
-    return res.status(400).json(`Error: ${err}`);
+    res.status(400).json(`Error: ${err}`);
   }
 });
 
-router.put('/:warning_id', isAdmin, async (req, res) => {
+router.put('/:warning_id', isAdmin, async (req: Request, res: Response) => {
   try {
     const member = req.member;
     const warningId = req.params.warning_id;
 
     const toUpdate = member.warnings.id(warningId);
-    if (req.body.reason) toUpdate.reason = req.body.reason;
+    if (req.body.reason && toUpdate) toUpdate.reason = req.body.reason;
 
     const newMember = await member.save();
     res.status(200).json(newMember);
   } catch (err) {
     console.error(err);
-    return res.status(400).json(`Error: ${err}`);
+    res.status(400).json(`Error: ${err}`);
   }
 });
 

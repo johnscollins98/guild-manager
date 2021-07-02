@@ -1,12 +1,18 @@
 import mongoose from 'mongoose';
-import Warning from '../Interfaces/Warning';
 
 const Schema = mongoose.Schema;
+
+interface WarningInterface extends mongoose.Document {
+  givenBy: string;
+  reason: string;
+  timestamp: string;
+  _id: string;
+}
 
 export interface GuildMemberInterface extends mongoose.Document {
   memberId: string;
   eventsAttended: number;
-  warnings: Warning[];
+  warnings: mongoose.Types.DocumentArray<WarningInterface>;
 };
 
 interface GuildMemberModelInterface extends mongoose.Model<GuildMemberInterface> {
