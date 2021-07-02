@@ -52,7 +52,12 @@ app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
-app.use(express.static(path.join(__dirname, '..', 'Client', 'build')));
+let dirs = [__dirname];
+if (process.env.NODE_ENV == 'production') {
+  dirs = [...dirs, '..'];
+}
+dirs = [...dirs, '..', 'Client', 'build'];
+app.use(express.static(path.join(...dirs)));
 
 app.get('*', (_, res) => {
   res.redirect('/');
