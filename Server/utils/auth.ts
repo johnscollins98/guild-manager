@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import AuthInfo from '../Interface/AuthInfo';
+import AuthInfo from '../Interfaces/AuthInfo';
 
 const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> => {
   if (!req.user) {
