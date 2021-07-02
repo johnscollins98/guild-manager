@@ -21,4 +21,4 @@ const EventPostSettingsSchema = new Schema({
 
 const EventPostSettings = mongoose.model('EventPostSettings', EventPostSettingsSchema);
 
-module.exports = EventPostSettings;
+export default EventPostSettings;

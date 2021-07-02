@@ -1,9 +1,14 @@
 const router = require('express').Router();
-const fetch = require('node-fetch');
-const DiscordUtils = require('../utils/discord');
-const Event = require('../models/event.model');
-const { isAdmin } = require('../middleware/auth');
-const EventPostSettings = require('../models/eventPostSettings.model');
+import fetch from 'node-fetch';
+import * as DiscordUtils from '../utils/discord';
+import Event from '../models/event.model';
+import { isAdmin } from '../middleware/auth';
+import EventPostSettings from '../models/eventPostSettings.model';
+import { Request, Response } from 'express';
+import DiscordRole from '../Interfaces/DiscordRole';
+import DiscordMessage from '../Interfaces/DiscordMessage';
+import IEvent from '../Interfaces/Event';
+import DiscordMember from '../Interfaces/DiscordMember';
 
 const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
 const botToken = process.env.BOT_TOKEN;
@@ -14,16 +19,16 @@ const reqParams = {
   }
 };
 
-router.get('/roles', async (req, res) => {
+router.get('/roles', async (_req: Request, res: Response) => {
   const roles = await fetch(`${baseUrl}/roles`, reqParams);
-  const rolesData = await roles.json();
+  const rolesData: DiscordRole[] = await roles.json();
   if (roles.status !== 200) {
     res.status(roles.status).json(rolesData);
     return;
   }
 
   res.status(200).json(
-    await DiscordUtils.getRoleInfo(
+    DiscordUtils.getRoleInfo(
       rolesData,
       rolesData.sort((a, b) => b.position - a.position).map((r) => r.id),
       await DiscordUtils.getValidRoles()
@@ -31,11 +36,11 @@ router.get('/roles', async (req, res) => {
   );
 });
 
-router.get('/members', async (req, res) => {
+router.get('/members', async (_req: Request, res: Response) => {
   try {
     // fetch member data
     const members = await fetch(`${baseUrl}/members?limit=1000`, reqParams);
-    const membersData = await members.json();
+    const membersData: DiscordMember[] = await members.json();
     if (members.status !== 200) {
       res.status(members.status).json(membersData);
       return;
@@ -43,7 +48,7 @@ router.get('/members', async (req, res) => {
 
     // fetch role data
     const roles = await fetch(`${baseUrl}/roles`, reqParams);
-    const rolesData = await roles.json();
+    const rolesData: DiscordRole[] = await roles.json();
     if (roles.status !== 200) {
       res.status(roles.status).json(rolesData);
       return;
@@ -58,7 +63,7 @@ router.get('/members', async (req, res) => {
   }
 });
 
-router.put('/members/:memberId/roles/:roleId', isAdmin, async (req, res) => {
+router.put('/members/:memberId/roles/:roleId', isAdmin, async (req: Request, res: Response) => {
   const response = await fetch(
     `${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`,
     { ...reqParams, method: 'PUT' }
@@ -66,7 +71,7 @@ router.put('/members/:memberId/roles/:roleId', isAdmin, async (req, res) => {
   res.status(response.status).json(req.params.roleId);
 });
 
-router.delete('/members/:memberId/roles/:roleId', isAdmin, async (req, res) => {
+router.delete('/members/:memberId/roles/:roleId', isAdmin, async (req: Request, res: Response) => {
   const response = await fetch(
     `${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`,
     { ...reqParams, method: 'DELETE' }
@@ -74,7 +79,7 @@ router.delete('/members/:memberId/roles/:roleId', isAdmin, async (req, res) => {
   res.status(response.status).json(req.params.roleId);
 });
 
-router.delete('/members/:id', isAdmin, async (req, res) => {
+router.delete('/members/:id', isAdmin, async (req: Request, res: Response) => {
   const response = await fetch(`${baseUrl}/members/${req.params.id}`, {
     ...reqParams,
     method: 'DELETE'
@@ -82,7 +87,7 @@ router.delete('/members/:id', isAdmin, async (req, res) => {
   res.status(response.status).json(req.params.id);
 });
 
-router.post('/eventUpdate', isAdmin, async (req, res) => {
+router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
   try {
     await EventPostSettings.findOneAndUpdate(
       { guildId: process.env.DISCORD_GUILD_ID },
@@ -90,7 +95,7 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
       { upsert: true }
     );
 
-    const channelId = req.body.channelId;
+    const channelId: string = req.body.channelId;
     const response = await fetch(`https://discord.com/api/channels/${channelId}`, { ...reqParams });
     if (response.status !== 200) throw await response.json();
     // we have found the channel
@@ -102,8 +107,8 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
         `https://discord.com/api/channels/${channelId}/messages`,
         { ...reqParams }
       );
-      const messages = await messagesResponse.json();
-      const values = Object.values(req.body.existingMessageIds);
+      const messages: DiscordMessage[] = await messagesResponse.json();
+      const values: string[] = Object.values(req.body.existingMessageIds);
 
       for (const id of values) {
         if (!messages.find((m) => m.id === id)) throw 'Invalid Message IDs';
@@ -122,11 +127,11 @@ router.post('/eventUpdate', isAdmin, async (req, res) => {
     for (const day of daysOfWeek) {
       const events = await Event.find({ day }).exec();
 
-      const parseTime = (str) => {
+      const parseTime = (str: string) => {
         return Date.parse(`1970/01/01 ${str}`);
       };
 
-      const sorted = events.sort((a, b) => {
+      const sorted = events.sort((a: IEvent, b: IEvent) => {
         const aTime = parseTime(a.startTime);
         const bTime = parseTime(b.startTime);
 

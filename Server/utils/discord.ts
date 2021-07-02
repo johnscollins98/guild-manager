@@ -6,7 +6,7 @@ import GW2Rank from '../Interfaces/GW2Rank';
 import Event from '../Interfaces/Event';
 import DiscordEmbed from '../Interfaces/DiscordEmbed';
 
-const getValidRoles = async (): Promise<string[]> => {
+export const getValidRoles = async (): Promise<string[]> => {
   const gwUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
   const gwToken = process.env.GW2_API_TOKEN;
   const gwParams = {
@@ -20,7 +20,7 @@ const getValidRoles = async (): Promise<string[]> => {
   return guildRanks.map((r) => r.id).concat(['Guest', 'Bots']);
 };
 
-const formatMembers = async (
+export const formatMembers = async (
   members: DiscordMember[],
   roles: DiscordRole[]
 ): Promise<FormattedDiscordMember[]> => {
@@ -28,7 +28,7 @@ const formatMembers = async (
   return members.map((member) => formatMember(member, roles, validRoles));
 };
 
-const formatMember = (
+export const formatMember = (
   member: DiscordMember,
   roles: DiscordRole[],
   validRoles: string[]
@@ -44,7 +44,7 @@ const formatMember = (
   };
 };
 
-const getRoleInfo = (
+export const getRoleInfo = (
   allRoles: DiscordRole[],
   memberRoleIds: string[],
   validRoleIds: string[]
@@ -57,9 +57,7 @@ const getRoleInfo = (
       const valid = !validRoleIds || validRoleIds.includes(discordRole.name);
       if (match && valid)
         roles.push({
-          name: discordRole.name,
-          id: discordRole.id,
-          color: discordRole.color
+          ...discordRole
         });
     }
   }
@@ -67,7 +65,7 @@ const getRoleInfo = (
   return roles;
 };
 
-const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
+export const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
   return {
     color: '3447003',
     title: `${day} Events`,

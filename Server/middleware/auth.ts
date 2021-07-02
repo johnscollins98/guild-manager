@@ -2,13 +2,13 @@ import { RequestHandler } from 'express';
 
 const { getUserAuthInfo } = require('../utils/auth');
 
-const isAdmin: RequestHandler = async (req, res, next) => {
+export const isAdmin: RequestHandler = async (req, res, next) => {
   const authInfo = await getUserAuthInfo(req);
   if (authInfo.isAdmin) return next();
   return res.status(303).json('Forbidden');
 };
 
-const isEventLeader: RequestHandler = async (req, res, next) => {
+export const isEventLeader: RequestHandler = async (req, res, next) => {
   const authInfo = await getUserAuthInfo(req);
   if (authInfo.isEventLeader || authInfo.isAdmin) return next();
   return res.status(303).json('Forbidden');
