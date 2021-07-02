@@ -1,17 +1,24 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const passport = require('passport');
-require('./strategies/discord.strategy');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import session from 'express-session';
+import passport from 'passport';
+import './strategies/discord.strategy';
+import path from 'path';
+import discordRoute from './routes/discord';
+import gw2Route from './routes/gw2';
+import authRoute from './routes/auth';
+import eventsRoute from './routes/events';
+
 const app = express();
 app.use(cors());
 
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
+
+if (!process.env.SESSION_SECRET) throw 'Must provide SESSION_SECRET';
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -26,6 +33,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+if (!process.env.ATLAS_URI) throw 'Must provide ATLAS_URI';
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -39,19 +47,19 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully.');
 });
 
-const discordRoute = require('./routes/discord');
-const gw2Route = require('./routes/gw2');
-const authRoute = require('./routes/auth');
-const eventsRoute = require('./routes/events');
-
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
-app.use(express.static(path.join(__dirname, '..', 'Client', 'build')));
+let dirs = [__dirname];
+if (process.env.NODE_ENV == 'production') {
+  dirs = [...dirs, '..'];
+}
+dirs = [...dirs, '..', 'Client', 'build'];
+app.use(express.static(path.join(...dirs)));
 
-app.get('*', (req, res) => {
+app.get('*', (_, res) => {
   res.redirect('/');
 });
 

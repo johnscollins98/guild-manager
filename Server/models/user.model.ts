@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -10,4 +10,4 @@ const UserSchema = new Schema({
 
 const DiscordUser = mongoose.model('DiscordUser', UserSchema);
 
-module.exports = DiscordUser;
+export default DiscordUser;

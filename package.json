@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "yarn --cwd Client && yarn --cwd Server",
-    "build": "yarn --cwd Client build",
+    "build": "yarn --cwd Client build && yarn --cwd Server build",
     "start": "yarn --cwd Server start",
     "dev-server": "yarn --cwd Server dev",
     "dev-client": "yarn --cwd Client start",

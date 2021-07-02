@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -21,4 +21,4 @@ const EventPostSettingsSchema = new Schema({
 
 const EventPostSettings = mongoose.model('EventPostSettings', EventPostSettingsSchema);
 
-module.exports = EventPostSettings;
+export default EventPostSettings;

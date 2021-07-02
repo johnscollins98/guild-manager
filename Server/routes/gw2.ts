@@ -1,10 +1,14 @@
-const router = require('express').Router();
-const fetch = require('node-fetch');
-const { isEventLeader } = require('../middleware/auth');
-const GuildMember = require('../models/guildMember.model');
-const PointLog = require('../models/pointLog.model');
-const GW2Utils = require('../utils/gw2');
-const warningRoute = require('./warnings');
+import express, { Request, RequestHandler, Response } from 'express';
+import fetch from 'node-fetch';
+import GW2Member from '../Interfaces/GW2Member';
+import { isEventLeader } from '../middleware/auth';
+import GuildMember from '../models/guildMember.model';
+import PointLog from '../models/pointLog.model';
+import * as GW2Utils from '../utils/gw2';
+import warningRoute from './warnings';
+
+const router = express.Router();
+
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
 const apiToken = process.env.GW2_API_TOKEN;
@@ -14,7 +18,7 @@ const reqParams = {
   }
 };
 
-const gatherMember = async (req, res, next) => {
+const gatherMember: RequestHandler = async (req, res, next) => {
   try {
     const memberId = req.params.member_id;
     const member = await GuildMember.findOne({ memberId });
@@ -32,10 +36,10 @@ const gatherMember = async (req, res, next) => {
 
 router.use('/members/:member_id/warnings/', gatherMember, warningRoute);
 
-router.get('/members', async (req, res) => {
+router.get('/members', async (_req: Request, res: Response) => {
   try {
     const response = await fetch(`${baseUrl}/members`, reqParams);
-    const data = await response.json();
+    const data: GW2Member[] = await response.json();
 
     // unique cases for crazy account names
     const uniqueCase = data.find((m) => m.name === 'DD035413-353B-42A1-BAD4-EB58438860CE');
@@ -62,7 +66,7 @@ router.get('/members', async (req, res) => {
   }
 });
 
-router.put('/members/:memberId', isEventLeader, async (req, res) => {
+router.put('/members/:memberId', isEventLeader, async (req: Request, res: Response) => {
   const { memberId, eventsAttended } = req.body;
 
   const record = await GuildMember.findOneOrCreate(
@@ -76,7 +80,7 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
   await record.save();
 
   await new PointLog({
-    givenBy: req.user.username,
+    givenBy: req?.user?.username,
     givenTo: memberId,
     oldVal: oldAttendance,
     newVal: eventsAttended
@@ -85,7 +89,7 @@ router.put('/members/:memberId', isEventLeader, async (req, res) => {
   res.status(200).json(JSON.stringify(record));
 });
 
-router.get('/ranks', async (req, res) => {
+router.get('/ranks', async (_req: Request, res: Response) => {
   try {
     const response = await fetch(`${baseUrl}/ranks`, reqParams);
     const data = await response.json();
@@ -96,7 +100,7 @@ router.get('/ranks', async (req, res) => {
   }
 });
 
-router.get('/log', async (req, res) => {
+router.get('/log', async (_req: Request, res: Response) => {
   try {
     const response = await fetch(`${baseUrl}/log`, reqParams);
     const status = response.status;
@@ -112,7 +116,7 @@ router.get('/log', async (req, res) => {
   }
 });
 
-router.get('/pointlog', async (req, res) => {
+router.get('/pointlog', async (_req: Request, res: Response) => {
   try {
     const collection = await PointLog.find();
     res.status(200).json(collection);
@@ -122,4 +126,4 @@ router.get('/pointlog', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

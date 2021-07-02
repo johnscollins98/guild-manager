@@ -1,6 +1,8 @@
-const DiscordStrategy = require('passport-discord').Strategy;
-const passport = require('passport');
-const DiscordUser = require('../models/user.model');
+import PassportDiscord from 'passport-discord';
+import passport from 'passport';
+import DiscordUser from '../models/user.model';
+
+const DiscordStrategy = PassportDiscord.Strategy;
 
 passport.serializeUser((user, done) => {
   done(null, user._id);
@@ -13,6 +15,10 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+if (!process.env.DISCORD_CLIENT_ID) throw 'Must provide DISCORD_CLIENT_ID';
+if (!process.env.DISCORD_CLIENT_SECRET) throw 'Must provide DISCORD_CLIENT_SECRET';
+if (!process.env.DISCORD_AUTH_REDIRECT) throw 'Must provide DISCORD_AUTH_REDIRECT';
+
 passport.use(
   new DiscordStrategy(
     {
@@ -21,7 +27,7 @@ passport.use(
       callbackURL: process.env.DISCORD_AUTH_REDIRECT,
       scope: ['identify', 'guilds']
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (_accessToken, _refreshToken, profile, done) => {
       try {
         const user = await DiscordUser.findOne({ id: profile.id });
         if (user) {
@@ -41,7 +47,7 @@ passport.use(
         }
       } catch (err) {
         console.error(err);
-        done(err, null);
+        done(err, undefined);
       }
     }
   )

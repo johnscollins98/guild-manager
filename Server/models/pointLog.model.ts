@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -15,4 +15,4 @@ const PointLogSchema = new Schema(
 
 const PointLog = mongoose.model('PointLog', PointLogSchema);
 
-module.exports = PointLog;
+export default PointLog;

@@ -21,7 +21,7 @@
   },
   "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set NODE_ENV=development&&react-scripts start",
     "build": "react-scripts build"
   },
   "browserslist": {
