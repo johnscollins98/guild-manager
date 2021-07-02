@@ -1,6 +1,12 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
+import DiscordMember from '../Interfaces/DiscordMember';
+import DiscordRole from '../Interfaces/DiscordRole';
+import FormattedDiscordMember from '../Interfaces/FormattedDiscordMember';
+import GW2Rank from '../Interfaces/GW2Rank';
+import Event from '../Interfaces/Event';
+import DiscordEmbed from '../Interfaces/DiscordEmbed';
 
-const getValidRoles = async () => {
+const getValidRoles = async (): Promise<string[]> => {
   const gwUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
   const gwToken = process.env.GW2_API_TOKEN;
   const gwParams = {
@@ -10,34 +16,45 @@ const getValidRoles = async () => {
   };
 
   const response = await fetch(`${gwUrl}/ranks`, gwParams);
-  const guildRanks = await response.json();
+  const guildRanks: GW2Rank[] = await response.json();
   return guildRanks.map((r) => r.id).concat(['Guest', 'Bots']);
 };
 
-const formatMembers = async (members, roles) => {
+const formatMembers = async (
+  members: DiscordMember[],
+  roles: DiscordRole[]
+): Promise<FormattedDiscordMember[]> => {
   const validRoles = await getValidRoles();
   return members.map((member) => formatMember(member, roles, validRoles));
 };
 
-const formatMember = (member, roles, validRoles) => {
+const formatMember = (
+  member: DiscordMember,
+  roles: DiscordRole[],
+  validRoles: string[]
+): FormattedDiscordMember => {
   return {
-    name: member.nick ? member.nick : member.user.username,
-    id: member.user.id,
+    name: member.nick ? member.nick : member?.user?.username,
+    id: member?.user?.id,
     roles: getRoleInfo(roles, member.roles, validRoles),
     joined: member.joined_at,
-    avatar: member.user.avatar
+    avatar: member?.user?.avatar
       ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`
       : undefined
   };
 };
 
-const getRoleInfo = (allRoles, memberRoles, validRoles) => {
+const getRoleInfo = (
+  allRoles: DiscordRole[],
+  memberRoleIds: string[],
+  validRoleIds: string[]
+): DiscordRole[] => {
   let roles = [];
 
-  for (const memberRoleId of memberRoles) {
+  for (const memberRoleId of memberRoleIds) {
     for (const discordRole of allRoles) {
       const match = memberRoleId === discordRole.id;
-      const valid = !validRoles || validRoles.includes(discordRole.name);
+      const valid = !validRoleIds || validRoleIds.includes(discordRole.name);
       if (match && valid)
         roles.push({
           name: discordRole.name,
@@ -50,7 +67,7 @@ const getRoleInfo = (allRoles, memberRoles, validRoles) => {
   return roles;
 };
 
-const createEmbed = (day, events) => {
+const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
   return {
     color: '3447003',
     title: `${day} Events`,
