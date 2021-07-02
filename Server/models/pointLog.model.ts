@@ -15,4 +15,4 @@ const PointLogSchema = new Schema(
 
 const PointLog = mongoose.model('PointLog', PointLogSchema);
 
-module.exports = PointLog;
+export default PointLog;

@@ -1,6 +1,17 @@
 import mongoose from 'mongoose';
+import Warning from '../Interfaces/Warning';
 
 const Schema = mongoose.Schema;
+
+export interface GuildMemberInterface extends mongoose.Document {
+  memberId: string;
+  eventsAttended: number;
+  warnings: Warning[];
+};
+
+interface GuildMemberModelInterface extends mongoose.Model<GuildMemberInterface> {
+  findOneOrCreate(findParams: any, createParams: any) : Promise<GuildMemberInterface>
+}
 
 const WarningSchema = new Schema({
   reason: { type: String, required: true },
@@ -21,6 +32,6 @@ GuildMemberSchema.static('findOneOrCreate', async function (findParams, createPa
   return new GuildMember(createParams).save();
 });
 
-const GuildMember = mongoose.model('GuildMember', GuildMemberSchema);
+const GuildMember = mongoose.model<GuildMemberInterface, GuildMemberModelInterface>('GuildMember', GuildMemberSchema);
 
-module.exports = GuildMember;
+export default GuildMember;

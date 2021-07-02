@@ -1,7 +1,7 @@
 import { FormattedLogEntry } from '../Interfaces/FormattedLogEntry';
 import GW2LogEntry from '../Interfaces/GW2LogEntry';
 
-const formatLog = (data: GW2LogEntry[]) : FormattedLogEntry[] => {
+export const formatLog = (data: GW2LogEntry[]) : FormattedLogEntry[] => {
   const filtered = data.filter((o) =>
     ['joined', 'invited', 'kick', 'rank_change'].includes(o.type)
   );
@@ -9,7 +9,7 @@ const formatLog = (data: GW2LogEntry[]) : FormattedLogEntry[] => {
   return formattedLogs;
 };
 
-const formatLogEntry = (entry: GW2LogEntry) : FormattedLogEntry => {
+export const formatLogEntry = (entry: GW2LogEntry) : FormattedLogEntry => {
   const type = entry.type;
 
   const date = entry.time.split('T')[0].replace(/-/g, '/');
@@ -37,5 +37,3 @@ const formatLogEntry = (entry: GW2LogEntry) : FormattedLogEntry => {
 
   return { date, time, message };
 };
-
-module.exports.formatLog = formatLog;
