@@ -1,31 +1,20 @@
 import mongoose from 'mongoose';
+import MemberInfo from '../Interfaces/MemberInfo';
+import Warning from '../Interfaces/Warning';
 
 const Schema = mongoose.Schema;
 
-interface WarningInterface extends mongoose.Document {
-  givenBy: string;
-  reason: string;
-  timestamp: string;
-  _id: string;
+interface GuildMemberModelInterface extends mongoose.Model<MemberInfo> {
+  findOneOrCreate(findParams: any, createParams: any): Promise<MemberInfo>;
 }
 
-export interface GuildMemberInterface extends mongoose.Document {
-  memberId: string;
-  eventsAttended: number;
-  warnings: mongoose.Types.DocumentArray<WarningInterface>;
-};
-
-interface GuildMemberModelInterface extends mongoose.Model<GuildMemberInterface> {
-  findOneOrCreate(findParams: any, createParams: any) : Promise<GuildMemberInterface>
-}
-
-const WarningSchema = new Schema({
+const WarningSchema = new Schema<Warning>({
   reason: { type: String, required: true },
   givenBy: { type: String, required: true },
   timestamp: { type: Date, default: Date.now, required: true }
 });
 
-const GuildMemberSchema = new Schema({
+const GuildMemberSchema = new Schema<MemberInfo>({
   memberId: { type: String, required: true },
   eventsAttended: { type: Number, required: true },
   warnings: [WarningSchema]
@@ -38,6 +27,9 @@ GuildMemberSchema.static('findOneOrCreate', async function (findParams, createPa
   return new GuildMember(createParams).save();
 });
 
-const GuildMember = mongoose.model<GuildMemberInterface, GuildMemberModelInterface>('GuildMember', GuildMemberSchema);
+const GuildMember = mongoose.model<MemberInfo, GuildMemberModelInterface>(
+  'GuildMember',
+  GuildMemberSchema
+);
 
 export default GuildMember;

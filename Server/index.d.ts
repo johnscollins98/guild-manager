@@ -7,7 +7,7 @@ declare global {
       member: GuildMemberInterface;
     }
     export interface User {
-      guilds: GuildInfo[];
+      guilds?: GuildInfo[];
       id: string;
       username: string;
       _id: string;

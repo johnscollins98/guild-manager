@@ -16,7 +16,9 @@ export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> =
   if (!process.env.ADMIN_ROLE) throw 'Must provide ADMIN_ROLE';
   if (!process.env.EVENT_LEADER_ROLE) throw 'Must provide EVENT_LEADER_ROLE';
 
-  const inGuild = req.user.guilds.some((g) => g.id === process.env.DISCORD_GUILD_ID);
+  const inGuild = !!(
+    req.user.guilds && req.user.guilds.some((g) => g.id === process.env.DISCORD_GUILD_ID)
+  );
   const roles = await getRoles(req.user.id);
   const isAdmin = inGuild && roles.includes(process.env.ADMIN_ROLE);
   const isEventLeader = inGuild && roles.includes(process.env.EVENT_LEADER_ROLE);

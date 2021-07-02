@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
+import PointLogEntry from '../Interfaces/PointLogEntry';
 
 const Schema = mongoose.Schema;
 
-const PointLogSchema = new Schema(
+const PointLogSchema = new Schema<PointLogEntry>(
   {
     givenBy: { type: String, required: true },
     givenTo: { type: String, required: true },
@@ -13,6 +14,6 @@ const PointLogSchema = new Schema(
   { capped: 10000 }
 );
 
-const PointLog = mongoose.model('PointLog', PointLogSchema);
+const PointLog = mongoose.model<PointLogEntry>('PointLog', PointLogSchema);
 
 export default PointLog;
