@@ -6,6 +6,7 @@ declare global {
       guilds: GuildInfo[];
       id: string;
       username: string;
+      _id: string;
     }
   }
 }

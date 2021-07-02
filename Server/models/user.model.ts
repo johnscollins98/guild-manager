@@ -10,4 +10,4 @@ const UserSchema = new Schema({
 
 const DiscordUser = mongoose.model('DiscordUser', UserSchema);
 
-module.exports = DiscordUser;
+export default DiscordUser;
