@@ -1,8 +1,9 @@
-const router = require('express').Router();
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import { isAdmin } from '../middleware/auth';
 import Event from '../models/event.model';
 import EventPostSettings from '../models/eventPostSettings.model';
+
+const router = express.Router();
 
 router.get('/settings', async (_req: Request, res: Response) => {
   try {
@@ -81,4 +82,4 @@ router.put('/:id', isAdmin, async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

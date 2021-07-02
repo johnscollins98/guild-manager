@@ -32,5 +32,3 @@ const getRoles = async (userId: string): Promise<string[]> => {
   const user = await res.json();
   return user.roles || [];
 };
-
-module.exports = { getUserAuthInfo };

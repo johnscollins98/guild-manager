@@ -1,4 +1,4 @@
-const router = require('express').Router();
+import express from 'express';
 import fetch from 'node-fetch';
 import * as DiscordUtils from '../utils/discord';
 import Event from '../models/event.model';
@@ -9,6 +9,8 @@ import DiscordRole from '../Interfaces/DiscordRole';
 import DiscordMessage from '../Interfaces/DiscordMessage';
 import IEvent from '../Interfaces/Event';
 import DiscordMember from '../Interfaces/DiscordMember';
+
+const router = express.Router();
 
 const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
 const botToken = process.env.BOT_TOKEN;
@@ -170,4 +172,4 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

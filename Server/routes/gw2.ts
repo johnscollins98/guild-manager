@@ -1,13 +1,14 @@
-const router = require('express').Router();
-import { Request, RequestHandler, Response } from 'express';
+import express, { Request, RequestHandler, Response } from 'express';
 import fetch from 'node-fetch';
 import GW2Member from '../Interfaces/GW2Member';
 import { isEventLeader } from '../middleware/auth';
 import GuildMember from '../models/guildMember.model';
 import PointLog from '../models/pointLog.model';
 import * as GW2Utils from '../utils/gw2';
+import warningRoute from './warnings';
 
-const warningRoute = require('./warnings');
+const router = express.Router();
+
 
 const baseUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
 const apiToken = process.env.GW2_API_TOKEN;
@@ -125,4 +126,4 @@ router.get('/pointlog', async (_req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

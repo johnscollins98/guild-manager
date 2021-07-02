@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { isAdmin } from '../middleware/auth';
-const router = require('express').Router();
+import express from 'express';
+const router = express.Router();
 
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -79,4 +80,4 @@ router.put('/:warning_id', isAdmin, async (req: Request, res: Response) => {
   }
 });
 
-module.exports = router;
+export default router;

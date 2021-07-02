@@ -82,8 +82,3 @@ export const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
     })
   };
 };
-
-module.exports.formatMembers = formatMembers;
-module.exports.getRoleInfo = getRoleInfo;
-module.exports.getValidRoles = getValidRoles;
-module.exports.createEmbed = createEmbed;

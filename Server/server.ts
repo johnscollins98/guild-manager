@@ -6,6 +6,11 @@ import session from 'express-session';
 import passport from 'passport';
 import './strategies/discord.strategy';
 import path from 'path';
+import discordRoute from './routes/discord';
+import gw2Route from './routes/gw2';
+import authRoute from './routes/auth';
+import eventsRoute from './routes/events';
+
 const app = express();
 app.use(cors());
 
@@ -41,12 +46,6 @@ const connection = mongoose.connection;
 connection.once('open', () => {
   console.log('MongoDB database connection established successfully.');
 });
-
-// TODO: swap to imports after completing other files
-const discordRoute = require('./routes/discord');
-const gw2Route = require('./routes/gw2');
-const authRoute = require('./routes/auth');
-const eventsRoute = require('./routes/events');
 
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);

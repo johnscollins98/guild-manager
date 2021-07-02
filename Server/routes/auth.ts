@@ -1,7 +1,9 @@
-const router = require('express').Router();
+import express from 'express';
 import { Request, Response } from 'express';
 import passport from 'passport';
 import { getUserAuthInfo } from '../utils/auth';
+
+const router = express.Router();
 
 router.get('/', passport.authenticate('discord'));
 
@@ -22,4 +24,4 @@ router.get('/authorization', async (req: Request, res: Response) => {
   res.json(JSON.stringify(await getUserAuthInfo(req)));
 });
 
-module.exports = router;
+export default router;
