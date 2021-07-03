@@ -7,7 +7,7 @@ import EventPostSettings from '../models/eventPostSettings.model';
 import { Request, Response } from 'express';
 import DiscordRole from '../Interfaces/DiscordRole';
 import DiscordMessage from '../Interfaces/DiscordMessage';
-import IEvent from '../Interfaces/Event';
+import IEvent from '../Interfaces/IEvent';
 import DiscordMember from '../Interfaces/DiscordMember';
 
 const router = express.Router();

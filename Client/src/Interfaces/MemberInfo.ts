@@ -10,6 +10,6 @@ export default interface MemberInfo {
 
 export interface MemberInfoPost {
   memberId: string;
-  eventsAttended?: number;
-  warnings?: Warning[];
+  eventsAttended: number;
+  warnings: Warning[];
 }

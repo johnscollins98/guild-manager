@@ -3,7 +3,7 @@ import DiscordMember from '../Interfaces/DiscordMember';
 import DiscordRole from '../Interfaces/DiscordRole';
 import FormattedDiscordMember from '../Interfaces/FormattedDiscordMember';
 import GW2Rank from '../Interfaces/GW2Rank';
-import Event from '../Interfaces/Event';
+import IEvent from '../Interfaces/IEvent';
 import DiscordEmbed from '../Interfaces/DiscordEmbed';
 
 export const getValidRoles = async (): Promise<string[]> => {
@@ -65,7 +65,7 @@ export const getRoleInfo = (
   return roles;
 };
 
-export const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
+export const createEmbed = (day: string, events: IEvent[]): DiscordEmbed => {
   return {
     color: '3447003',
     title: `${day} Events`,

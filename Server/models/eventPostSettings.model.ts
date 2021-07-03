@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import EventPostSettings, { MessageIDs } from '../Interfaces/EventPostSettings';
+import IEventPostSettings, { MessageIDs } from '../Interfaces/EventPostSettings';
 
 const Schema = mongoose.Schema;
 
@@ -13,14 +13,14 @@ const MessgeIDSchema = new Schema<MessageIDs>({
   Sunday: { type: String, required: true }
 });
 
-const EventPostSettingsSchema = new Schema<EventPostSettings>({
+const EventPostSettingsSchema = new Schema<IEventPostSettings>({
   guildId: { type: String, required: true },
   channelId: { type: String, required: true },
   editMessages: { type: Boolean, required: true },
   existingMessageIds: MessgeIDSchema
 });
 
-const EventPostSettings = mongoose.model<EventPostSettings>(
+const EventPostSettings = mongoose.model<IEventPostSettings>(
   'EventPostSettings',
   EventPostSettingsSchema
 );

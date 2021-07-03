@@ -1,11 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, FilterQuery } from 'mongoose';
 import MemberInfo from '../Interfaces/MemberInfo';
 import Warning from '../Interfaces/Warning';
 
 const Schema = mongoose.Schema;
 
 interface GuildMemberModelInterface extends mongoose.Model<MemberInfo> {
-  findOneOrCreate(findParams: any, createParams: any): Promise<MemberInfo>;
+  findOneOrCreate(
+    findParams: FilterQuery<MemberInfo>,
+    createParams: MemberInfo
+  ): Promise<MemberInfo & Document<any, any>>;
 }
 
 const WarningSchema = new Schema<Warning>({
@@ -20,12 +23,19 @@ const GuildMemberSchema = new Schema<MemberInfo>({
   warnings: [WarningSchema]
 });
 
-GuildMemberSchema.static('findOneOrCreate', async function (findParams, createParams) {
-  const record = await GuildMember.findOne(findParams);
-  if (record) return record;
+GuildMemberSchema.static(
+  'findOneOrCreate',
 
-  return new GuildMember(createParams).save();
-});
+  async function (
+    findParams: FilterQuery<MemberInfo>,
+    createParams: MemberInfo
+  ): Promise<MemberInfo & Document<any, any>> {
+    const record = await GuildMember.findOne(findParams);
+    if (record) return record;
+
+    return new GuildMember(createParams).save();
+  }
+);
 
 const GuildMember = mongoose.model<MemberInfo, GuildMemberModelInterface>(
   'GuildMember',

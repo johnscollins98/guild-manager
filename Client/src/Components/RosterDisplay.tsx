@@ -16,6 +16,7 @@ import AuthInfo from '../Interfaces/AuthInfo';
 import { WarningPost } from '../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
+import { MemberInfoPost } from '../Interfaces/MemberInfo';
 
 interface Props {
   records: MemberRecord[];
@@ -191,13 +192,10 @@ const RosterDisplay = ({
     [openToast, recordState]
   );
 
-  const changeEventAttended = useCallback(
-    async (memberId: string, eventsAttended: number) => {
+  const updateMember = useCallback(
+    async (newMember: MemberInfoPost) => {
       try {
-        const newObject = await setGuildMember({
-          memberId,
-          eventsAttended
-        });
+        const newObject = await setGuildMember(newMember);
 
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
@@ -218,26 +216,37 @@ const RosterDisplay = ({
 
   const incrementEventAttended = useCallback(
     async (record: MemberRecord) => {
-      if (record.memberId && record.eventsAttended !== undefined) {
-        const current = record.eventsAttended;
-        await changeEventAttended(record.memberId, current + 1);
+      if (record.memberId && record.eventsAttended !== undefined && record.warnings) {
+        const newMember: MemberInfoPost = {
+          eventsAttended: record.eventsAttended + 1,
+          memberId: record.memberId,
+          warnings: record.warnings
+        };
+
+        await updateMember(newMember);
       } else {
         throw 'Cannot increment points for this member';
       }
     },
-    [changeEventAttended]
+    [updateMember]
   );
 
   const decrementEventAttended = useCallback(
     async (record: MemberRecord) => {
-      if (record.memberId && record.eventsAttended !== undefined) {
-        const current = record.eventsAttended;
-        await changeEventAttended(record.memberId, current - 1);
+      if (record.memberId && record.eventsAttended !== undefined && record.warnings) {
+        if (record.eventsAttended > 0) {
+          const newMember: MemberInfoPost = {
+            memberId: record.memberId,
+            eventsAttended: record.eventsAttended - 1,
+            warnings: record.warnings
+          };
+          await updateMember(newMember);
+        }
       } else {
         throw 'Cannot decrement points for this member';
       }
     },
-    [changeEventAttended]
+    [updateMember]
   );
 
   return (

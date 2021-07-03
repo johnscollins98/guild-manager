@@ -1,6 +1,7 @@
 import express, { Request, RequestHandler, Response } from 'express';
 import fetch from 'node-fetch';
 import GW2Member from '../Interfaces/GW2Member';
+import MemberInfo from '../Interfaces/MemberInfo';
 import { isEventLeader } from '../middleware/auth';
 import GuildMember from '../models/guildMember.model';
 import PointLog from '../models/pointLog.model';
@@ -49,7 +50,7 @@ router.get('/members', async (_req: Request, res: Response) => {
       data.map(async (m) => {
         const record = await GuildMember.findOneOrCreate(
           { memberId: m.name },
-          { memberId: m.name, eventsAttended: 0 }
+          { memberId: m.name, eventsAttended: 0, warnings: [] }
         );
         return {
           ...m,
@@ -67,11 +68,11 @@ router.get('/members', async (_req: Request, res: Response) => {
 });
 
 router.put('/members/:memberId', isEventLeader, async (req: Request, res: Response) => {
-  const { memberId, eventsAttended } = req.body;
+  const { memberId, eventsAttended, warnings }: MemberInfo = req.body;
 
   const record = await GuildMember.findOneOrCreate(
     { memberId: req.params.memberId },
-    { memberId, eventsAttended }
+    { memberId, eventsAttended, warnings }
   );
 
   const oldAttendance = record.eventsAttended || 0;

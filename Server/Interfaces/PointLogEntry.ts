@@ -1,4 +1,4 @@
-export default interface PointLogEntry {
+export default interface IPointLogEntry {
   givenBy: string;
   givenTo: string;
   oldVal: number;

@@ -1,4 +1,4 @@
-export default interface EventPostSettings {
+export default interface IEventPostSettings {
   guildId: string;
   channelId: string;
   editMessages: boolean;
