@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import AuthInfo from '../Interfaces/AuthInfo';
+import { config } from '../config'
 
 export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> => {
   if (!req.user) {
@@ -12,24 +13,21 @@ export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> =
   }
   const loggedIn = true;
 
-  if (!process.env.DISCORD_GUILD_ID) throw 'Must provide DISCORD_GUILD_ID';
-  if (!process.env.ADMIN_ROLE) throw 'Must provide ADMIN_ROLE';
-  if (!process.env.EVENT_LEADER_ROLE) throw 'Must provide EVENT_LEADER_ROLE';
 
   const inGuild = !!(
-    req.user.guilds && req.user.guilds.some((g) => g.id === process.env.DISCORD_GUILD_ID)
+    req.user.guilds && req.user.guilds.some((g) => g.id === config.discordGuildId)
   );
   const roles = await getRoles(req.user.id);
-  const isAdmin = inGuild && roles.includes(process.env.ADMIN_ROLE);
-  const isEventLeader = inGuild && roles.includes(process.env.EVENT_LEADER_ROLE);
+  const isAdmin = inGuild && roles.includes(config.adminRole);
+  const isEventLeader = inGuild && roles.includes(config.eventLeaderRole);
 
   const username = req.user.username;
   return { loggedIn, isAdmin, isEventLeader, username };
 };
 
 const getRoles = async (userId: string): Promise<string[]> => {
-  const url = `http://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}/members/${userId}`;
-  const params = { headers: { Authorization: `Bot ${process.env.BOT_TOKEN}` } };
+  const url = `http://discord.com/api/guilds/${config.discordGuildId}/members/${userId}`;
+  const params = { headers: { Authorization: `Bot ${config.botToken}` } };
   const res = await fetch(url, params);
   const user = await res.json();
   return user.roles || [];
