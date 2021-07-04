@@ -1,10 +1,15 @@
-import { getEnvString } from "./env"
-
 export const config = {
-  botToken: getEnvString('BOT_TOKEN'),
-  discordGuildId: getEnvString('DISCORD_GUILD_ID'),
-  gw2apiToken: getEnvString('GW2_API_TOKEN'),
-  gw2guildId: getEnvString('GW2_GUILD_ID'),
-  adminRole: getEnvString('ADMIN_ROLE'),
-  eventLeaderRole: getEnvString('EVENT_LEADER_ROLE')
+  botToken: process.env.BOT_TOKEN,
+  discordGuildId: process.env.DISCORD_GUILD_ID,
+  gw2guildId: process.env.GW2_GUILD_ID,
+  gw2apiToken: process.env.GW2_API_TOKEN,
+  port: parseInt(process.env.PORT) || 3000,
+  atlasUri: process.env.ATLAS_URI,
+  discordClientId: process.env.DISCORD_CLIENT_ID,
+  discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
+  discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
+  adminRole: process.env.ADMIN_ROLE,
+  eventLeaderRole: process.env.EVENT_LEADER_ROLE,
+  sessionSecret: process.env.SESSION_SECRET
 }
+
