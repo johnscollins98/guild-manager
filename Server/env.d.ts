@@ -12,5 +12,6 @@ declare namespace NodeJS {
     ADMIN_ROLE: string;
     EVENT_LEADER_ROLE: string;
     SESSION_SECRET: string;
+    FRONT_END_BASE_URL: string;
   }
 }

@@ -3,13 +3,14 @@ import { isAdmin } from '../middleware/auth';
 import Event from '../models/event.model';
 import IEvent from '../Interfaces/IEvent';
 import EventPostSettings from '../models/eventPostSettings.model';
+import { config } from '../config';
 
 const router = express.Router();
 
 router.get('/settings', async (_req: Request, res: Response) => {
   try {
     const settings = await EventPostSettings.findOne({
-      guildId: process.env.DISCORD_GUILD_ID
+      guildId: config.discordGuildId
     });
     return res.status(200).json(settings);
   } catch (err) {

@@ -9,14 +9,14 @@ import DiscordRole from '../Interfaces/DiscordRole';
 import DiscordMessage from '../Interfaces/DiscordMessage';
 import IEvent from '../Interfaces/IEvent';
 import DiscordMember from '../Interfaces/DiscordMember';
+import { config } from '../config';
 
 const router = express.Router();
 
-const baseUrl = `https://discord.com/api/guilds/${process.env.DISCORD_GUILD_ID}`;
-const botToken = process.env.BOT_TOKEN;
+const baseUrl = `https://discord.com/api/guilds/${config.discordGuildId}`;
 const reqParams = {
   headers: {
-    Authorization: `Bot ${botToken}`,
+    Authorization: `Bot ${config.botToken}`,
     'Content-Type': 'application/json'
   }
 };
@@ -92,8 +92,8 @@ router.delete('/members/:id', isAdmin, async (req: Request, res: Response) => {
 router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
   try {
     await EventPostSettings.findOneAndUpdate(
-      { guildId: process.env.DISCORD_GUILD_ID },
-      { ...req.body, guildId: process.env.DISCORD_GUILD_ID },
+      { guildId: config.discordGuildId },
+      { ...req.body, guildId: config.discordGuildId },
       { upsert: true }
     );
 
