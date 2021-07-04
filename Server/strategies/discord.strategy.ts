@@ -1,6 +1,7 @@
 import PassportDiscord from 'passport-discord';
 import passport from 'passport';
 import DiscordUser from '../models/user.model';
+import { config } from '../config';
 
 const DiscordStrategy = PassportDiscord.Strategy;
 
@@ -15,16 +16,12 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-if (!process.env.DISCORD_CLIENT_ID) throw 'Must provide DISCORD_CLIENT_ID';
-if (!process.env.DISCORD_CLIENT_SECRET) throw 'Must provide DISCORD_CLIENT_SECRET';
-if (!process.env.DISCORD_AUTH_REDIRECT) throw 'Must provide DISCORD_AUTH_REDIRECT';
-
 passport.use(
   new DiscordStrategy(
     {
-      clientID: process.env.DISCORD_CLIENT_ID,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: process.env.DISCORD_AUTH_REDIRECT,
+      clientID: config.discordClientId,
+      clientSecret: config.discordClientSecret,
+      callbackURL: config.discordAuthRedirect,
       scope: ['identify', 'guilds']
     },
     async (_accessToken, _refreshToken, profile, done) => {

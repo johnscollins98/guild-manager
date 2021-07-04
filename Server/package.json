@@ -23,7 +23,9 @@
   "scripts": {
     "start": "set NODE_ENV=production&&node ./build/server.js",
     "build": "tsc",
-    "dev": "set NODE_ENV=development&&nodemon --exec ts-node --files ./server.ts"
+    "dev": "set NODE_ENV=development&&nodemon --exec ts-node --files ./server.ts",
+    "regen-types": "npx gen-env-types .env", 
+    "env-check": "ts-node check-env.ts"
   },
   "devDependencies": {
     "lint-staged": "^11.0.0",

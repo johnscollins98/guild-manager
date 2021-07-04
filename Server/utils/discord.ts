@@ -5,13 +5,13 @@ import FormattedDiscordMember from '../Interfaces/FormattedDiscordMember';
 import GW2Rank from '../Interfaces/GW2Rank';
 import IEvent from '../Interfaces/IEvent';
 import DiscordEmbed from '../Interfaces/DiscordEmbed';
+import { config } from '../config';
 
 export const getValidRoles = async (): Promise<string[]> => {
-  const gwUrl = `https://api.guildwars2.com/v2/guild/${process.env.GW2_GUILD_ID}`;
-  const gwToken = process.env.GW2_API_TOKEN;
+  const gwUrl = `https://api.guildwars2.com/v2/guild/${config.gw2guildId}`;
   const gwParams = {
     headers: {
-      Authorization: `Bearer ${gwToken}`
+      Authorization: `Bearer ${config.gw2apiToken}`
     }
   };
 

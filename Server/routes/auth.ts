@@ -1,6 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import passport from 'passport';
+import { config } from '../config';
 import { getUserAuthInfo } from '../utils/auth';
 
 const router = express.Router();
@@ -10,8 +11,8 @@ router.get('/', passport.authenticate('discord'));
 router.get(
   '/redirect',
   passport.authenticate('discord', {
-    failureRedirect: `${process.env.FRONT_END_BASE_URL || ''}/`,
-    successRedirect: `${process.env.FRONT_END_BASE_URL || ''}/`
+    failureRedirect: `${config.frontEndBaseUrl}/`,
+    successRedirect: `${config.frontEndBaseUrl}/`
   })
 );
 
