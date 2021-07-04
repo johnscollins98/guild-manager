@@ -1,8 +1,8 @@
 import express, { Request, RequestHandler, Response } from 'express';
 import fetch from 'node-fetch';
 import { config } from '../config';
-import GW2Member from '../Interfaces/GW2Member';
-import MemberInfo from '../Interfaces/MemberInfo';
+import GW2Member from '../interfaces/GW2Member';
+import MemberInfo from '../interfaces/MemberInfo';
 import { isEventLeader } from '../middleware/auth';
 import GuildMember from '../models/guildMember.model';
 import PointLog from '../models/pointLog.model';

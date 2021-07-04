@@ -1,5 +1,5 @@
-import { FormattedLogEntry } from '../Interfaces/FormattedLogEntry';
-import GW2LogEntry from '../Interfaces/GW2LogEntry';
+import { FormattedLogEntry } from '../interfaces/FormattedLogEntry';
+import GW2LogEntry from '../interfaces/GW2LogEntry';
 
 export const formatLog = (data: GW2LogEntry[]): FormattedLogEntry[] => {
   const filtered = data.filter((o) =>

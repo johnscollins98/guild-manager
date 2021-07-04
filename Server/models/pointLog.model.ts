@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import IPointLogEntry from '../Interfaces/PointLogEntry';
+import IPointLogEntry from '../interfaces/PointLogEntry';
 
 const Schema = mongoose.Schema;
 

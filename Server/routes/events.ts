@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import { isAdmin } from '../middleware/auth';
 import Event from '../models/event.model';
-import IEvent from '../Interfaces/IEvent';
+import IEvent from '../interfaces/IEvent';
 import EventPostSettings from '../models/eventPostSettings.model';
 import { config } from '../config';
 

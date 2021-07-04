@@ -1,6 +1,6 @@
 import mongoose, { Document, FilterQuery } from 'mongoose';
-import MemberInfo from '../Interfaces/MemberInfo';
-import Warning from '../Interfaces/Warning';
+import MemberInfo from '../interfaces/MemberInfo';
+import Warning from '../interfaces/Warning';
 
 const Schema = mongoose.Schema;
 

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import AuthInfo from '../Interfaces/AuthInfo';
+import AuthInfo from '../interfaces/AuthInfo';
 import { config } from '../config'
 
 export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> => {

@@ -5,10 +5,10 @@ import Event from '../models/event.model';
 import { isAdmin } from '../middleware/auth';
 import EventPostSettings from '../models/eventPostSettings.model';
 import { Request, Response } from 'express';
-import DiscordRole from '../Interfaces/DiscordRole';
-import DiscordMessage from '../Interfaces/DiscordMessage';
-import IEvent from '../Interfaces/IEvent';
-import DiscordMember from '../Interfaces/DiscordMember';
+import DiscordRole from '../interfaces/DiscordRole';
+import DiscordMessage from '../interfaces/DiscordMessage';
+import IEvent from '../interfaces/IEvent';
+import DiscordMember from '../interfaces/DiscordMember';
 import { config } from '../config';
 
 const router = express.Router();
