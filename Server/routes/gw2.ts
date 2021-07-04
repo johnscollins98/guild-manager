@@ -12,7 +12,7 @@ import warningRoute from './warnings';
 const router = express.Router();
 
 
-const baseUrl = `https://api.guildwars2.com/v2/guild/${config.discordGuildId}`;
+const baseUrl = `https://api.guildwars2.com/v2/guild/${config.gw2guildId}`;
 const reqParams = {
   headers: {
     Authorization: `Bearer ${config.gw2apiToken}`
