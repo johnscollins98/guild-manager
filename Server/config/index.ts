@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+
 export const config = {
   env: process.env.NODE_ENV as string,
   botToken: process.env.BOT_TOKEN,
@@ -14,4 +16,13 @@ export const config = {
   sessionSecret: process.env.SESSION_SECRET,
   frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
 }
+
+export const loadEnv = () => {
+  if (!_loaded) {
+    dotenv.config()
+    _loaded = true
+  }
+}
+
+let _loaded = false
 

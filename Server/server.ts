@@ -1,4 +1,3 @@
-require('dotenv').config();
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -10,7 +9,9 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
-import { config } from './config';
+import { config, loadEnv } from './config';
+
+loadEnv()
 
 const app = express();
 app.use(cors());
