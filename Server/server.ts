@@ -10,18 +10,16 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
+import { config } from './config';
 
 const app = express();
 app.use(cors());
 
-const port = process.env.PORT || 5000;
-
 app.use(express.json());
 
-if (!process.env.SESSION_SECRET) throw 'Must provide SESSION_SECRET';
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: config.sessionSecret,
     cookie: {
       maxAge: 60000 * 60 * 24
     },
@@ -33,9 +31,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-if (!process.env.ATLAS_URI) throw 'Must provide ATLAS_URI';
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, {
+mongoose.connect(config.atlasUri, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,
@@ -52,15 +48,15 @@ app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
-let dirs = [__dirname];
-if (process.env.NODE_ENV == 'production') {
-  dirs = [...dirs, '..'];
+const dirs = [__dirname];
+if (config.env === 'production') {
+  dirs.push('..')
 }
-dirs = [...dirs, '..', 'Client', 'build'];
+dirs.push('..', 'Client', 'build')
 app.use(express.static(path.join(...dirs)));
 
 app.get('*', (_, res) => {
   res.redirect('/');
 });
 
-app.listen(port, () => console.info(`Listening on port ${port}`));
+app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
