@@ -9,9 +9,7 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
-import { config, loadEnv } from './config';
-
-loadEnv()
+import { config } from './config';
 
 const app = express();
 app.use(cors());
@@ -50,7 +48,7 @@ app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
 const dirs = [__dirname];
-if (config.env === 'production') {
+if (process.env.NODE_ENV === 'production') {
   dirs.push('..')
 }
 dirs.push('..', 'Client', 'build')
