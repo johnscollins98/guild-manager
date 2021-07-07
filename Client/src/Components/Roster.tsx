@@ -71,15 +71,18 @@ const Roster = ({ filterString, openToast }: Props) => {
   ]);
 
   useEffect(() => {
+    if (isLoading) return;
+    if (error && error.data !== 'authorization') return;
+
     setRecords([]);
-    if (!isLoading && gw2Members.data && discordMembers.data && guildRanks.data) {
+    if (gw2Members.data && discordMembers.data && guildRanks.data) {
       setRecords(
         generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data).concat(
           getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data)
         )
       );
     }
-  }, [isLoading, gw2Members.data, discordMembers.data, guildRanks.data]);
+  }, [isLoading, gw2Members.data, discordMembers.data, guildRanks.data, error]);
 
   if (error) {
     openToast(`There was an error getting ${error.data} data`, 'error');
