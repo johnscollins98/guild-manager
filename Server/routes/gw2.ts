@@ -94,7 +94,8 @@ router.get('/ranks', async (_req: Request, res: Response) => {
   try {
     const response = await fetch(`${baseUrl}/ranks`, reqParams);
     const data = await response.json();
-    res.status(200).json(data);
+
+    res.status(response.status).json(data);
   } catch (err) {
     console.error(err);
     res.status(400).json(`Error: ${err}`);
