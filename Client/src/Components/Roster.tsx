@@ -93,6 +93,7 @@ const Roster = ({ filterString, openToast }: Props) => {
   return (
     <RosterDisplay
       records={records}
+      refetchDiscord={discordMembers.refetch}
       discordRoles={discordRoles.data}
       guildRanks={guildRanks.data}
       filterString={filterString}

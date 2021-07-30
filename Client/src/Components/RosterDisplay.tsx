@@ -17,12 +17,15 @@ import { WarningPost } from '../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
 import { MemberInfoPost } from '../Interfaces/MemberInfo';
+import { QueryObserverResult, RefetchOptions } from 'react-query';
+import DiscordMember from '../Interfaces/DiscordMember';
 
 interface Props {
   records: MemberRecord[];
   discordRoles: DiscordRole[];
   filterString: string;
   guildRanks: GW2Rank[];
+  refetchDiscord: (options?: RefetchOptions) => Promise<QueryObserverResult<DiscordMember[], unknown>>;
   openToast: (msg: string, status: Color) => void;
   authInfo?: AuthInfo;
 }
@@ -32,6 +35,7 @@ const RosterDisplay = ({
   discordRoles,
   filterString,
   guildRanks,
+  refetchDiscord,
   openToast,
   authInfo = { isAdmin: false, loggedIn: true, isEventLeader: false, username: '' }
 }: Props) => {
@@ -132,8 +136,8 @@ const RosterDisplay = ({
       if (res) {
         const success = await kickDiscordMember(record.discordId);
         if (success) {
+          await refetchDiscord();
           openToast(`Kicked ${record.discordName} from Discord.`, 'success');
-          setRecordState(recordState.filter((m) => m.discordId !== record.discordId));
         } else {
           openToast(`Could not kick ${record.discordName}`, 'error');
         }
