@@ -32,7 +32,7 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
         if (member.memberId) {
           await onDeleteWarning(member.memberId, warning._id);
         } else {
-          throw 'Chosen member has no memberId';
+          throw new Error('Chosen member has no memberId');
         }
       }
       onClose();

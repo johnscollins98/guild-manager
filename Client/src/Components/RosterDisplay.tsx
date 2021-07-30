@@ -143,7 +143,7 @@ const RosterDisplay = ({
         }
       }
     },
-    [recordState, setRecordState, openToast]
+    [openToast, refetchDiscord]
   );
 
   const openEdit = useCallback(
@@ -162,7 +162,7 @@ const RosterDisplay = ({
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
         });
-        if (!toEdit) throw 'Cannot find given member';
+        if (!toEdit) throw new Error('Cannot find given member');
 
         toEdit.warnings = newMember.warnings;
         setRecordState(recordsCopy);
@@ -183,7 +183,7 @@ const RosterDisplay = ({
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newMember.memberId;
         });
-        if (!toEdit) throw 'Cannot find given member';
+        if (!toEdit) throw new Error('Cannot find given member');
 
         toEdit.warnings = newMember.warnings;
         setRecordState(recordsCopy);
@@ -205,7 +205,7 @@ const RosterDisplay = ({
         const toEdit = recordsCopy.find((record) => {
           return record.memberId === newObject.memberId;
         });
-        if (!toEdit) throw 'Cannot find given member';
+        if (!toEdit) throw new Error('Cannot find given member');
 
         toEdit.eventsAttended = newObject.eventsAttended;
 
@@ -229,7 +229,7 @@ const RosterDisplay = ({
 
         await updateMember(newMember);
       } else {
-        throw 'Cannot increment points for this member';
+        throw new Error('Cannot increment points for this member');
       }
     },
     [updateMember]
@@ -247,7 +247,7 @@ const RosterDisplay = ({
           await updateMember(newMember);
         }
       } else {
-        throw 'Cannot decrement points for this member';
+        throw new Error('Cannot decrement points for this member');
       }
     },
     [updateMember]

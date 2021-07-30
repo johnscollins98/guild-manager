@@ -24,7 +24,7 @@ import Add from '@material-ui/icons/Add';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-import Error from '@material-ui/icons/Error';
+import ErrorIcon from '@material-ui/icons/Error';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
@@ -89,7 +89,9 @@ const GuildMemberCard = ({
 
   const warningSubmitHandler = useCallback(
     async (warningObject: WarningPost) => {
-      if (!member.memberId) throw 'Cannot give warning: No memberId for chosen member';
+      if (!member.memberId) {
+        throw new Error('test');
+      }
       await onGiveWarning(member.memberId, warningObject);
     },
     [onGiveWarning, member]
@@ -136,7 +138,7 @@ const GuildMemberCard = ({
               ) : null}
               {member.issues.multipleRoles ? (
                 <Tooltip title="Multiple Discord Roles">
-                  <Error className="error" />
+                  <ErrorIcon className="error" />
                 </Tooltip>
               ) : null}
               {member.issues.unmatchingRoles ? (

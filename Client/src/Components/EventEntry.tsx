@@ -79,7 +79,7 @@ const EventEntry = ({
   const onReset = useCallback(() => {
     setLocalEvent(event ? event : emptyEvent);
     setModified(false);
-  }, [event, create, setLocalEvent, setModified]);
+  }, [event, setLocalEvent, setModified]);
 
   const onUpdate = useCallback(async () => {
     try {
@@ -90,7 +90,7 @@ const EventEntry = ({
     }
 
     if (!updateEvent) {
-      throw 'No update event function passed in';
+      throw new Error('No update event function passed in');
     }
 
     const updatedEvent = await updateEvent(localEvent);
@@ -108,7 +108,7 @@ const EventEntry = ({
     }
 
     if (!createEvent) {
-      throw 'No create event function passed in';
+      throw new Error('No create event function passed in');
     }
 
     const createdEvent = await createEvent(localEvent);
@@ -122,9 +122,9 @@ const EventEntry = ({
     if (deleteEvent) {
       deleteEvent(localEvent);
     } else {
-      throw 'No Delete event function passed in';
+      throw new Error('No Delete event function passed in');
     }
-  }, [localEvent])
+  }, [localEvent, deleteEvent])
 
   const onSubmit = useCallback(
     (e) => {

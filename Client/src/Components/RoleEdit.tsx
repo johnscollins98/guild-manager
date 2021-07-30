@@ -54,7 +54,7 @@ const RoleEdit = ({
     setEdittingRole(true);
 
     if (!selectedRecord || !selectedRecord.discordId) {
-      throw 'Cannot change roles for this member - no discord id';
+      throw new Error('Cannot change roles for this member - no discord id');
     }
 
     if (e.target.checked) {
