@@ -25,6 +25,8 @@ interface Props {
   discordRoles: DiscordRole[];
   filterString: string;
   guildRanks: GW2Rank[];
+  isFetching: boolean;
+  refetchData: () => void;
   openToast: (msg: string, status: Color) => void;
   authInfo?: AuthInfo;
 }
@@ -35,6 +37,8 @@ const RosterDisplay = ({
   filterString,
   guildRanks,
   openToast,
+  isFetching,
+  refetchData,
   authInfo = { isAdmin: false, loggedIn: true, isEventLeader: false, username: '' }
 }: Props) => {
   const [modalShow, setModalShow] = useState(false);
@@ -283,6 +287,8 @@ const RosterDisplay = ({
         setSortBy={setSortBy}
         filterBy={filterBy}
         setFilterBy={setFilterBy}
+        refetchData={refetchData}
+        isFetching={isFetching}
       />
       <div className="roster-container">
         {filteredRecords.map((record) => (

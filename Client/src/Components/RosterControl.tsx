@@ -12,6 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Check from '@material-ui/icons/Check';
 import FilterList from '@material-ui/icons/FilterList';
 import ImportExport from '@material-ui/icons/ImportExport';
+import Refresh from '@material-ui/icons/Refresh';
 
 interface Props {
   singleColumn: boolean;
@@ -20,6 +21,8 @@ interface Props {
   setFilterBy: (val: string) => void;
   sortBy: string;
   setSortBy: (val: string) => void;
+  refetchData: () => void;
+  isFetching: boolean;
 }
 
 const RosterControl = ({
@@ -28,7 +31,9 @@ const RosterControl = ({
   filterBy,
   setFilterBy,
   sortBy,
-  setSortBy
+  setSortBy,
+  refetchData,
+  isFetching
 }: Props) => {
   const [anchorElement, setAnchorElement] = useState<(EventTarget & Element) | null>(null);
   const [sortOpen, setSortOpen] = useState(false);
@@ -84,6 +89,9 @@ const RosterControl = ({
           </IconButton>
         </span>
         <span className="right">
+          <IconButton size="small" onClick={refetchData} className="refresh" disabled={isFetching}>
+            <Refresh />
+          </IconButton>
           <FormControlLabel
             control={
               <Switch

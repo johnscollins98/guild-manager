@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
 
@@ -35,7 +35,32 @@ const Roster = ({ filterString, openToast }: Props) => {
 
   const [records, setRecords] = useState<MemberRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<CustomError | null>(null);
+
+  const refetchData = useCallback(() => {
+    gw2Members.refetch();
+    discordMembers.refetch();
+    guildRanks.refetch();
+    discordRoles.refetch();
+    authInfo.refetch();
+  }, [gw2Members, discordMembers, guildRanks, discordRoles, authInfo]);
+
+  useEffect(() => {
+    setIsFetching(
+      gw2Members.isFetching ||
+      discordMembers.isFetching ||
+      guildRanks.isFetching ||
+      discordRoles.isFetching ||
+      authInfo.isFetching
+    )
+  }, [
+    gw2Members.isFetching,
+    discordMembers.isFetching,
+    guildRanks.isFetching,
+    discordRoles.isFetching,
+    authInfo.isFetching
+  ]);
 
   useEffect(() => {
     const getError = () => {
@@ -97,6 +122,8 @@ const Roster = ({ filterString, openToast }: Props) => {
       guildRanks={guildRanks.data}
       filterString={filterString}
       authInfo={authInfo.data}
+      refetchData={refetchData}
+      isFetching={isFetching}
       openToast={openToast}
     />
   );
