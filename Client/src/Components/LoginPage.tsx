@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './LoginPage.scss';
 
 import AuthInfo from '../Interfaces/AuthInfo';
+import { config } from '../Config';
 
 import LoaderPage from './LoaderPage';
 import SOGif from '../assets/images/SO_Logo.gif';
@@ -37,7 +38,7 @@ const LoginPage = ({ isLoading, authInfo }: Props) => {
             onMouseLeave={() => setLogo(SOStatic)}
           />
           <Button
-            href={`${process.env.REACT_APP_BACKEND_BASE_URL || ''}/auth`}
+            href={`${config.backEndBaseUrl}/auth`}
             variant="contained"
             color="primary"
           >
