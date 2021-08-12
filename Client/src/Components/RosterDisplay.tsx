@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import RoleEdit from './RoleEdit';
 import { filterDataByString } from '../utils/Helpers';
-import { kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
+import { changeDiscordMember, kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
 
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
@@ -179,6 +179,35 @@ const RosterDisplay = ({
     [setModalShow, setSelectedRecord]
   );
 
+  const onEditNickname = useCallback(
+    async (member: MemberRecord) => {
+      const newNickname = window.prompt('Enter new nickname: ', member.nickname || member.discordName || '');
+      if (newNickname) {
+        try {
+          if (!member.discordId) {
+            throw new Error('Discord ID not found for given member');
+          }
+
+          const res = await changeDiscordMember(member.discordId, newNickname);
+          const recordCopy = [...recordState];
+          const toEdit = recordCopy.find((record) => record.discordId === member.discordId);
+          if (!toEdit) {
+            throw new Error('Cannot find given member');
+          }
+
+          toEdit.discordName = res;
+          setRecordState(recordCopy);
+          openToast(`Successfully updated nickname to ${res}`, 'success');
+          refetchData();
+        } catch (err) {
+          openToast('There was an error changing the nickname', 'error');
+          console.error(err);
+        }
+      }
+    },
+    [openToast, recordState, refetchData]
+  );
+
   const onGiveWarning = useCallback(
     async (memberId: string, warningObject: WarningPost) => {
       try {
@@ -301,6 +330,7 @@ const RosterDisplay = ({
             onDeleteWarning={onDeleteWarning}
             singleColumn={singleColumn}
             onEdit={openEdit}
+            onChangeNickname={onEditNickname}
             isAdmin={authInfo.isAdmin}
             addPoint={incrementEventAttended}
             removePoint={decrementEventAttended}

@@ -73,6 +73,28 @@ router.put('/members/:memberId/roles/:roleId', isAdmin, async (req: Request, res
   res.status(response.status).json(req.params.roleId);
 });
 
+router.put('/members/:memberId', isAdmin, async (req: Request, res: Response) => {
+  try {
+    const response = await fetch(`${baseUrl}/members/${req.params.memberId}`, {
+      ...reqParams,
+      method: 'PATCH',
+      body: JSON.stringify({
+        nick: req.body.nickname
+      })
+    });
+
+    if (response.status === 204) {
+      res.status(200).json(req.body.nickname);
+    } else {
+      const data = await response.json();
+      res.status(response.status).json(data);
+    }
+  } catch (err) {
+    res.status(400).json(`Error: ${err}`);
+    console.error(err);
+  }
+});
+
 router.delete('/members/:memberId/roles/:roleId', isAdmin, async (req: Request, res: Response) => {
   const response = await fetch(
     `${baseUrl}/members/${req.params.memberId}/roles/${req.params.roleId}`,

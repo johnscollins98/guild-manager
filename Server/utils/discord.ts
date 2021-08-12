@@ -35,6 +35,7 @@ export const formatMember = (
 ): FormattedDiscordMember => {
   return {
     name: member.nick ? member.nick : member?.user?.username,
+    nickname: member.nick,
     id: member?.user?.id,
     roles: getRoleInfo(roles, member.roles, validRoles),
     joined: member.joined_at,

@@ -45,6 +45,7 @@ export const generateGW2RosterRecords = (
     });
 
     const discordName = discordMember?.name;
+    const nickname = discordMember?.nickname;
     const discordId = discordMember?.id;
     const roles = discordMember?.roles || [];
     const avatar = discordMember?.avatar;
@@ -63,6 +64,7 @@ export const generateGW2RosterRecords = (
       eventsAttended,
       warnings,
       discordName,
+      nickname,
       discordId,
       roles,
       avatar,
@@ -91,6 +93,7 @@ export const getExcessDiscordRecords = (
     .map((discordMember) => {
       return {
         accountName: discordMember.name,
+        nickname: discordMember.nickname,
         joinDate: discordMember.joined.split('T')[0].replace(/-/g, '/'),
         discordName: discordMember.name,
         discordId: discordMember.id,

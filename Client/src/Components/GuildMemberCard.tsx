@@ -30,6 +30,7 @@ import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import Warning from '@material-ui/icons/Warning';
+import List from '@material-ui/icons/List';
 
 interface Props {
   member: MemberRecord;
@@ -38,6 +39,7 @@ interface Props {
   singleColumn: boolean;
   onKick: (member: MemberRecord) => Promise<any>;
   onEdit: (member: MemberRecord) => void;
+  onChangeNickname: (member: MemberRecord) => void;
   onGiveWarning: (memberId: string, warning: WarningPost) => Promise<any>;
   onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
   addPoint: (member: MemberRecord) => Promise<any>;
@@ -49,6 +51,7 @@ const GuildMemberCard = ({
   discordRoles,
   onKick,
   onEdit,
+  onChangeNickname,
   onGiveWarning,
   onDeleteWarning,
   isAdmin,
@@ -202,10 +205,16 @@ const GuildMemberCard = ({
               Kick
             </span>
           </MenuItem>
-          <MenuItem disabled={!isAdmin || memberIsAdmin} onClick={() => menuAction(onEdit)}>
+          <MenuItem disabled={!isAdmin || memberIsAdmin || !member.discordId} onClick={() => menuAction(onEdit)}>
+            <span className="menu-item">
+              <List className="icon" />
+              Edit Roles
+            </span>
+          </MenuItem>
+          <MenuItem disabled={!isAdmin || memberIsAdmin || !member.discordId} onClick={() => menuAction(onChangeNickname)}>
             <span className="menu-item">
               <Edit className="icon" />
-              Edit Roles
+              Edit Nickname
             </span>
           </MenuItem>
           <Divider />

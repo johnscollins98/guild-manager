@@ -43,6 +43,28 @@ export const removeDiscordRole = async (memberId: string, roleId: string): Promi
   return response.status === 204;
 };
 
+export const changeDiscordMember = async (
+  memberId: string,
+  newNickname: string
+): Promise<string> => {
+  const response = await fetch(`api/discord/members/${memberId}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      nickname: newNickname
+    }),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
+  const data = await response.json();
+
+  if (response.status === 200) {
+    return data;
+  }
+
+  throw data;
+};
+
 export const kickDiscordMember = async (memberId: string): Promise<boolean> => {
   const response = await fetch(`/api/discord/members/${memberId}`, {
     method: 'DELETE'

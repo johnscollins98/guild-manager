@@ -8,6 +8,7 @@ export default interface MemberRecord {
   rankImage?: string;
   eventsAttended?: number;
   joinDate: string;
+  nickname?: string,
   discordName?: string;
   discordId?: string;
   roles: DiscordRole[];
