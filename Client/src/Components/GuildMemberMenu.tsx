@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import './GuildMemberMenu.scss';
 
 import MemberRecord from '../Interfaces/MemberRecord';
 
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import Add from '@material-ui/icons/Add';
 import Close from '@material-ui/icons/Close';
@@ -14,6 +12,7 @@ import List from '@material-ui/icons/List';
 import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
 import Warning from '@material-ui/icons/Warning';
+import GuildMemberMenuItem from './GuildMemberMenuItem';
 
 interface Props {
   member: MemberRecord;
@@ -58,67 +57,52 @@ const GuildMemberMenu = ({
 
   return (
     <Menu anchorEl={menuAnchor} keepMounted open={Boolean(menuAnchor)} onClose={closeMenu}>
-      <MenuItem
+      <GuildMemberMenuItem
+        Icon={Close}
+        label="Kick"
         disabled={!isAdmin || memberIsAdmin}
-        onClick={() => menuAction(onKick)}
         className="error"
-      >
-        <span className="menu-item error">
-          <Close className="icon" />
-          Kick
-        </span>
-      </MenuItem>
-      <MenuItem
+        action={() => menuAction(onKick)}
+      />
+      <GuildMemberMenuItem
+        Icon={List}
+        label="Edit Roles"
         disabled={!isAdmin || memberIsAdmin || !member.discordId}
-        onClick={() => menuAction(onEdit)}
-      >
-        <span className="menu-item">
-          <List className="icon" />
-          Edit Roles
-        </span>
-      </MenuItem>
-      <MenuItem
+        action={() => menuAction(onEdit)}
+      />
+      <GuildMemberMenuItem
+        Icon={Edit}
+        label="Edit Nickname"
         disabled={!isAdmin || memberIsAdmin || !member.discordId}
-        onClick={() => menuAction(onChangeNickname)}
-      >
-        <span className="menu-item">
-          <Edit className="icon" />
-          Edit Nickname
-        </span>
-      </MenuItem>
+        action={() => menuAction(onChangeNickname)}
+      />
       <Divider />
-      <MenuItem disabled={!member.memberId} onClick={() => menuAction(addPoint)}>
-        <span className="menu-item">
-          <Add className="icon" />
-          Add Point
-        </span>
-      </MenuItem>
-      <MenuItem disabled={!member.memberId} onClick={() => menuAction(removePoint)}>
-        <span className="menu-item">
-          <Remove className="icon" />
-          Remove Point
-        </span>
-      </MenuItem>
+      <GuildMemberMenuItem
+        Icon={Add}
+        label="Add Point"
+        disabled={!member.memberId}
+        action={() => menuAction(addPoint)}
+      />
+      <GuildMemberMenuItem
+        Icon={Remove}
+        label="Remove Point"
+        disabled={!member.memberId}
+        action={() => menuAction(removePoint)}
+      />
       <Divider />
-      <MenuItem
+      <GuildMemberMenuItem
+        Icon={Warning}
         disabled={!isAdmin || !member.memberId}
-        onClick={() => menuAction(() => setWarningOpen(true))}
         className="warning"
-      >
-        <span className="menu-item warning">
-          <Warning className="icon" />
-          Give Warning
-        </span>
-      </MenuItem>
-      <MenuItem
+        action={() => menuAction(() => setWarningOpen(true))}
+        label="Give Warning"
+      />
+      <GuildMemberMenuItem
+        Icon={Search}
         disabled={!member.memberId || member.warnings.length < 1}
-        onClick={() => menuAction(() => setWarningViewerOpen(true))}
-      >
-        <span className="menu-item">
-          <Search className="icon" />
-          View Warnings
-        </span>
-      </MenuItem>
+        action={() => menuAction(() => setWarningViewerOpen(true))}
+        label="View Warnings"
+      />
     </Menu>
   );
 };
