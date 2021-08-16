@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import './GuildMemberCard.scss';
 import { getColorFromRole } from '../utils/Helpers';
@@ -16,21 +16,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Divider from '@material-ui/core/Divider';
 
-import Add from '@material-ui/icons/Add';
 import CalendarToday from '@material-ui/icons/CalendarToday';
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
 import ErrorIcon from '@material-ui/icons/Error';
 import ExpandLess from '@material-ui/icons/ExpandLess';
-import Remove from '@material-ui/icons/Remove';
-import Search from '@material-ui/icons/Search';
 import SyncProblem from '@material-ui/icons/SyncProblem';
-import Warning from '@material-ui/icons/Warning';
-import List from '@material-ui/icons/List';
+import GuildMemberMenu from './GuildMemberMenu';
 
 interface Props {
   member: MemberRecord;
@@ -63,13 +54,8 @@ const GuildMemberCard = ({
   const color = getColorFromRole(rank, discordRoles);
 
   const [menuAnchor, setMenuAnchor] = useState(null);
-  const [memberIsAdmin, setMemberIsAdmin] = useState(true);
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
-
-  useEffect(() => {
-    setMemberIsAdmin(member.rank === 'General' || member.rank === 'Spearmarshal');
-  }, [member]);
 
   const handleClick = useCallback(
     (e) => {
@@ -81,14 +67,6 @@ const GuildMemberCard = ({
   const closeMenu = useCallback(() => {
     setMenuAnchor(null);
   }, [setMenuAnchor]);
-
-  const menuAction = useCallback(
-    async (func: Function) => {
-      await func(member);
-      closeMenu();
-    },
-    [member, closeMenu]
-  );
 
   const warningSubmitHandler = useCallback(
     async (warningObject: WarningPost) => {
@@ -194,63 +172,19 @@ const GuildMemberCard = ({
         </CardContent>
       </Card>
       {menuAnchor ? (
-        <Menu anchorEl={menuAnchor} keepMounted open={Boolean(menuAnchor)} onClose={closeMenu}>
-          <MenuItem
-            disabled={!isAdmin || memberIsAdmin}
-            onClick={() => menuAction(onKick)}
-            className="error"
-          >
-            <span className="menu-item error">
-              <Close className="icon" />
-              Kick
-            </span>
-          </MenuItem>
-          <MenuItem disabled={!isAdmin || memberIsAdmin || !member.discordId} onClick={() => menuAction(onEdit)}>
-            <span className="menu-item">
-              <List className="icon" />
-              Edit Roles
-            </span>
-          </MenuItem>
-          <MenuItem disabled={!isAdmin || memberIsAdmin || !member.discordId} onClick={() => menuAction(onChangeNickname)}>
-            <span className="menu-item">
-              <Edit className="icon" />
-              Edit Nickname
-            </span>
-          </MenuItem>
-          <Divider />
-          <MenuItem disabled={!member.memberId} onClick={() => menuAction(addPoint)}>
-            <span className="menu-item">
-              <Add className="icon" />
-              Add Point
-            </span>
-          </MenuItem>
-          <MenuItem disabled={!member.memberId} onClick={() => menuAction(removePoint)}>
-            <span className="menu-item">
-              <Remove className="icon" />
-              Remove Point
-            </span>
-          </MenuItem>
-          <Divider />
-          <MenuItem
-            disabled={!isAdmin || !member.memberId}
-            onClick={() => menuAction(() => setWarningOpen(true))}
-            className="warning"
-          >
-            <span className="menu-item warning">
-              <Warning className="icon" />
-              Give Warning
-            </span>
-          </MenuItem>
-          <MenuItem
-            disabled={!member.memberId || member.warnings.length < 1}
-            onClick={() => menuAction(() => setWarningViewerOpen(true))}
-          >
-            <span className="menu-item">
-              <Search className="icon" />
-              View Warnings
-            </span>
-          </MenuItem>
-        </Menu>
+        <GuildMemberMenu
+          member={member}
+          menuAnchor={menuAnchor}
+          isAdmin={isAdmin}
+          closeMenu={closeMenu}
+          onKick={onKick}
+          onEdit={onEdit}
+          onChangeNickname={onChangeNickname}
+          addPoint={addPoint}
+          removePoint={removePoint}
+          setWarningOpen={setWarningOpen}
+          setWarningViewerOpen={setWarningViewerOpen}
+        />
       ) : null}
       <WarningForm
         isOpen={warningOpen}
