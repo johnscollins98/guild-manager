@@ -91,7 +91,7 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
   if (isLoading || posting)
     return (
       <div style={{ height: '300px' }}>
-        <LoaderPage />;
+        <LoaderPage />
       </div>
     );
   //

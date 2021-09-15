@@ -41,7 +41,7 @@ export const generateGW2RosterRecords = (
         ) // strip any emojis
         .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
 
-      return discordName === testName || discordName.includes(`(${testName})`);
+      return discordName === testName || discordName.includes(`(${testName})`) || discordName === memberId.toLowerCase();
     });
 
     const discordName = discordMember?.name;
