@@ -66,7 +66,6 @@ const App = () => {
   const [authInfo, setAuthInfo] = useState<AuthInfo>({
     loggedIn: false,
     isAdmin: false,
-    isEventLeader: false,
     username: ''
   });
   const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
@@ -99,7 +98,7 @@ const App = () => {
           </Alert>
         </Snackbar>
         <div className="content">
-          {authInfo.loggedIn && (authInfo.isAdmin || authInfo.isEventLeader) ? (
+          {authInfo.loggedIn && authInfo.isAdmin ? (
             <>
               <Control
                 handleFilterChange={handleFilterChange}

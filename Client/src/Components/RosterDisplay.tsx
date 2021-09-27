@@ -38,7 +38,7 @@ const RosterDisplay = ({
   openToast,
   isFetching,
   refetchData,
-  authInfo = { isAdmin: false, loggedIn: true, isEventLeader: false, username: '' }
+  authInfo = { isAdmin: false, loggedIn: true, username: '' }
 }: Props) => {
   const [modalShow, setModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<MemberRecord | null>(null);

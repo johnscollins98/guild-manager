@@ -7,7 +7,6 @@ export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> =
     return {
       loggedIn: false,
       isAdmin: false,
-      isEventLeader: false,
       username: ''
     };
   }
@@ -19,10 +18,9 @@ export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> =
   );
   const roles = await getRoles(req.user.id);
   const isAdmin = inGuild && roles.includes(config.adminRole);
-  const isEventLeader = inGuild && roles.includes(config.eventLeaderRole);
 
   const username = req.user.username;
-  return { loggedIn, isAdmin, isEventLeader, username };
+  return { loggedIn, isAdmin, username };
 };
 
 const getRoles = async (userId: string): Promise<string[]> => {
