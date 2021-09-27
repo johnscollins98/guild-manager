@@ -85,7 +85,6 @@ const App = () => {
   const TABS = {
     ROSTER: 'Roster',
     LOG: 'Log',
-    POINT_LOG: 'Points Log',
     EVENTS: 'Events'
   };
 
