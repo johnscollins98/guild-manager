@@ -112,11 +112,6 @@ const GuildMemberCard = ({
               </span>
             </div>
             <div className="icons-container">
-              {member.issues.promotionRequired ? (
-                <Tooltip title="Promotion Required">
-                  <ExpandLess />
-                </Tooltip>
-              ) : null}
               {member.issues.multipleRoles ? (
                 <Tooltip title="Multiple Discord Roles">
                   <ErrorIcon className="error" />

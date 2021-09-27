@@ -2,7 +2,6 @@ import DiscordMember from '../Interfaces/DiscordMember';
 import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import MemberRecord from '../Interfaces/MemberRecord';
-import { isPromotionRequired } from './Helpers';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],
@@ -53,7 +52,6 @@ export const generateGW2RosterRecords = (
     const missingDiscord = rank !== 'Alt' && !discordName;
     const multipleRoles = roles.length > 1;
     const unmatchingRoles = !!(discordName && rank !== roles[0]?.name);
-    const promotionRequired = isPromotionRequired(rank, joinDate, eventsAttended);
 
     return {
       accountName,
@@ -71,8 +69,7 @@ export const generateGW2RosterRecords = (
       issues: {
         missingDiscord,
         multipleRoles,
-        unmatchingRoles,
-        promotionRequired
+        unmatchingRoles
       }
     };
   });

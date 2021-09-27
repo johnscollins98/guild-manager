@@ -19,6 +19,5 @@ export default interface MemberRecord {
     missingDiscord?: boolean;
     multipleRoles?: boolean;
     unmatchingRoles?: boolean;
-    promotionRequired?: boolean;
   };
 }
