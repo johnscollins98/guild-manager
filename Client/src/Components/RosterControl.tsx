@@ -122,10 +122,6 @@ const RosterControl = ({
           {sortBy === 'name' ? <Check className="selected" /> : null}
           Name
         </MenuItem>
-        <MenuItem onClick={() => sortHandler('points')}>
-          {sortBy === 'points' ? <Check className="selected" /> : null}
-          Points
-        </MenuItem>
         <MenuItem onClick={() => sortHandler('date')}>
           {sortBy === 'date' ? <Check className="selected" /> : null}
           Join Date

@@ -5,11 +5,9 @@ import MemberRecord from '../Interfaces/MemberRecord';
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
 
-import Add from '@material-ui/icons/Add';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import List from '@material-ui/icons/List';
-import Remove from '@material-ui/icons/Remove';
 import Search from '@material-ui/icons/Search';
 import Warning from '@material-ui/icons/Warning';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
@@ -22,8 +20,6 @@ interface Props {
   onKick: (member: MemberRecord) => Promise<any>;
   onEdit: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
-  addPoint: (member: MemberRecord) => Promise<any>;
-  removePoint: (member: MemberRecord) => Promise<any>;
   setWarningOpen: (isOpen: boolean) => void;
   setWarningViewerOpen: (isOpen: boolean) => void;
 }
@@ -36,8 +32,6 @@ const GuildMemberMenu = ({
   onKick,
   onEdit,
   onChangeNickname,
-  addPoint,
-  removePoint,
   setWarningOpen,
   setWarningViewerOpen
 }: Props) => {
@@ -75,19 +69,6 @@ const GuildMemberMenu = ({
         label="Edit Nickname"
         disabled={!isAdmin || memberIsAdmin || !member.discordId}
         action={() => menuAction(onChangeNickname)}
-      />
-      <Divider />
-      <GuildMemberMenuItem
-        Icon={Add}
-        label="Add Point"
-        disabled={!member.memberId}
-        action={() => menuAction(addPoint)}
-      />
-      <GuildMemberMenuItem
-        Icon={Remove}
-        label="Remove Point"
-        disabled={!member.memberId}
-        action={() => menuAction(removePoint)}
       />
       <Divider />
       <GuildMemberMenuItem

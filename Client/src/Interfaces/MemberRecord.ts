@@ -6,7 +6,6 @@ export default interface MemberRecord {
   memberId?: string;
   rank?: string;
   rankImage?: string;
-  eventsAttended?: number;
   joinDate: string;
   nickname?: string,
   discordName?: string;

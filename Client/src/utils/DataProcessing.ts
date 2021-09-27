@@ -24,7 +24,6 @@ export const generateGW2RosterRecords = (
     const rank = gw2Member.rank;
     const rankImage = ranks.find((r) => r.id === rank)?.icon;
     const joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
-    const eventsAttended = gw2Member.eventsAttended;
     const warnings = gw2Member.warnings;
 
     // special case for unique account name
@@ -59,7 +58,6 @@ export const generateGW2RosterRecords = (
       rank,
       rankImage,
       joinDate,
-      eventsAttended,
       warnings,
       discordName,
       nickname,

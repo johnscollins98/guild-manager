@@ -19,7 +19,6 @@ const WarningSchema = new Schema<Warning>({
 
 const GuildMemberSchema = new Schema<MemberInfo>({
   memberId: { type: String, required: true },
-  eventsAttended: { type: Number, required: true },
   warnings: [WarningSchema]
 });
 

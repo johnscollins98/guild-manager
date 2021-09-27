@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import RoleEdit from './RoleEdit';
 import { filterDataByString } from '../utils/Helpers';
-import { changeDiscordMember, kickDiscordMember, setGuildMember } from '../utils/DataRetrieval';
+import { changeDiscordMember, kickDiscordMember } from '../utils/DataRetrieval';
 
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
@@ -16,7 +16,6 @@ import AuthInfo from '../Interfaces/AuthInfo';
 import { WarningPost } from '../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
-import { MemberInfoPost } from '../Interfaces/MemberInfo';
 import { useMutation, useQueryClient } from 'react-query';
 import DiscordMember from '../Interfaces/DiscordMember';
 
@@ -63,13 +62,6 @@ const RosterDisplay = ({
             const aName = a.accountName || a.discordName || '';
             const bName = b.accountName || b.discordName || '';
             return aName.toLowerCase().localeCompare(bName.toLowerCase());
-          });
-          break;
-        case 'points':
-          sorted = sorted.sort((a, b) => {
-            const aPoints = a.eventsAttended || -1;
-            const bPoints = b.eventsAttended || -1;
-            return bPoints - aPoints;
           });
           break;
         case 'rank':
@@ -250,63 +242,6 @@ const RosterDisplay = ({
     [openToast, recordState]
   );
 
-  const updateMember = useCallback(
-    async (newMember: MemberInfoPost) => {
-      try {
-        const newObject = await setGuildMember(newMember);
-
-        const recordsCopy = [...recordState];
-        const toEdit = recordsCopy.find((record) => {
-          return record.memberId === newObject.memberId;
-        });
-        if (!toEdit) throw new Error('Cannot find given member');
-
-        toEdit.eventsAttended = newObject.eventsAttended;
-
-        setRecordState(recordsCopy);
-      } catch (err) {
-        console.error(err);
-        openToast('There was an error updating attendance.', 'error');
-      }
-    },
-    [setRecordState, openToast, recordState]
-  );
-
-  const incrementEventAttended = useCallback(
-    async (record: MemberRecord) => {
-      if (record.memberId && record.eventsAttended !== undefined && record.warnings) {
-        const newMember: MemberInfoPost = {
-          eventsAttended: record.eventsAttended + 1,
-          memberId: record.memberId,
-          warnings: record.warnings
-        };
-
-        await updateMember(newMember);
-      } else {
-        throw new Error('Cannot increment points for this member');
-      }
-    },
-    [updateMember]
-  );
-
-  const decrementEventAttended = useCallback(
-    async (record: MemberRecord) => {
-      if (record.memberId && record.eventsAttended !== undefined && record.warnings) {
-        if (record.eventsAttended > 0) {
-          const newMember: MemberInfoPost = {
-            memberId: record.memberId,
-            eventsAttended: record.eventsAttended - 1,
-            warnings: record.warnings
-          };
-          await updateMember(newMember);
-        }
-      } else {
-        throw new Error('Cannot decrement points for this member');
-      }
-    },
-    [updateMember]
-  );
-
   return (
     <>
       <RosterControl
@@ -332,8 +267,6 @@ const RosterDisplay = ({
             onEdit={openEdit}
             onChangeNickname={onEditNickname}
             isAdmin={authInfo.isAdmin}
-            addPoint={incrementEventAttended}
-            removePoint={decrementEventAttended}
           />
         ))}
       </div>

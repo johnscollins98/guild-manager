@@ -6,7 +6,6 @@ import './App.scss';
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
-import PointLog from './PointLog';
 import EventPage from './EventPage';
 import LoginPage from './LoginPage';
 import { fetchAuthInfo } from '../utils/DataRetrieval';
@@ -116,7 +115,6 @@ const App = () => {
                 >
                   <Tab label={TABS.ROSTER} value="roster" />
                   <Tab label={TABS.LOG} value="log" />
-                  <Tab label={TABS.POINT_LOG} value="pointlog" />
                   <Tab label={TABS.EVENTS} value="events" />
                 </Tabs>
                 <TabPanel value="roster">
@@ -124,9 +122,6 @@ const App = () => {
                 </TabPanel>
                 <TabPanel value="log">
                   <Log filterString={filterString} openToast={openToast} />
-                </TabPanel>
-                <TabPanel value="pointlog">
-                  <PointLog filterString={filterString} openToast={openToast} />
                 </TabPanel>
                 <TabPanel value="events">
                   <EventPage filterString={filterString} openToast={openToast} />

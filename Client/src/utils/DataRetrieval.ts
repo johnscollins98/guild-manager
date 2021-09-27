@@ -5,7 +5,6 @@ import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import GW2LogEntry from '../Interfaces/GW2LogEntry';
 import { MemberInfoPost } from '../Interfaces/MemberInfo';
-import PointLogEntry from '../Interfaces/PointLogEntry';
 
 export const fetchDiscordMembers = async (): Promise<DiscordMember[]> => {
   const response = await fetch(`/api/discord/members`);
@@ -136,15 +135,4 @@ export const fetchAuthInfo = async (): Promise<AuthInfo> => {
   }
 
   return JSON.parse(data);
-};
-
-export const fetchPointLog = async (): Promise<PointLogEntry[]> => {
-  const response = await fetch('/api/gw2/pointlog');
-  const data = await response.json();
-
-  if (response.status !== 200) {
-    throw data;
-  }
-
-  return data.reverse();
 };

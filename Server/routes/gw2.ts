@@ -2,10 +2,7 @@ import express, { Request, RequestHandler, Response } from 'express';
 import fetch from 'node-fetch';
 import { config } from '../config';
 import GW2Member from '../interfaces/GW2Member';
-import MemberInfo from '../interfaces/MemberInfo';
-import { isEventLeader } from '../middleware/auth';
 import GuildMember from '../models/guildMember.model';
-import PointLog from '../models/pointLog.model';
 import * as GW2Utils from '../utils/gw2';
 import warningRoute from './warnings';
 
@@ -50,11 +47,10 @@ router.get('/members', async (_req: Request, res: Response) => {
       data.map(async (m) => {
         const record = await GuildMember.findOneOrCreate(
           { memberId: m.name },
-          { memberId: m.name, eventsAttended: 0, warnings: [] }
+          { memberId: m.name, warnings: [] }
         );
         return {
           ...m,
-          eventsAttended: record.eventsAttended,
           warnings: record.warnings
         };
       })
@@ -65,29 +61,6 @@ router.get('/members', async (_req: Request, res: Response) => {
     console.error(err);
     res.status(400).json(`Error: ${err}`);
   }
-});
-
-router.put('/members/:memberId', isEventLeader, async (req: Request, res: Response) => {
-  const { memberId, eventsAttended, warnings }: MemberInfo = req.body;
-
-  const record = await GuildMember.findOneOrCreate(
-    { memberId: req.params.memberId },
-    { memberId, eventsAttended, warnings }
-  );
-
-  const oldAttendance = record.eventsAttended || 0;
-
-  record.eventsAttended = eventsAttended;
-  await record.save();
-
-  await new PointLog({
-    givenBy: req?.user?.username,
-    givenTo: memberId,
-    oldVal: oldAttendance,
-    newVal: eventsAttended
-  }).save();
-
-  res.status(200).json(JSON.stringify(record));
 });
 
 router.get('/ranks', async (_req: Request, res: Response) => {
@@ -112,16 +85,6 @@ router.get('/log', async (_req: Request, res: Response) => {
     } else {
       res.status(status).json(data);
     }
-  } catch (err) {
-    console.error(err);
-    res.status(400).json(`Error: ${err}`);
-  }
-});
-
-router.get('/pointlog', async (_req: Request, res: Response) => {
-  try {
-    const collection = await PointLog.find();
-    res.status(200).json(collection);
   } catch (err) {
     console.error(err);
     res.status(400).json(`Error: ${err}`);

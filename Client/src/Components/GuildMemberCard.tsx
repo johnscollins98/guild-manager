@@ -19,7 +19,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import ErrorIcon from '@material-ui/icons/Error';
-import ExpandLess from '@material-ui/icons/ExpandLess';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import GuildMemberMenu from './GuildMemberMenu';
 
@@ -33,8 +32,6 @@ interface Props {
   onChangeNickname: (member: MemberRecord) => void;
   onGiveWarning: (memberId: string, warning: WarningPost) => Promise<any>;
   onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
-  addPoint: (member: MemberRecord) => Promise<any>;
-  removePoint: (member: MemberRecord) => Promise<any>;
 }
 
 const GuildMemberCard = ({
@@ -46,8 +43,6 @@ const GuildMemberCard = ({
   onGiveWarning,
   onDeleteWarning,
   isAdmin,
-  addPoint,
-  removePoint,
   singleColumn
 }: Props) => {
   const rank = member.rank || member.roles[0]?.name;
@@ -157,11 +152,6 @@ const GuildMemberCard = ({
                   <Avatar className="number warnings">{member.warnings.length}</Avatar>
                 </Tooltip>
               ) : null}
-              {member.eventsAttended !== null && member.eventsAttended !== undefined ? (
-                <Tooltip title="Number of points">
-                  <Avatar className="number points">{member.eventsAttended}</Avatar>
-                </Tooltip>
-              ) : null}
             </div>
           </div>
         </CardContent>
@@ -175,8 +165,6 @@ const GuildMemberCard = ({
           onKick={onKick}
           onEdit={onEdit}
           onChangeNickname={onChangeNickname}
-          addPoint={addPoint}
-          removePoint={removePoint}
           setWarningOpen={setWarningOpen}
           setWarningViewerOpen={setWarningViewerOpen}
         />
