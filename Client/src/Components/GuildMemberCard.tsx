@@ -18,7 +18,6 @@ import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import CalendarToday from '@material-ui/icons/CalendarToday';
-import ErrorIcon from '@material-ui/icons/Error';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import GuildMemberMenu from './GuildMemberMenu';
 
@@ -107,11 +106,6 @@ const GuildMemberCard = ({
               </span>
             </div>
             <div className="icons-container">
-              {member.issues.multipleRoles ? (
-                <Tooltip title="Multiple Discord Roles">
-                  <ErrorIcon className="error" />
-                </Tooltip>
-              ) : null}
               {member.issues.unmatchingRoles ? (
                 <Tooltip
                   title={`Unmatching Roles (${member.rank} / ${

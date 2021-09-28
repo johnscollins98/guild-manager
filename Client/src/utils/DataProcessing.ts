@@ -49,7 +49,6 @@ export const generateGW2RosterRecords = (
     const avatar = discordMember?.avatar;
 
     const missingDiscord = rank !== 'Alt' && !discordName;
-    const multipleRoles = roles.length > 1;
     const unmatchingRoles = !!(discordName && rank !== roles[0]?.name);
 
     return {
@@ -66,7 +65,6 @@ export const generateGW2RosterRecords = (
       avatar,
       issues: {
         missingDiscord,
-        multipleRoles,
         unmatchingRoles
       }
     };
@@ -97,7 +95,6 @@ export const getExcessDiscordRecords = (
         warnings: [],
         issues: {
           missingGW2: !discordMember.roles.find((r) => r.name === 'Guest' || r.name === 'Bots'),
-          multipleRoles: discordMember.roles.length > 1
         }
       };
     })

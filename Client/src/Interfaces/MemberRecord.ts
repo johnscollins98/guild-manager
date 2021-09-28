@@ -16,7 +16,6 @@ export default interface MemberRecord {
   issues: {
     missingGW2?: boolean;
     missingDiscord?: boolean;
-    multipleRoles?: boolean;
     unmatchingRoles?: boolean;
   };
 }
