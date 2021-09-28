@@ -54,7 +54,7 @@ const GuildMemberMenu = ({
       <GuildMemberMenuItem
         Icon={Close}
         label="Kick"
-        disabled={!isAdmin || memberIsAdmin}
+        disabled={!isAdmin || memberIsAdmin || !member.discordId}
         className="error"
         action={() => menuAction(onKick)}
       />
