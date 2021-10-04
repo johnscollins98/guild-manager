@@ -86,7 +86,10 @@ const EventPage = ({ filterString, openToast }: Props) => {
         const res = window.confirm(`Are you sure you want to delete '${eventToDelete.title}'?`);
         if (!res) return;
 
-        const deletedEvent = await EventRepo.deleteById(eventToDelete._id);
+        const deletedEvent = eventToDelete._id === undefined 
+          ? null 
+          : await EventRepo.deleteById(eventToDelete._id);
+
         if (deletedEvent) {
           setLocalEvents(localEvents.filter((event) => event._id !== eventToDelete._id));
           openToast('Successfully deleted event!', 'success');
@@ -104,7 +107,10 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const updateEvent = useCallback(
     async (eventToUpdate: Event) : Promise<Event | undefined> => {
       try {
-        const updatedEvent = await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
+        const updatedEvent = eventToUpdate._id === undefined 
+          ? null 
+          : await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
+          
         if (updatedEvent) {
           const eventsCopy = [...localEvents];
           const index = eventsCopy.findIndex((event) => event._id === updatedEvent._id);
