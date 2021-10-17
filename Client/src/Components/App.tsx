@@ -8,7 +8,7 @@ import Roster from './Roster';
 import Control from './Control';
 import EventPage from './EventPage';
 import LoginPage from './LoginPage';
-import { fetchAuthInfo } from '../utils/DataRetrieval';
+import { fetchAuthInfo, fetchDiscordMembers, fetchDiscordRoles, fetchGW2Log, fetchGW2Members, fetchGW2Ranks } from '../utils/DataRetrieval';
 
 import 'fontsource-roboto';
 import Paper from '@material-ui/core/Paper';
@@ -21,7 +21,8 @@ import Alert, { Color } from '@material-ui/lab/Alert';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { PaletteType } from '@material-ui/core';
 
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
+import EventRepository from '../utils/EventRepository';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -35,6 +36,18 @@ const App = () => {
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    queryClient.prefetchQuery('')
+    queryClient.prefetchQuery('gw2log', fetchGW2Log);
+    queryClient.prefetchQuery('eventsData', EventRepository.getAll);
+    queryClient.prefetchQuery('event-settings', EventRepository.getSettings);
+    queryClient.prefetchQuery('gw2Members', fetchGW2Members);
+    queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
+    queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
+    queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
+  }, []);
 
   const darkTheme = createMuiTheme({
     palette: {
