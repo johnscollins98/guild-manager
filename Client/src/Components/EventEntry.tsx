@@ -26,8 +26,7 @@ const emptyEvent: Event = {
   day: 'Monday',
   startTime: '',
   duration: '',
-  leaderId: '',
-  _id: ''
+  leaderId: ''
 };
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
