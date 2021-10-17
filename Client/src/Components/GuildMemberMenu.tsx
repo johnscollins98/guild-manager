@@ -11,6 +11,7 @@ import List from '@material-ui/icons/List';
 import Search from '@material-ui/icons/Search';
 import Warning from '@material-ui/icons/Warning';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
+import { getAdminRoles } from '../utils/DataRetrieval';
 
 interface Props {
   member: MemberRecord;
@@ -38,7 +39,9 @@ const GuildMemberMenu = ({
   const [memberIsAdmin, setMemberIsAdmin] = useState(true);
 
   useEffect(() => {
-    setMemberIsAdmin(member.rank === 'General' || member.rank === 'Spearmarshal');
+    getAdminRoles().then((adminRoles) => {
+      setMemberIsAdmin(member.roles.some(r => adminRoles.includes(r.id)));
+    });
   }, [member]);
 
   const menuAction = useCallback(

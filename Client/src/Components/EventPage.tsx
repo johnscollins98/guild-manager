@@ -8,7 +8,7 @@ import EventRepo from '../utils/EventRepository';
 import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
 import LoaderPage from './LoaderPage';
-import { fetchDiscordMembers } from '../utils/DataRetrieval';
+import { fetchDiscordMembers, getEventRoles } from '../utils/DataRetrieval';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -34,15 +34,16 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const [possibleLeaders, setPossibleLeaders] = useState<DiscordMember[]>([]);
 
   useEffect(() => {
-    if (!discordQuery.data) return;
-    setPossibleLeaders(
-      discordQuery.data.filter(
-        (member) =>
-          !!member.roles.find(
-            (r) => r.name === 'General' || r.name === 'Spearmarshal' || r.name === 'Commander'
-          ) // hardcoded for now, to be improved.
-      )
-    );
+    const getPossibleLeaders = async () => {
+      if (!discordQuery.data) return;
+      const eventLeaderRoles = await getEventRoles();
+      setPossibleLeaders(
+        discordQuery.data.filter(
+          (member) => !!member.roles.find((r) => eventLeaderRoles.includes(r.id)) // hardcoded for now, to be improved.
+        )
+      );
+    };
+    getPossibleLeaders();
   }, [discordQuery.data]);
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
   );
 
   const updateEvent = useCallback(
-    async (eventToUpdate: Event) : Promise<Event | undefined> => {
+    async (eventToUpdate: Event): Promise<Event | undefined> => {
       try {
         const updatedEvent = await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
         if (updatedEvent) {
@@ -130,7 +131,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
   );
 
   const createEvent = useCallback(
-    async (eventToCreate: Event) : Promise<Event | undefined> => {
+    async (eventToCreate: Event): Promise<Event | undefined> => {
       try {
         const createdEvent = await EventRepo.create(eventToCreate);
         if (createdEvent) {

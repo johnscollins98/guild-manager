@@ -25,4 +25,13 @@ router.get('/authorization', async (req: Request, res: Response) => {
   res.json(JSON.stringify(await getUserAuthInfo(req)));
 });
 
+router.get('/admin_roles', (_req: Request, res: Response) => {
+  res.json(config.adminRoles);
+});
+
+router.get('/event_roles', (_req: Request, res: Response) => {
+  const eventLeaders = config.adminRoles.concat(config.eventRoles);
+  res.json(eventLeaders);
+})
+
 export default router;

@@ -22,6 +22,7 @@ export const config = {
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
   adminRoles: (process.env.ADMIN_ROLES).split(","),
+  eventRoles: (process.env.EVENT_ROLES).split(","),
   sessionSecret: process.env.SESSION_SECRET,
   frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
 }

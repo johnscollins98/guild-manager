@@ -136,3 +136,25 @@ export const fetchAuthInfo = async (): Promise<AuthInfo> => {
 
   return JSON.parse(data);
 };
+
+export const getAdminRoles = async (): Promise<String[]> => {
+  const response = await fetch('/auth/admin_roles');
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return data;
+}
+
+export const getEventRoles = async (): Promise<String[]> => {
+  const response = await fetch('/auth/event_roles');
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return data;
+}
