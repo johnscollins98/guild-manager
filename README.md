@@ -17,7 +17,7 @@ To run this you do need to set up the following env variables:
 | DISCORD_CLIENT_ID          | Client ID for Discord OAuth                              |
 | DISCORD_CLIENT_SECRET      | Client Secret for Discord OAuth                          |
 | DISCORD_AUTH_REDIRECT      | OAuth Redirect URL                                       |
-| ADMIN_ROLE                 | Admin Discord Role                                       |
+| ADMIN_ROLES                | Comma Seperated List of Admin Discord Roles              |
 | REACT_APP_BACKEND_BASE_URL | Backend URL for React to point to                        |
 | SESSION_SECRET             | Secret for Express Session                               |
 

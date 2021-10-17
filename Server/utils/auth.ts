@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 import AuthInfo from '../interfaces/AuthInfo';
-import { config } from '../config'
+import { config } from '../config';
 
 export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> => {
   if (!req.user) {
@@ -12,12 +12,11 @@ export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> =
   }
   const loggedIn = true;
 
-
   const inGuild = !!(
     req.user.guilds && req.user.guilds.some((g) => g.id === config.discordGuildId)
   );
   const roles = await getRoles(req.user.id);
-  const isAdmin = inGuild && roles.includes(config.adminRole);
+  const isAdmin = inGuild && roles.some((role) => config.adminRoles.includes(role));
 
   const username = req.user.username;
   return { loggedIn, isAdmin, username };
