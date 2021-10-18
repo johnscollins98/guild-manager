@@ -1,6 +1,3 @@
 .roster-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  overflow: auto;
+  flex-grow: 1;
 }

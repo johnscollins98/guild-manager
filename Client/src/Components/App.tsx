@@ -47,7 +47,7 @@ const App = () => {
     queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
     queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
     queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
-  }, []);
+  }, [queryClient]);
 
   const darkTheme = createMuiTheme({
     palette: {

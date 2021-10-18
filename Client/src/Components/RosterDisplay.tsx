@@ -17,7 +17,21 @@ import { WarningPost } from '../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
 import { useMutation, useQueryClient } from 'react-query';
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+import Grid from 'react-virtualized/dist/commonjs/Grid';
+import 'react-virtualized/styles.css';
 import DiscordMember from '../Interfaces/DiscordMember';
+
+const COLUMN_MIN_WIDTH = 300;
+const MAX_NUM_COLS = 5;
+const MIN_NUM_COLS = 1;
+const ROW_HEIGHT = 79;
+const numColsHelper = (width: number) => {
+  for (let i = MAX_NUM_COLS; i > 0; i--) {
+    if (width / i > COLUMN_MIN_WIDTH) return i;
+  }
+  return MIN_NUM_COLS;
+};
 
 interface Props {
   records: MemberRecord[];
@@ -44,7 +58,7 @@ const RosterDisplay = ({
   const [selectedRecord, setSelectedRecord] = useState<MemberRecord | null>(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
-  const [singleColumn, setSingleColumn] = useState(false);
+  const [singleColumn, setSingleColumn] = useState(true);
 
   const [sortBy, setSortBy] = useState('rank');
   const [filterBy, setFilterBy] = useState('none');
@@ -173,7 +187,10 @@ const RosterDisplay = ({
 
   const onEditNickname = useCallback(
     async (member: MemberRecord) => {
-      const newNickname = window.prompt('Enter new nickname: ', member.nickname || member.discordName || '');
+      const newNickname = window.prompt(
+        'Enter new nickname: ',
+        member.nickname || member.discordName || ''
+      );
       if (newNickname) {
         try {
           if (!member.discordId) {
@@ -242,6 +259,41 @@ const RosterDisplay = ({
     [openToast, recordState]
   );
 
+  const memberRenderer = useCallback(
+    ({ key, rowIndex, columnIndex, style }, numCols) => {
+      const index = rowIndex * numCols + columnIndex;
+      const member = filteredRecords[index];
+      if (!member) return null;
+
+      return (
+        <div key={key} style={{ ...style, padding: 5 }}>
+          <GuildMemberCard
+            member={member}
+            discordRoles={discordRoles}
+            onKick={onKick}
+            onGiveWarning={onGiveWarning}
+            onDeleteWarning={onDeleteWarning}
+            singleColumn={singleColumn}
+            onEdit={openEdit}
+            onChangeNickname={onEditNickname}
+            isAdmin={authInfo.isAdmin}
+          />
+        </div>
+      );
+    },
+    [
+      singleColumn,
+      discordRoles,
+      authInfo.isAdmin,
+      filteredRecords,
+      onKick,
+      onGiveWarning,
+      onDeleteWarning,
+      openEdit,
+      onEditNickname
+    ]
+  );
+
   return (
     <>
       <RosterControl
@@ -255,20 +307,25 @@ const RosterDisplay = ({
         isFetching={isFetching}
       />
       <div className="roster-container">
-        {filteredRecords.map((record) => (
-          <GuildMemberCard
-            member={record}
-            key={record.memberId || record.discordName}
-            discordRoles={discordRoles}
-            onKick={onKick}
-            onGiveWarning={onGiveWarning}
-            onDeleteWarning={onDeleteWarning}
-            singleColumn={singleColumn}
-            onEdit={openEdit}
-            onChangeNickname={onEditNickname}
-            isAdmin={authInfo.isAdmin}
-          />
-        ))}
+        <AutoSizer>
+          {({ height, width }: { height: number; width: number }) => {
+            const numCols = singleColumn ? 1 : numColsHelper(width);
+            const columnWidth = (width - 5) / numCols;
+            const numRows = Math.ceil(filteredRecords.length / numCols);
+
+            return (
+              <Grid
+                height={height}
+                width={width}
+                columnCount={numCols}
+                columnWidth={columnWidth}
+                rowHeight={ROW_HEIGHT}
+                rowCount={numRows}
+                cellRenderer={(props) => memberRenderer(props, numCols)}
+              />
+            );
+          }}
+        </AutoSizer>
       </div>
       <RoleEdit
         modalShow={modalShow}
