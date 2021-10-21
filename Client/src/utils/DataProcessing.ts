@@ -124,5 +124,5 @@ export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): num
 };
 
 export const getDateString = (date: DateTime): string => {
-  return date.toUTC().toLocal().toFormat("f (ZZZZ)");
+  return date.toLocal().toFormat("f (ZZZZ)");
 };
