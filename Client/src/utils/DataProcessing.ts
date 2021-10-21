@@ -23,7 +23,7 @@ export const generateGW2RosterRecords = (
     const memberId = gw2Member.name;
     const rank = gw2Member.rank;
     const rankImage = ranks.find((r) => r.id === rank)?.icon;
-    const joinDate = gw2Member.joined.split('T')[0].replace(/-/g, '/');
+    const joinDate = new Date(gw2Member.joined);
     const warnings = gw2Member.warnings;
 
     // special case for unique account name
@@ -39,7 +39,11 @@ export const generateGW2RosterRecords = (
         ) // strip any emojis
         .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
 
-      return discordName === testName || discordName.includes(`(${testName})`) || discordName === memberId.toLowerCase();
+      return (
+        discordName === testName ||
+        discordName.includes(`(${testName})`) ||
+        discordName === memberId.toLowerCase()
+      );
     });
 
     const discordName = discordMember?.name;
@@ -84,17 +88,24 @@ export const getExcessDiscordRecords = (
       return !records.some((record) => record.discordName === discordMember.name);
     })
     .map((discordMember) => {
+      const missingGW2 = !discordMember.roles.find((r) => r.name === 'Guest' || r.name === 'Bots');
+      const joinDate = new Date(discordMember.joined);
+
+      const twentyFourHours = 1000 * 60 * 60 * 24;
+      const over24h = missingGW2 && ((Date.now() - joinDate.getTime()) > twentyFourHours);
+
       return {
         accountName: discordMember.name,
         nickname: discordMember.nickname,
-        joinDate: discordMember.joined.split('T')[0].replace(/-/g, '/'),
+        joinDate,
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         avatar: discordMember.avatar,
         warnings: [],
         issues: {
-          missingGW2: !discordMember.roles.find((r) => r.name === 'Guest' || r.name === 'Bots'),
+          missingGW2,
+          over24h
         }
       };
     })
@@ -109,4 +120,14 @@ export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): num
   const bObj = ranks.find((o) => o.id === bRank) || { order: ranks.length };
 
   return aObj.order - bObj.order;
+};
+
+const pad = (num: Number) => {
+  return String(num).padStart(2, '0');
+};
+
+export const getDateString = (date: Date): string => {
+  return `${pad(date.getUTCDate())}/${pad(
+    date.getUTCMonth() + 1
+  )}/${date.getUTCFullYear()} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())} (UTC)`;
 };

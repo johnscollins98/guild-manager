@@ -20,6 +20,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import GuildMemberMenu from './GuildMemberMenu';
+import { getDateString } from '../utils/DataProcessing';
+import { Timer } from '@material-ui/icons';
 
 interface Props {
   member: MemberRecord;
@@ -100,7 +102,7 @@ const GuildMemberCard = ({
                 {member.joinDate ? (
                   <span className="date">
                     <CalendarToday />
-                    <Typography>{member.joinDate}</Typography>
+                    <Typography>{getDateString(member.joinDate)}</Typography>
                   </span>
                 ) : null}
               </span>
@@ -123,6 +125,11 @@ const GuildMemberCard = ({
               {member.issues.missingDiscord ? (
                 <Tooltip title="Discord Account Not Found">
                   <DiscordLogo width="24" height="24" className="error" />
+                </Tooltip>
+              ) : null}
+              {member.issues.over24h ? (
+                <Tooltip title="Been in server over 24h">
+                  <Timer className="error" />
                 </Tooltip>
               ) : null}
               {member.discordName ? (

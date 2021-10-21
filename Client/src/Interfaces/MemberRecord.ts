@@ -6,7 +6,7 @@ export default interface MemberRecord {
   memberId?: string;
   rank?: string;
   rankImage?: string;
-  joinDate: string;
+  joinDate: Date;
   nickname?: string,
   discordName?: string;
   discordId?: string;
@@ -17,5 +17,6 @@ export default interface MemberRecord {
     missingGW2?: boolean;
     missingDiscord?: boolean;
     unmatchingRoles?: boolean;
+    over24h?: boolean;
   };
 }
