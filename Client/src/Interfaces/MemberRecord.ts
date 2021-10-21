@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import DiscordRole from './DiscordRole';
 import Warning from './Warning';
 
@@ -6,7 +7,7 @@ export default interface MemberRecord {
   memberId?: string;
   rank?: string;
   rankImage?: string;
-  joinDate: Date;
+  joinDate: DateTime;
   nickname?: string,
   discordName?: string;
   discordId?: string;
