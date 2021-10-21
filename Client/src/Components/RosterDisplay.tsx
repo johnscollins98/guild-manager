@@ -21,6 +21,7 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
 import DiscordMember from '../Interfaces/DiscordMember';
+import { DateTime } from 'luxon';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;
@@ -87,9 +88,9 @@ const RosterDisplay = ({
           break;
         case 'date':
           sorted = sorted.sort((a, b) => {
-            const aDate = a.joinDate || '1970-01-01T00:00:00.000Z';
-            const bDate = b.joinDate || '1970-01-01T00:00:00.000Z';
-            return new Date(aDate).valueOf() - new Date(bDate).valueOf();
+            const aDate = a.joinDate || DateTime.utc(1970, 1, 1, 0, 0, 0);
+            const bDate = b.joinDate || DateTime.utc(1970, 1, 1, 0, 0, 0);
+            return aDate.toMillis() - bDate.toMillis();
           });
           break;
         case 'warnings':

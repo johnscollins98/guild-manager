@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import DiscordMember from '../Interfaces/DiscordMember';
 import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
@@ -11,9 +12,9 @@ export const generateGW2RosterRecords = (
   const sortedGW2Members = gw2Members.sort((a, b) => {
     let value = compareRank(ranks, a.rank, b.rank);
     if (value === 0) {
-      const bDate = new Date(b.joined);
-      const aDate = new Date(a.joined);
-      value = aDate.valueOf() - bDate.valueOf();
+      const bDate = DateTime.fromISO(b.joined, { zone: 'utc' });
+      const aDate = DateTime.fromISO(a.joined, { zone: 'utc' });
+      value = aDate.toMillis() - bDate.toMillis();
     }
     return value;
   });
@@ -23,7 +24,7 @@ export const generateGW2RosterRecords = (
     const memberId = gw2Member.name;
     const rank = gw2Member.rank;
     const rankImage = ranks.find((r) => r.id === rank)?.icon;
-    const joinDate = new Date(gw2Member.joined);
+    const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
     const warnings = gw2Member.warnings;
 
     // special case for unique account name
@@ -89,10 +90,10 @@ export const getExcessDiscordRecords = (
     })
     .map((discordMember) => {
       const missingGW2 = !discordMember.roles.find((r) => r.name === 'Guest' || r.name === 'Bots');
-      const joinDate = new Date(discordMember.joined);
+      const joinDate = DateTime.fromISO(discordMember.joined, { zone: 'utc' });
 
       const twentyFourHours = 1000 * 60 * 60 * 24;
-      const over24h = missingGW2 && ((Date.now() - joinDate.getTime()) > twentyFourHours);
+      const over24h = missingGW2 && ((DateTime.now().toMillis() - joinDate.toMillis()) > twentyFourHours);
 
       return {
         accountName: discordMember.name,
@@ -122,12 +123,6 @@ export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): num
   return aObj.order - bObj.order;
 };
 
-const pad = (num: Number) => {
-  return String(num).padStart(2, '0');
-};
-
-export const getDateString = (date: Date): string => {
-  return `${pad(date.getUTCDate())}/${pad(
-    date.getUTCMonth() + 1
-  )}/${date.getUTCFullYear()} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())} (UTC)`;
+export const getDateString = (date: DateTime): string => {
+  return date.toUTC().toLocal().toFormat("f (ZZZZ)");
 };
