@@ -88,9 +88,7 @@ const RosterDisplay = ({
           break;
         case 'date':
           sorted = sorted.sort((a, b) => {
-            const aDate = a.joinDate || DateTime.utc(1970, 1, 1, 0, 0, 0);
-            const bDate = b.joinDate || DateTime.utc(1970, 1, 1, 0, 0, 0);
-            return aDate.toMillis() - bDate.toMillis();
+            return a.joinDate.diff(b.joinDate).toMillis();
           });
           break;
         case 'warnings':

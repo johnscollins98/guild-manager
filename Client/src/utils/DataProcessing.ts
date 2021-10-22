@@ -9,71 +9,70 @@ export const generateGW2RosterRecords = (
   discordMembers: DiscordMember[],
   ranks: GW2Rank[]
 ): MemberRecord[] => {
-  const sortedGW2Members = gw2Members.sort((a, b) => {
-    let value = compareRank(ranks, a.rank, b.rank);
-    if (value === 0) {
-      const bDate = DateTime.fromISO(b.joined, { zone: 'utc' });
-      const aDate = DateTime.fromISO(a.joined, { zone: 'utc' });
-      value = aDate.toMillis() - bDate.toMillis();
-    }
-    return value;
-  });
+  const records: MemberRecord[] = gw2Members
+    .map((gw2Member) => {
+      const accountName = gw2Member.name.split('.')[0];
+      const memberId = gw2Member.name;
+      const rank = gw2Member.rank;
+      const rankImage = ranks.find((r) => r.id === rank)?.icon;
+      const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
+      const warnings = gw2Member.warnings;
 
-  const records: MemberRecord[] = sortedGW2Members.map((gw2Member) => {
-    const accountName = gw2Member.name.split('.')[0];
-    const memberId = gw2Member.name;
-    const rank = gw2Member.rank;
-    const rankImage = ranks.find((r) => r.id === rank)?.icon;
-    const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
-    const warnings = gw2Member.warnings;
+      // special case for unique account name
+      const testName = accountName.toLowerCase();
 
-    // special case for unique account name
-    const testName = accountName.toLowerCase();
+      // check for exact match
+      let discordMember = discordMembers.find((m) => {
+        const discordName = m.name
+          .toLowerCase()
+          .replace(
+            /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+            ''
+          ) // strip any emojis
+          .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
 
-    // check for exact match
-    let discordMember = discordMembers.find((m) => {
-      const discordName = m.name
-        .toLowerCase()
-        .replace(
-          /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-          ''
-        ) // strip any emojis
-        .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
+        return (
+          discordName === testName ||
+          discordName.includes(`(${testName})`) ||
+          discordName === memberId.toLowerCase()
+        );
+      });
 
-      return (
-        discordName === testName ||
-        discordName.includes(`(${testName})`) ||
-        discordName === memberId.toLowerCase()
-      );
-    });
+      const discordName = discordMember?.name;
+      const nickname = discordMember?.nickname;
+      const discordId = discordMember?.id;
+      const roles = discordMember?.roles || [];
+      const avatar = discordMember?.avatar;
 
-    const discordName = discordMember?.name;
-    const nickname = discordMember?.nickname;
-    const discordId = discordMember?.id;
-    const roles = discordMember?.roles || [];
-    const avatar = discordMember?.avatar;
+      const missingDiscord = rank !== 'Alt' && !discordName;
+      const unmatchingRoles = !!(discordName && rank !== roles[0]?.name);
 
-    const missingDiscord = rank !== 'Alt' && !discordName;
-    const unmatchingRoles = !!(discordName && rank !== roles[0]?.name);
-
-    return {
-      accountName,
-      memberId,
-      rank,
-      rankImage,
-      joinDate,
-      warnings,
-      discordName,
-      nickname,
-      discordId,
-      roles,
-      avatar,
-      issues: {
-        missingDiscord,
-        unmatchingRoles
+      return {
+        accountName,
+        memberId,
+        rank,
+        rankImage,
+        joinDate,
+        warnings,
+        discordName,
+        nickname,
+        discordId,
+        roles,
+        avatar,
+        issues: {
+          missingDiscord,
+          unmatchingRoles
+        }
+      };
+    })
+    .sort((a: MemberRecord, b: MemberRecord) => {
+      let value = 0;
+      if (a.rank && b.rank) value = compareRank(ranks, a.rank, b.rank);
+      if (value === 0) {
+        value = a.joinDate.diff(b.joinDate).toMillis();
       }
-    };
-  });
+      return value;
+    });
 
   return records;
 };
@@ -93,7 +92,7 @@ export const getExcessDiscordRecords = (
       const joinDate = DateTime.fromISO(discordMember.joined, { zone: 'utc' });
 
       const twentyFourHours = 1000 * 60 * 60 * 24;
-      const over24h = missingGW2 && ((DateTime.now().toMillis() - joinDate.toMillis()) > twentyFourHours);
+      const over24h = missingGW2 && DateTime.now().diff(joinDate).toMillis() > twentyFourHours;
 
       return {
         accountName: discordMember.name,
@@ -124,5 +123,5 @@ export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): num
 };
 
 export const getDateString = (date: DateTime): string => {
-  return date.toLocal().toFormat("f (ZZZZ)");
+  return date.toLocal().toFormat('yyyy/LL/dd, HH:mm (ZZZZ)');
 };
