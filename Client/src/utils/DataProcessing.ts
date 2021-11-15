@@ -45,7 +45,7 @@ export const generateGW2RosterRecords = (
       const avatar = discordMember?.avatar;
 
       const missingDiscord = rank !== 'Alt' && !discordName;
-      const unmatchingRoles = !!(discordName && rank !== roles[0]?.name);
+      const unmatchingRoles = rank !== 'Alt' && !!(discordName && rank !== roles[0]?.name);
 
       return {
         accountName,
