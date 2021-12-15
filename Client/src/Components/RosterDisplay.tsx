@@ -21,7 +21,6 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
 import DiscordMember from '../Interfaces/DiscordMember';
-import { DateTime } from 'luxon';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;
@@ -42,6 +41,10 @@ interface Props {
   isFetching: boolean;
   refetchData: () => void;
   openToast: (msg: string, status: Color) => void;
+  sortBy: string;
+  setSortBy: (setSortBy: string) => void;
+  filterBy: string;
+  setFilterBy: (setFilterBy: string) => void;
   authInfo?: AuthInfo;
 }
 
@@ -53,6 +56,10 @@ const RosterDisplay = ({
   openToast,
   isFetching,
   refetchData,
+  sortBy,
+  setSortBy,
+  filterBy,
+  setFilterBy,
   authInfo = { isAdmin: false, loggedIn: true, username: '' }
 }: Props) => {
   const [modalShow, setModalShow] = useState(false);
@@ -61,8 +68,7 @@ const RosterDisplay = ({
   const [filteredRecords, setFilteredRecords] = useState(recordState);
   const [singleColumn, setSingleColumn] = useState(true);
 
-  const [sortBy, setSortBy] = useState('rank');
-  const [filterBy, setFilterBy] = useState('none');
+  
 
   useEffect(() => {
     setRecordState(records);

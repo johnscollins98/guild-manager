@@ -24,9 +24,13 @@ interface CustomError {
 interface Props {
   filterString: string;
   openToast: (msg: string, status: Color) => void;
+  sortBy: string;
+  setSortBy: (sortBy: string) => void;
+  filterBy: string;
+  setFilterBy: (filterBy: string) => void;
 }
 
-const Roster = ({ filterString, openToast }: Props) => {
+const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilterBy }: Props) => {
   const gw2Members = useQuery('gw2Members', () => fetchGW2Members());
   const discordMembers = useQuery('discordMembers', () => fetchDiscordMembers());
   const guildRanks = useQuery('guildRanks', () => fetchGW2Ranks());
@@ -125,6 +129,10 @@ const Roster = ({ filterString, openToast }: Props) => {
       refetchData={refetchData}
       isFetching={isFetching}
       openToast={openToast}
+      sortBy={sortBy}
+      setSortBy={setSortBy}
+      filterBy={filterBy}
+      setFilterBy={setFilterBy}
     />
   );
 };

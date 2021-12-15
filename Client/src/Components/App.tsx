@@ -28,6 +28,9 @@ const App = () => {
   const [filterString, setFilterString] = useState('');
   const [tab, setTab] = useState('roster');
 
+  const [sortBy, setSortBy] = useState('rank');
+  const [filterBy, setFilterBy] = useState('none');
+
   const [showToast, setShowToast] = useState(false);
   const [toastStatus, setToastStatus] = useState<Color>('info');
   const [toastMessage, setToastMessage] = useState('');
@@ -129,7 +132,14 @@ const App = () => {
                   <Tab label={TABS.EVENTS} value="events" />
                 </Tabs>
                 <TabPanel value="roster">
-                  <Roster filterString={filterString} openToast={openToast} />
+                  <Roster 
+                    filterString={filterString} 
+                    openToast={openToast} 
+                    sortBy={sortBy} 
+                    setSortBy={setSortBy}
+                    filterBy={filterBy} 
+                    setFilterBy={setFilterBy}
+                  />
                 </TabPanel>
                 <TabPanel value="log">
                   <Log filterString={filterString} openToast={openToast} />
