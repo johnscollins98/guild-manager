@@ -108,7 +108,12 @@ router.delete('/members/:id', isAdmin, async (req: Request, res: Response) => {
     ...reqParams,
     method: 'DELETE'
   });
-  res.status(response.status).json(req.params.id);
+
+  if (response.ok) {
+    res.status(response.status).json(req.params.id);
+  } else {
+    res.status(response.status).json(await response.json());
+  }
 });
 
 router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
