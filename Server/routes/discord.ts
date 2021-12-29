@@ -58,6 +58,7 @@ router.get('/members', async (_req: Request, res: Response) => {
 
     // format and return
     const data = await DiscordUtils.formatMembers(membersData, rolesData);
+    res.setHeader("Expires", new Date(Date.now() + (30 * 1000)).toISOString());
     res.status(200).json(data);
   } catch (err) {
     console.error(err);
