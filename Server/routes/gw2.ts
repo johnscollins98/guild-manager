@@ -56,7 +56,6 @@ router.get('/members', async (_req: Request, res: Response) => {
       })
     );
 
-    res.setHeader("Expires", new Date(Date.now() + (30 * 1000)).toISOString());
     res.status(response.status).json(transformed);
   } catch (err) {
     console.error(err);

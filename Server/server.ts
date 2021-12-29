@@ -10,6 +10,7 @@ import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
 import { config } from './config';
+import { setCache } from './middleware/setCache';
 
 const app = express();
 app.use(cors());
@@ -42,6 +43,7 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully.');
 });
 
+app.use(setCache);
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);

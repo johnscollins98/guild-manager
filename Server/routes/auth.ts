@@ -22,6 +22,7 @@ router.get('/logout', (req: Request, res: Response) => {
 });
 
 router.get('/authorization', async (req: Request, res: Response) => {
+  res.set('Cache-control', 'no-store');
   res.json(JSON.stringify(await getUserAuthInfo(req)));
 });
 
