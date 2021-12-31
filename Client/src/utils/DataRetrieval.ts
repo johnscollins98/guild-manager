@@ -5,6 +5,7 @@ import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import GW2LogEntry from '../Interfaces/GW2LogEntry';
 import { MemberInfoPost } from '../Interfaces/MemberInfo';
+import { DiscordLog } from '../Interfaces/DiscordLog';
 
 export const fetchDiscordMembers = async (): Promise<DiscordMember[]> => {
   const response = await fetch(`/api/discord/members`);
@@ -27,6 +28,17 @@ export const fetchDiscordRoles = async (): Promise<DiscordRole[]> => {
 
   return data;
 };
+
+export const fetchDiscordLog = async (): Promise<DiscordLog> => {
+  const response = await fetch(`api/discord/log`);
+  const data = await response.json();
+
+  if (response.status !== 200) {
+    throw data;
+  }
+
+  return data;
+}
 
 export const addDiscordRole = async (memberId: string, roleId: string): Promise<boolean> => {
   const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
