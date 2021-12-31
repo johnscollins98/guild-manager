@@ -1,14 +1,14 @@
 import { DiscordActionType } from '../Interfaces/DiscordActionType';
 import { DiscordLog } from '../Interfaces/DiscordLog';
-import { DiscordLogStringGenerator } from '../Interfaces/DiscordLogStringGenerator';
+import { DiscordLogDisplayGenerator } from '../Interfaces/DiscordLogStringGenerator';
 import { MemberKicked } from './DiscordLogStringGenerators/MemberKicked';
 import { MemberRoleUpdate } from './DiscordLogStringGenerators/MemberRoleUpdate';
 import { MemberUpdate } from './DiscordLogStringGenerators/MemberUpdate';
 
-export class DiscordLogStringFactory {
+export class DiscordLogDisplayFactory {
   constructor(private readonly log: DiscordLog) {}
 
-  getDiscordLogStringGenerator(id: string): DiscordLogStringGenerator | null {
+  getDiscordLogStringGenerator(id: string): DiscordLogDisplayGenerator | null {
     const logEntry = this.log.audit_log_entries.find((entry) => entry.id === id);
 
     if (!logEntry) {

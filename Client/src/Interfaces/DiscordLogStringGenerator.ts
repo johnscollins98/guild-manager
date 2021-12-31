@@ -1,3 +1,8 @@
-export interface DiscordLogStringGenerator {
-  getEntry() : string;
+export interface DiscordLogDisplay {
+  summary: string;
+  details?: string[];
+}
+
+export interface DiscordLogDisplayGenerator {
+  getEntry() : DiscordLogDisplay;
 }

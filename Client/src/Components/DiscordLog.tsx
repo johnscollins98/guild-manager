@@ -3,12 +3,12 @@ import { Color } from '@material-ui/lab/Alert';
 import { useQuery } from 'react-query';
 import { fetchDiscordLog } from '../utils/DataRetrieval';
 import LoaderPage from './LoaderPage';
-import { DiscordLogStringFactory as DiscordLogEntryFactory } from '../utils/DiscordLogStringFactory';
+import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../utils/DiscordLogStringFactory';
 
 import './DiscordLog.scss';
-import LogEntry from './LogEntry';
-import GW2LogEntry from '../Interfaces/GW2LogEntry';
 import { snowflakeToDate } from '../utils/Helpers';
+import { DiscordLogDisplay, DiscordLogDisplayGenerator } from '../Interfaces/DiscordLogStringGenerator';
+import DiscordLogEntry from './DiscordLogEntry';
 
 interface Props {
   filterString: string;
@@ -17,7 +17,7 @@ interface Props {
 
 const DiscordLog = ({ filterString, openToast }: Props) => {
   const { isLoading, data, error } = useQuery('discordLog', fetchDiscordLog);
-  const [logData, setLogData] = useState<GW2LogEntry[]>([]);
+  const [logData, setLogData] = useState<{ discordDisplay: DiscordLogDisplay, date: Date}[]>([]);
 
   useEffect(() => {
     if (error) {
@@ -33,11 +33,10 @@ const DiscordLog = ({ filterString, openToast }: Props) => {
       .filter((entry) => !!factory.getDiscordLogStringGenerator(entry.id))
       .map((entry) => {
         const date = snowflakeToDate(entry.id);
-        const generator = factory.getDiscordLogStringGenerator(entry.id);
+        const generator = factory.getDiscordLogStringGenerator(entry.id) as DiscordLogDisplayGenerator;
         return {
-          date: date.toLocaleDateString(),
-          time: date.toLocaleTimeString(),
-          message: generator?.getEntry() || "not found"
+          date: date,
+          discordDisplay: generator.getEntry()
         }
       });
 
@@ -51,7 +50,7 @@ const DiscordLog = ({ filterString, openToast }: Props) => {
   return (
     <div className="log-container">
       {logData.map((entry) => {
-        return <LogEntry entryData={entry} key={`${entry.date}${entry.time}${entry.message}`} />;
+        return <DiscordLogEntry displayEntry={entry.discordDisplay} date={entry.date}  />;
       })}
     </div>
   );

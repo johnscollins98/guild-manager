@@ -1,0 +1,17 @@
+.discord-log-summary {
+  .MuiAccordionSummary-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    div {
+      margin: 8px;
+      display: flex;
+      flex-direction: row;
+
+      svg {
+        margin-right: 4px;
+      }
+    }
+  }
+}
