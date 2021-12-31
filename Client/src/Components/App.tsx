@@ -8,7 +8,15 @@ import Roster from './Roster';
 import Control from './Control';
 import EventPage from './EventPage';
 import LoginPage from './LoginPage';
-import { fetchAuthInfo, fetchDiscordMembers, fetchDiscordRoles, fetchGW2Log, fetchGW2Members, fetchGW2Ranks } from '../utils/DataRetrieval';
+import {
+  fetchAuthInfo,
+  fetchDiscordLog,
+  fetchDiscordMembers,
+  fetchDiscordRoles,
+  fetchGW2Log,
+  fetchGW2Members,
+  fetchGW2Ranks
+} from '../utils/DataRetrieval';
 
 import 'fontsource-roboto';
 import Paper from '@material-ui/core/Paper';
@@ -23,6 +31,7 @@ import { PaletteType } from '@material-ui/core';
 
 import { useQuery, useQueryClient } from 'react-query';
 import EventRepository from '../utils/EventRepository';
+import DiscordLog from './DiscordLog';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -42,7 +51,7 @@ const App = () => {
 
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.prefetchQuery('')
+    queryClient.prefetchQuery('');
     queryClient.prefetchQuery('gw2log', fetchGW2Log);
     queryClient.prefetchQuery('eventsData', EventRepository.getAll);
     queryClient.prefetchQuery('event-settings', EventRepository.getSettings);
@@ -50,6 +59,7 @@ const App = () => {
     queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
     queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
     queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
+    queryClient.prefetchQuery('discordLog', fetchDiscordLog);
   }, [queryClient]);
 
   const darkTheme = createMuiTheme({
@@ -101,6 +111,7 @@ const App = () => {
   const TABS = {
     ROSTER: 'Roster',
     LOG: 'Log',
+    DISCORD_LOG: 'Discord Log',
     EVENTS: 'Events'
   };
 
@@ -129,20 +140,24 @@ const App = () => {
                 >
                   <Tab label={TABS.ROSTER} value="roster" />
                   <Tab label={TABS.LOG} value="log" />
+                  <Tab label={TABS.DISCORD_LOG} value="discord-log" />
                   <Tab label={TABS.EVENTS} value="events" />
                 </Tabs>
                 <TabPanel value="roster">
-                  <Roster 
-                    filterString={filterString} 
-                    openToast={openToast} 
-                    sortBy={sortBy} 
+                  <Roster
+                    filterString={filterString}
+                    openToast={openToast}
+                    sortBy={sortBy}
                     setSortBy={setSortBy}
-                    filterBy={filterBy} 
+                    filterBy={filterBy}
                     setFilterBy={setFilterBy}
                   />
                 </TabPanel>
                 <TabPanel value="log">
                   <Log filterString={filterString} openToast={openToast} />
+                </TabPanel>
+                <TabPanel value="discord-log">
+                  <DiscordLog filterString={filterString} openToast={openToast} />
                 </TabPanel>
                 <TabPanel value="events">
                   <EventPage filterString={filterString} openToast={openToast} />
