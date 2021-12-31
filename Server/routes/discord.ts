@@ -201,7 +201,7 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
 
 router.get('/log', isAdmin, async (_req: Request, res: Response) => {
   try {
-    const response = await fetch(`${baseUrl}/audit-logs`, reqParams);
+    const response = await fetch(`${baseUrl}/audit-logs?limit=100`, reqParams);
     const data = await response.json();
     
     res.status(response.status).json(data);
