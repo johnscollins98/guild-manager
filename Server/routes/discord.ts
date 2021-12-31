@@ -199,4 +199,15 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
   }
 });
 
+router.get('/log', isAdmin, async (_req: Request, res: Response) => {
+  try {
+    const response = await fetch(`${baseUrl}/audit-logs`, reqParams);
+    const data = await response.json();
+    
+    res.status(response.status).json(data);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 export default router;
