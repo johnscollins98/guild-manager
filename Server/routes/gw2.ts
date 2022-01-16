@@ -56,6 +56,7 @@ router.get('/members', async (_req: Request, res: Response) => {
       })
     );
 
+    res.set('Cache-control', `public, max-age=0`);
     res.status(response.status).json(transformed);
   } catch (err) {
     console.error(err);

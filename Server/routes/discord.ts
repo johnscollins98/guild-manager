@@ -58,6 +58,7 @@ router.get('/members', async (_req: Request, res: Response) => {
 
     // format and return
     const data = await DiscordUtils.formatMembers(membersData, rolesData);
+    res.set('Cache-control', `public, max-age=0`);
     res.status(200).json(data);
   } catch (err) {
     console.error(err);
