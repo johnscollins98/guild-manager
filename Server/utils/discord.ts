@@ -83,3 +83,15 @@ export const createEmbed = (day: string, events: IEvent[]): DiscordEmbed => {
     })
   };
 };
+
+export const getGuildMember = async (userId: string): Promise<DiscordMember | null> => {
+  const url = `http://discord.com/api/guilds/${config.discordGuildId}/members/${userId}`;
+  const params = { headers: { Authorization: `Bot ${config.botToken}` } };
+  const res = await fetch(url, params);
+  
+  if (res.ok) {
+    return await res.json();
+  } else {
+    return null;
+  }
+};

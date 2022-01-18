@@ -21,7 +21,7 @@ app.use(
   session({
     secret: config.sessionSecret,
     cookie: {
-      maxAge: 60000 * 60 * 24
+      maxAge: 60000 * 60 * 24 * 30
     },
     resave: true,
     saveUninitialized: false,
