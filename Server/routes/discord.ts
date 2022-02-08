@@ -156,6 +156,7 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
     ];
     for (const day of daysOfWeek) {
       const events = await Event.find({ day }).exec();
+      if (events.length === 0 && req.body.editMessages) continue;
 
       const parseTime = (str: string) => {
         return Date.parse(`1970/01/01 ${str}`);
