@@ -15,6 +15,7 @@ import LoaderPage from './LoaderPage';
 
 import MemberRecord from '../Interfaces/MemberRecord';
 import { Color } from '@material-ui/lab/Alert';
+import WarningRepository from '../utils/WarningRepository';
 
 interface CustomError {
   data: string;
@@ -35,6 +36,7 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
   const discordMembers = useQuery('discordMembers', () => fetchDiscordMembers());
   const guildRanks = useQuery('guildRanks', () => fetchGW2Ranks());
   const discordRoles = useQuery('discordRoles', () => fetchDiscordRoles());
+  const warningInfo = useQuery('warnings', WarningRepository.getWarnings);
   const authInfo = useQuery('authInfo', () => fetchAuthInfo());
 
   const [records, setRecords] = useState<MemberRecord[]>([]);
@@ -48,7 +50,8 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
     guildRanks.refetch();
     discordRoles.refetch();
     authInfo.refetch();
-  }, [gw2Members, discordMembers, guildRanks, discordRoles, authInfo]);
+    warningInfo.refetch();
+  }, [gw2Members, discordMembers, guildRanks, discordRoles, authInfo, warningInfo]);
 
   useEffect(() => {
     setIsFetching(
@@ -56,14 +59,16 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
       discordMembers.isFetching ||
       guildRanks.isFetching ||
       discordRoles.isFetching ||
-      authInfo.isFetching
+      authInfo.isFetching || 
+      warningInfo.isFetching
     )
   }, [
     gw2Members.isFetching,
     discordMembers.isFetching,
     guildRanks.isFetching,
     discordRoles.isFetching,
-    authInfo.isFetching
+    authInfo.isFetching,
+    warningInfo.isFetching
   ]);
 
   useEffect(() => {
@@ -72,6 +77,7 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
       if (discordMembers.error) return { data: 'discord member', error: discordMembers.error };
       if (guildRanks.error) return { data: 'guild rank', error: guildRanks.error };
       if (authInfo.error) return { data: 'authorisation', error: authInfo.error };
+      if (warningInfo.error) return { data: 'warning', error: warningInfo.error };
       return null;
     };
     setError(getError());
@@ -80,7 +86,8 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
     discordMembers.error,
     discordRoles.error,
     guildRanks.error,
-    authInfo.error
+    authInfo.error,
+    warningInfo.error
   ]);
 
   useEffect(() => {
@@ -89,6 +96,7 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
       if (discordMembers.isLoading) return true;
       if (discordRoles.isLoading) return true;
       if (guildRanks.isLoading) return true;
+      if (warningInfo.isLoading) return true;
       return false;
     };
     setIsLoading(getIsLoading());
@@ -96,7 +104,8 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
     gw2Members.isLoading,
     discordMembers.isLoading,
     discordRoles.isLoading,
-    guildRanks.isLoading
+    guildRanks.isLoading,
+    warningInfo.isLoading
   ]);
 
   useEffect(() => {
@@ -104,14 +113,14 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
     if (error && error.data !== 'authorization') return;
 
     setRecords([]);
-    if (gw2Members.data && discordMembers.data && guildRanks.data) {
+    if (gw2Members.data && discordMembers.data && guildRanks.data && warningInfo.data) {
       setRecords(
-        generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data).concat(
-          getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data)
+        generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data, warningInfo.data).concat(
+          getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data, warningInfo.data)
         )
       );
     }
-  }, [isLoading, gw2Members.data, discordMembers.data, guildRanks.data, error]);
+  }, [isLoading, gw2Members.data, discordMembers.data, guildRanks.data, warningInfo.data, error]);
 
   if (error) {
     openToast(`There was an error getting ${error.data} data`, 'error');

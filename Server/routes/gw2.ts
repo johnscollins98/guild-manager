@@ -1,10 +1,8 @@
-import express, { Request, RequestHandler, Response } from 'express';
+import express, { Request, Response } from 'express';
 import fetch from 'node-fetch';
 import { config } from '../config';
 import GW2Member from '../interfaces/GW2Member';
-import GuildMember from '../models/guildMember.model';
 import * as GW2Utils from '../utils/gw2';
-import warningRoute from './warnings';
 
 const router = express.Router();
 
@@ -15,27 +13,6 @@ const reqParams = {
   }
 };
 
-const gatherMember: RequestHandler = async (req, res, next) => {
-  try {
-    const memberId = req.params.member_id;
-    const member = await GuildMember.findOneOrCreate(
-      { memberId }, 
-      { memberId, warnings: [] }
-    );
-    if (member) {
-      req.member = member;
-      return next();
-    } else {
-      return res.status(404).json('Not found');
-    }
-  } catch (err) {
-    console.error(err);
-    return res.status(400).json(`Error: ${err}`);
-  }
-};
-
-router.use('/members/:member_id/warnings/', gatherMember, warningRoute);
-
 router.get('/members', async (_req: Request, res: Response) => {
   try {
     const response = await fetch(`${baseUrl}/members`, reqParams);
@@ -45,18 +22,8 @@ router.get('/members', async (_req: Request, res: Response) => {
     const uniqueCase = data.find((m) => m.name === 'DD035413-353B-42A1-BAD4-EB58438860CE');
     if (uniqueCase) uniqueCase.name = 'Berry';
 
-    const transformed = await Promise.all(
-      data.map(async (m) => {
-        const record = await GuildMember.findOne({ memberId: m.name });
-        return {
-          ...m,
-          warnings: record?.warnings || []
-        };
-      })
-    );
-
     res.set('Cache-control', `public, max-age=0`);
-    res.status(response.status).json(transformed);
+    res.status(response.status).json(data);
   } catch (err) {
     console.error(err);
     res.status(400).json(`Error: ${err}`);

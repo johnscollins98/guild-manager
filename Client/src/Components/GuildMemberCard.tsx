@@ -31,8 +31,8 @@ interface Props {
   onKick: (member: MemberRecord) => Promise<any>;
   onEdit: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
-  onGiveWarning: (memberId: string, warning: WarningPost) => Promise<any>;
-  onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
+  onGiveWarning: (warning: WarningPost) => Promise<any>;
+  onDeleteWarning: (warningId: string) => Promise<any>;
 }
 
 const GuildMemberCard = ({
@@ -65,11 +65,11 @@ const GuildMemberCard = ({
   }, [setMenuAnchor]);
 
   const warningSubmitHandler = useCallback(
-    async (warningObject: WarningPost) => {
+    async (reason: string) => {
       if (!member.memberId) {
         throw new Error('test');
       }
-      await onGiveWarning(member.memberId, warningObject);
+      await onGiveWarning({ givenTo: member.memberId, reason });
     },
     [onGiveWarning, member]
   );

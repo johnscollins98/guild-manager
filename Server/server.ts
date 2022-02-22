@@ -9,6 +9,7 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
+import warningsRoute from './routes/warnings';
 import { config } from './config';
 import { setCache } from './middleware/setCache';
 
@@ -47,6 +48,7 @@ app.use(setCache);
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
+app.use('/api/warnings', warningsRoute);
 app.use('/auth', authRoute);
 
 const dirs = [__dirname];

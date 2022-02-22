@@ -223,16 +223,16 @@ const RosterDisplay = ({
   );
 
   const onGiveWarning = useCallback(
-    async (memberId: string, warningObject: WarningPost) => {
+    async (warningObject: WarningPost) => {
       try {
-        const newMember = await WarningRepository.addWarning(memberId, warningObject);
+        const newWarning = await WarningRepository.addWarning(warningObject);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
-          return record.memberId === newMember.memberId;
+          return record.memberId === newWarning.givenTo;
         });
         if (!toEdit) throw new Error('Cannot find given member');
 
-        toEdit.warnings = newMember.warnings;
+        toEdit.warnings = [...toEdit.warnings, newWarning];
         setRecordState(recordsCopy);
         openToast('Successfully gave warning', 'success');
       } catch (err) {
@@ -244,16 +244,16 @@ const RosterDisplay = ({
   );
 
   const onDeleteWarning = useCallback(
-    async (memberId: string, warningId: string) => {
+    async (warningId: string) => {
       try {
-        const newMember = await WarningRepository.deleteWarning(memberId, warningId);
+        const newWarning = await WarningRepository.deleteWarning(warningId);
         const recordsCopy = [...recordState];
         const toEdit = recordsCopy.find((record) => {
-          return record.memberId === newMember.memberId;
+          return record.memberId === newWarning.givenTo;
         });
         if (!toEdit) throw new Error('Cannot find given member');
 
-        toEdit.warnings = newMember.warnings;
+        toEdit.warnings = toEdit.warnings.filter(w => w._id !== newWarning._id);
         setRecordState(recordsCopy);
         openToast('Successfully removed warning', 'success');
       } catch (err) {

@@ -2,8 +2,6 @@ import React, { useState, useCallback } from 'react';
 
 import './WarningForm.scss';
 
-import { WarningPost } from '../Interfaces/Warning';
-
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -13,7 +11,7 @@ import Button from '@material-ui/core/Button';
 interface Props {
   isOpen: boolean;
   onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
-  onSubmit: (warning: WarningPost) => Promise<any>;
+  onSubmit: (reason: string) => Promise<any>;
 }
 
 const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
@@ -22,7 +20,7 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
   const submitHandler: React.FormEventHandler = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      await onSubmit({ reason: warningReason });
+      await onSubmit(warningReason);
       setWarningReason('');
       onClose();
     },

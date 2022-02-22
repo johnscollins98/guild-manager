@@ -1,10 +1,9 @@
 import fetch from 'node-fetch';
-import MemberInfo from '../Interfaces/MemberInfo';
 import Warning, { WarningPost } from '../Interfaces/Warning';
 
 const WarningRepository = {
-  getWarnings: async (memberId: string): Promise<Warning[]> => {
-    const url = `/api/gw2/members/${memberId}/warnings`;
+  getWarningsForMember: async (memberId: string): Promise<Warning[]> => {
+    const url = `/api/warnings/${memberId}`;
     const response = await fetch(url);
     const data = await response.json();
     if (response.status === 200) {
@@ -14,8 +13,19 @@ const WarningRepository = {
     }
   },
 
-  getWarning: async (memberId: string, warningId: string): Promise<Warning> => {
-    const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
+  getWarnings: async () : Promise<Warning[]> => {
+    const url = `/api/warnings`;
+    const response= await fetch(url);
+    const data = await response.json();
+    if (response.status === 200) {
+      return data;
+    } else {
+      throw data;
+    }
+  },
+
+  getWarning: async (warningId: string): Promise<Warning> => {
+    const url = `/api/warnings/${warningId}`;
     const response = await fetch(url);
     const data = await response.json();
     if (response.status === 200) {
@@ -25,8 +35,8 @@ const WarningRepository = {
     }
   },
 
-  addWarning: async (memberId: string, warningObject: WarningPost): Promise<MemberInfo> => {
-    const url = `/api/gw2/members/${memberId}/warnings`;
+  addWarning: async (warningObject: WarningPost): Promise<Warning> => {
+    const url = `/api/warnings`;
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',
@@ -43,8 +53,8 @@ const WarningRepository = {
     }
   },
 
-  deleteWarning: async (memberId: string, warningId: string): Promise<MemberInfo> => {
-    const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
+  deleteWarning: async (warningId: string): Promise<Warning> => {
+    const url = `/api/warnings/${warningId}`;
     const response = await fetch(url, { method: 'DELETE' });
     const data = await response.json();
 
@@ -56,11 +66,10 @@ const WarningRepository = {
   },
 
   updateWarning: async (
-    memberId: string,
     warningId: string,
     warningObject: WarningPost
-  ): Promise<MemberInfo> => {
-    const url = `/api/gw2/members/${memberId}/warnings/${warningId}`;
+  ): Promise<Warning> => {
+    const url = `/api/warnings/${warningId}`;
     const response = await fetch(url, {
       headers: {
         Accept: 'application/json',

@@ -20,7 +20,7 @@ import Person from '@material-ui/icons/Person';
 interface Props {
   isOpen: boolean;
   onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
-  onDeleteWarning: (memberId: string, warningId: string) => Promise<any>;
+  onDeleteWarning: (warningId: string) => Promise<any>;
   member: MemberRecord;
 }
 
@@ -30,7 +30,7 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
       const res = window.confirm('Are you sure you want to delete this warning?');
       if (res) {
         if (member.memberId) {
-          await onDeleteWarning(member.memberId, warning._id);
+          await onDeleteWarning(warning._id);
         } else {
           throw new Error('Chosen member has no memberId');
         }

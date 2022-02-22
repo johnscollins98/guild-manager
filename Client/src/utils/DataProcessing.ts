@@ -3,11 +3,13 @@ import DiscordMember from '../Interfaces/DiscordMember';
 import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import MemberRecord from '../Interfaces/MemberRecord';
+import Warning from '../Interfaces/Warning';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],
   discordMembers: DiscordMember[],
-  ranks: GW2Rank[]
+  ranks: GW2Rank[],
+  warnings: Warning[]
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
     .map((gw2Member) => {
@@ -16,7 +18,7 @@ export const generateGW2RosterRecords = (
       const rank = gw2Member.rank;
       const rankImage = ranks.find((r) => r.id === rank)?.icon;
       const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
-      const warnings = gw2Member.warnings;
+      const warningsForThisMember = warnings.filter(warning => warning.givenTo === memberId);
 
       // special case for unique account name
       const exceptions: { [key: string]: string } = {
@@ -57,7 +59,7 @@ export const generateGW2RosterRecords = (
         rank,
         rankImage,
         joinDate,
-        warnings,
+        warnings: warningsForThisMember,
         discordName,
         nickname,
         discordId,
@@ -84,9 +86,10 @@ export const generateGW2RosterRecords = (
 export const getExcessDiscordRecords = (
   gw2Members: GW2Member[],
   discordMembers: DiscordMember[],
-  ranks: GW2Rank[]
+  ranks: GW2Rank[],
+  warnings: Warning[]
 ): MemberRecord[] => {
-  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks);
+  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
   return discordMembers
     .filter((discordMember) => {
       return !records.some((record) => record.discordName === discordMember.name);
