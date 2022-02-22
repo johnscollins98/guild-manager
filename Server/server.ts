@@ -1,4 +1,5 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import 'reflect-metadata';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import session from 'express-session';
@@ -9,11 +10,17 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
-import warningsRoute from './routes/warnings';
+import { WarningsController } from './routes/warnings';
 import { config } from './config';
 import { setCache } from './middleware/setCache';
+import { createExpressServer, useContainer } from 'routing-controllers';
+import Container from 'typedi';
 
-const app = express();
+useContainer(Container);
+
+const app = createExpressServer({
+  controllers: [WarningsController]
+});
 app.use(cors());
 
 app.use(express.json());
@@ -48,7 +55,6 @@ app.use(setCache);
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
-app.use('/api/warnings', warningsRoute);
 app.use('/auth', authRoute);
 
 const dirs = [__dirname];
@@ -58,7 +64,7 @@ if (process.env.NODE_ENV === 'production') {
 dirs.push('..', 'Client', 'build')
 app.use(express.static(path.join(...dirs)));
 
-app.get('*', (_, res) => {
+app.get('*', (_req: Request, res: Response) => {
   res.redirect('/');
 });
 

@@ -1,9 +1,10 @@
 import { isValidObjectId } from 'mongoose';
-import IWarningRepository from '../interfaces/IWarningRepository';
+import { Service } from 'typedi';
 import Warning from '../interfaces/Warning';
 import WarningModel from '../models/warnings';
 
-class WarningsRepository implements IWarningRepository {
+@Service()
+class WarningsRepository {
   constructor() {}
   async getAll(): Promise<Warning[]> {
     return await WarningModel.find().exec();
