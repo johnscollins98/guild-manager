@@ -19,7 +19,11 @@ export const generateGW2RosterRecords = (
       const warnings = gw2Member.warnings;
 
       // special case for unique account name
-      const testName = accountName.toLowerCase();
+      const exceptions: { [key: string]: string } = {
+        'Zerumii': 'Zerumi'
+      };
+      const testName = exceptions[accountName] ? exceptions[accountName].toLowerCase() : accountName.toLowerCase();
+
 
       // check for exact match
       let discordMember = discordMembers.find((m) => {
