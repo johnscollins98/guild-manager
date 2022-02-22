@@ -10,7 +10,7 @@ import discordRoute from './routes/discord';
 import gw2Route from './routes/gw2';
 import authRoute from './routes/auth';
 import eventsRoute from './routes/events';
-import { WarningsController } from './routes/warnings';
+import { WarningsController } from './routes/warnings.controller';
 import { config } from './config';
 import { setCache } from './middleware/setCache';
 import { createExpressServer, useContainer } from 'routing-controllers';
