@@ -1,7 +1,7 @@
 import { isValidObjectId } from 'mongoose';
 import { Service } from 'typedi';
-import Warning from '../interfaces/Warning';
-import WarningModel from '../models/warnings';
+import Warning from '../interfaces/warning.interface';
+import WarningModel from '../models/warning.model';
 
 @Service()
 class WarningsRepository {

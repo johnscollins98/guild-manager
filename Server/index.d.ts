@@ -1,5 +1,5 @@
 import { GuildInfo } from 'passport-discord';
-import { GuildMemberInterface } from './models/warnings';
+import { GuildMemberInterface } from './models/warning.model';
 
 declare global {
   namespace Express {

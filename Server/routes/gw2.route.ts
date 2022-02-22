@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
 import fetch from 'node-fetch';
 import { config } from '../config';
-import GW2Member from '../interfaces/GW2Member';
-import * as GW2Utils from '../utils/gw2';
+import GW2Member from '../interfaces/gw2member.interface';
+import * as GW2Utils from '../utils/gw2.utils';
 
 const router = express.Router();
 

@@ -1,10 +1,10 @@
 import fetch from 'node-fetch';
-import DiscordMember from '../interfaces/DiscordMember';
-import DiscordRole from '../interfaces/DiscordRole';
-import FormattedDiscordMember from '../interfaces/FormattedDiscordMember';
-import GW2Rank from '../interfaces/GW2Rank';
-import IEvent from '../interfaces/IEvent';
-import DiscordEmbed from '../interfaces/DiscordEmbed';
+import DiscordMember from '../interfaces/discordmember.interface';
+import DiscordRole from '../interfaces/discordrole.interface';
+import FormattedDiscordMember from '../interfaces/formatteddiscordmember.interface';
+import GW2Rank from '../interfaces/gw2rank.interface';
+import IEvent from '../interfaces/event.interface';
+import DiscordEmbed from '../interfaces/discordembed.interface';
 import { config } from '../config';
 
 export const getValidRoles = async (): Promise<string[]> => {

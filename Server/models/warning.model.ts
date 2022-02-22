@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Warning from '../interfaces/Warning';
+import Warning from '../interfaces/warning.interface';
 
 const Schema = mongoose.Schema;
 

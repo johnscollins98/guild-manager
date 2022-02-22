@@ -1,14 +1,14 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import * as DiscordUtils from '../utils/discord';
+import * as DiscordUtils from '../utils/discord.utils';
 import Event from '../models/event.model';
-import { isAdmin } from '../middleware/auth';
+import { isAdmin } from '../middleware/auth.middleware';
 import EventPostSettings from '../models/eventPostSettings.model';
 import { Request, Response } from 'express';
-import DiscordRole from '../interfaces/DiscordRole';
-import DiscordMessage from '../interfaces/DiscordMessage';
-import IEvent from '../interfaces/IEvent';
-import DiscordMember from '../interfaces/DiscordMember';
+import DiscordRole from '../interfaces/discordrole.interface';
+import DiscordMessage from '../interfaces/discordmessage.interface';
+import IEvent from '../interfaces/event.interface';
+import DiscordMember from '../interfaces/discordmember.interface';
 import { config } from '../config';
 
 const router = express.Router();

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import IEventPostSettings, { MessageIDs } from '../interfaces/EventPostSettings';
+import IEventPostSettings, { MessageIDs } from '../interfaces/eventpostsettings.interface';
 
 const Schema = mongoose.Schema;
 

@@ -2,7 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import passport from 'passport';
 import { config } from '../config';
-import { getUserAuthInfo } from '../utils/auth';
+import { getUserAuthInfo } from '../utils/auth.utils';
 
 const router = express.Router();
 

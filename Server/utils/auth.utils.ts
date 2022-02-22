@@ -1,6 +1,6 @@
-import AuthInfo from '../interfaces/AuthInfo';
+import AuthInfo from '../interfaces/authinfo.interface';
 import { config } from '../config';
-import { getGuildMember } from './discord';
+import { getGuildMember } from './discord.utils';
 
 const notLoggedIn = {
   loggedIn: false,
