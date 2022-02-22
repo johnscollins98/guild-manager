@@ -22,7 +22,7 @@ passport.use(
       clientID: config.discordClientId,
       clientSecret: config.discordClientSecret,
       callbackURL: config.discordAuthRedirect,
-      scope: ['identify', 'guilds']
+      scope: ['identify']
     },
     async (_accessToken, _refreshToken, profile, done) => {
       try {
@@ -30,14 +30,12 @@ passport.use(
         if (user) {
           user.id = profile.id;
           user.username = profile.username;
-          user.guilds = profile.guilds;
           const updatedUser = await user.save();
           done(null, updatedUser);
         } else {
           const newUser = await DiscordUser.create({
             id: profile.id,
             username: profile.username,
-            guilds: profile.guilds
           });
           const savedUser = await newUser.save();
           done(null, savedUser);
