@@ -24,12 +24,13 @@
     "start": "set NODE_ENV=production&&node ./build/server.js",
     "build": "tsc",
     "dev": "set NODE_ENV=development&&nodemon --exec ts-node --files ./server.ts",
-    "regen-types": "npx gen-env-types .env", 
+    "regen-types": "npx gen-env-types .env",
     "env-check": "ts-node check-env.ts"
   },
   "devDependencies": {
     "lint-staged": "^11.0.0",
     "nodemon": "^2.0.4",
-    "ts-node": "^10.0.0"
+    "ts-node": "^10.0.0",
+    "yarn-audit-fix": "^9.1.2"
   }
 }
