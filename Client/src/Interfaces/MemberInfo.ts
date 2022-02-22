@@ -6,8 +6,3 @@ export default interface MemberInfo {
   _v: number;
   _id: string;
 }
-
-export interface MemberInfoPost {
-  memberId: string;
-  warnings: Warning[];
-}

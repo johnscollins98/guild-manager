@@ -8,7 +8,6 @@ import warningRoute from './warnings';
 
 const router = express.Router();
 
-
 const baseUrl = `https://api.guildwars2.com/v2/guild/${config.gw2guildId}`;
 const reqParams = {
   headers: {
@@ -19,7 +18,10 @@ const reqParams = {
 const gatherMember: RequestHandler = async (req, res, next) => {
   try {
     const memberId = req.params.member_id;
-    const member = await GuildMember.findOne({ memberId });
+    const member = await GuildMember.findOneOrCreate(
+      { memberId }, 
+      { memberId, warnings: [] }
+    );
     if (member) {
       req.member = member;
       return next();
@@ -45,13 +47,10 @@ router.get('/members', async (_req: Request, res: Response) => {
 
     const transformed = await Promise.all(
       data.map(async (m) => {
-        const record = await GuildMember.findOneOrCreate(
-          { memberId: m.name },
-          { memberId: m.name, warnings: [] }
-        );
+        const record = await GuildMember.findOne({ memberId: m.name });
         return {
           ...m,
-          warnings: record.warnings
+          warnings: record?.warnings || []
         };
       })
     );

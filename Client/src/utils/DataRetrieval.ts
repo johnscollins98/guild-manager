@@ -4,7 +4,6 @@ import DiscordRole from '../Interfaces/DiscordRole';
 import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import GW2LogEntry from '../Interfaces/GW2LogEntry';
-import { MemberInfoPost } from '../Interfaces/MemberInfo';
 import { DiscordLog } from '../Interfaces/DiscordLog';
 
 export const fetchDiscordMembers = async (): Promise<DiscordMember[]> => {
@@ -114,24 +113,6 @@ export const fetchGW2Log = async (): Promise<GW2LogEntry[]> => {
   }
 
   return data;
-};
-
-export const setGuildMember = async (newMember: MemberInfoPost) => {
-  const response = await fetch(`/api/gw2/members/${newMember.memberId}`, {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: 'PUT',
-    body: JSON.stringify(newMember)
-  });
-
-  if (response.status !== 200) {
-    throw response;
-  }
-
-  const data = await response.json();
-  return JSON.parse(data);
 };
 
 export const fetchAuthInfo = async (): Promise<AuthInfo> => {
