@@ -1,15 +1,19 @@
-import mongoose from 'mongoose';
-import Warning from '../interfaces/warning.interface';
+import { Column, CreateDateColumn, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
-const Schema = mongoose.Schema;
+@Entity()
+export class Warning {
+  @ObjectIdColumn()
+  public readonly _id!: ObjectID;
 
-const WarningSchema = new Schema<Warning>({
-  reason: { type: String, required: true },
-  givenBy: { type: String, required: true },
-  givenTo: { type: String, required: true },
-  timestamp: { type: Date, default: Date.now, required: true }
-});
+  @Column()
+  reason!: string;
 
-const Warning = mongoose.model<Warning>('Warning', WarningSchema);
+  @Column()
+  givenBy!: string;
 
-export default Warning;
+  @Column()
+  givenTo!: string;
+
+  @CreateDateColumn()
+  timestamp!: Date;
+}

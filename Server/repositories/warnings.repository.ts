@@ -1,42 +1,46 @@
-import { isValidObjectId } from 'mongoose';
-import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
-import Warning from '../interfaces/warning.interface';
-import WarningModel from '../models/warning.model';
-
+import { getRepository, Repository } from 'typeorm';
+import { Warning } from '../models/warning.model';
 @Service()
 class WarningsRepository {
-  constructor() {}
+  private readonly warningRepo: Repository<Warning>;
+  constructor() {
+    // TODO temporary: move to DI
+    this.warningRepo = getRepository(Warning);
+  }
+
   async getAll(): Promise<Warning[]> {
-    return await WarningModel.find().exec();
+    return await this.warningRepo.find();
   }
 
   async get(id: string): Promise<Warning | undefined> {
-    this.validateId(id);
-    return await WarningModel.findById(id).exec() || undefined;
+    return await this.warningRepo.findOne(id);
   }
 
   async getForMember(memberId: string): Promise<Warning[]> {
-    return await WarningModel.find({ givenTo: memberId }).exec();
+    return await this.warningRepo.find({ givenTo: memberId });
   }
 
   async create(newWarning: Warning): Promise<Warning> {
-    return await new WarningModel(newWarning).save();
+    return await this.warningRepo.save(newWarning);
   }
 
   async delete(id: string): Promise<Warning | undefined> {
-    this.validateId(id);
-    return await WarningModel.findByIdAndDelete(id) || undefined;
+    const warningToDelete = await this.warningRepo.findOne(id);
+    const deleteResult = await this.warningRepo.delete(id);
+    if (deleteResult.affected === 1 && warningToDelete) {
+      return warningToDelete;
+    } else {
+      return undefined;
+    }
   }
 
   async update(id: string, updatedWarning: Warning): Promise<Warning | undefined> {
-    this.validateId(id);  
-    return await WarningModel.findByIdAndUpdate(id, updatedWarning) || undefined;
-  }
-
-  private validateId(id: string): void {
-    if (!isValidObjectId(id)) {
-      throw new HttpError(400, `Invalid ID: ${id}`);
+    const updateResult = await this.warningRepo.update(id, updatedWarning);
+    if (updateResult.affected === 1) {
+      return await this.warningRepo.findOne(id);
+    } else {
+      return undefined;
     }
   }
 }

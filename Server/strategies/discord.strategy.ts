@@ -1,7 +1,8 @@
 import PassportDiscord from 'passport-discord';
 import passport from 'passport';
-import DiscordUser from '../models/user.model';
+import { User } from '../models/user.model';
 import { config } from '../config';
+import { getRepository } from 'typeorm';
 
 const DiscordStrategy = PassportDiscord.Strategy;
 
@@ -10,7 +11,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-  const user = await DiscordUser.findById(id);
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(id as string);
   if (user) {
     done(null, user);
   }
@@ -25,20 +27,21 @@ passport.use(
       scope: ['identify']
     },
     async (_accessToken, _refreshToken, profile, done) => {
+      const userRepository = getRepository(User);
       try {
-        const user = await DiscordUser.findOne({ id: profile.id });
+        const user = await userRepository.findOne({ id: profile.id });
         if (user) {
           user.id = profile.id;
           user.username = profile.username;
-          const updatedUser = await user.save();
+          await userRepository.update(user._id, user);
+          const updatedUser = await userRepository.findOne(user._id);
           done(null, updatedUser);
         } else {
-          const newUser = await DiscordUser.create({
-            id: profile.id,
-            username: profile.username,
-          });
-          const savedUser = await newUser.save();
-          done(null, savedUser);
+          const userToSave = new User();
+          userToSave.id = profile.id;
+          userToSave.username = profile.username;
+          const newUser = await userRepository.save(userToSave);
+          done(null, newUser);
         }
       } catch (err) {
         console.error(err);

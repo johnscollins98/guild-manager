@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import { Body, Delete, ForbiddenError, Get, JsonController, Param, Post, Put, Req, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
-import Warning from '../interfaces/warning.interface';
 import { isAdmin } from '../middleware/auth.middleware';
+import { Warning } from '../models/warning.model';
 import WarningsRepository from '../repositories/warnings.repository';
 
 @JsonController('/api/warnings', { transformResponse: false })

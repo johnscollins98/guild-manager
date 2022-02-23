@@ -1,15 +1,16 @@
 import express from 'express';
 import fetch from 'node-fetch';
 import * as DiscordUtils from '../utils/discord.utils';
-import Event from '../models/event.model';
+import { Event } from '../models/event.model';
 import { isAdmin } from '../middleware/auth.middleware';
-import EventPostSettings from '../models/eventPostSettings.model';
+import { EventPostSettings } from '../models/eventPostSettings.model';
 import { Request, Response } from 'express';
 import DiscordRole from '../interfaces/discordrole.interface';
 import DiscordMessage from '../interfaces/discordmessage.interface';
 import IEvent from '../interfaces/event.interface';
 import DiscordMember from '../interfaces/discordmember.interface';
 import { config } from '../config';
+import { getRepository } from 'typeorm';
 
 const router = express.Router();
 
@@ -119,11 +120,8 @@ router.delete('/members/:id', isAdmin, async (req: Request, res: Response) => {
 
 router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
   try {
-    await EventPostSettings.findOneAndUpdate(
-      { guildId: config.discordGuildId },
-      { ...req.body, guildId: config.discordGuildId },
-      { upsert: true }
-    );
+    const eventPostRepo = getRepository(EventPostSettings);
+    await eventPostRepo.update({ guildId: config.discordGuildId }, { ...req.body });
 
     const channelId: string = req.body.channelId;
     const response = await fetch(`https://discord.com/api/channels/${channelId}`, { ...reqParams });
@@ -154,9 +152,9 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
       'Saturday',
       'Sunday'
     ];
+    const eventRepo = getRepository(Event);
     for (const day of daysOfWeek) {
-      const events = await Event.find({ day }).exec();
-      if (events.length === 0 && req.body.editMessages) continue;
+      const events = await eventRepo.find({ day });
 
       const parseTime = (str: string) => {
         return Date.parse(`1970/01/01 ${str}`);

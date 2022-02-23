@@ -1,6 +1,5 @@
 import express from 'express';
 import 'reflect-metadata';
-import mongoose from 'mongoose';
 import session from 'express-session';
 import passport from 'passport';
 import './strategies/discord.strategy';
@@ -14,6 +13,7 @@ import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
 import { useContainer, useExpressServer } from 'routing-controllers';
 import Container from 'typedi';
+import { createConnection } from 'typeorm';
 
 useContainer(Container);
 const app = express();
@@ -33,17 +33,15 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(config.atlasUri, {
+createConnection({
+  type: 'mongodb',
+  url: config.atlasUri,
   useNewUrlParser: true,
-  useCreateIndex: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
-});
-
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully.');
-});
+  synchronize: true,
+  logging: true,
+  entities: ['./models/*.*']
+}).then(() => console.log('Connected to MongoDB'));
 
 app.use(setCache);
 app.use('/api/discord', discordRoute);
