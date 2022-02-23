@@ -1,13 +1,10 @@
 import { Service } from 'typedi';
-import { getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Warning } from '../models/warning.model';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 @Service()
 class WarningsRepository {
-  private readonly warningRepo: Repository<Warning>;
-  constructor() {
-    // TODO temporary: move to DI
-    this.warningRepo = getRepository(Warning);
-  }
+  constructor(@InjectRepository(Warning) private readonly warningRepo: Repository<Warning>) {}
 
   async getAll(): Promise<Warning[]> {
     return await this.warningRepo.find();

@@ -11,11 +11,13 @@ import eventsRoute from './routes/events.route';
 import { WarningsController } from './routes/warnings.controller';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
-import { useContainer, useExpressServer } from 'routing-controllers';
-import Container from 'typedi';
-import { createConnection } from 'typeorm';
+import { useExpressServer, useContainer as rc_useContainer } from 'routing-controllers';
+import { Container } from 'typeorm-typedi-extensions';
+import { createConnection, useContainer } from 'typeorm';
 
+rc_useContainer(Container);
 useContainer(Container);
+
 const app = express();
 app.use(express.json());
 
