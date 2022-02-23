@@ -5,7 +5,6 @@ import passport from 'passport';
 import './strategies/discord.strategy';
 import path from 'path';
 import discordRoute from './routes/discord.route';
-import gw2Route from './routes/gw2.route';
 import authRoute from './routes/auth.route';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
@@ -45,7 +44,6 @@ createConnection({
 
 app.use(setCache);
 app.use('/api/discord', discordRoute);
-app.use('/api/gw2', gw2Route);
 app.use('/auth', authRoute);
 
 useExpressServer(app, {
