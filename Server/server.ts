@@ -7,7 +7,6 @@ import path from 'path';
 import discordRoute from './routes/discord.route';
 import gw2Route from './routes/gw2.route';
 import authRoute from './routes/auth.route';
-import eventsRoute from './routes/events.route';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
 import { useExpressServer, useContainer as rc_useContainer } from 'routing-controllers';
@@ -47,7 +46,6 @@ createConnection({
 app.use(setCache);
 app.use('/api/discord', discordRoute);
 app.use('/api/gw2', gw2Route);
-app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
 useExpressServer(app, {

@@ -34,7 +34,7 @@ const EventRepository = {
     });
     const data = await response.json();
 
-    if (response.status === 201) {
+    if (response.status === 200) {
       return data;
     } else {
       throw data;
@@ -62,7 +62,7 @@ const EventRepository = {
   deleteById: async (id: string): Promise<boolean> => {
     const response = await fetch(`/api/events/${id}`, { method: 'DELETE' });
 
-    if (response.status === 204) {
+    if (response.status === 200) {
       return true;
     } else {
       const data = await response.json();

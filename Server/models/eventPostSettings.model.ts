@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
 export class MessageIDs {
   Monday!: string;
@@ -15,7 +15,7 @@ export class EventPostSettings {
   @ObjectIdColumn()
   public readonly _id!: ObjectID;
 
-  @Column()
+  @PrimaryColumn()
   guildId!: string;
 
   @Column()
