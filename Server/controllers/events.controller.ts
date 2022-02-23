@@ -10,9 +10,9 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { isAdmin } from '../middleware/auth.middleware';
-import { EventRepository } from '../repositories/event.repository';
+import { EventRepository } from '../services/repositories/event.repository';
 import { Event } from '../models/event.model';
-import { EventPostSettingsRepository } from '../repositories/eventpostsettings.repository';
+import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
 import { config } from '../config';
 
 @JsonController('/api/events', { transformResponse: false })

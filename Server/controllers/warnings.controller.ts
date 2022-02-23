@@ -3,7 +3,7 @@ import { Body, Delete, ForbiddenError, Get, JsonController, Param, Post, Put, Re
 import { Service } from 'typedi';
 import { isAdmin } from '../middleware/auth.middleware';
 import { Warning } from '../models/warning.model';
-import WarningsRepository from '../repositories/warnings.repository';
+import WarningsRepository from '../services/repositories/warnings.repository';
 
 @JsonController('/api/warnings', { transformResponse: false })
 @Service()

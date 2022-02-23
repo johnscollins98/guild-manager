@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { EventPostSettings } from '../models/eventPostSettings.model';
+import { EventPostSettings } from '../../models/eventPostSettings.model';
 import { BaseRepository } from './base.repository';
 
 @Service()
