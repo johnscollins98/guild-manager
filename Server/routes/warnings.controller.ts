@@ -17,7 +17,7 @@ export class WarningsController {
 
   @Get('/:id')
   get(@Param('id') id: string) {
-    return this.warningRepo.get(id);
+    return this.warningRepo.getById(id);
   }
 
   @Get('/member/:id')
