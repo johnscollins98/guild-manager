@@ -8,7 +8,6 @@ import discordRoute from './routes/discord.route';
 import gw2Route from './routes/gw2.route';
 import authRoute from './routes/auth.route';
 import eventsRoute from './routes/events.route';
-import { WarningsController } from './routes/warnings.controller';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
 import { useExpressServer, useContainer as rc_useContainer } from 'routing-controllers';
@@ -53,7 +52,7 @@ app.use('/auth', authRoute);
 
 useExpressServer(app, {
   cors: true,
-  controllers: [WarningsController]
+  controllers: [path.join(__dirname + '/controllers/*.controller.*')]
 });
 
 const dirs = [__dirname];
