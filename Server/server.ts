@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import 'reflect-metadata';
 import mongoose from 'mongoose';
 import session from 'express-session';
@@ -12,16 +12,11 @@ import eventsRoute from './routes/events.route';
 import { WarningsController } from './routes/warnings.controller';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
-import { createExpressServer, useContainer } from 'routing-controllers';
+import { useContainer, useExpressServer } from 'routing-controllers';
 import Container from 'typedi';
 
 useContainer(Container);
-
-const app = createExpressServer({
-  cors: true,
-  controllers: [WarningsController]
-});
-
+const app = express();
 app.use(express.json());
 
 app.use(
@@ -56,15 +51,16 @@ app.use('/api/gw2', gw2Route);
 app.use('/api/events', eventsRoute);
 app.use('/auth', authRoute);
 
+useExpressServer(app, {
+  cors: true,
+  controllers: [WarningsController]
+});
+
 const dirs = [__dirname];
 if (process.env.NODE_ENV === 'production') {
   dirs.push('..');
 }
 dirs.push('..', 'Client', 'build');
 app.use(express.static(path.join(...dirs)));
-
-app.get('*', (_req: Request, res: Response) => {
-  res.redirect('/');
-});
 
 app.listen(config.port, () => console.info(`Listening on port ${config.port}`));

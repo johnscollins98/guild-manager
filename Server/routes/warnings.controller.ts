@@ -1,10 +1,11 @@
-import { Body, Delete, Get, JsonController, Param, Post, Put, UseBefore } from 'routing-controllers';
+import { Request } from 'express';
+import { Body, Delete, ForbiddenError, Get, JsonController, Param, Post, Put, Req, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
 import Warning from '../interfaces/warning.interface';
 import { isAdmin } from '../middleware/auth.middleware';
 import WarningsRepository from '../repositories/warnings.repository';
 
-@JsonController('/api/warnings')
+@JsonController('/api/warnings', { transformResponse: false })
 @Service()
 export class WarningsController {
   constructor(private readonly warningRepo: WarningsRepository) {}
@@ -32,7 +33,12 @@ export class WarningsController {
 
   @Post('/')
   @UseBefore(isAdmin)
-  create(@Body() warning: Warning) {
+  create(@Body() warning: Warning, @Req() req: Request) {
+    if (req.user) {
+      warning.givenBy = req.user?.username;
+    } else {
+      throw new ForbiddenError();
+    }
     return this.warningRepo.create(warning);
   }
 

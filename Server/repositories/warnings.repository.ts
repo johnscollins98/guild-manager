@@ -1,4 +1,5 @@
 import { isValidObjectId } from 'mongoose';
+import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
 import Warning from '../interfaces/warning.interface';
 import WarningModel from '../models/warning.model';
@@ -10,9 +11,9 @@ class WarningsRepository {
     return await WarningModel.find().exec();
   }
 
-  async get(id: string): Promise<Warning | null> {
+  async get(id: string): Promise<Warning | undefined> {
     this.validateId(id);
-    return await WarningModel.findById(id).exec();
+    return await WarningModel.findById(id).exec() || undefined;
   }
 
   async getForMember(memberId: string): Promise<Warning[]> {
@@ -23,19 +24,19 @@ class WarningsRepository {
     return await new WarningModel(newWarning).save();
   }
 
-  async delete(id: string): Promise<Warning | null> {
+  async delete(id: string): Promise<Warning | undefined> {
     this.validateId(id);
-    return await WarningModel.findByIdAndDelete(id);
+    return await WarningModel.findByIdAndDelete(id) || undefined;
   }
 
-  async update(id: string, updatedWarning: Warning): Promise<Warning | null> {
+  async update(id: string, updatedWarning: Warning): Promise<Warning | undefined> {
     this.validateId(id);  
-    return await WarningModel.findByIdAndUpdate(id, updatedWarning);
+    return await WarningModel.findByIdAndUpdate(id, updatedWarning) || undefined;
   }
 
   private validateId(id: string): void {
     if (!isValidObjectId(id)) {
-      throw new Error(`Invalid ID: ${id}`);
+      throw new HttpError(400, `Invalid ID: ${id}`);
     }
   }
 }
