@@ -3,8 +3,8 @@ import DiscordMember from '../interfaces/discordmember.interface';
 import DiscordRole from '../interfaces/discordrole.interface';
 import FormattedDiscordMember from '../interfaces/formatteddiscordmember.interface';
 import GW2Rank from '../interfaces/gw2rank.interface';
-import IEvent from '../interfaces/event.interface';
 import DiscordEmbed from '../interfaces/discordembed.interface';
+import { Event } from '../models/event.model';
 import { config } from '../config';
 
 export const getValidRoles = async (): Promise<string[]> => {
@@ -66,7 +66,7 @@ export const getRoleInfo = (
   return roles;
 };
 
-export const createEmbed = (day: string, events: IEvent[]): DiscordEmbed => {
+export const createEmbed = (day: string, events: Event[]): DiscordEmbed => {
   return {
     color: '3447003',
     title: `${day} Events`,

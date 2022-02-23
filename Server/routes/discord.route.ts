@@ -7,7 +7,6 @@ import { EventPostSettings } from '../models/eventPostSettings.model';
 import { Request, Response } from 'express';
 import DiscordRole from '../interfaces/discordrole.interface';
 import DiscordMessage from '../interfaces/discordmessage.interface';
-import IEvent from '../interfaces/event.interface';
 import DiscordMember from '../interfaces/discordmember.interface';
 import { config } from '../config';
 import { getRepository } from 'typeorm';
@@ -160,7 +159,7 @@ router.post('/eventUpdate', isAdmin, async (req: Request, res: Response) => {
         return Date.parse(`1970/01/01 ${str}`);
       };
 
-      const sorted = events.sort((a: IEvent, b: IEvent) => {
+      const sorted = events.sort((a, b) => {
         const aTime = parseTime(a.startTime);
         const bTime = parseTime(b.startTime);
 
