@@ -8,14 +8,14 @@ const notLoggedIn = {
   username: ''
 };
 
-export const getUserAuthInfo = async (req: Express.Request): Promise<AuthInfo> => {
-  if (!req.user) return notLoggedIn;
+export const getUserAuthInfo = async (user?: Express.User): Promise<AuthInfo> => {
+  if (!user) return notLoggedIn;
   const loggedIn = true;
-  const discordMember = await getGuildMember(req.user.id);
+  const discordMember = await getGuildMember(user.id);
   if (!discordMember) return notLoggedIn;
 
   const roles = discordMember.roles;
   const isAdmin = roles.some((role) => config.adminRoles.includes(role));
-  const username = req.user.username;
+  const username = user.username;
   return { loggedIn, isAdmin, username };
 };

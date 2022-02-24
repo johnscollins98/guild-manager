@@ -1,15 +1,14 @@
 import {
+  Authorized,
   Body,
   Delete,
   Get,
   JsonController,
   Param,
   Post,
-  Put,
-  UseBefore
+  Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { isAdmin } from '../middleware/auth.middleware';
 import { EventRepository } from '../services/repositories/event.repository';
 import { Event } from '../models/event.model';
 import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
@@ -46,19 +45,19 @@ export class EventsController {
   }
 
   @Delete('/:id')
-  @UseBefore(isAdmin)
+  @Authorized()
   delete(@Param('id') id: string) {
     return this.eventRepo.delete(id);
   }
 
   @Post('/')
-  @UseBefore(isAdmin)
+  @Authorized()
   create(@Body() event: Event) {
     return this.eventRepo.create(event);
   }
 
   @Put('/:id')
-  @UseBefore(isAdmin)
+  @Authorized()
   update(@Param('id') id: string, @Body() event: Event) {
     return this.eventRepo.update(id, event);
   }

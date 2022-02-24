@@ -127,7 +127,7 @@ export const fetchAuthInfo = async (): Promise<AuthInfo> => {
     throw data;
   }
 
-  return JSON.parse(data);
+  return data;
 };
 
 export const getAdminRoles = async (): Promise<String[]> => {

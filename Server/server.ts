@@ -5,12 +5,12 @@ import passport from 'passport';
 import './strategies/discord.strategy';
 import path from 'path';
 import discordRoute from './routes/discord.route';
-import authRoute from './routes/auth.route';
 import { config } from './config';
 import { setCache } from './middleware/setcache.middleware';
-import { useExpressServer, useContainer as rc_useContainer } from 'routing-controllers';
+import { useExpressServer, useContainer as rc_useContainer, Action } from 'routing-controllers';
 import { Container } from 'typeorm-typedi-extensions';
 import { createConnection, useContainer } from 'typeorm';
+import { getUserAuthInfo } from './utils/auth.utils';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -44,11 +44,19 @@ createConnection({
 
 app.use(setCache);
 app.use('/api/discord', discordRoute);
-app.use('/auth', authRoute);
 
 useExpressServer(app, {
   cors: true,
-  controllers: [path.join(__dirname + '/controllers/*.controller.*')]
+  controllers: [path.join(__dirname + '/controllers/*.controller.*')],
+  authorizationChecker: async (action: Action) => {
+    if (!action.request.user) {
+      return false
+    }
+
+    const info = await getUserAuthInfo(action.request.user)
+    return info.loggedIn && info.isAdmin;
+  },
+  currentUserChecker: (action: Action) => action.request.user
 });
 
 const dirs = [__dirname];
