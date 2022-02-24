@@ -38,11 +38,7 @@ export abstract class BaseRepository<T extends IMayHaveId> {
       delete updatedItem._id;
     }
 
-    const updateResult = await this.repo.update(id, updatedItem);
-    if (updateResult.affected === 1) {
-      return await this.repo.findOne(id);
-    } else {
-      return undefined;
-    }
+    await this.repo.update(id, updatedItem);
+    return await this.repo.findOne(id);
   }
 } 
