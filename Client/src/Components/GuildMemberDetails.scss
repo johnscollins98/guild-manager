@@ -1,0 +1,29 @@
+div.member-details {
+  padding: 16px;
+
+  div.member-header {
+    display: flex;
+    padding-bottom: 8px;
+    align-items: center;
+
+    .avatar {
+      margin-right: 16px;
+    }
+  }
+
+  div.detail {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    // justify-content: center;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

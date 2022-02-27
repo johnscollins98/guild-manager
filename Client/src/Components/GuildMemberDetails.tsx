@@ -1,0 +1,61 @@
+import './GuildMemberDetails.scss';
+import MemberRecord from '../Interfaces/MemberRecord';
+import { Avatar, Divider, Popover, PopoverPosition, Typography } from '@material-ui/core';
+
+interface Props {
+  member: MemberRecord;
+  detailsAnchor: PopoverPosition | undefined;
+  closeDetails: () => void;
+}
+
+const GuildMemberDetails = ({ member, detailsAnchor, closeDetails }: Props) => {
+  return (
+    <Popover
+      anchorReference="anchorPosition"
+      anchorPosition={detailsAnchor}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      keepMounted
+      open={Boolean(detailsAnchor)}
+      onClose={closeDetails}
+    >
+      <div className="member-details">
+        <div className="member-header">
+          <Avatar src={member.avatar} className="avatar" />
+          <Typography variant="h6">{member.accountName}</Typography>
+        </div>
+        <Divider />
+        <GuildMemberDetail>
+          <Typography>GW2 Name: {member.memberId}</Typography>
+        </GuildMemberDetail>
+        <GuildMemberDetail>
+          <Typography>GW2 Rank:</Typography>
+          <img src={member.rankImage} />
+          <Typography>{member.rank}</Typography>
+        </GuildMemberDetail>
+        <GuildMemberDetail>
+          <Typography>Discord Name: {member.discordName}</Typography>
+        </GuildMemberDetail>
+        <GuildMemberDetail>
+          <Typography>Discord Role: {member.roles[0]?.name}</Typography>
+        </GuildMemberDetail>
+      </div>
+    </Popover>
+  );
+};
+
+interface DetailProps {
+  children: React.ReactNode;
+}
+
+const GuildMemberDetail = ({ children }: DetailProps) => {
+  return <div className="detail">{children}</div>;
+};
+
+export default GuildMemberDetails;

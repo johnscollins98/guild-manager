@@ -12,10 +12,11 @@ import Search from '@material-ui/icons/Search';
 import Warning from '@material-ui/icons/Warning';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
 import { getAdminRoles } from '../utils/DataRetrieval';
+import { PopoverPosition } from '@material-ui/core';
 
 interface Props {
   member: MemberRecord;
-  menuAnchor: Element | null;
+  menuAnchor: PopoverPosition | undefined;
   isAdmin: boolean;
   closeMenu: () => void;
   onKick: (member: MemberRecord) => Promise<any>;
@@ -40,7 +41,7 @@ const GuildMemberMenu = ({
 
   useEffect(() => {
     getAdminRoles().then((adminRoles) => {
-      setMemberIsAdmin(member.roles.some(r => adminRoles.includes(r.id)));
+      setMemberIsAdmin(member.roles.some((r) => adminRoles.includes(r.id)));
     });
   }, [member]);
 
@@ -53,7 +54,21 @@ const GuildMemberMenu = ({
   );
 
   return (
-    <Menu anchorEl={menuAnchor} keepMounted open={Boolean(menuAnchor)} onClose={closeMenu}>
+    <Menu
+      anchorReference="anchorPosition"
+      anchorPosition={menuAnchor}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'left'
+      }}
+      keepMounted
+      open={Boolean(menuAnchor)}
+      onClose={closeMenu}
+    >
       <GuildMemberMenuItem
         Icon={Close}
         label="Kick"

@@ -22,6 +22,8 @@ import SyncProblem from '@material-ui/icons/SyncProblem';
 import GuildMemberMenu from './GuildMemberMenu';
 import { getDateString } from '../utils/DataProcessing';
 import { Timer } from '@material-ui/icons';
+import GuildMemberDetails from './GuildMemberDetails';
+import { PopoverPosition } from '@material-ui/core';
 
 interface Props {
   member: MemberRecord;
@@ -49,19 +51,33 @@ const GuildMemberCard = ({
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
-  const [menuAnchor, setMenuAnchor] = useState(null);
+  const [detailsAnchor, setDetailsAnchor] = useState<PopoverPosition | undefined>(undefined);
+  const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
-  const handleClick = useCallback(
-    (e) => {
-      setMenuAnchor(e.currentTarget);
+  const openDetails = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setDetailsAnchor({ top: e.clientY, left: e.clientX });
+    },
+    [setDetailsAnchor]
+  );
+
+  const closeDetails = useCallback(() => {
+    setDetailsAnchor(undefined);
+  }, [setDetailsAnchor]);
+
+  const openMenu = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      setMenuAnchor({ top: e.clientY, left: e.clientX });
     },
     [setMenuAnchor]
   );
 
   const closeMenu = useCallback(() => {
-    setMenuAnchor(null);
+    setMenuAnchor(undefined);
   }, [setMenuAnchor]);
 
   const warningSubmitHandler = useCallback(
@@ -80,10 +96,11 @@ const GuildMemberCard = ({
         variant="outlined"
         className={`member-card ${singleColumn ? 'fullWidth' : ''}`}
         style={{ borderLeftColor: color }}
-        onClick={handleClick}
+        onClick={openDetails}
+        onContextMenu={openMenu}
         raised
       >
-        <CardContent onClick={handleClick}>
+        <CardContent>
           <div className="top-row">
             <div className="name">
               <Avatar
@@ -168,6 +185,13 @@ const GuildMemberCard = ({
           onChangeNickname={onChangeNickname}
           setWarningOpen={setWarningOpen}
           setWarningViewerOpen={setWarningViewerOpen}
+        />
+      ) : null}
+      {detailsAnchor ? (
+        <GuildMemberDetails
+          member={member}
+          detailsAnchor={detailsAnchor}
+          closeDetails={closeDetails}
         />
       ) : null}
       <WarningForm
