@@ -59,6 +59,7 @@ const GuildMemberCard = ({
   const openDetails = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       setDetailsAnchor({ top: e.clientY, left: e.clientX });
     },
     [setDetailsAnchor]
@@ -96,8 +97,7 @@ const GuildMemberCard = ({
         variant="outlined"
         className={`member-card ${singleColumn ? 'fullWidth' : ''}`}
         style={{ borderLeftColor: color }}
-        onClick={openDetails}
-        onContextMenu={openMenu}
+        onClick={openMenu}
         raised
       >
         <CardContent>
@@ -107,6 +107,7 @@ const GuildMemberCard = ({
                 className="avatar"
                 alt={member.memberId || member.discordName}
                 src={member.avatar}
+                onClick={openDetails}
               >
                 {member.memberId
                   ? member.memberId[0]
