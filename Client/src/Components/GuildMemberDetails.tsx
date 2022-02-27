@@ -36,7 +36,7 @@ const GuildMemberDetails = ({ member, detailsAnchor, closeDetails }: Props) => {
         </GuildMemberDetail>
         <GuildMemberDetail>
           <Typography>GW2 Rank:</Typography>
-          <img src={member.rankImage} />
+          <img src={member.rankImage} alt="rank-image" />
           <Typography>{member.rank}</Typography>
         </GuildMemberDetail>
         <GuildMemberDetail>
