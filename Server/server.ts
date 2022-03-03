@@ -2,7 +2,7 @@ import express from 'express';
 import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
-import './strategies/discord.strategy';
+import { DiscordStrategySetup } from './strategies/discord.strategy';
 import path from 'path';
 import discordRoute from './routes/discord.route';
 import { config } from './config';
@@ -40,7 +40,10 @@ createConnection({
   synchronize: true,
   logging: true,
   entities: ['./models/*.*']
-}).then(() => console.log('Connected to MongoDB'));
+}).then(() => {
+  console.log('Connected to MongoDB');
+  Container.get(DiscordStrategySetup);
+});
 
 app.use(setCache);
 app.use('/api/discord', discordRoute);
