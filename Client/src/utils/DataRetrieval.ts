@@ -68,7 +68,7 @@ export const changeDiscordMember = async (
   });
 
   if (!response.ok) {
-    throw { status: response.status, text: response.statusText };
+    throw new Error(response.statusText);
   }
 };
 
