@@ -1,13 +1,11 @@
-import { GuildInfo } from 'passport-discord';
-import { GuildMemberInterface } from './models/warnings';
+import 'passport-discord';
 
 declare global {
   namespace Express {
     export interface User {
-      guilds?: GuildInfo[];
+      _id: ObjectID;
       id: string;
       username: string;
-      _id: string;
     }
   }
 }

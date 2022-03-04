@@ -1,28 +1,30 @@
-import mongoose from 'mongoose';
-import IEventPostSettings, { MessageIDs } from '../interfaces/EventPostSettings';
+import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
-const Schema = mongoose.Schema;
+export interface MessageIDs {
+  [key: string]: string;
+  Monday: string;
+  Tuesday: string;
+  Wednesday: string;
+  Thursday: string;
+  Friday: string;
+  Saturday: string;
+  Sunday: string;
+}
 
-const MessgeIDSchema = new Schema<MessageIDs>({
-  Monday: { type: String, required: true },
-  Tuesday: { type: String, required: true },
-  Wednesday: { type: String, required: true },
-  Thursday: { type: String, required: true },
-  Friday: { type: String, required: true },
-  Saturday: { type: String, required: true },
-  Sunday: { type: String, required: true }
-});
+@Entity()
+export class EventPostSettings {
+  @ObjectIdColumn()
+  public readonly _id!: ObjectID;
 
-const EventPostSettingsSchema = new Schema<IEventPostSettings>({
-  guildId: { type: String, required: true },
-  channelId: { type: String, required: true },
-  editMessages: { type: Boolean, required: true },
-  existingMessageIds: MessgeIDSchema
-});
+  @PrimaryColumn()
+  guildId!: string;
 
-const EventPostSettings = mongoose.model<IEventPostSettings>(
-  'EventPostSettings',
-  EventPostSettingsSchema
-);
+  @Column()
+  channelId!: string;
 
-export default EventPostSettings;
+  @Column()
+  editMessages!: boolean;
+
+  @Column()
+  existingMessageIds!: MessageIDs;
+}

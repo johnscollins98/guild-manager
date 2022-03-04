@@ -1,12 +1,13 @@
-import mongoose from 'mongoose';
+import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
-const Schema = mongoose.Schema;
+@Entity()
+export class User {
+  @ObjectIdColumn()
+  public readonly _id!: ObjectID;
 
-const UserSchema = new Schema<Express.User>({
-  id: { type: String, required: true },
-  username: { type: String, required: true },
-});
+  @PrimaryColumn()
+  id!: string;
 
-const DiscordUser = mongoose.model<Express.User>('DiscordUser', UserSchema);
-
-export default DiscordUser;
+  @Column()
+  username!: string;
+}

@@ -1,21 +1,19 @@
 import express from 'express';
-import cors from 'cors';
-import mongoose from 'mongoose';
+import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
-import './strategies/discord.strategy';
+import { DiscordStrategySetup } from './services/auth/strategies/discord.strategy';
 import path from 'path';
-import discordRoute from './routes/discord';
-import gw2Route from './routes/gw2';
-import authRoute from './routes/auth';
-import eventsRoute from './routes/events';
-import warningsRoute from './routes/warnings';
 import { config } from './config';
-import { setCache } from './middleware/setCache';
+import { useExpressServer, useContainer as rc_useContainer, Action } from 'routing-controllers';
+import { Container } from 'typeorm-typedi-extensions';
+import { createConnection, useContainer } from 'typeorm';
+import { AuthService } from './services/auth/auth.service';
+
+rc_useContainer(Container);
+useContainer(Container);
 
 const app = express();
-app.use(cors());
-
 app.use(express.json());
 
 app.use(
@@ -32,34 +30,38 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect(config.atlasUri, {
+createConnection({
+  type: 'mongodb',
+  url: config.atlasUri,
   useNewUrlParser: true,
-  useCreateIndex: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  synchronize: true,
+  logging: true,
+  entities: ['./models/*.*']
+}).then(() => {
+  console.log('Connected to MongoDB');
+  Container.get(DiscordStrategySetup);
 });
 
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully.');
-});
+useExpressServer(app, {
+  cors: true,
+  controllers: [path.join(__dirname + '/controllers/*.controller.*')],
+  authorizationChecker: async (action: Action) => {
+    if (!action.request.user) {
+      return false
+    }
 
-app.use(setCache);
-app.use('/api/discord', discordRoute);
-app.use('/api/gw2', gw2Route);
-app.use('/api/events', eventsRoute);
-app.use('/api/warnings', warningsRoute);
-app.use('/auth', authRoute);
+    const info = await Container.get(AuthService).getUserAuthInfo(action.request.user);
+    return info.loggedIn && info.isAdmin;
+  },
+  currentUserChecker: (action: Action) => action.request.user
+});
 
 const dirs = [__dirname];
 if (process.env.NODE_ENV === 'production') {
-  dirs.push('..')
+  dirs.push('..');
 }
-dirs.push('..', 'Client', 'build')
+dirs.push('..', 'Client', 'build');
 app.use(express.static(path.join(...dirs)));
-
-app.get('*', (_, res) => {
-  res.redirect('/');
-});
 
 app.listen(config.port, () => console.info(`Listening on port ${config.port}`));

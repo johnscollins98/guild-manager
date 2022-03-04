@@ -1,16 +1,22 @@
-import mongoose from 'mongoose';
-import IEvent from '../interfaces/IEvent';
+import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
-const Schema = mongoose.Schema;
+@Entity()
+export class Event {
+  @ObjectIdColumn()
+  public readonly _id!: ObjectID;
 
-const EventSchema = new Schema<IEvent>({
-  title: { type: String, required: true },
-  day: { type: String, required: true },
-  startTime: { type: String, required: true },
-  duration: { type: String, required: true },
-  leaderId: { type: String, required: true }
-});
+  @Column()
+  title!: string;
 
-const Event = mongoose.model<IEvent>('Event', EventSchema);
+  @Column()
+  day!: string;
 
-export default Event;
+  @Column()
+  startTime!: string;
+
+  @Column()
+  duration!: string;
+
+  @Column()
+  leaderId!: string;
+}
