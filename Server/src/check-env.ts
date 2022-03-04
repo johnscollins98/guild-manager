@@ -1,4 +1,4 @@
-import { config } from "./src/config";
+import { config } from "./config";
 
 for (const [key, value] of Object.entries(config)) {
   if (value === undefined) {

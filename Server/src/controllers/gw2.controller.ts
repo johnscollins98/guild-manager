@@ -1,7 +1,7 @@
 import { Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { GW2GuildApi } from '../services/gw2/gw2guildapi.service';
-import { GW2LogFormatter } from '../services/gw2/gw2logformatter.service';
+import { GW2GuildApi } from '../services/gw2/guildapi.gw2.service';
+import { GW2LogFormatter } from '../services/gw2/logformatter.gw2.service';
 
 @JsonController('/api/gw2')
 @Service()

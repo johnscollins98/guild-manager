@@ -4,10 +4,10 @@ import { config } from '../config';
 import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discordmember.interface';
 import DiscordRole from '../models/interfaces/discordrole.interface';
 import { EventPostSettings } from '../models/eventPostSettings.model';
-import { DiscordChannelApi } from '../services/discord/discordchannelapi.service';
-import { DiscordGuildApi } from '../services/discord/discordguildapi.service';
-import { DiscordMemberFormatter } from '../services/discord/discordmemberformatter.service';
-import { EventEmbedCreator } from '../services/discord/eventembedcreator.service';
+import { DiscordChannelApi } from '../services/discord/channelapi.discord.service';
+import { DiscordGuildApi } from '../services/discord/guildapi.discord.service';
+import { DiscordMemberFormatter } from '../services/discord/memberformatter.discord.service';
+import { EventEmbedCreator } from '../services/discord/eventembedcreator.discord.service';
 import { EventRepository } from '../services/repositories/event.repository';
 import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
 
