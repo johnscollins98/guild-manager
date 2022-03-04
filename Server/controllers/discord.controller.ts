@@ -1,7 +1,8 @@
 import { Authorized, BadRequestError, Body, Delete, Get, Header, JsonController, NotFoundError, OnUndefined, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { DiscordMemberUpdate } from '../interfaces/discordmember.interface';
+import DiscordMember, { DiscordMemberUpdate } from '../interfaces/discordmember.interface';
+import DiscordRole from '../interfaces/discordrole.interface';
 import { EventPostSettings } from '../models/eventPostSettings.model';
 import { DiscordChannelApi } from '../services/discord/discordchannelapi.service';
 import { DiscordGuildApi } from '../services/discord/discordguildapi.service';
@@ -30,9 +31,8 @@ export class DiscordController {
   @Get('/members')
   @Header('Cache-control', `public, max-age=0`)
   async getMembers() {
-    const rawMembers = await this.discordGuildApi.getMembers();
-    const roles = await this.discordGuildApi.getRoles();
-    return await this.discordMemberFormatter.formatMembers(rawMembers, roles);
+    const results: [DiscordMember[], DiscordRole[]] = await Promise.all([this.discordGuildApi.getMembers(), this.discordGuildApi.getRoles()]);
+    return await this.discordMemberFormatter.formatMembers(...results);
   }
 
   @Get('/log')
