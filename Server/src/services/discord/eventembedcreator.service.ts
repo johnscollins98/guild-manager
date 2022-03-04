@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import DiscordEmbed from '../../interfaces/discordembed.interface';
+import DiscordEmbed from '../../models/interfaces/discordembed.interface';
 import { Event } from '../../models/event.model';
 
 @Service()

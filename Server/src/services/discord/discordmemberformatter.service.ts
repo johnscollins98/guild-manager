@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
-import DiscordMember from '../../interfaces/discordmember.interface';
-import DiscordRole from '../../interfaces/discordrole.interface';
-import FormattedDiscordMember from '../../interfaces/formatteddiscordmember.interface';
+import DiscordMember from '../../models/interfaces/discordmember.interface';
+import DiscordRole from '../../models/interfaces/discordrole.interface';
+import FormattedDiscordMember from '../../models/interfaces/formatteddiscordmember.interface';
 import { GW2GuildApi } from '../gw2/gw2guildapi.service';
 
 @Service()

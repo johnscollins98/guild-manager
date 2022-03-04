@@ -1,8 +1,8 @@
 import { Authorized, BadRequestError, Body, Delete, Get, Header, JsonController, NotFoundError, OnUndefined, Param, Post, Put } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import DiscordMember, { DiscordMemberUpdate } from '../interfaces/discordmember.interface';
-import DiscordRole from '../interfaces/discordrole.interface';
+import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discordmember.interface';
+import DiscordRole from '../models/interfaces/discordrole.interface';
 import { EventPostSettings } from '../models/eventPostSettings.model';
 import { DiscordChannelApi } from '../services/discord/discordchannelapi.service';
 import { DiscordGuildApi } from '../services/discord/discordguildapi.service';

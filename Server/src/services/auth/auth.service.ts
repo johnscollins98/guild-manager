@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
-import AuthInfo from '../../interfaces/authinfo.interface';
+import AuthInfo from '../../models/interfaces/authinfo.interface';
 import { DiscordGuildApi } from '../discord/discordguildapi.service';
 
 const notLoggedIn = {

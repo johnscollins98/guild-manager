@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
-import DiscordMember, { DiscordMemberUpdate } from '../../interfaces/discordmember.interface';
-import DiscordRole from '../../interfaces/discordrole.interface';
+import DiscordMember, { DiscordMemberUpdate } from '../../models/interfaces/discordmember.interface';
+import DiscordRole from '../../models/interfaces/discordrole.interface';
 import { DiscordApi } from './discordapi.service';
 
 @Service()

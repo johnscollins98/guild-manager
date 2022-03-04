@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
-import { DiscordChannel } from '../../interfaces/discordchannel.interface';
-import DiscordEmbed from '../../interfaces/discordembed.interface';
-import DiscordMessage from '../../interfaces/discordmessage.interface';
+import { DiscordChannel } from '../../models/interfaces/discordchannel.interface';
+import DiscordEmbed from '../../models/interfaces/discordembed.interface';
+import DiscordMessage from '../../models/interfaces/discordmessage.interface';
 import { DiscordApi } from './discordapi.service';
 
 @Service()
