@@ -1,13 +1,14 @@
 import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
-export class MessageIDs {
-  Monday!: string;
-  Tuesday!: string;
-  Wednesday!: string;
-  Thursday!: string;
-  Friday!: string;
-  Saturday!: string;
-  Sunday!: string;
+export interface MessageIDs {
+  [key: string]: string;
+  Monday: string;
+  Tuesday: string;
+  Wednesday: string;
+  Thursday: string;
+  Friday: string;
+  Saturday: string;
+  Sunday: string;
 }
 
 @Entity()

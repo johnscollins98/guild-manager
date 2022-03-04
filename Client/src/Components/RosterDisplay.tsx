@@ -202,16 +202,16 @@ const RosterDisplay = ({
             throw new Error('Discord ID not found for given member');
           }
 
-          const res = await changeDiscordMember(member.discordId, newNickname);
+          await changeDiscordMember(member.discordId, newNickname);
           const recordCopy = [...recordState];
           const toEdit = recordCopy.find((record) => record.discordId === member.discordId);
           if (!toEdit) {
             throw new Error('Cannot find given member');
           }
 
-          toEdit.discordName = res;
+          toEdit.discordName = newNickname;
           setRecordState(recordCopy);
-          openToast(`Successfully updated nickname to ${res}`, 'success');
+          openToast(`Successfully updated nickname to ${newNickname}`, 'success');
           refetchData();
         } catch (err) {
           openToast('There was an error changing the nickname', 'error');

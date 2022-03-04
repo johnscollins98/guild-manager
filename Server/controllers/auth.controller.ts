@@ -3,12 +3,12 @@ import passport from 'passport';
 import { Authorized, CurrentUser, Get, Header, JsonController, Req, Res, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { getUserAuthInfo } from '../utils/auth.utils';
+import { AuthService } from '../services/auth/auth.service';
 
 @Service()
 @JsonController('/auth')
 export class AuthController {
-  constructor() {}
+  constructor(private readonly authService: AuthService) {}
 
   @Get('/')
   @UseBefore(passport.authenticate('discord'))
@@ -30,7 +30,7 @@ export class AuthController {
   @Get('/authorization')
   @Header('Cache-control', 'no-store')
   getAuthorization(@CurrentUser() user: Express.User) {
-    return getUserAuthInfo(user);
+    return this.authService.getUserAuthInfo(user);
   }
 
   @Get('/admin_roles')
@@ -42,6 +42,6 @@ export class AuthController {
   @Get('/event_roles')
   @Authorized()
   getEventRoles() {
-    return config.eventRoles;
+    return config.eventRoles.concat(config.adminRoles);
   }
 }

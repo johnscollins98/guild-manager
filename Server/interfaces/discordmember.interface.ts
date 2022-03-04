@@ -8,3 +8,8 @@ export default interface DiscordMember {
   nick?: string;
   joined_at: string;
 }
+
+export interface DiscordMemberUpdate {
+  nick?: string,
+  roles?: string[]
+}

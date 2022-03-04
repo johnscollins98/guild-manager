@@ -1,8 +1,8 @@
 import PassportDiscord from 'passport-discord';
 import passport from 'passport';
-import { User } from '../models/user.model';
-import { config } from '../config';
-import { UserRepository } from '../services/repositories/user.repository';
+import { User } from '../../../models/user.model';
+import { config } from '../../../config';
+import { UserRepository } from '../../repositories/user.repository';
 import { Service } from 'typedi';
 
 const DiscordStrategy = PassportDiscord.Strategy;

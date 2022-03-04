@@ -1,0 +1,127 @@
+import { Authorized, BadRequestError, Body, Delete, Get, Header, JsonController, NotFoundError, OnUndefined, Param, Post, Put } from 'routing-controllers';
+import { Service } from 'typedi';
+import { config } from '../config';
+import { DiscordMemberUpdate } from '../interfaces/discordmember.interface';
+import { EventPostSettings } from '../models/eventPostSettings.model';
+import { DiscordChannelApi } from '../services/discord/discordchannelapi.service';
+import { DiscordGuildApi } from '../services/discord/discordguildapi.service';
+import { DiscordMemberFormatter } from '../services/discord/discordmemberformatter.service';
+import { EventEmbedCreator } from '../services/discord/eventembedcreator.service';
+import { EventRepository } from '../services/repositories/event.repository';
+import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
+
+@Service()
+@JsonController('/api/discord')
+export class DiscordController {
+  constructor(
+    private readonly discordGuildApi: DiscordGuildApi,
+    private readonly discordChannelApi: DiscordChannelApi,
+    private readonly discordMemberFormatter: DiscordMemberFormatter,
+    private readonly discordEventEmbedCreator: EventEmbedCreator,
+    private readonly eventRepository: EventRepository,
+    private readonly eventSettingsRepository: EventPostSettingsRepository
+  ) {}
+
+  @Get('/roles')
+  async getRoles() {
+    return await this.discordGuildApi.getRoles();
+  }
+
+  @Get('/members')
+  @Header('Cache-control', `public, max-age=0`)
+  async getMembers() {
+    const rawMembers = await this.discordGuildApi.getMembers();
+    const roles = await this.discordGuildApi.getRoles();
+    return await this.discordMemberFormatter.formatMembers(rawMembers, roles);
+  }
+
+  @Get('/log')
+  async getLogs() {
+    return await this.discordGuildApi.getLogs();
+  }
+
+  @Authorized()
+  @OnUndefined(204)
+  @Put('/members/:memberId/roles/:roleId')
+  async addRoleToMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
+    await this.discordGuildApi.addRoleToMember(memberId, roleId);
+  }
+  
+  @Authorized()
+  @OnUndefined(204)
+  @Delete('/members/:memberId/roles/:roleId')
+  async removeRoleFromMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
+    await this.discordGuildApi.removeRoleFromMember(memberId, roleId);
+  }
+
+  @Authorized()
+  @OnUndefined(204)
+  @Put('/members/:memberId')
+  async updateMember(@Param('memberId') memberId: string, @Body() updates: DiscordMemberUpdate) {
+    return await this.discordGuildApi.updateMember(memberId, updates);
+  }
+
+  @Authorized()
+  @OnUndefined(204)
+  @Delete('/members/:memberId')
+  async deleteMember(@Param('memberId') memberId: string) {
+    await this.discordGuildApi.kickMember(memberId);
+  }
+
+  @Authorized()
+  @OnUndefined(200)
+  @Post('/eventUpdate')
+  async postEventUpdates(@Body() settings: EventPostSettings) {
+    await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, settings);
+    if (!(await this.discordChannelApi.getChannel(settings.channelId))) {
+      throw new NotFoundError('Channel not found');
+    }
+
+    if (settings.editMessages) {
+      if (!settings.existingMessageIds) throw new BadRequestError('Missing "existingMessageIds"');
+
+      const channelMessages = await this.discordChannelApi.getChannelMessages(settings.channelId);
+      const values: string[] = Object.values(settings.existingMessageIds);
+      for (const id of values) {
+        if (!channelMessages.find((m) => m.id === id)) throw new BadRequestError('Invalid Message IDs');
+      }
+    }
+
+    const daysOfWeek = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+
+    for (const day of daysOfWeek) {
+      const events = await this.eventRepository.getEventsOnADay(day);
+
+      const parseTime = (str: string) => {
+        return Date.parse(`1970/01/01 ${str}`);
+      };
+
+      const sorted = events.sort((a, b) => {
+        const aTime = parseTime(a.startTime);
+        const bTime = parseTime(b.startTime);
+
+        return aTime - bTime;
+      });
+
+      const embed = this.discordEventEmbedCreator.createEmbed(day, sorted);
+      if (settings.editMessages) {
+        const messageId = settings.existingMessageIds[day];
+        if (!messageId) throw 'Invalid Message IDs';
+
+        await this.discordChannelApi.editEmbed(settings.channelId, messageId, embed);
+      } else {
+        await this.discordChannelApi.addEmbed(settings.channelId, embed);
+      }
+
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+  }
+}

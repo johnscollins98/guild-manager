@@ -2,15 +2,13 @@ import express from 'express';
 import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
-import { DiscordStrategySetup } from './strategies/discord.strategy';
+import { DiscordStrategySetup } from './services/auth/strategies/discord.strategy';
 import path from 'path';
-import discordRoute from './routes/discord.route';
 import { config } from './config';
-import { setCache } from './middleware/setcache.middleware';
 import { useExpressServer, useContainer as rc_useContainer, Action } from 'routing-controllers';
 import { Container } from 'typeorm-typedi-extensions';
 import { createConnection, useContainer } from 'typeorm';
-import { getUserAuthInfo } from './utils/auth.utils';
+import { AuthService } from './services/auth/auth.service';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -45,9 +43,6 @@ createConnection({
   Container.get(DiscordStrategySetup);
 });
 
-app.use(setCache);
-app.use('/api/discord', discordRoute);
-
 useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*.controller.*')],
@@ -56,7 +51,7 @@ useExpressServer(app, {
       return false
     }
 
-    const info = await getUserAuthInfo(action.request.user)
+    const info = await Container.get(AuthService).getUserAuthInfo(action.request.user);
     return info.loggedIn && info.isAdmin;
   },
   currentUserChecker: (action: Action) => action.request.user

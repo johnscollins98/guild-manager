@@ -18,4 +18,9 @@ export class EventPostSettingsRepository extends BaseRepository<EventPostSetting
       return await this.repo.save({ guildId });
     }
   }
+
+  async updateByGuildId(guildId: string, updated: EventPostSettings): Promise<EventPostSettings> {
+    await this.repo.update({ guildId }, updated);
+    return this.findOrCreateByGuildId(guildId);
+  }
 }
