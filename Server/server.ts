@@ -37,7 +37,7 @@ createConnection({
   useUnifiedTopology: true,
   synchronize: true,
   logging: true,
-  entities: ['./models/*.*']
+  entities: [path.join(__dirname, '**','*.model.{ts,js}')]
 }).then(() => {
   console.log('Connected to MongoDB');
   Container.get(DiscordStrategySetup);
