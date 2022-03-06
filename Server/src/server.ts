@@ -37,7 +37,7 @@ createConnection({
   useUnifiedTopology: true,
   synchronize: true,
   logging: true,
-  entities: [path.join(__dirname, '**','*.model.{ts,js}')]
+  entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
 }).then(() => {
   console.log('Connected to MongoDB');
   Container.get(DiscordStrategySetup);
@@ -48,7 +48,7 @@ useExpressServer(app, {
   controllers: [path.join(__dirname + '/controllers/*.controller.*')],
   authorizationChecker: async (action: Action) => {
     if (!action.request.user) {
-      return false
+      return false;
     }
 
     const info = await Container.get(AuthService).getUserAuthInfo(action.request.user);
@@ -57,11 +57,9 @@ useExpressServer(app, {
   currentUserChecker: (action: Action) => action.request.user
 });
 
-const dirs = [__dirname];
-if (process.env.NODE_ENV === 'production') {
-  dirs.push('..');
-}
-dirs.push('..', 'Client', 'build');
-app.use(express.static(path.join(...dirs)));
+app.use(express.static(path.join(__dirname, '..', '..', 'Client', 'build')));
+app.use('*', (_, res) => {
+  if (!res.headersSent) res.redirect('/');
+});
 
 app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
