@@ -1,33 +1,37 @@
-.warning-content {
-  display: flex;
-  flex-direction: column;
+div.warning-content {
+  padding-bottom: 24px;
 
   .warning-card {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex: 1;
-    align-items: center;
-    margin: 8px;
-    padding: 8px;
+    margin: 8px 0;
+    padding: 4px;
 
-    .field {
-      display: flex;
+    .data {
       flex: 1;
-      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
 
-      .MuiTypography-root {
-        white-space: nowrap;
-      }
+      .field {
+        display: flex;
+        align-items: center;
+        margin: 8px;
 
-      &.actions {
-        justify-self: flex-end;
-        flex-grow: 0;
+        .icon {
+          margin: 0 4px;
+        }
       }
+    }
 
-      .icon {
-        margin: 0 4px;
-      }
+    .actions {
+      flex: 0;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 }
