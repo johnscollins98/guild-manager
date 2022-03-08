@@ -25,7 +25,16 @@ export class DiscordController {
 
   @Get('/roles')
   async getRoles() {
-    return await this.discordGuildApi.getRoles();
+    const results: [DiscordRole[], string[]] = await Promise.all([
+      await this.discordGuildApi.getRoles(),
+      await this.discordMemberFormatter.getValidRoles()
+    ]);
+    const [discordRoles, validRoleIds] = results;
+    return this.discordMemberFormatter.getRoleInfo(
+      discordRoles, 
+      discordRoles.sort((a, b) => b.position - a.position).map(r => r.id),
+      validRoleIds
+    );
   }
 
   @Get('/members')

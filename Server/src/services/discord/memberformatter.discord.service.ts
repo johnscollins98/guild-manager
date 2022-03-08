@@ -33,7 +33,7 @@ export class DiscordMemberFormatter {
     };
   }
 
-  private getRoleInfo(
+  getRoleInfo(
     allRoles: DiscordRole[],
     memberRoleIds: string[],
     validRoleIds: string[]
@@ -54,7 +54,7 @@ export class DiscordMemberFormatter {
     return roles;
   }
 
-  private async getValidRoles(): Promise<string[]> {
+  async getValidRoles(): Promise<string[]> {
     const gw2ranks = await this.gw2GuildApi.getRanks();
     const extraRanks = ['Guest', 'Bots'];
 
