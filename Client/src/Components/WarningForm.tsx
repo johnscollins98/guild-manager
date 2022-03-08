@@ -40,7 +40,7 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
             size="small"
             required
           />
-          <Button variant="outlined" type="submit">
+          <Button variant="contained" color="primary" size="large" type="submit">
             Submit
           </Button>
         </form>

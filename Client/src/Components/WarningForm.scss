@@ -1,6 +1,11 @@
 .warning-form {
   display: flex;
   align-items: center;
+  padding-bottom: 16px;
+
+  button {
+    padding: 6.875px 22px;
+  }
 
   .MuiFormControl-root {
     flex: 1;
