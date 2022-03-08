@@ -4,7 +4,7 @@ import { ExpandMore } from '@material-ui/icons';
 import AccessTime from '@material-ui/icons/AccessTime';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import React from 'react';
-import { DiscordLogDisplay } from '../Interfaces/DiscordLogStringGenerator';
+import { DiscordLogDisplay } from '../../Interfaces/DiscordLogStringGenerator';
 
 import './DiscordLogEntry.scss';
 

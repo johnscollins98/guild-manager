@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Color } from '@material-ui/lab/Alert';
 import { useQuery } from 'react-query';
-import { fetchDiscordLog } from '../utils/DataRetrieval';
-import LoaderPage from './LoaderPage';
-import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../utils/DiscordLogStringFactory';
+import { fetchDiscordLog } from '../../utils/DataRetrieval';
+import LoaderPage from '../LoaderPage';
+import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
 
 import './DiscordLog.scss';
-import { snowflakeToDate } from '../utils/Helpers';
-import { DiscordLogDisplay, DiscordLogDisplayGenerator } from '../Interfaces/DiscordLogStringGenerator';
+import { snowflakeToDate } from '../../utils/Helpers';
+import { DiscordLogDisplay, DiscordLogDisplayGenerator } from '../../Interfaces/DiscordLogStringGenerator';
 import DiscordLogEntry from './DiscordLogEntry';
 
 interface Props {

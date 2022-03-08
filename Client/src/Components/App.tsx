@@ -31,7 +31,7 @@ import { PaletteType } from '@material-ui/core';
 
 import { useQuery, useQueryClient } from 'react-query';
 import EventRepository from '../utils/EventRepository';
-import DiscordLog from './DiscordLog';
+import DiscordLog from './DiscordLog/DiscordLog';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
