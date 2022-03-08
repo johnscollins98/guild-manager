@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import './EventPage.scss';
 
 import Event from '../../Interfaces/Event';
@@ -17,6 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { Color } from '@material-ui/lab/Alert';
 
 import { useQuery } from 'react-query';
+import useConfirm from '../Common/ConfirmDialog/useConfirm';
 
 interface Props {
   filterString: string;
@@ -32,6 +33,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const [showModal, setShowModal] = useState(false);
 
   const [possibleLeaders, setPossibleLeaders] = useState<DiscordMember[]>([]);
+  const { confirm } = useConfirm();
 
   useEffect(() => {
     const getPossibleLeaders = async () => {
@@ -84,7 +86,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const deleteEvent = useCallback(
     async (eventToDelete: Event) => {
       try {
-        const res = window.confirm(`Are you sure you want to delete '${eventToDelete.title}'?`);
+        const res = await confirm(`Are you sure you want to delete '${eventToDelete.title}'?`, 'Delete Event');
         if (!res) return;
 
         const deletedEvent = eventToDelete._id === undefined 
@@ -102,7 +104,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
         openToast('There was an error deleting the event', 'error');
       }
     },
-    [localEvents, setLocalEvents, openToast]
+    [localEvents, setLocalEvents, openToast, confirm]
   );
 
   const updateEvent = useCallback(

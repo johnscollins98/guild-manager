@@ -16,6 +16,7 @@ import Assignment from '@material-ui/icons/Assignment';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import Close from '@material-ui/icons/Close';
 import Person from '@material-ui/icons/Person';
+import useConfirm from '../../Common/ConfirmDialog/useConfirm';
 
 interface Props {
   isOpen: boolean;
@@ -25,9 +26,11 @@ interface Props {
 }
 
 const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => {
+  const { confirm } = useConfirm();
+
   const handleDeleteWarning = useCallback(
     async (warning: Warning) => {
-      const res = window.confirm('Are you sure you want to delete this warning?');
+      const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
       if (res) {
         if (member.memberId) {
           await onDeleteWarning(warning._id);

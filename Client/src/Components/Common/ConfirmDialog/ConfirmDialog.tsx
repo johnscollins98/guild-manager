@@ -2,30 +2,18 @@ import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@materia
 import React from 'react';
 
 import './ConfirmDialog.scss';
+import useConfirm from './useConfirm';
 
-interface Props {
-  isOpen: boolean;
-  onCancel: () => unknown;
-  onConfirm: () => unknown;
-  title?: string;
-  message?: string;
-}
+const ConfirmDialog = () => {
+  const { onConfirm, onCancel, confirmModalState } = useConfirm();
 
-const ConfirmDialog = ({
-  isOpen,
-  onCancel,
-  onConfirm,
-  title = 'Confirm',
-  message = 'Are you sure would like to proceed?',
-  ...props
-}: Props) => {
   return (
-    <Dialog open={isOpen} onClose={onCancel} className="confirm-modal" {...props}>
-      <DialogTitle>{title}</DialogTitle>
+    <Dialog open={confirmModalState.show} onClose={onCancel} className="confirm-modal">
+      <DialogTitle>{confirmModalState.title}</DialogTitle>
       <DialogContent className="confirm-modal-content">
         <form onSubmit={onConfirm} onReset={onCancel}>
           <div className="confirm-modal-message">
-            <Typography>{message}</Typography>
+            <Typography>{confirmModalState.message}</Typography>
           </div>
           <div className="confirm-modal-actions">
             <Button color="secondary" variant="contained" type="reset">

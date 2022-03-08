@@ -21,6 +21,7 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
 import DiscordMember from '../../Interfaces/DiscordMember';
+import useConfirm from '../Common/ConfirmDialog/useConfirm';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;
@@ -67,6 +68,7 @@ const RosterDisplay = ({
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
   const [singleColumn, setSingleColumn] = useState(true);
+  const { confirm } = useConfirm();
 
   
 
@@ -173,13 +175,13 @@ const RosterDisplay = ({
     async (record: MemberRecord) => {
       if (!record.discordId) return;
 
-      const res = window.confirm(`Are you sure you want to kick ${record.discordName}?`);
+      const res = await confirm(`Are you sure you want to kick ${record.discordName}?`, 'Confirm Kick');
       await queryClient.cancelQueries();
       if (res) {
         kickMutation.mutate(record.discordId);
       }
     },
-    [kickMutation, queryClient]
+    [kickMutation, queryClient, confirm]
   );
 
   const openEdit = useCallback(

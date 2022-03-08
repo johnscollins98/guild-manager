@@ -32,6 +32,8 @@ import { PaletteType } from '@material-ui/core';
 import { useQuery, useQueryClient } from 'react-query';
 import EventRepository from '../utils/EventRepository';
 import DiscordLog from './DiscordLog/DiscordLog';
+import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
+import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -117,58 +119,61 @@ const App = () => {
 
   return (
     <MuiThemeProvider theme={darkTheme}>
-      <Paper className="paper-container" square>
-        <Snackbar open={showToast} autoHideDuration={6000} onClose={() => closeToast()}>
-          <Alert onClose={() => closeToast()} severity={toastStatus}>
-            {toastMessage}
-          </Alert>
-        </Snackbar>
-        <div className="content">
-          {authInfo.loggedIn && authInfo.isAdmin ? (
-            <>
-              <Control
-                handleFilterChange={handleFilterChange}
-                theme={theme}
-                toggleTheme={toggleTheme}
-              />
-              <TabContext value={tab}>
-                <Tabs
-                  value={tab}
-                  onChange={(_, v) => setTab(v)}
-                  scrollButtons="auto"
-                  variant="scrollable"
-                >
-                  <Tab label={TABS.ROSTER} value="roster" />
-                  <Tab label={TABS.LOG} value="log" />
-                  <Tab label={TABS.DISCORD_LOG} value="discord-log" />
-                  <Tab label={TABS.EVENTS} value="events" />
-                </Tabs>
-                <TabPanel value="roster">
-                  <Roster
-                    filterString={filterString}
-                    openToast={openToast}
-                    sortBy={sortBy}
-                    setSortBy={setSortBy}
-                    filterBy={filterBy}
-                    setFilterBy={setFilterBy}
-                  />
-                </TabPanel>
-                <TabPanel value="log">
-                  <Log filterString={filterString} openToast={openToast} />
-                </TabPanel>
-                <TabPanel value="discord-log">
-                  <DiscordLog filterString={filterString} openToast={openToast} />
-                </TabPanel>
-                <TabPanel value="events">
-                  <EventPage filterString={filterString} openToast={openToast} />
-                </TabPanel>
-              </TabContext>
-            </>
-          ) : (
-            <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
-          )}
-        </div>
-      </Paper>
+      <ConfirmContextProvider>
+        <Paper className="paper-container" square>
+          <Snackbar open={showToast} autoHideDuration={6000} onClose={() => closeToast()}>
+            <Alert onClose={() => closeToast()} severity={toastStatus}>
+              {toastMessage}
+            </Alert>
+          </Snackbar>
+          <div className="content">
+            {authInfo.loggedIn && authInfo.isAdmin ? (
+              <>
+                <Control
+                  handleFilterChange={handleFilterChange}
+                  theme={theme}
+                  toggleTheme={toggleTheme}
+                />
+                <TabContext value={tab}>
+                  <Tabs
+                    value={tab}
+                    onChange={(_, v) => setTab(v)}
+                    scrollButtons="auto"
+                    variant="scrollable"
+                  >
+                    <Tab label={TABS.ROSTER} value="roster" />
+                    <Tab label={TABS.LOG} value="log" />
+                    <Tab label={TABS.DISCORD_LOG} value="discord-log" />
+                    <Tab label={TABS.EVENTS} value="events" />
+                  </Tabs>
+                  <TabPanel value="roster">
+                    <Roster
+                      filterString={filterString}
+                      openToast={openToast}
+                      sortBy={sortBy}
+                      setSortBy={setSortBy}
+                      filterBy={filterBy}
+                      setFilterBy={setFilterBy}
+                    />
+                  </TabPanel>
+                  <TabPanel value="log">
+                    <Log filterString={filterString} openToast={openToast} />
+                  </TabPanel>
+                  <TabPanel value="discord-log">
+                    <DiscordLog filterString={filterString} openToast={openToast} />
+                  </TabPanel>
+                  <TabPanel value="events">
+                    <EventPage filterString={filterString} openToast={openToast} />
+                  </TabPanel>
+                </TabContext>
+              </>
+            ) : (
+              <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
+            )}
+          </div>
+        </Paper>
+        <ConfirmDialog />
+      </ConfirmContextProvider>
     </MuiThemeProvider>
   );
 };
