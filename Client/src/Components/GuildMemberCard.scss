@@ -51,12 +51,14 @@
 
           .date {
             display: flex;
+            overflow: hidden;
             align-items: center;
             .MuiSvgIcon-root,
             .MuiTypography-root {
               font-size: 12px;
               opacity: 0.8;
               font-weight: 200;
+              white-space: nowrap;
             }
 
             .MuiSvgIcon-root {
