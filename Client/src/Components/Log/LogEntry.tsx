@@ -2,7 +2,7 @@ import React from 'react';
 
 import './LogEntry.scss';
 
-import GW2LogEntry from '../Interfaces/GW2LogEntry';
+import GW2LogEntry from '../../Interfaces/GW2LogEntry';
 
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';

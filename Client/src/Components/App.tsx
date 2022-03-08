@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import AuthInfo from '../Interfaces/AuthInfo';
 
 import './App.scss';
-import Log from './Log';
+import Log from './Log/Log';
 import Roster from './Roster';
 import Control from './Control';
 import EventPage from './Events/EventPage';

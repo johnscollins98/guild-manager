@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import './Log.scss';
 
-import GW2LogEntry from '../Interfaces/GW2LogEntry';
+import GW2LogEntry from '../../Interfaces/GW2LogEntry';
 
-import { filterLogByString } from '../utils/Helpers';
-import { fetchGW2Log } from '../utils/DataRetrieval';
+import { filterLogByString } from '../../utils/Helpers';
+import { fetchGW2Log } from '../../utils/DataRetrieval';
 import LogEntry from './LogEntry';
-import LoaderPage from './LoaderPage';
+import LoaderPage from '../LoaderPage';
 
 import { Color } from '@material-ui/lab/Alert';
 
