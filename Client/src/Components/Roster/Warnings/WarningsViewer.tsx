@@ -2,8 +2,8 @@ import React, { useCallback } from 'react';
 
 import './WarningsViewer.scss';
 
-import MemberRecord from '../Interfaces/MemberRecord';
-import Warning from '../Interfaces/Warning';
+import MemberRecord from '../../../Interfaces/MemberRecord';
+import Warning from '../../../Interfaces/Warning';
 
 import Card from '@material-ui/core/Card';
 import Dialog from '@material-ui/core/Dialog';

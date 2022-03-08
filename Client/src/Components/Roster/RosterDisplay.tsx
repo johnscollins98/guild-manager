@@ -1,26 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import RoleEdit from './RoleEdit';
-import { filterDataByString } from '../utils/Helpers';
-import { changeDiscordMember, kickDiscordMember } from '../utils/DataRetrieval';
+import { filterDataByString } from '../../utils/Helpers';
+import { changeDiscordMember, kickDiscordMember } from '../../utils/DataRetrieval';
 
 import GuildMemberCard from './GuildMemberCard';
 import './RosterDisplay.scss';
 import RosterControl from './RosterControl';
-import { compareRank } from '../utils/DataProcessing';
-import WarningRepository from '../utils/WarningRepository';
+import { compareRank } from '../../utils/DataProcessing';
+import WarningRepository from '../../utils/WarningRepository';
 
-import MemberRecord from '../Interfaces/MemberRecord';
-import DiscordRole from '../Interfaces/DiscordRole';
-import GW2Rank from '../Interfaces/GW2Rank';
-import AuthInfo from '../Interfaces/AuthInfo';
-import { WarningPost } from '../Interfaces/Warning';
+import MemberRecord from '../../Interfaces/MemberRecord';
+import DiscordRole from '../../Interfaces/DiscordRole';
+import GW2Rank from '../../Interfaces/GW2Rank';
+import AuthInfo from '../../Interfaces/AuthInfo';
+import { WarningPost } from '../../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
 import { useMutation, useQueryClient } from 'react-query';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
-import DiscordMember from '../Interfaces/DiscordMember';
+import DiscordMember from '../../Interfaces/DiscordMember';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;

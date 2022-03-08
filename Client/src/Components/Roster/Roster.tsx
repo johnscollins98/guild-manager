@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { generateGW2RosterRecords, getExcessDiscordRecords } from '../utils/DataProcessing';
+import { generateGW2RosterRecords, getExcessDiscordRecords } from '../../utils/DataProcessing';
 
 import RosterDisplay from './RosterDisplay';
 import { useQuery } from 'react-query';
@@ -10,12 +10,12 @@ import {
   fetchDiscordRoles,
   fetchGW2Members,
   fetchGW2Ranks
-} from '../utils/DataRetrieval';
-import LoaderPage from './LoaderPage';
+} from '../../utils/DataRetrieval';
+import LoaderPage from '../LoaderPage';
 
-import MemberRecord from '../Interfaces/MemberRecord';
+import MemberRecord from '../../Interfaces/MemberRecord';
 import { Color } from '@material-ui/lab/Alert';
-import WarningRepository from '../utils/WarningRepository';
+import WarningRepository from '../../utils/WarningRepository';
 
 interface CustomError {
   data: string;

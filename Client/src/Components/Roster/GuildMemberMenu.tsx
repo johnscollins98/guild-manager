@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import MemberRecord from '../Interfaces/MemberRecord';
+import MemberRecord from '../../Interfaces/MemberRecord';
 
 import Divider from '@material-ui/core/Divider';
 import Menu from '@material-ui/core/Menu';
@@ -11,7 +11,7 @@ import List from '@material-ui/icons/List';
 import Search from '@material-ui/icons/Search';
 import Warning from '@material-ui/icons/Warning';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
-import { getAdminRoles } from '../utils/DataRetrieval';
+import { getAdminRoles } from '../../utils/DataRetrieval';
 import { PopoverPosition } from '@material-ui/core';
 
 interface Props {

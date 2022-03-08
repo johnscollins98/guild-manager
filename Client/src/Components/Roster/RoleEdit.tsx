@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import './RoleEdit.scss';
-import { getColorFromRole } from '../utils/Helpers';
-import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../utils/DataRetrieval';
+import { getColorFromRole } from '../../utils/Helpers';
+import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../../utils/DataRetrieval';
 
-import MemberRecord from '../Interfaces/MemberRecord';
-import DiscordRole from '../Interfaces/DiscordRole';
+import MemberRecord from '../../Interfaces/MemberRecord';
+import DiscordRole from '../../Interfaces/DiscordRole';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import Dialog from '@material-ui/core/Dialog';

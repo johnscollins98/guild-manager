@@ -1,5 +1,5 @@
 import './GuildMemberDetails.scss';
-import MemberRecord from '../Interfaces/MemberRecord';
+import MemberRecord from '../../Interfaces/MemberRecord';
 import { Avatar, Divider, Popover, PopoverPosition, Typography } from '@material-ui/core';
 
 interface Props {

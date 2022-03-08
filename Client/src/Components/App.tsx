@@ -4,7 +4,7 @@ import AuthInfo from '../Interfaces/AuthInfo';
 
 import './App.scss';
 import Log from './Log/Log';
-import Roster from './Roster';
+import Roster from './Roster/Roster';
 import Control from './Control';
 import EventPage from './Events/EventPage';
 import LoginPage from './LoginPage';

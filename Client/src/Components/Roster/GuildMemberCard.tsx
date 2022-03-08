@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from 'react';
 
 import './GuildMemberCard.scss';
-import { getColorFromRole } from '../utils/Helpers';
-import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
-import WarningForm from './WarningForm';
-import WarningsViewer from './WarningsViewer';
-import gw2Image from '../assets/images/gw2.png';
+import { getColorFromRole } from '../../utils/Helpers';
+import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
+import WarningForm from './Warnings/WarningForm';
+import WarningsViewer from './Warnings/WarningsViewer';
+import gw2Image from '../../assets/images/gw2.png';
 
-import MemberRecord from '../Interfaces/MemberRecord';
-import DiscordRole from '../Interfaces/DiscordRole';
-import { WarningPost } from '../Interfaces/Warning';
+import MemberRecord from '../../Interfaces/MemberRecord';
+import DiscordRole from '../../Interfaces/DiscordRole';
+import { WarningPost } from '../../Interfaces/Warning';
 
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
@@ -20,7 +20,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import SyncProblem from '@material-ui/icons/SyncProblem';
 import GuildMemberMenu from './GuildMemberMenu';
-import { getDateString } from '../utils/DataProcessing';
+import { getDateString } from '../../utils/DataProcessing';
 import { Timer } from '@material-ui/icons';
 import GuildMemberDetails from './GuildMemberDetails';
 import { PopoverPosition } from '@material-ui/core';
