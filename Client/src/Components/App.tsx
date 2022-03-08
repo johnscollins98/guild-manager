@@ -6,7 +6,7 @@ import './App.scss';
 import Log from './Log';
 import Roster from './Roster';
 import Control from './Control';
-import EventPage from './EventPage';
+import EventPage from './Events/EventPage';
 import LoginPage from './LoginPage';
 import {
   fetchAuthInfo,

@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './EventPage.scss';
 
-import Event from '../Interfaces/Event';
-import DiscordMember from '../Interfaces/DiscordMember';
+import Event from '../../Interfaces/Event';
+import DiscordMember from '../../Interfaces/DiscordMember';
 
-import EventRepo from '../utils/EventRepository';
+import EventRepo from '../../utils/EventRepository';
 import EventEntry from './EventEntry';
 import EventPosterForm from './EventPosterForm';
-import LoaderPage from './LoaderPage';
-import { fetchDiscordMembers, getEventRoles } from '../utils/DataRetrieval';
+import LoaderPage from '../LoaderPage';
+import { fetchDiscordMembers, getEventRoles } from '../../utils/DataRetrieval';
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';

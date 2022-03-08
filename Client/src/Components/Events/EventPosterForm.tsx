@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import EventRepository from '../utils/EventRepository';
-import LoaderPage from './LoaderPage';
+import EventRepository from '../../utils/EventRepository';
+import LoaderPage from '../LoaderPage';
 
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';

@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react';
 
 import './EventEntry.scss';
 
-import DiscordMember from '../Interfaces/DiscordMember';
-import Event from '../Interfaces/Event';
+import DiscordMember from '../../Interfaces/DiscordMember';
+import Event from '../../Interfaces/Event';
 
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
