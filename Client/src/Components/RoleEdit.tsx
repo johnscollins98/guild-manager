@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-
+import './RoleEdit.scss';
 import { getColorFromRole } from '../utils/Helpers';
 import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../utils/DataRetrieval';
 
@@ -102,9 +102,9 @@ const RoleEdit = ({
 
   if (!selectedRecord) return null;
   return (
-    <Dialog open={modalShow} onClose={closeEdit}>
+    <Dialog open={modalShow} onClose={closeEdit} className="role-edit-modal">
       <DialogTitle>Edit Roles</DialogTitle>
-      <DialogContent>
+      <DialogContent className="role-edit-content">
         {allRoles.map((role) => (
           <FormGroup row key={role.id}>
             <FormControlLabel
