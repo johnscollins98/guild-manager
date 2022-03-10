@@ -51,18 +51,26 @@ const App = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
+  const [authInfo, setAuthInfo] = useState<AuthInfo>({
+    loggedIn: false,
+    isAdmin: false,
+    username: ''
+  });
+
   const queryClient = useQueryClient();
   useEffect(() => {
-    queryClient.prefetchQuery('');
-    queryClient.prefetchQuery('gw2log', fetchGW2Log);
-    queryClient.prefetchQuery('eventsData', EventRepository.getAll);
-    queryClient.prefetchQuery('event-settings', EventRepository.getSettings);
-    queryClient.prefetchQuery('gw2Members', fetchGW2Members);
-    queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
-    queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
-    queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
-    queryClient.prefetchQuery('discordLog', fetchDiscordLog);
-  }, [queryClient]);
+    if (authInfo.loggedIn && authInfo.isAdmin) {
+      queryClient.prefetchQuery('');
+      queryClient.prefetchQuery('gw2log', fetchGW2Log);
+      queryClient.prefetchQuery('eventsData', EventRepository.getAll);
+      queryClient.prefetchQuery('event-settings', EventRepository.getSettings);
+      queryClient.prefetchQuery('gw2Members', fetchGW2Members);
+      queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
+      queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
+      queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
+      queryClient.prefetchQuery('discordLog', fetchDiscordLog);
+    }
+  }, [queryClient, authInfo]);
 
   const darkTheme = createMuiTheme({
     palette: {
@@ -91,11 +99,6 @@ const App = () => {
     [setFilterString]
   );
 
-  const [authInfo, setAuthInfo] = useState<AuthInfo>({
-    loggedIn: false,
-    isAdmin: false,
-    username: ''
-  });
   const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
   useEffect(() => {
     if (authInfoQuery.isLoading) return;
