@@ -40,7 +40,7 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
       }
       onClose();
     },
-    [onDeleteWarning, onClose, member]
+    [onDeleteWarning, onClose, member, confirm]
   );
 
   return (
