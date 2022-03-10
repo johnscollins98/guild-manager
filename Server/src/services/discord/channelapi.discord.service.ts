@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { DiscordChannel } from '../../models/interfaces/discordchannel.interface';
 import DiscordEmbed from '../../models/interfaces/discordembed.interface';
 import DiscordMessage from '../../models/interfaces/discordmessage.interface';
+import { DiscordMessageDetails } from '../../models/interfaces/discordmessagedetails.interface';
 import { DiscordApi } from './api.discord.service';
 
 @Service()
@@ -16,13 +17,43 @@ export class DiscordChannelApi {
     return await this.discordApi.get(`channels/${channelId}/messages`);
   }
 
+  async getChannelMessage(channelId: string, messageId: string): Promise<DiscordMessageDetails> {
+    return await this.discordApi.get(`channels/${channelId}/messages/${messageId}`);
+  }
+
   async editEmbed(channelId: string, messageId: string, embed: DiscordEmbed): Promise<boolean> {
-    await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, { embed });
+    const currentMessage = await this.getChannelMessage(channelId, messageId);
+
+    // check there is a change before posting
+    const areEmbedsTheSame = this.areEmbedsTheSame(currentMessage.embeds[0], embed);
+    if (!areEmbedsTheSame) {
+      await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, { embed });
+    }
     return true;
   }
 
   async addEmbed(channelId: string, embed: DiscordEmbed): Promise<boolean> {
     await this.discordApi.post(`channels/${channelId}/messages`, { embed });
+    return true;
+  }
+
+  private areEmbedsTheSame(embedA: DiscordEmbed, embedB: DiscordEmbed): boolean {
+    if (!embedA || !embedB) return false;
+    if (embedA.title !== embedB.title) return false;
+    if (parseInt(embedA.color) !== parseInt(embedB.color)) return false;
+    
+    const embedAFields = embedA.fields || [];
+    const embedBFields = embedB.fields || [];
+    for (let i = 0; i < embedAFields.length; i++) {
+      const fieldA = embedAFields[i];
+      const fieldB = embedBFields[i];
+
+      if (!fieldB) return false;
+
+      if (fieldA.name !== fieldB.name) return false;
+      if (fieldA.value !== fieldB.value) return false;
+    }
+
     return true;
   }
 }
