@@ -55,7 +55,13 @@ export class DiscordApi {
 
     const response = await fetch(`${this.baseUrl}/${endpoint}`, { ...defInit, ...init });
     if (!response.ok) {
-      throw new HttpError(response.status, response.statusText);
+      let message = response.statusText;
+
+      try {
+        message = await response.json();
+      } catch (err) {}
+
+      throw new HttpError(response.status, message);
     }
 
     return await response.json().catch(() => {});
