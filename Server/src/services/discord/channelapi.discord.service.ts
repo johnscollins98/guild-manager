@@ -38,16 +38,21 @@ export class DiscordChannelApi {
   }
 
   private areEmbedsTheSame(embedA: DiscordEmbed, embedB: DiscordEmbed): boolean {
-    if (!embedA || !embedB) return false;
+    if (!embedA && !embedB) return false;
+    if (embedA && !embedB) return false;
+    if (!embedA && embedB) return false;
+
     if (embedA.title !== embedB.title) return false;
     if (parseInt(embedA.color) !== parseInt(embedB.color)) return false;
     
     const embedAFields = embedA.fields || [];
     const embedBFields = embedB.fields || [];
-    for (let i = 0; i < embedAFields.length; i++) {
+    const longerLength = Math.max(embedAFields.length, embedBFields.length);
+    for (let i = 0; i < longerLength; i++) {
       const fieldA = embedAFields[i];
       const fieldB = embedBFields[i];
 
+      if (!fieldA) return false;
       if (!fieldB) return false;
 
       if (fieldA.name !== fieldB.name) return false;
