@@ -34,7 +34,7 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
         <form onSubmit={submitHandler} className="warning-form">
           <TextField
             value={warningReason}
-            onChange={(e) => setWarningReason(e.target.value)}
+            onChange={e => setWarningReason(e.target.value)}
             variant="outlined"
             label="Reason"
             size="small"

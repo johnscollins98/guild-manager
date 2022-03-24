@@ -70,8 +70,6 @@ const RosterDisplay = ({
   const [singleColumn, setSingleColumn] = useState(true);
   const { confirm } = useConfirm();
 
-  
-
   useEffect(() => {
     setRecordState(records);
   }, [records]);
@@ -115,18 +113,18 @@ const RosterDisplay = ({
     let filtered = toFilter;
     switch (filterBy) {
       case 'has-gw2':
-        filtered = filtered.filter((record) => record.memberId);
+        filtered = filtered.filter(record => record.memberId);
         break;
       case 'excess-discord':
-        filtered = filtered.filter((record) => !record.memberId);
+        filtered = filtered.filter(record => !record.memberId);
         break;
       case 'issues':
-        filtered = filtered.filter((record) => {
-          return Object.values(record.issues).some((k) => k);
+        filtered = filtered.filter(record => {
+          return Object.values(record.issues).some(k => k);
         });
         break;
       case 'warnings':
-        filtered = filtered.filter((record) => record.warnings.length);
+        filtered = filtered.filter(record => record.warnings.length);
         break;
       case 'none':
         break;
@@ -152,7 +150,7 @@ const RosterDisplay = ({
       if (previousData) {
         queryClient.setQueryData(
           'discordMembers',
-          previousData.filter((r) => r.id !== discordId)
+          previousData.filter(r => r.id !== discordId)
         );
       }
 
@@ -175,7 +173,10 @@ const RosterDisplay = ({
     async (record: MemberRecord) => {
       if (!record.discordId) return;
 
-      const res = await confirm(`Are you sure you want to kick ${record.discordName}?`, 'Confirm Kick');
+      const res = await confirm(
+        `Are you sure you want to kick ${record.discordName}?`,
+        'Confirm Kick'
+      );
       await queryClient.cancelQueries();
       if (res) {
         kickMutation.mutate(record.discordId);
@@ -206,7 +207,7 @@ const RosterDisplay = ({
 
           await changeDiscordMember(member.discordId, newNickname);
           const recordCopy = [...recordState];
-          const toEdit = recordCopy.find((record) => record.discordId === member.discordId);
+          const toEdit = recordCopy.find(record => record.discordId === member.discordId);
           if (!toEdit) {
             throw new Error('Cannot find given member');
           }
@@ -229,7 +230,7 @@ const RosterDisplay = ({
       try {
         const newWarning = await WarningRepository.addWarning(warningObject);
         const recordsCopy = [...recordState];
-        const toEdit = recordsCopy.find((record) => {
+        const toEdit = recordsCopy.find(record => {
           return record.memberId === newWarning.givenTo;
         });
         if (!toEdit) throw new Error('Cannot find given member');
@@ -250,7 +251,7 @@ const RosterDisplay = ({
       try {
         const newWarning = await WarningRepository.deleteWarning(warningId);
         const recordsCopy = [...recordState];
-        const toEdit = recordsCopy.find((record) => {
+        const toEdit = recordsCopy.find(record => {
           return record.memberId === newWarning.givenTo;
         });
         if (!toEdit) throw new Error('Cannot find given member');
@@ -328,7 +329,7 @@ const RosterDisplay = ({
                 columnWidth={columnWidth}
                 rowHeight={ROW_HEIGHT}
                 rowCount={numRows}
-                cellRenderer={(props) => memberRenderer(props, numCols)}
+                cellRenderer={props => memberRenderer(props, numCols)}
               />
             );
           }}

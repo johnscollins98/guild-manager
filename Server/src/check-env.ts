@@ -1,10 +1,10 @@
-import { config } from "./config";
+import { config } from './config';
 
 for (const [key, value] of Object.entries(config)) {
   if (value === undefined) {
-    throw new Error(`Must provide ${key}`)
+    throw new Error(`Must provide ${key}`);
   } else if (typeof value === 'number' && Number.isNaN(value)) {
-    throw new Error(`Invalid numeric value for ${key}`)
+    throw new Error(`Invalid numeric value for ${key}`);
   }
 }
-console.log('Environmental variables presence check successfully passed')
+console.log('Environmental variables presence check successfully passed');

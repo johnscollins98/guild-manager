@@ -99,7 +99,7 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
     <form onSubmit={submitHandler}>
       <div>
         <TextField
-          onChange={(e) => setPostChannel(e.target.value)}
+          onChange={e => setPostChannel(e.target.value)}
           value={postChannel}
           label="Channel ID to post to"
           disabled={posting}
@@ -110,7 +110,7 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
         control={
           <Switch
             checked={editMessages}
-            onChange={(e) => {
+            onChange={e => {
               setEditMessages(e.target.checked);
             }}
             disabled={posting}

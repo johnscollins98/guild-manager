@@ -34,8 +34,8 @@ const DiscordLogEntry = ({ displayEntry, date }: Props) => {
       </AccordionSummary>
       {displayEntry.details ? (
         <AccordionDetails>
-          <ul style={{margin: 0}}>
-            {displayEntry.details.map((d) => (
+          <ul style={{ margin: 0 }}>
+            {displayEntry.details.map(d => (
               <li>
                 <Typography>{d}</Typography>
               </li>

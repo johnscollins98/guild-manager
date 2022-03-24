@@ -47,7 +47,7 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
       <DialogContent className="warning-content">
-        {member.warnings.map((warning) => (
+        {member.warnings.map(warning => (
           <Card variant="outlined" className="warning-card" key={warning._id}>
             <div className="data">
               <span className="date field">

@@ -5,10 +5,10 @@ import GW2LogEntry from '../../models/interfaces/gw2logentry.interface';
 @Service()
 export class GW2LogFormatter {
   formatLogEntries(entries: GW2LogEntry[]): FormattedLogEntry[] {
-    const filtered = entries.filter((o) =>
+    const filtered = entries.filter(o =>
       ['joined', 'invited', 'kick', 'rank_change'].includes(o.type)
     );
-    const formattedLogs = filtered.map((entry) => this.formatLogEntry(entry));
+    const formattedLogs = filtered.map(entry => this.formatLogEntry(entry));
     return formattedLogs;
   }
 

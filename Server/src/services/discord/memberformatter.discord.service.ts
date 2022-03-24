@@ -13,7 +13,7 @@ export class DiscordMemberFormatter {
     roles: DiscordRole[]
   ): Promise<FormattedDiscordMember[]> {
     const validRoles = await this.getValidRoles();
-    return members.map((member) => this.formatMember(member, roles, validRoles));
+    return members.map(member => this.formatMember(member, roles, validRoles));
   }
 
   private formatMember(
@@ -59,9 +59,9 @@ export class DiscordMemberFormatter {
     const extraRanks = ['Guest', 'Bots'];
 
     if (gw2ranks === undefined) {
-      return extraRanks
+      return extraRanks;
     }
-    const rankStrings = gw2ranks.map((r) => r.id);
+    const rankStrings = gw2ranks.map(r => r.id);
     return [...rankStrings, ...extraRanks];
   }
 }

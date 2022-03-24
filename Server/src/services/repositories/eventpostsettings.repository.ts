@@ -6,7 +6,9 @@ import { BaseRepository } from './base.repository';
 
 @Service()
 export class EventPostSettingsRepository extends BaseRepository<EventPostSettings> {
-  constructor(@InjectRepository(EventPostSettings) eventPostSettingsRepo: Repository<EventPostSettings>) {
+  constructor(
+    @InjectRepository(EventPostSettings) eventPostSettingsRepo: Repository<EventPostSettings>
+  ) {
     super(eventPostSettingsRepo);
   }
 

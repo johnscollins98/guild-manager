@@ -37,11 +37,7 @@ const LoginPage = ({ isLoading, authInfo }: Props) => {
             onMouseEnter={() => setLogo(SOGif)}
             onMouseLeave={() => setLogo(SOStatic)}
           />
-          <Button
-            href={`${config.backEndBaseUrl}/auth`}
-            variant="contained"
-            color="primary"
-          >
+          <Button href={`${config.backEndBaseUrl}/auth`} variant="contained" color="primary">
             <DiscordLogo height="24" width="24" className="discord-logo" />
             Log In
           </Button>

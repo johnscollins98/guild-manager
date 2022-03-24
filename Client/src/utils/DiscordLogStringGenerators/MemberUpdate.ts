@@ -17,7 +17,7 @@ export class MemberUpdate implements DiscordLogDisplayGenerator {
       details: []
     };
 
-    const nick = this.changes.find((c) => c.key === 'nick');
+    const nick = this.changes.find(c => c.key === 'nick');
     if (nick && display.details) {
       display.details.push(`Changed nickname to ${nick.new_value}`);
     }

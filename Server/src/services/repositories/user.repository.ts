@@ -10,7 +10,7 @@ export class UserRepository extends BaseRepository<User> {
     super(userRepo);
   }
 
-  async getByGuildId(guildId: string) : Promise<User | undefined> {
+  async getByGuildId(guildId: string): Promise<User | undefined> {
     return await this.repo.findOne({ id: guildId });
   }
 }

@@ -12,23 +12,24 @@ export const generateGW2RosterRecords = (
   warnings: Warning[]
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
-    .map((gw2Member) => {
+    .map(gw2Member => {
       const accountName = gw2Member.name.split('.')[0];
       const memberId = gw2Member.name;
       const rank = gw2Member.rank;
-      const rankImage = ranks.find((r) => r.id === rank)?.icon;
+      const rankImage = ranks.find(r => r.id === rank)?.icon;
       const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
       const warningsForThisMember = warnings.filter(warning => warning.givenTo === memberId);
 
       // special case for unique account name
       const exceptions: { [key: string]: string } = {
-        'Zerumii': 'Zerumi'
+        Zerumii: 'Zerumi'
       };
-      const testName = exceptions[accountName] ? exceptions[accountName].toLowerCase() : accountName.toLowerCase();
-
+      const testName = exceptions[accountName]
+        ? exceptions[accountName].toLowerCase()
+        : accountName.toLowerCase();
 
       // check for exact match
-      let discordMember = discordMembers.find((m) => {
+      let discordMember = discordMembers.find(m => {
         const discordName = m.name
           .toLowerCase()
           .replace(
@@ -91,11 +92,11 @@ export const getExcessDiscordRecords = (
 ): MemberRecord[] => {
   const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
   return discordMembers
-    .filter((discordMember) => {
-      return !records.some((record) => record.discordName === discordMember.name);
+    .filter(discordMember => {
+      return !records.some(record => record.discordName === discordMember.name);
     })
-    .map((discordMember) => {
-      const missingGW2 = !discordMember.roles.find((r) => r.name === 'Guest' || r.name === 'Bots');
+    .map(discordMember => {
+      const missingGW2 = !discordMember.roles.find(r => r.name === 'Guest' || r.name === 'Bots');
       const joinDate = DateTime.fromISO(discordMember.joined, { zone: 'utc' });
 
       const twentyFourHours = 1000 * 60 * 60 * 24;
@@ -123,8 +124,8 @@ export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): num
   ranks.push({ id: 'Guest', order: ranks.length + 1, permissions: [], icon: '' });
   ranks.push({ id: 'Bots', order: ranks.length + 1, permissions: [], icon: '' });
 
-  const aObj = ranks.find((o) => o.id === aRank) || { order: ranks.length };
-  const bObj = ranks.find((o) => o.id === bRank) || { order: ranks.length };
+  const aObj = ranks.find(o => o.id === aRank) || { order: ranks.length };
+  const bObj = ranks.find(o => o.id === bRank) || { order: ranks.length };
 
   return aObj.order - bObj.order;
 };

@@ -44,7 +44,7 @@ export class DiscordChannelApi {
 
     if (embedA.title !== embedB.title) return false;
     if (parseInt(embedA.color) !== parseInt(embedB.color)) return false;
-    
+
     const embedAFields = embedA.fields || [];
     const embedBFields = embedB.fields || [];
     const longerLength = Math.max(embedAFields.length, embedBFields.length);

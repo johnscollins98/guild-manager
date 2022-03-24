@@ -13,9 +13,9 @@ const WarningRepository = {
     }
   },
 
-  getWarnings: async () : Promise<Warning[]> => {
+  getWarnings: async (): Promise<Warning[]> => {
     const url = `/api/warnings`;
-    const response= await fetch(url);
+    const response = await fetch(url);
     const data = await response.json();
     if (response.status === 200) {
       return data;
@@ -65,10 +65,7 @@ const WarningRepository = {
     }
   },
 
-  updateWarning: async (
-    warningId: string,
-    warningObject: WarningPost
-  ): Promise<Warning> => {
+  updateWarning: async (warningId: string, warningObject: WarningPost): Promise<Warning> => {
     const url = `/api/warnings/${warningId}`;
     const response = await fetch(url, {
       headers: {

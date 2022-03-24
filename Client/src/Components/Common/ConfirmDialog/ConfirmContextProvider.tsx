@@ -9,5 +9,9 @@ interface Props {
 export const ConfirmContextProvider = ({ children }: Props) => {
   const [confirmModalState, dispatch] = useReducer(reducer, initialState);
 
-  return <ConfirmContext.Provider value={{confirmModalState, dispatch}}>{children}</ConfirmContext.Provider>;
+  return (
+    <ConfirmContext.Provider value={{ confirmModalState, dispatch }}>
+      {children}
+    </ConfirmContext.Provider>
+  );
 };

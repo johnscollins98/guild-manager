@@ -54,10 +54,10 @@ const EventEntry = ({
   const [modified, setModified] = useState(false);
 
   const validationHelper = useCallback(
-    (event) => {
+    event => {
       const anyEmpty = Object.keys(event)
-        .filter((k) => !k.startsWith('_'))
-        .some((k) => !event[k]);
+        .filter(k => !k.startsWith('_'))
+        .some(k => !event[k]);
       if (anyEmpty) throw new Error('Ensure all fields have a value!');
 
       if (!daysOfWeek.includes(event.day))
@@ -123,10 +123,10 @@ const EventEntry = ({
     } else {
       throw new Error('No Delete event function passed in');
     }
-  }, [localEvent, deleteEvent])
+  }, [localEvent, deleteEvent]);
 
   const onSubmit = useCallback(
-    (e) => {
+    e => {
       e.preventDefault();
       create ? onCreate() : onUpdate();
     },
@@ -143,7 +143,7 @@ const EventEntry = ({
         <div className="field">
           <CalendarToday className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
-            {daysOfWeek.map((day) => (
+            {daysOfWeek.map(day => (
               <MenuItem value={day} key={day}>
                 {day}
               </MenuItem>
@@ -161,7 +161,7 @@ const EventEntry = ({
         <div className="field long">
           <Person className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" select>
-            {possibleLeaders.map((leader) => (
+            {possibleLeaders.map(leader => (
               <MenuItem value={leader.id} key={leader.id}>
                 {leader.name}
               </MenuItem>
@@ -206,7 +206,7 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldPro
       size="small"
       className="entry-input"
       value={event[fieldKey]}
-      onChange={(e) => {
+      onChange={e => {
         onEdit(fieldKey, e.target.value);
       }}
       fullWidth

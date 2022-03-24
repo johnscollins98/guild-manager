@@ -7,7 +7,10 @@ import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/
 
 import './DiscordLog.scss';
 import { snowflakeToDate } from '../../utils/Helpers';
-import { DiscordLogDisplay, DiscordLogDisplayGenerator } from '../../Interfaces/DiscordLogStringGenerator';
+import {
+  DiscordLogDisplay,
+  DiscordLogDisplayGenerator
+} from '../../Interfaces/DiscordLogStringGenerator';
 import DiscordLogEntry from './DiscordLogEntry';
 
 interface Props {
@@ -17,7 +20,7 @@ interface Props {
 
 const DiscordLog = ({ filterString, openToast }: Props) => {
   const { isLoading, data, error } = useQuery('discordLog', fetchDiscordLog);
-  const [logData, setLogData] = useState<{ discordDisplay: DiscordLogDisplay, date: Date}[]>([]);
+  const [logData, setLogData] = useState<{ discordDisplay: DiscordLogDisplay; date: Date }[]>([]);
 
   useEffect(() => {
     if (error) {
@@ -30,14 +33,16 @@ const DiscordLog = ({ filterString, openToast }: Props) => {
 
     const factory = new DiscordLogEntryFactory(data);
     const generatedData = data.audit_log_entries
-      .filter((entry) => !!factory.getDiscordLogStringGenerator(entry.id))
-      .map((entry) => {
+      .filter(entry => !!factory.getDiscordLogStringGenerator(entry.id))
+      .map(entry => {
         const date = snowflakeToDate(entry.id);
-        const generator = factory.getDiscordLogStringGenerator(entry.id) as DiscordLogDisplayGenerator;
+        const generator = factory.getDiscordLogStringGenerator(
+          entry.id
+        ) as DiscordLogDisplayGenerator;
         return {
           date: date,
           discordDisplay: generator.getEntry()
-        }
+        };
       });
 
     setLogData(generatedData);
@@ -49,8 +54,8 @@ const DiscordLog = ({ filterString, openToast }: Props) => {
 
   return (
     <div className="log-container">
-      {logData.map((entry) => {
-        return <DiscordLogEntry displayEntry={entry.discordDisplay} date={entry.date}  />;
+      {logData.map(entry => {
+        return <DiscordLogEntry displayEntry={entry.discordDisplay} date={entry.date} />;
       })}
     </div>
   );

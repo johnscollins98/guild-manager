@@ -36,7 +36,7 @@ const Log = ({ filterString, openToast }: Props) => {
   if (isLoading) return <LoaderPage />;
   return (
     <div className="log-container">
-      {filteredData.map((entry) => (
+      {filteredData.map(entry => (
         <LogEntry entryData={entry} key={`${entry.date}${entry.time}`} />
       ))}
     </div>

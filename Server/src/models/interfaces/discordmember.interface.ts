@@ -10,6 +10,6 @@ export default interface DiscordMember {
 }
 
 export interface DiscordMemberUpdate {
-  nick?: string,
-  roles?: string[]
+  nick?: string;
+  roles?: string[];
 }

@@ -37,7 +37,7 @@ export const fetchDiscordLog = async (): Promise<DiscordLog> => {
   }
 
   return data;
-}
+};
 
 export const addDiscordRole = async (memberId: string, roleId: string): Promise<boolean> => {
   const response = await fetch(`api/discord/members/${memberId}/roles/${roleId}`, {
@@ -53,17 +53,14 @@ export const removeDiscordRole = async (memberId: string, roleId: string): Promi
   return response.status === 204;
 };
 
-export const changeDiscordMember = async (
-  memberId: string,
-  newNickname: string
-): Promise<void> => {
+export const changeDiscordMember = async (memberId: string, newNickname: string): Promise<void> => {
   const response = await fetch(`api/discord/members/${memberId}`, {
     method: 'PUT',
     body: JSON.stringify({
       nick: newNickname
     }),
     headers: {
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     }
   });
 
@@ -136,7 +133,7 @@ export const getAdminRoles = async (): Promise<String[]> => {
   }
 
   return data;
-}
+};
 
 export const getEventRoles = async (): Promise<String[]> => {
   const response = await fetch('/auth/event_roles');
@@ -147,4 +144,4 @@ export const getEventRoles = async (): Promise<String[]> => {
   }
 
   return data;
-}
+};

@@ -1,4 +1,14 @@
-import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, Put } from 'routing-controllers';
+import {
+  Authorized,
+  Body,
+  CurrentUser,
+  Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  Put
+} from 'routing-controllers';
 import { Service } from 'typedi';
 import { Warning } from '../models/warning.model';
 import WarningsRepository from '../services/repositories/warnings.repository';

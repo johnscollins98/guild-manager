@@ -41,7 +41,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
       const eventLeaderRoles = await getEventRoles();
       setPossibleLeaders(
         discordQuery.data.filter(
-          (member) => !!member.roles.find((r) => eventLeaderRoles.includes(r.id)) // hardcoded for now, to be improved.
+          member => !!member.roles.find(r => eventLeaderRoles.includes(r.id)) // hardcoded for now, to be improved.
         )
       );
     };
@@ -66,7 +66,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
     ]);
     setSortedEvents(
       [...localEvents]
-        .filter((event) => event.title.includes(filterString) || event.day.includes(filterString))
+        .filter(event => event.title.includes(filterString) || event.day.includes(filterString))
         .sort((a, b) => {
           const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
           if (dateSort !== 0) return dateSort;
@@ -86,15 +86,17 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const deleteEvent = useCallback(
     async (eventToDelete: Event) => {
       try {
-        const res = await confirm(`Are you sure you want to delete '${eventToDelete.title}'?`, 'Delete Event');
+        const res = await confirm(
+          `Are you sure you want to delete '${eventToDelete.title}'?`,
+          'Delete Event'
+        );
         if (!res) return;
 
-        const deletedEvent = eventToDelete._id === undefined 
-          ? null 
-          : await EventRepo.deleteById(eventToDelete._id);
+        const deletedEvent =
+          eventToDelete._id === undefined ? null : await EventRepo.deleteById(eventToDelete._id);
 
         if (deletedEvent) {
-          setLocalEvents(localEvents.filter((event) => event._id !== eventToDelete._id));
+          setLocalEvents(localEvents.filter(event => event._id !== eventToDelete._id));
           openToast('Successfully deleted event!', 'success');
         } else {
           throw new Error('Could not delete event');
@@ -110,13 +112,14 @@ const EventPage = ({ filterString, openToast }: Props) => {
   const updateEvent = useCallback(
     async (eventToUpdate: Event): Promise<Event | undefined> => {
       try {
-        const updatedEvent = eventToUpdate._id === undefined 
-          ? null 
-          : await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
-          
+        const updatedEvent =
+          eventToUpdate._id === undefined
+            ? null
+            : await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
+
         if (updatedEvent) {
           const eventsCopy = [...localEvents];
-          const index = eventsCopy.findIndex((event) => event._id === updatedEvent._id);
+          const index = eventsCopy.findIndex(event => event._id === updatedEvent._id);
 
           if (index !== null && index !== undefined) {
             eventsCopy[index] = updatedEvent;
@@ -174,7 +177,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
   return (
     <>
       <div className="event-page">
-        {sortedEvents.map((event) => (
+        {sortedEvents.map(event => (
           <EventEntry
             event={event}
             deleteEvent={deleteEvent}

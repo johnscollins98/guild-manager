@@ -37,6 +37,6 @@ export interface DiscordLogUser {
 }
 
 export interface DiscordLog {
-  audit_log_entries: DiscordLogEntry[],
-  users: DiscordLogUser[]
+  audit_log_entries: DiscordLogEntry[];
+  users: DiscordLogUser[];
 }

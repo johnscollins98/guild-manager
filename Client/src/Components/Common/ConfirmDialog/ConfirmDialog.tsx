@@ -14,7 +14,7 @@ const ConfirmDialog = () => {
     }
   }, [submitRef, confirmModalState]);
 
-  const handleSubmit: FormEventHandler = (e) => {
+  const handleSubmit: FormEventHandler = e => {
     e.preventDefault();
     e.stopPropagation();
 

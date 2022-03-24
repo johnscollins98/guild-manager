@@ -96,7 +96,7 @@ const RosterControl = ({
             control={
               <Switch
                 checked={singleColumn}
-                onChange={(e) => {
+                onChange={e => {
                   setSingleColumn(e.target.checked);
                 }}
               />

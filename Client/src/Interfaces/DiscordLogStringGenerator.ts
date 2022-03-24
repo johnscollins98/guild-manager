@@ -4,5 +4,5 @@ export interface DiscordLogDisplay {
 }
 
 export interface DiscordLogDisplayGenerator {
-  getEntry() : DiscordLogDisplay;
+  getEntry(): DiscordLogDisplay;
 }

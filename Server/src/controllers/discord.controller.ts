@@ -1,4 +1,17 @@
-import { Authorized, BadRequestError, Body, Delete, Get, Header, JsonController, NotFoundError, OnUndefined, Param, Post, Put } from 'routing-controllers';
+import {
+  Authorized,
+  BadRequestError,
+  Body,
+  Delete,
+  Get,
+  Header,
+  JsonController,
+  NotFoundError,
+  OnUndefined,
+  Param,
+  Post,
+  Put
+} from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
 import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discordmember.interface';
@@ -31,7 +44,7 @@ export class DiscordController {
     ]);
     const [discordRoles, validRoleIds] = results;
     return this.discordMemberFormatter.getRoleInfo(
-      discordRoles, 
+      discordRoles,
       discordRoles.sort((a, b) => b.position - a.position).map(r => r.id),
       validRoleIds
     );
@@ -40,7 +53,10 @@ export class DiscordController {
   @Get('/members')
   @Header('Cache-control', `public, max-age=0`)
   async getMembers() {
-    const results: [DiscordMember[], DiscordRole[]] = await Promise.all([this.discordGuildApi.getMembers(), this.discordGuildApi.getRoles()]);
+    const results: [DiscordMember[], DiscordRole[]] = await Promise.all([
+      this.discordGuildApi.getMembers(),
+      this.discordGuildApi.getRoles()
+    ]);
     return await this.discordMemberFormatter.formatMembers(...results);
   }
 
@@ -55,7 +71,7 @@ export class DiscordController {
   async addRoleToMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
     await this.discordGuildApi.addRoleToMember(memberId, roleId);
   }
-  
+
   @Authorized()
   @OnUndefined(204)
   @Delete('/members/:memberId/roles/:roleId')
@@ -92,7 +108,8 @@ export class DiscordController {
       const channelMessages = await this.discordChannelApi.getChannelMessages(settings.channelId);
       const values: string[] = Object.values(settings.existingMessageIds);
       for (const id of values) {
-        if (!channelMessages.find((m) => m.id === id)) throw new BadRequestError('Invalid Message IDs');
+        if (!channelMessages.find(m => m.id === id))
+          throw new BadRequestError('Invalid Message IDs');
       }
     }
 
@@ -130,7 +147,7 @@ export class DiscordController {
         await this.discordChannelApi.addEmbed(settings.channelId, embed);
       }
 
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
 }

@@ -72,7 +72,7 @@ const RoleEdit = ({
       if (res) {
         setSelectedRecord({
           ...selectedRecord,
-          roles: selectedRecord.roles.filter((r) => r.id !== roleId)
+          roles: selectedRecord.roles.filter(r => r.id !== roleId)
         });
       } else {
         openToast('Something went wrong changing roles', 'error');
@@ -91,7 +91,7 @@ const RoleEdit = ({
 
     if (anyChanges && selectedRecord) {
       const recordsCopy = [...records];
-      const toEdit = recordsCopy.find((record) => record.discordId === selectedRecord.discordId);
+      const toEdit = recordsCopy.find(record => record.discordId === selectedRecord.discordId);
       if (toEdit) {
         toEdit.roles = selectedRecord.roles;
         setRecords(recordsCopy);
@@ -105,13 +105,13 @@ const RoleEdit = ({
     <Dialog open={modalShow} onClose={closeEdit} className="role-edit-modal">
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
-        {allRoles.map((role) => (
+        {allRoles.map(role => (
           <FormGroup row key={role.id}>
             <FormControlLabel
               control={
                 <StyledCheckbox
                   color={getColorFromRole(role.name, allRoles) || ''}
-                  checked={selectedRecord.roles.map((r) => r.id).includes(role.id)}
+                  checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     roleChangeHandler(e, role.id, role.name, role.color)
                   }
@@ -143,7 +143,7 @@ const StyledCheckbox = ({ color, ...props }: StyleProps) => {
       }
     },
     checked: {}
-  })((props) => <Checkbox color="default" {...props} />);
+  })(props => <Checkbox color="default" {...props} />);
 
   return <OurCheckbox {...props} />;
 };

@@ -20,7 +20,7 @@ export class AuthService {
     if (!discordMember) return notLoggedIn;
 
     const roles = discordMember.roles;
-    const isAdmin = roles.some((role) => config.adminRoles.includes(role));
+    const isAdmin = roles.some(role => config.adminRoles.includes(role));
     const username = user.username;
     return { loggedIn, isAdmin, username };
   }

@@ -1,15 +1,15 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-let _loaded = false
+let _loaded = false;
 
 const loadEnv = () => {
   if (!_loaded) {
-    dotenv.config()
-    _loaded = true
+    dotenv.config();
+    _loaded = true;
   }
-}
+};
 
-loadEnv()
+loadEnv();
 
 export const config = {
   botToken: process.env.BOT_TOKEN,
@@ -21,9 +21,8 @@ export const config = {
   discordClientId: process.env.DISCORD_CLIENT_ID,
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
-  adminRoles: (process.env.ADMIN_ROLES).split(","),
-  eventRoles: (process.env.EVENT_ROLES).split(","),
+  adminRoles: process.env.ADMIN_ROLES.split(','),
+  eventRoles: process.env.EVENT_ROLES.split(','),
   sessionSecret: process.env.SESSION_SECRET,
-  frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
-}
-
+  frontEndBaseUrl: process.env.FRONT_END_BASE_URL || ''
+};

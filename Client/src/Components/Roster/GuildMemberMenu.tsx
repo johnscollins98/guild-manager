@@ -40,8 +40,8 @@ const GuildMemberMenu = ({
   const [memberIsAdmin, setMemberIsAdmin] = useState(true);
 
   useEffect(() => {
-    getAdminRoles().then((adminRoles) => {
-      setMemberIsAdmin(member.roles.some((r) => adminRoles.includes(r.id)));
+    getAdminRoles().then(adminRoles => {
+      setMemberIsAdmin(member.roles.some(r => adminRoles.includes(r.id)));
     });
   }, [member]);
 

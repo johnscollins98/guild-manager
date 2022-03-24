@@ -56,12 +56,12 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
   useEffect(() => {
     setIsFetching(
       gw2Members.isFetching ||
-      discordMembers.isFetching ||
-      guildRanks.isFetching ||
-      discordRoles.isFetching ||
-      authInfo.isFetching || 
-      warningInfo.isFetching
-    )
+        discordMembers.isFetching ||
+        guildRanks.isFetching ||
+        discordRoles.isFetching ||
+        authInfo.isFetching ||
+        warningInfo.isFetching
+    );
   }, [
     gw2Members.isFetching,
     discordMembers.isFetching,
@@ -115,8 +115,18 @@ const Roster = ({ filterString, openToast, sortBy, filterBy, setSortBy, setFilte
     setRecords([]);
     if (gw2Members.data && discordMembers.data && guildRanks.data && warningInfo.data) {
       setRecords(
-        generateGW2RosterRecords(gw2Members.data, discordMembers.data, guildRanks.data, warningInfo.data).concat(
-          getExcessDiscordRecords(gw2Members.data, discordMembers.data, guildRanks.data, warningInfo.data)
+        generateGW2RosterRecords(
+          gw2Members.data,
+          discordMembers.data,
+          guildRanks.data,
+          warningInfo.data
+        ).concat(
+          getExcessDiscordRecords(
+            gw2Members.data,
+            discordMembers.data,
+            guildRanks.data,
+            warningInfo.data
+          )
         )
       );
     }

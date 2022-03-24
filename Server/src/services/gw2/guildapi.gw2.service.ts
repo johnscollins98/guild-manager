@@ -13,19 +13,19 @@ export class GW2GuildApi {
     this.guildId = config.gw2guildId;
   }
 
-  async getMembers() : Promise<GW2Member[]> {
+  async getMembers(): Promise<GW2Member[]> {
     return await this.get<GW2Member[]>('members');
   }
 
-  async getLog() : Promise<GW2LogEntry[]> {
+  async getLog(): Promise<GW2LogEntry[]> {
     return await this.get<GW2LogEntry[]>('log');
   }
 
-  async getRanks() : Promise<GW2Rank[]> {
+  async getRanks(): Promise<GW2Rank[]> {
     return await this.get<GW2Rank[]>('ranks');
   }
 
-  private async get<T>(endpoint: string) : Promise<T> {
+  private async get<T>(endpoint: string): Promise<T> {
     return await this.gw2Api.get(`guild/${this.guildId}/${endpoint}`);
   }
 }

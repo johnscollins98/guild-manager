@@ -7,7 +7,7 @@ import { SvgIconTypeMap } from '@material-ui/core/SvgIcon';
 
 interface Props {
   action: () => void;
-  Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
   label: string;
   disabled: boolean;
   className?: string;
@@ -21,7 +21,7 @@ const GuildMemberMenuItem = ({ action, Icon, label, disabled, className }: Props
         {label}
       </span>
     </MenuItem>
-  )
-}
+  );
+};
 
-export default GuildMemberMenuItem
+export default GuildMemberMenuItem;

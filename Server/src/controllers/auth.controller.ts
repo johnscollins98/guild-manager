@@ -1,6 +1,15 @@
 import { Request, Response } from 'express';
 import passport from 'passport';
-import { Authorized, CurrentUser, Get, Header, JsonController, Req, Res, UseBefore } from 'routing-controllers';
+import {
+  Authorized,
+  CurrentUser,
+  Get,
+  Header,
+  JsonController,
+  Req,
+  Res,
+  UseBefore
+} from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
 import { AuthService } from '../services/auth/auth.service';
@@ -15,10 +24,12 @@ export class AuthController {
   authenticate() {}
 
   @Get('/redirect')
-  @UseBefore(passport.authenticate('discord', {
-    failureRedirect: `${config.frontEndBaseUrl}/`,
-    successRedirect: `${config.frontEndBaseUrl}/`
-  }))
+  @UseBefore(
+    passport.authenticate('discord', {
+      failureRedirect: `${config.frontEndBaseUrl}/`,
+      successRedirect: `${config.frontEndBaseUrl}/`
+    })
+  )
   redirect() {}
 
   @Get('/logout')

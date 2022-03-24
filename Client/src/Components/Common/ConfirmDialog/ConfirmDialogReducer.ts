@@ -10,8 +10,8 @@ export interface ModalState {
 }
 
 export interface ModalAction {
-  type: ActionTypes,
-  payload?: ModalState
+  type: ActionTypes;
+  payload?: ModalState;
 }
 
 export const initialState: ModalState = {
@@ -23,8 +23,8 @@ export const initialState: ModalState = {
 export const reducer = (_state = initialState, action: ModalAction) => {
   switch (action.type) {
     case ActionTypes.SHOW:
-      return { ...action.payload, show: true }
+      return { ...action.payload, show: true };
     default:
       return initialState;
   }
-}
+};

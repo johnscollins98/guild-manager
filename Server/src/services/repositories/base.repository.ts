@@ -3,7 +3,7 @@ import { DeepPartial, ObjectID, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 interface IMayHaveId {
-  _id?: ObjectID
+  _id?: ObjectID;
 }
 
 @Service()
@@ -41,4 +41,4 @@ export abstract class BaseRepository<T extends IMayHaveId> {
     await this.repo.update(id, updatedItem);
     return await this.repo.findOne(id);
   }
-} 
+}

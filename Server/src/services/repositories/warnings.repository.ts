@@ -12,8 +12,6 @@ class WarningsRepository extends BaseRepository<Warning> {
   async getForMember(memberId: string): Promise<Warning[]> {
     return await this.repo.find({ givenTo: memberId });
   }
-
-  
 }
 
 export default WarningsRepository;
