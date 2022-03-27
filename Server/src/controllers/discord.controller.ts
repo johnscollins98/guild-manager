@@ -25,6 +25,7 @@ import { EventRepository } from '../services/repositories/event.repository';
 import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
 
 @Service()
+@Authorized()
 @JsonController('/api/discord')
 export class DiscordController {
   constructor(
@@ -65,35 +66,30 @@ export class DiscordController {
     return await this.discordGuildApi.getLogs();
   }
 
-  @Authorized()
   @OnUndefined(204)
   @Put('/members/:memberId/roles/:roleId')
   async addRoleToMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
     await this.discordGuildApi.addRoleToMember(memberId, roleId);
   }
 
-  @Authorized()
   @OnUndefined(204)
   @Delete('/members/:memberId/roles/:roleId')
   async removeRoleFromMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
     await this.discordGuildApi.removeRoleFromMember(memberId, roleId);
   }
 
-  @Authorized()
   @OnUndefined(204)
   @Put('/members/:memberId')
   async updateMember(@Param('memberId') memberId: string, @Body() updates: DiscordMemberUpdate) {
     return await this.discordGuildApi.updateMember(memberId, updates);
   }
 
-  @Authorized()
   @OnUndefined(204)
   @Delete('/members/:memberId')
   async deleteMember(@Param('memberId') memberId: string) {
     await this.discordGuildApi.kickMember(memberId);
   }
 
-  @Authorized()
   @OnUndefined(200)
   @Post('/eventUpdate')
   async postEventUpdates(@Body() settings: EventPostSettings) {

@@ -15,6 +15,7 @@ import { EventPostSettingsRepository } from '../services/repositories/eventposts
 import { config } from '../config';
 
 @JsonController('/api/events', { transformResponse: false })
+@Authorized()
 @Service()
 export class EventsController {
   constructor(
@@ -45,19 +46,16 @@ export class EventsController {
   }
 
   @Delete('/:id')
-  @Authorized()
   delete(@Param('id') id: string) {
     return this.eventRepo.delete(id);
   }
 
   @Post('/')
-  @Authorized()
   create(@Body() event: Event) {
     return this.eventRepo.create(event);
   }
 
   @Put('/:id')
-  @Authorized()
   update(@Param('id') id: string, @Body() event: Event) {
     return this.eventRepo.update(id, event);
   }
