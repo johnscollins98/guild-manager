@@ -35,10 +35,9 @@ const GuildMemberDetails = ({ member, detailsAnchor, closeDetails }: Props) => {
           <Typography>GW2 Name: {member.memberId || 'N/A'}</Typography>
         </GuildMemberDetail>
         <GuildMemberDetail>
-          <Typography>
-            GW2 Rank: {member.rankImage && <img src={member.rankImage} alt="rank icon" />}
-            {member.rank || 'N/A'}
-          </Typography>
+          <Typography>GW2 Rank: </Typography>
+          {member.rankImage && <img src={member.rankImage} alt="rank icon" />}
+          <Typography>{member.rank || 'N/A'}</Typography>
         </GuildMemberDetail>
         <GuildMemberDetail>
           <Typography>Discord Name: {member.discordName || 'N/A'}</Typography>
