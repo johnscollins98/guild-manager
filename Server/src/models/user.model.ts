@@ -10,4 +10,10 @@ export class User {
 
   @Column()
   username!: string;
+
+  @Column()
+  inGuild!: boolean;
+
+  @Column()
+  isAdmin!: boolean;
 }

@@ -5,11 +5,9 @@ import fetch, { RequestInit } from 'node-fetch';
 
 @Service()
 export class DiscordApi {
-  private readonly apiKey: string;
   private readonly baseUrl: string;
 
-  constructor() {
-    this.apiKey = config.botToken;
+  constructor(private readonly apiKey = config.botToken, private readonly isBearer = false) {
     this.baseUrl = `https://discord.com/api`;
   }
 
@@ -48,20 +46,15 @@ export class DiscordApi {
   private async makeRequest<T>(endpoint: string, init?: RequestInit): Promise<T | any> {
     const defInit: RequestInit = {
       headers: {
-        Authorization: `Bot ${this.apiKey}`,
+        Authorization: `${this.isBearer ? 'Bearer' : 'Bot'} ${this.apiKey}`,
         'Content-Type': 'application/json'
       }
     };
 
     const response = await fetch(`${this.baseUrl}/${endpoint}`, { ...defInit, ...init });
     if (!response.ok) {
-      let message = response.statusText;
-
-      try {
-        message = await response.json();
-      } catch (err) {}
-
-      throw new HttpError(response.status, message);
+      const message = response.statusText;
+      throw new HttpError(500, `Error getting discord data: (${response.status}) ${message}`);
     }
 
     return await response.json().catch(() => {});

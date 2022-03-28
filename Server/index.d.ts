@@ -6,6 +6,8 @@ declare global {
       _id: ObjectID;
       id: string;
       username: string;
+      inGuild: boolean;
+      isAdmin: boolean;
     }
   }
 }
