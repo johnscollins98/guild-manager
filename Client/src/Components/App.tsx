@@ -8,15 +8,7 @@ import Roster from './Roster/Roster';
 import Control from './Control';
 import EventPage from './Events/EventPage';
 import LoginPage from './LoginPage';
-import {
-  fetchAuthInfo,
-  fetchDiscordLog,
-  fetchDiscordMembers,
-  fetchDiscordRoles,
-  fetchGW2Log,
-  fetchGW2Members,
-  fetchGW2Ranks
-} from '../utils/DataRetrieval';
+import { fetchAuthInfo } from '../utils/DataRetrieval';
 
 import 'fontsource-roboto';
 import Paper from '@material-ui/core/Paper';
@@ -29,8 +21,7 @@ import Alert, { Color } from '@material-ui/lab/Alert';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { PaletteType } from '@material-ui/core';
 
-import { useQuery, useQueryClient } from 'react-query';
-import EventRepository from '../utils/EventRepository';
+import { useQuery } from 'react-query';
 import DiscordLog from './DiscordLog/DiscordLog';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
@@ -56,21 +47,6 @@ const App = () => {
     isAdmin: false,
     username: ''
   });
-
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    if (authInfo.loggedIn && authInfo.isAdmin) {
-      queryClient.prefetchQuery('');
-      queryClient.prefetchQuery('gw2log', fetchGW2Log);
-      queryClient.prefetchQuery('eventsData', EventRepository.getAll);
-      queryClient.prefetchQuery('event-settings', EventRepository.getSettings);
-      queryClient.prefetchQuery('gw2Members', fetchGW2Members);
-      queryClient.prefetchQuery('discordMembers', fetchDiscordMembers);
-      queryClient.prefetchQuery('guildRanks', fetchGW2Ranks);
-      queryClient.prefetchQuery('discordRoles', fetchDiscordRoles);
-      queryClient.prefetchQuery('discordLog', fetchDiscordLog);
-    }
-  }, [queryClient, authInfo]);
 
   const darkTheme = createMuiTheme({
     palette: {
