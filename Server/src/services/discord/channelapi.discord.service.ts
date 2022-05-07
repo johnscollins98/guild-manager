@@ -3,6 +3,7 @@ import { DiscordChannel } from '../../models/interfaces/discordchannel.interface
 import DiscordEmbed from '../../models/interfaces/discordembed.interface';
 import DiscordMessage from '../../models/interfaces/discordmessage.interface';
 import { DiscordMessageDetails } from '../../models/interfaces/discordmessagedetails.interface';
+import { DiscordMessagePost } from '../../models/interfaces/discordmessagepost.interface';
 import { DiscordApi } from './api.discord.service';
 
 @Service()
@@ -11,6 +12,13 @@ export class DiscordChannelApi {
 
   async getChannel(channelId: string): Promise<DiscordChannel> {
     return await this.discordApi.get(`channels/${channelId}`);
+  }
+
+  async createDirectMessageChannel(userId: string): Promise<string> {
+    const channelObject: DiscordChannel = await this.discordApi.post(`/users/@me/channels`, {
+      recipient_id: userId
+    });
+    return channelObject.id;
   }
 
   async getChannelMessages(channelId: string): Promise<DiscordMessage[]> {
@@ -33,7 +41,12 @@ export class DiscordChannelApi {
   }
 
   async addEmbed(channelId: string, embed: DiscordEmbed): Promise<boolean> {
-    await this.discordApi.post(`channels/${channelId}/messages`, { embed });
+    await this.sendMessage(channelId, { embeds: [embed] });
+    return true;
+  }
+
+  async sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean> {
+    await this.discordApi.post(`channels/${channelId}/messages`, messageObject);
     return true;
   }
 

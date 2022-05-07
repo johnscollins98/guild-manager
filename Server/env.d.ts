@@ -13,5 +13,6 @@ declare namespace NodeJS {
     EVENT_ROLES: string;
     SESSION_SECRET: string;
     FRONT_END_BASE_URL: string;
+    INVITE_LINK: string;
   }
 }

@@ -87,6 +87,13 @@ export class DiscordController {
   @OnUndefined(204)
   @Delete('/members/:memberId')
   async deleteMember(@Param('memberId') memberId: string) {
+    // send re-invite message
+    const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
+    await this.discordChannelApi.sendMessage(dmChannelId, {
+      content: `You have been kicked from Sunspear Order. You are welcome to re-join using this link: ${config.discordInviteLink}`
+    });
+
+    // kick member
     await this.discordGuildApi.kickMember(memberId);
   }
 
