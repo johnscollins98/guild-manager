@@ -16,12 +16,13 @@ import AuthInfo from '../../Interfaces/AuthInfo';
 import { WarningPost } from '../../Interfaces/Warning';
 
 import { Color } from '@material-ui/lab/Alert';
-import { useMutation, useQueryClient } from 'react-query';
+import { MutationFunction, useMutation, useQueryClient } from 'react-query';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
 import DiscordMember from '../../Interfaces/DiscordMember';
-import useConfirm from '../Common/ConfirmDialog/useConfirm';
+import { FetchError } from 'node-fetch';
+import KickModal from './KickModal';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;
@@ -64,11 +65,11 @@ const RosterDisplay = ({
   authInfo = { isAdmin: false, loggedIn: true, username: '' }
 }: Props) => {
   const [modalShow, setModalShow] = useState(false);
+  const [kickModalShow, setKickModalShow] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<MemberRecord | null>(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
   const [singleColumn, setSingleColumn] = useState(true);
-  const { confirm } = useConfirm();
 
   useEffect(() => {
     setRecordState(records);
@@ -142,47 +143,48 @@ const RosterDisplay = ({
   }, [recordState, sortBy, filterBy, filterString, onFilter, onSort]);
 
   const queryClient = useQueryClient();
-  const kickMutation = useMutation(kickDiscordMember, {
-    onMutate: async (discordId: string) => {
-      await queryClient.cancelQueries('discordMembers');
-      const previousData = queryClient.getQueryData<DiscordMember[]>('discordMembers');
 
-      if (previousData) {
-        queryClient.setQueryData(
-          'discordMembers',
-          previousData.filter(r => r.id !== discordId)
-        );
+  type KickInfo = { discordId: string; reinvite: boolean; reason?: string };
+  const kickFunc: MutationFunction<void, KickInfo> = async (kickInfo: KickInfo): Promise<void> => {
+    await kickDiscordMember(kickInfo.discordId, kickInfo.reinvite, kickInfo.reason);
+  };
+
+  const kickMutation = useMutation<void, FetchError, KickInfo, { previousData?: DiscordMember[] }>(
+    kickFunc,
+    {
+      onMutate: async kickInfo => {
+        await queryClient.cancelQueries('discordMembers');
+        const previousData = queryClient.getQueryData<DiscordMember[]>('discordMembers');
+
+        if (previousData) {
+          queryClient.setQueryData(
+            'discordMembers',
+            previousData.filter(r => r.id !== kickInfo.discordId)
+          );
+        }
+
+        return { previousData };
+      },
+      onError: (err, _, context) => {
+        console.error(err);
+        openToast('Unable to kick member', 'error');
+        queryClient.setQueryData('discordMembers', context?.previousData);
+      },
+      onSuccess: () => {
+        openToast('Kicked Member', 'success');
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries('discordMembers');
       }
-
-      return { previousData };
-    },
-    onError: (err, _, context) => {
-      console.error(err);
-      openToast('Unable to kick member', 'error');
-      queryClient.setQueryData('discordMembers', context?.previousData);
-    },
-    onSuccess: () => {
-      openToast('Kicked Member', 'success');
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries('discordMembers');
     }
-  });
+  );
 
   const onKick = useCallback(
-    async (record: MemberRecord) => {
-      if (!record.discordId) return;
-
-      const res = await confirm(
-        `Are you sure you want to kick ${record.discordName}?`,
-        'Confirm Kick'
-      );
+    async (discordId: string, reinvite: boolean, reason?: string) => {
       await queryClient.cancelQueries();
-      if (res) {
-        kickMutation.mutate(record.discordId);
-      }
+      kickMutation.mutate({ discordId: discordId, reinvite, reason });
     },
-    [kickMutation, queryClient, confirm]
+    [kickMutation, queryClient]
   );
 
   const openEdit = useCallback(
@@ -278,7 +280,10 @@ const RosterDisplay = ({
           <GuildMemberCard
             member={member}
             discordRoles={discordRoles}
-            onKick={onKick}
+            onKick={record => {
+              setSelectedRecord(record);
+              setKickModalShow(true);
+            }}
             onGiveWarning={onGiveWarning}
             onDeleteWarning={onDeleteWarning}
             singleColumn={singleColumn}
@@ -294,7 +299,6 @@ const RosterDisplay = ({
       discordRoles,
       authInfo.isAdmin,
       filteredRecords,
-      onKick,
       onGiveWarning,
       onDeleteWarning,
       openEdit,
@@ -344,6 +348,14 @@ const RosterDisplay = ({
         setRecords={setRecordState}
         openToast={openToast}
       />
+      {selectedRecord && kickDiscordMember && (
+        <KickModal
+          isOpen={kickModalShow}
+          onClose={() => setKickModalShow(false)}
+          onKick={onKick}
+          user={selectedRecord}
+        />
+      )}
     </>
   );
 };

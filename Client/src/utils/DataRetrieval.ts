@@ -5,6 +5,7 @@ import GW2Member from '../Interfaces/GW2Member';
 import GW2Rank from '../Interfaces/GW2Rank';
 import GW2LogEntry from '../Interfaces/GW2LogEntry';
 import { DiscordLog } from '../Interfaces/DiscordLog';
+import { config } from '../Config';
 
 export const fetchDiscordMembers = async (): Promise<DiscordMember[]> => {
   const response = await fetch(`/api/discord/members`);
@@ -69,11 +70,38 @@ export const changeDiscordMember = async (memberId: string, newNickname: string)
   }
 };
 
-export const kickDiscordMember = async (memberId: string): Promise<boolean> => {
+export const kickDiscordMember = async (
+  memberId: string,
+  shouldSendReinviteLink: boolean,
+  reason?: string
+): Promise<boolean> => {
+  if (shouldSendReinviteLink) {
+    await sendReinviteLink(memberId, reason);
+  }
+
   const response = await fetch(`/api/discord/members/${memberId}`, {
     method: 'DELETE'
   });
   return response.status === 204;
+};
+
+export const sendReinviteLink = async (memberId: string, reason?: string): Promise<boolean> => {
+  let content = 'You have been kicked from Sunspear Order';
+  if (reason) {
+    content += ` for the following reason: "${reason}"`;
+  }
+
+  if (config.discordReinviteUrl) {
+    content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
+  }
+
+  await fetch(`/api/discord/members/${memberId}/messages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content })
+  });
+
+  return true;
 };
 
 export const fetchGW2Members = async (): Promise<GW2Member[]> => {

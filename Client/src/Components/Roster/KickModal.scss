@@ -1,0 +1,23 @@
+div.kick-modal-content {
+  padding-bottom: 24px;
+
+  .kick-reinvite-form {
+    .MuiTextField-root {
+      margin-top: 4px;
+    }
+  }
+  
+  .kick-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+
+    button {
+      margin-right: 8px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
