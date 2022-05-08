@@ -54,6 +54,9 @@ export class DiscordApi {
     const response = await fetch(`${this.baseUrl}/${endpoint}`, { ...defInit, ...init });
     if (!response.ok) {
       const message = response.statusText;
+      try {
+        console.error(await response.json());
+      } catch (_) {}
       throw new HttpError(500, `Error getting discord data: (${response.status}) ${message}`);
     }
 

@@ -21,6 +21,11 @@ export class GW2Api {
 
     if (!response.ok) {
       const message = response.statusText;
+
+      try {
+        console.error(await response.json());
+      } catch (_) {}
+
       throw new HttpError(500, `Error getting gw2 data: (${response.status}) ${message}`);
     }
 

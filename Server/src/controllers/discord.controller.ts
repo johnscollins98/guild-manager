@@ -23,6 +23,7 @@ import { DiscordMemberFormatter } from '../services/discord/memberformatter.disc
 import { EventEmbedCreator } from '../services/discord/eventembedcreator.discord.service';
 import { EventRepository } from '../services/repositories/event.repository';
 import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
+import { DiscordMessagePost } from '../models/interfaces/discordmessagepost.interface';
 
 @Service()
 @Authorized()
@@ -88,6 +89,16 @@ export class DiscordController {
   @Delete('/members/:memberId')
   async deleteMember(@Param('memberId') memberId: string) {
     await this.discordGuildApi.kickMember(memberId);
+  }
+
+  @OnUndefined(200)
+  @Post('/members/:memberId/messages')
+  async sendMessageToMember(
+    @Param('memberId') memberId: string,
+    @Body() messageData: DiscordMessagePost
+  ) {
+    const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
+    await this.discordChannelApi.sendMessage(dmChannelId, messageData);
   }
 
   @OnUndefined(200)

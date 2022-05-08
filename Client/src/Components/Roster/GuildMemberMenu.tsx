@@ -19,7 +19,7 @@ interface Props {
   menuAnchor: PopoverPosition | undefined;
   isAdmin: boolean;
   closeMenu: () => void;
-  onKick: (member: MemberRecord) => Promise<any>;
+  onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
   setWarningOpen: (isOpen: boolean) => void;

@@ -30,7 +30,7 @@ interface Props {
   discordRoles: DiscordRole[];
   isAdmin: boolean;
   singleColumn: boolean;
-  onKick: (member: MemberRecord) => Promise<any>;
+  onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
   onGiveWarning: (warning: WarningPost) => Promise<any>;
