@@ -1,18 +1,13 @@
+import { Check, FilterList, ImportExport, Refresh } from '@mui/icons-material';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Paper from '@mui/material/Paper';
+import Switch from '@mui/material/Switch';
 import React, { useCallback, useState } from 'react';
 
 import './RosterControl.scss';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
-import Switch from '@material-ui/core/Switch';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-
-import Check from '@material-ui/icons/Check';
-import FilterList from '@material-ui/icons/FilterList';
-import ImportExport from '@material-ui/icons/ImportExport';
-import Refresh from '@material-ui/icons/Refresh';
 
 interface Props {
   singleColumn: boolean;

@@ -1,14 +1,12 @@
-import {
-  Button,
-  Checkbox,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  FormGroup,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { FunctionComponent, useCallback, useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
 import './KickModal.scss';
@@ -24,13 +22,16 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose, o
   const [reasonText, setReasonText] = useState<string>('');
   const [reinvite, setReinvite] = useState<boolean>(false);
 
-  const onFormSubmitted: React.FormEventHandler<HTMLFormElement> = useCallback(async (e) => {
-    e.preventDefault();
-    if (user.discordId) {
-      await onKick(user.discordId, reinvite, reasonText);
-    }
-    onClose();
-  }, [user, reinvite, reasonText, onClose, onKick]);
+  const onFormSubmitted: React.FormEventHandler<HTMLFormElement> = useCallback(
+    async e => {
+      e.preventDefault();
+      if (user.discordId) {
+        await onKick(user.discordId, reinvite, reasonText);
+      }
+      onClose();
+    },
+    [user, reinvite, reasonText, onClose, onKick]
+  );
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
@@ -60,10 +61,10 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose, o
             )}
           </div>
           <div className="kick-modal-actions">
-            <Button variant="contained" type="reset">
+            <Button variant="text" type="reset">
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type="submit">
+            <Button variant="contained" type="submit" color="primary">
               Kick
             </Button>
           </div>

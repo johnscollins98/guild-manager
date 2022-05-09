@@ -5,15 +5,13 @@ import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../../util
 
 import MemberRecord from '../../Interfaces/MemberRecord';
 import DiscordRole from '../../Interfaces/DiscordRole';
-
-import Checkbox from '@material-ui/core/Checkbox';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { Color } from '@material-ui/lab/Alert';
+import { AlertColor } from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormGroup from '@mui/material/FormGroup';
+import DialogContent from '@mui/material/DialogContent';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 interface Props {
   selectedRecord: MemberRecord | null;
@@ -22,7 +20,7 @@ interface Props {
   setModalShow: (val: boolean) => void;
   records: MemberRecord[];
   setRecords: (members: MemberRecord[]) => void;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const RoleEdit = ({
@@ -134,16 +132,6 @@ interface StyleProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const StyledCheckbox = ({ color, ...props }: StyleProps) => {
-  const OurCheckbox = withStyles({
-    root: {
-      color: color,
-      '&$checked': {
-        color: color
-      }
-    },
-    checked: {}
-  })(props => <Checkbox color="default" {...props} />);
-
-  return <OurCheckbox {...props} />;
-};
+const StyledCheckbox = ({ color, ...props }: StyleProps) => (
+  <Checkbox sx={{ color: color, '&.Mui-checked': { color: color } }} {...props} />
+);

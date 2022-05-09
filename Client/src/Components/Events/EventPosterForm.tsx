@@ -1,19 +1,12 @@
+import { AlertColor, Button, FormControlLabel, Switch, TextField } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-
+import { useQuery } from 'react-query';
 import EventRepository from '../../utils/EventRepository';
 import LoaderPage from '../LoaderPage';
 
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
-import { Color } from '@material-ui/lab/Alert';
-
-import { useQuery } from 'react-query';
-
 interface Props {
   onClose: () => void;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const EventPosterForm = ({ onClose, openToast }: Props) => {
@@ -102,6 +95,9 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           onChange={e => setPostChannel(e.target.value)}
           value={postChannel}
           label="Channel ID to post to"
+          size="small"
+          margin="dense"
+          fullWidth
           disabled={posting}
           required
         />
@@ -123,8 +119,9 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           {Object.entries(existingMessageIds).map(([day, value]) => (
             <TextField
               fullWidth
+              size="small"
+              margin="dense"
               key={day}
-              style={{ marginBottom: '8px' }}
               variant="outlined"
               placeholder="Enter Message ID"
               label={day}
@@ -144,12 +141,7 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           marginTop: '16px'
         }}
       >
-        <Button
-          variant="contained"
-          onClick={onClose}
-          style={{ marginRight: '8px' }}
-          disabled={posting}
-        >
+        <Button variant="text" onClick={onClose} style={{ marginRight: '8px' }} disabled={posting}>
           Close
         </Button>
         <Button variant="contained" color="primary" type="submit" disabled={posting}>

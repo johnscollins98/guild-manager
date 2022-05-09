@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import './LoginPage.scss';
 
@@ -9,10 +9,9 @@ import LoaderPage from './LoaderPage';
 import SOGif from '../assets/images/SO_Logo.gif';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
-
-import Button from '@material-ui/core/Button';
-import Alert from '@material-ui/lab/Alert';
-import AlertTitle from '@material-ui/lab/AlertTitle';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 interface Props {
   isLoading: boolean;
@@ -37,7 +36,7 @@ const LoginPage = ({ isLoading, authInfo }: Props) => {
             onMouseEnter={() => setLogo(SOGif)}
             onMouseLeave={() => setLogo(SOStatic)}
           />
-          <Button href={`${config.backEndBaseUrl}/auth`} variant="contained" color="primary">
+          <Button href={`${config.backEndBaseUrl}/auth`} variant="contained">
             <DiscordLogo height="24" width="24" className="discord-logo" />
             Log In
           </Button>

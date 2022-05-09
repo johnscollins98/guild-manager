@@ -1,18 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react';
-
+import { Close, Edit, List, Search, Warning } from '@mui/icons-material';
+import Divider from '@mui/material/Divider';
+import Menu from '@mui/material/Menu';
+import { PopoverPosition } from '@mui/material/Popover';
+import { useCallback, useEffect, useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
-
-import Divider from '@material-ui/core/Divider';
-import Menu from '@material-ui/core/Menu';
-
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
-import List from '@material-ui/icons/List';
-import Search from '@material-ui/icons/Search';
-import Warning from '@material-ui/icons/Warning';
-import GuildMemberMenuItem from './GuildMemberMenuItem';
 import { getAdminRoles } from '../../utils/DataRetrieval';
-import { PopoverPosition } from '@material-ui/core';
+import GuildMemberMenuItem from './GuildMemberMenuItem';
 
 interface Props {
   member: MemberRecord;

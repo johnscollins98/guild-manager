@@ -14,8 +14,8 @@ import {
 import LoaderPage from '../LoaderPage';
 
 import MemberRecord from '../../Interfaces/MemberRecord';
-import { Color } from '@material-ui/lab/Alert';
 import WarningRepository from '../../utils/WarningRepository';
+import { AlertColor } from '@mui/material/Alert';
 
 interface CustomError {
   data: string;
@@ -24,7 +24,7 @@ interface CustomError {
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
   sortBy: string;
   setSortBy: (sortBy: string) => void;
   filterBy: string;

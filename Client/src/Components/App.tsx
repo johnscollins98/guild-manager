@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import AuthInfo from '../Interfaces/AuthInfo';
 
@@ -11,20 +11,25 @@ import LoginPage from './LoginPage';
 import { fetchAuthInfo } from '../utils/DataRetrieval';
 
 import 'fontsource-roboto';
-import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import TabContext from '@material-ui/lab/TabContext';
-import TabPanel from '@material-ui/lab/TabPanel';
-import Alert, { Color } from '@material-ui/lab/Alert';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { PaletteType } from '@material-ui/core';
 
 import { useQuery } from 'react-query';
 import DiscordLog from './DiscordLog/DiscordLog';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
+import {
+  Alert,
+  AlertColor,
+  Box,
+  createTheme,
+  CssBaseline,
+  PaletteMode,
+  Snackbar,
+  Tab,
+  Tabs,
+  ThemeProvider,
+  useMediaQuery
+} from '@mui/material';
+import { TabPanel, TabContext } from '@mui/lab';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -34,10 +39,15 @@ const App = () => {
   const [filterBy, setFilterBy] = useState('none');
 
   const [showToast, setShowToast] = useState(false);
-  const [toastStatus, setToastStatus] = useState<Color>('info');
+  const [toastStatus, setToastStatus] = useState<AlertColor>('info');
   const [toastMessage, setToastMessage] = useState('');
 
-  const [theme, setTheme] = useState<PaletteType>('dark');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [theme, setTheme] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
+  useEffect(() => {
+    setTheme(prefersDarkMode ? 'dark' : 'light');
+  }, [prefersDarkMode]);
+
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
@@ -48,14 +58,23 @@ const App = () => {
     username: ''
   });
 
-  const darkTheme = createMuiTheme({
-    palette: {
-      type: theme
-    }
-  });
+  const darkTheme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: theme
+        },
+        components: {
+          MuiDialogContent: {
+            styleOverrides: { root: { paddingTop: `8px !important` } }
+          }
+        }
+      }),
+    [theme]
+  );
 
   const openToast = useCallback(
-    (message: string, status: Color = 'info') => {
+    (message: string, status: AlertColor = 'info') => {
       setToastStatus(status);
       setToastMessage(message);
       setShowToast(true);
@@ -97,9 +116,10 @@ const App = () => {
   };
 
   return (
-    <MuiThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <ConfirmContextProvider>
-        <Paper className="paper-container" square>
+        <Box className="paper-container">
           <Snackbar open={showToast} autoHideDuration={6000} onClose={() => closeToast()}>
             <Alert onClose={() => closeToast()} severity={toastStatus}>
               {toastMessage}
@@ -150,10 +170,10 @@ const App = () => {
               <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
             )}
           </div>
-        </Paper>
+        </Box>
         <ConfirmDialog />
       </ConfirmContextProvider>
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 };
 

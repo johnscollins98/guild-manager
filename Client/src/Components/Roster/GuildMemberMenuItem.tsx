@@ -1,9 +1,7 @@
-import React from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { SvgIconTypeMap } from '@mui/material/SvgIcon';
 import './GuildMemberMenuItem.scss';
-
-import MenuItem from '@material-ui/core/MenuItem';
-import { OverridableComponent } from '@material-ui/core/OverridableComponent';
-import { SvgIconTypeMap } from '@material-ui/core/SvgIcon';
 
 interface Props {
   action: () => void;

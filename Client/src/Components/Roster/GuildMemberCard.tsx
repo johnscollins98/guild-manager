@@ -1,29 +1,23 @@
+import { CalendarToday, SyncProblem, Timer } from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { PopoverPosition } from '@mui/material/Popover';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import React, { useCallback, useState } from 'react';
-
-import './GuildMemberCard.scss';
-import { getColorFromRole } from '../../utils/Helpers';
 import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
+import gw2Image from '../../assets/images/gw2.png';
+import DiscordRole from '../../Interfaces/DiscordRole';
+import MemberRecord from '../../Interfaces/MemberRecord';
+import { WarningPost } from '../../Interfaces/Warning';
+import { getDateString } from '../../utils/DataProcessing';
+import { getColorFromRole } from '../../utils/Helpers';
+import './GuildMemberCard.scss';
+import GuildMemberDetails from './GuildMemberDetails';
+import GuildMemberMenu from './GuildMemberMenu';
 import WarningForm from './Warnings/WarningForm';
 import WarningsViewer from './Warnings/WarningsViewer';
-import gw2Image from '../../assets/images/gw2.png';
-
-import MemberRecord from '../../Interfaces/MemberRecord';
-import DiscordRole from '../../Interfaces/DiscordRole';
-import { WarningPost } from '../../Interfaces/Warning';
-
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import SyncProblem from '@material-ui/icons/SyncProblem';
-import GuildMemberMenu from './GuildMemberMenu';
-import { getDateString } from '../../utils/DataProcessing';
-import { Timer } from '@material-ui/icons';
-import GuildMemberDetails from './GuildMemberDetails';
-import { PopoverPosition } from '@material-ui/core';
 
 interface Props {
   member: MemberRecord;

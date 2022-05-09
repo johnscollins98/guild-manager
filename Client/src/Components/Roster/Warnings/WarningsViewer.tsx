@@ -1,22 +1,10 @@
-import React, { useCallback } from 'react';
-
-import './WarningsViewer.scss';
-
+import { CalendarToday, Person, Assignment, Close } from '@mui/icons-material';
+import { Dialog, DialogTitle, DialogContent, Card, Typography, IconButton } from '@mui/material';
+import { useCallback } from 'react';
 import MemberRecord from '../../../Interfaces/MemberRecord';
 import Warning from '../../../Interfaces/Warning';
-
-import Card from '@material-ui/core/Card';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-
-import Assignment from '@material-ui/icons/Assignment';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import Close from '@material-ui/icons/Close';
-import Person from '@material-ui/icons/Person';
 import useConfirm from '../../Common/ConfirmDialog/useConfirm';
+import './WarningsViewer.scss';
 
 interface Props {
   isOpen: boolean;
@@ -48,7 +36,12 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
       <DialogContent className="warning-content">
         {member.warnings.map(warning => (
-          <Card variant="outlined" className="warning-card" key={warning._id}>
+          <Card
+            variant="outlined"
+            className="warning-card"
+            key={warning._id}
+            sx={{ backgroundColor: 'inherit' }}
+          >
             <div className="data">
               <span className="date field">
                 <CalendarToday className="icon" />

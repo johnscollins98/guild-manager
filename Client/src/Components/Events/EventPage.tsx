@@ -1,27 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import './EventPage.scss';
-
-import Event from '../../Interfaces/Event';
-import DiscordMember from '../../Interfaces/DiscordMember';
-
-import EventRepo from '../../utils/EventRepository';
-import EventEntry from './EventEntry';
-import EventPosterForm from './EventPosterForm';
-import LoaderPage from '../LoaderPage';
-import { fetchDiscordMembers, getEventRoles } from '../../utils/DataRetrieval';
-
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { Color } from '@material-ui/lab/Alert';
-
+import { AlertColor, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import DiscordMember from '../../Interfaces/DiscordMember';
+import Event from '../../Interfaces/Event';
+import { fetchDiscordMembers, getEventRoles } from '../../utils/DataRetrieval';
+import EventRepo from '../../utils/EventRepository';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
+import LoaderPage from '../LoaderPage';
+import EventEntry from './EventEntry';
+import './EventPage.scss';
+import EventPosterForm from './EventPosterForm';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const EventPage = ({ filterString, openToast }: Props) => {
