@@ -12,7 +12,6 @@ import FormGroup from '@mui/material/FormGroup';
 import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { styled } from '@mui/material/styles';
 
 interface Props {
   selectedRecord: MemberRecord | null;
@@ -133,16 +132,6 @@ interface StyleProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const StyledCheckbox = ({ color, ...props }: StyleProps) => {
-  const OurCheckbox = styled(Checkbox)(() => ({
-    root: {
-      color: color,
-      '&$checked': {
-        color: color
-      }
-    },
-    checked: {}
-  }));
-
-  return <OurCheckbox {...props} />;
-};
+const StyledCheckbox = ({ color, ...props }: StyleProps) => (
+  <Checkbox sx={{ color: color, '&.Mui-checked': { color: color } }} {...props} />
+);
