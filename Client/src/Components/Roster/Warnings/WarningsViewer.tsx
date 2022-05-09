@@ -36,7 +36,12 @@ const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => 
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
       <DialogContent className="warning-content">
         {member.warnings.map(warning => (
-          <Card variant="outlined" className="warning-card" key={warning._id}>
+          <Card
+            variant="outlined"
+            className="warning-card"
+            key={warning._id}
+            sx={{ backgroundColor: 'inherit' }}
+          >
             <div className="data">
               <span className="date field">
                 <CalendarToday className="icon" />
