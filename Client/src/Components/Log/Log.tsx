@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
-
-import './Log.scss';
-
-import GW2LogEntry from '../../Interfaces/GW2LogEntry';
-
-import { filterLogByString } from '../../utils/Helpers';
-import { fetchGW2Log } from '../../utils/DataRetrieval';
-import LogEntry from './LogEntry';
-import LoaderPage from '../LoaderPage';
-
-import { Color } from '@material-ui/lab/Alert';
-
+import { AlertColor } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import GW2LogEntry from '../../Interfaces/GW2LogEntry';
+import { fetchGW2Log } from '../../utils/DataRetrieval';
+import { filterLogByString } from '../../utils/Helpers';
+import LoaderPage from '../LoaderPage';
+import './Log.scss';
+import LogEntry from './LogEntry';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const Log = ({ filterString, openToast }: Props) => {

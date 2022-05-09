@@ -1,19 +1,12 @@
+import { AlertColor, Button, FormControlLabel, Switch, TextField } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-
+import { useQuery } from 'react-query';
 import EventRepository from '../../utils/EventRepository';
 import LoaderPage from '../LoaderPage';
 
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import TextField from '@material-ui/core/TextField';
-import { Color } from '@material-ui/lab/Alert';
-
-import { useQuery } from 'react-query';
-
 interface Props {
   onClose: () => void;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const EventPosterForm = ({ onClose, openToast }: Props) => {

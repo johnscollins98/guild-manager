@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Color } from '@material-ui/lab/Alert';
+import { AlertColor } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { fetchDiscordLog } from '../../utils/DataRetrieval';
-import LoaderPage from '../LoaderPage';
-import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
-
-import './DiscordLog.scss';
-import { snowflakeToDate } from '../../utils/Helpers';
 import {
   DiscordLogDisplay,
   DiscordLogDisplayGenerator
 } from '../../Interfaces/DiscordLogStringGenerator';
+import { fetchDiscordLog } from '../../utils/DataRetrieval';
+import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
+import { snowflakeToDate } from '../../utils/Helpers';
+import LoaderPage from '../LoaderPage';
+import './DiscordLog.scss';
 import DiscordLogEntry from './DiscordLogEntry';
-
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const DiscordLog = ({ filterString, openToast }: Props) => {

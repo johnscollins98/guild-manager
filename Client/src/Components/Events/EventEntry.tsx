@@ -1,25 +1,19 @@
+import {
+  Assignment,
+  CalendarToday,
+  WatchLater,
+  HourglassFull,
+  Person,
+  Close,
+  Add,
+  Create,
+  Refresh
+} from '@mui/icons-material';
+import { AlertColor, Card, MenuItem, IconButton, TextField } from '@mui/material';
 import React, { useCallback, useState } from 'react';
-
-import './EventEntry.scss';
-
 import DiscordMember from '../../Interfaces/DiscordMember';
 import Event from '../../Interfaces/Event';
-
-import Card from '@material-ui/core/Card';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
-
-import Add from '@material-ui/icons/Add';
-import Assignment from '@material-ui/icons/Assignment';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import Close from '@material-ui/icons/Close';
-import Create from '@material-ui/icons/Create';
-import HourglassFull from '@material-ui/icons/HourglassFull';
-import Person from '@material-ui/icons/Person';
-import Refresh from '@material-ui/icons/Refresh';
-import WatchLater from '@material-ui/icons/WatchLater';
-import { Color } from '@material-ui/lab/Alert';
+import './EventEntry.scss';
 
 const emptyEvent: Event = {
   title: '',
@@ -38,7 +32,7 @@ interface Props {
   deleteEvent?: (e: Event) => Promise<void>;
   updateEvent?: (e: Event) => Promise<Event | undefined>;
   createEvent?: (e: Event) => Promise<Event | undefined>;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
 }
 
 const EventEntry = ({

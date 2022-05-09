@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogTitle, Typography } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Typography, Button } from '@mui/material';
 import { FormEventHandler, useEffect, useRef } from 'react';
 
 import './ConfirmDialog.scss';

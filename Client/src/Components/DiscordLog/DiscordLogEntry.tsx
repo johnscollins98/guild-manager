@@ -1,11 +1,6 @@
-import { AccordionDetails, AccordionSummary, Typography } from '@material-ui/core';
-import Accordion from '@material-ui/core/Accordion';
-import { ExpandMore } from '@material-ui/icons';
-import AccessTime from '@material-ui/icons/AccessTime';
-import CalendarToday from '@material-ui/icons/CalendarToday';
-import React from 'react';
+import { ExpandMore, CalendarToday, AccessTime } from '@mui/icons-material';
+import { Accordion, AccordionSummary, Typography, AccordionDetails } from '@mui/material';
 import { DiscordLogDisplay } from '../../Interfaces/DiscordLogStringGenerator';
-
 import './DiscordLogEntry.scss';
 
 interface Props {

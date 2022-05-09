@@ -15,7 +15,6 @@ import GW2Rank from '../../Interfaces/GW2Rank';
 import AuthInfo from '../../Interfaces/AuthInfo';
 import { WarningPost } from '../../Interfaces/Warning';
 
-import { Color } from '@material-ui/lab/Alert';
 import { MutationFunction, useMutation, useQueryClient } from 'react-query';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
@@ -23,6 +22,7 @@ import 'react-virtualized/styles.css';
 import DiscordMember from '../../Interfaces/DiscordMember';
 import { FetchError } from 'node-fetch';
 import KickModal from './KickModal';
+import { AlertColor } from '@mui/material/Alert';
 
 const COLUMN_MIN_WIDTH = 300;
 const MAX_NUM_COLS = 5;
@@ -42,7 +42,7 @@ interface Props {
   guildRanks: GW2Rank[];
   isFetching: boolean;
   refetchData: () => void;
-  openToast: (msg: string, status: Color) => void;
+  openToast: (msg: string, status: AlertColor) => void;
   sortBy: string;
   setSortBy: (setSortBy: string) => void;
   filterBy: string;
