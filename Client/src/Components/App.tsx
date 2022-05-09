@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import AuthInfo from '../Interfaces/AuthInfo';
 
@@ -26,7 +26,8 @@ import {
   Snackbar,
   Tab,
   Tabs,
-  ThemeProvider
+  ThemeProvider,
+  useMediaQuery
 } from '@mui/material';
 import { TabPanel, TabContext } from '@mui/lab';
 
@@ -41,7 +42,12 @@ const App = () => {
   const [toastStatus, setToastStatus] = useState<AlertColor>('info');
   const [toastMessage, setToastMessage] = useState('');
 
-  const [theme, setTheme] = useState<PaletteMode>('dark');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [theme, setTheme] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
+  useEffect(() => {
+    setTheme(prefersDarkMode ? 'dark' : 'light');
+  }, [prefersDarkMode]);
+
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
@@ -52,16 +58,20 @@ const App = () => {
     username: ''
   });
 
-  const darkTheme = createTheme({
-    palette: {
-      mode: theme
-    },
-    components: {
-      MuiDialogContent: {
-        styleOverrides: { root: { paddingTop: `8px !important` } }
-      }
-    }
-  });
+  const darkTheme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: theme
+        },
+        components: {
+          MuiDialogContent: {
+            styleOverrides: { root: { paddingTop: `8px !important` } }
+          }
+        }
+      }),
+    [theme]
+  );
 
   const openToast = useCallback(
     (message: string, status: AlertColor = 'info') => {
