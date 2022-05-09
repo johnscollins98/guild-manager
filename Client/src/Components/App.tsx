@@ -55,6 +55,11 @@ const App = () => {
   const darkTheme = createTheme({
     palette: {
       mode: theme
+    },
+    components: {
+      MuiDialogContent: {
+        styleOverrides: { root: { paddingTop: `8px !important` } }
+      }
     }
   });
 

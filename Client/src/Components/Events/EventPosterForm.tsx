@@ -95,6 +95,9 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           onChange={e => setPostChannel(e.target.value)}
           value={postChannel}
           label="Channel ID to post to"
+          size="small"
+          margin="dense"
+          fullWidth
           disabled={posting}
           required
         />
@@ -116,8 +119,9 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           {Object.entries(existingMessageIds).map(([day, value]) => (
             <TextField
               fullWidth
+              size="small"
+              margin="dense"
               key={day}
-              style={{ marginBottom: '8px' }}
               variant="outlined"
               placeholder="Enter Message ID"
               label={day}
@@ -137,12 +141,7 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
           marginTop: '16px'
         }}
       >
-        <Button
-          variant="contained"
-          onClick={onClose}
-          style={{ marginRight: '8px' }}
-          disabled={posting}
-        >
+        <Button variant="text" onClick={onClose} style={{ marginRight: '8px' }} disabled={posting}>
           Close
         </Button>
         <Button variant="contained" color="primary" type="submit" disabled={posting}>

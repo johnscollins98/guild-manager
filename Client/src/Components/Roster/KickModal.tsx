@@ -61,10 +61,10 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose, o
             )}
           </div>
           <div className="kick-modal-actions">
-            <Button variant="contained" type="reset">
+            <Button variant="text" type="reset">
               Cancel
             </Button>
-            <Button variant="contained" color="primary" type="submit">
+            <Button variant="contained" type="submit" color="primary">
               Kick
             </Button>
           </div>
