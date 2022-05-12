@@ -9,7 +9,8 @@ import {
   Create,
   Refresh
 } from '@mui/icons-material';
-import { AlertColor, Card, MenuItem, IconButton, TextField } from '@mui/material';
+import { AlertColor, Card, MenuItem, IconButton, TextField, Theme } from '@mui/material';
+import { useTheme } from '@mui/system';
 import React, { useCallback, useState } from 'react';
 import DiscordMember from '../../Interfaces/DiscordMember';
 import Event from '../../Interfaces/Event';
@@ -194,6 +195,7 @@ interface EditFieldProps {
 }
 
 const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldProps) => {
+  const theme = useTheme<Theme>();
   return (
     <TextField
       variant="outlined"
@@ -203,6 +205,7 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldPro
       onChange={e => {
         onEdit(fieldKey, e.target.value);
       }}
+      style={{ colorScheme: theme.palette.mode }}
       fullWidth
       required
       {...props}
