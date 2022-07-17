@@ -1,15 +1,15 @@
+import ConnectMongoDBSession from 'connect-mongodb-session';
 import express from 'express';
-import 'reflect-metadata';
 import session from 'express-session';
 import passport from 'passport';
-import { DiscordStrategySetup } from './services/auth/strategies/discord.strategy';
 import path from 'path';
-import { config } from './config';
-import { useExpressServer, useContainer as rc_useContainer, Action } from 'routing-controllers';
-import { Container } from 'typeorm-typedi-extensions';
+import 'reflect-metadata';
+import { Action, useContainer as rc_useContainer, useExpressServer } from 'routing-controllers';
 import { createConnection, useContainer } from 'typeorm';
+import { Container } from 'typeorm-typedi-extensions';
+import { config } from './config';
 import { AuthService } from './services/auth/auth.service';
-import ConnectMongoDBSession from 'connect-mongodb-session';
+import { DiscordStrategySetup } from './services/auth/strategies/discord.strategy';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -19,10 +19,13 @@ app.use(express.json());
 
 const MongoDBStore = ConnectMongoDBSession(session);
 
-const store = process.env.NODE_ENV === 'production' ? new MongoDBStore({
-  uri: config.atlasUri,
-  collection: 'sessions'
-}) : undefined;
+const store =
+  process.env.NODE_ENV === 'production'
+    ? new MongoDBStore({
+        uri: config.atlasUri,
+        collection: 'sessions'
+      })
+    : undefined;
 
 app.use(
   session({

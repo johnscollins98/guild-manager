@@ -12,8 +12,5 @@ export class User {
   username!: string;
 
   @Column()
-  inGuild!: boolean;
-
-  @Column()
-  isAdmin!: boolean;
+  accessToken!: string;
 }
