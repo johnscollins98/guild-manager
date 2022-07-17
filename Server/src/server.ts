@@ -9,6 +9,7 @@ import { useExpressServer, useContainer as rc_useContainer, Action } from 'routi
 import { Container } from 'typeorm-typedi-extensions';
 import { createConnection, useContainer } from 'typeorm';
 import { AuthService } from './services/auth/auth.service';
+import ConnectMongoDBSession from 'connect-mongodb-session';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -16,15 +17,23 @@ useContainer(Container);
 const app = express();
 app.use(express.json());
 
+const MongoDBStore = ConnectMongoDBSession(session);
+
+const store = process.env.NODE_ENV === 'production' ? new MongoDBStore({
+  uri: config.atlasUri,
+  collection: 'sessions'
+}) : undefined;
+
 app.use(
   session({
     secret: config.sessionSecret,
     cookie: {
-      maxAge: 60000 * 60 * 24 * 30
+      maxAge: 60000 * 60 * 24 * 7
     },
     resave: true,
     saveUninitialized: false,
-    name: 'discord.oauth2'
+    name: 'discord.oauth2',
+    store
   })
 );
 app.use(passport.initialize());
