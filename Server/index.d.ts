@@ -6,7 +6,7 @@ declare global {
       _id: ObjectID;
       id: string;
       username: string;
-      accessToken;
+      accessToken: string;
     }
   }
 }
