@@ -33,7 +33,9 @@ export class AuthService {
       }
       const guildMember = await guildMemberPromise;
       isAdmin = guildMember.roles.some(r => config.adminRoles.includes(r));
-    } catch {}
+    } catch (err) {
+      console.error(err);
+    }
 
     return { loggedIn, isAdmin, username };
   }
