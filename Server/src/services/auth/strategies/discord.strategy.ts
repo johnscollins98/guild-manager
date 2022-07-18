@@ -21,7 +21,7 @@ export class DiscordStrategySetup {
       // return false if access token has expired
       if (user) {
         const currentDate = Date.now();
-        if (currentDate >= user.expires.getTime()) {
+        if (!user.expires || currentDate >= user.expires.getTime()) {
           return done(null, false);
         }
       }
