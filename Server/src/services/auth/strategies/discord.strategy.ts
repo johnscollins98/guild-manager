@@ -1,5 +1,6 @@
 import passport from 'passport';
-import PassportDiscord from 'passport-discord';
+import PassportDiscord, { Profile } from 'passport-discord';
+import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
 import { User } from '../../../models/user.model';
@@ -16,6 +17,15 @@ export class DiscordStrategySetup {
 
     passport.deserializeUser(async (id, done) => {
       const user = await userRepository.getById(id as string);
+
+      // return false if access token has expired
+      if (user) {
+        const currentDate = Date.now();
+        if (currentDate >= user.expires.getTime()) {
+          return done(null, false);
+        }
+      }
+
       done(null, user);
     });
 
@@ -27,12 +37,20 @@ export class DiscordStrategySetup {
           callbackURL: config.discordAuthRedirect,
           scope: ['identify', 'guilds.members.read']
         },
-        async (accessToken, _refreshToken, profile, done) => {
+        async (
+          accessToken: string,
+          _refreshToken: string,
+          params: { expires_in: number },
+          profile: Profile,
+          done: OAuth2Strategy.VerifyCallback
+        ) => {
           try {
             const userToSave = new User();
             userToSave.id = profile.id;
             userToSave.username = profile.username;
             userToSave.accessToken = accessToken;
+            userToSave.expires = new Date(Date.now() + params.expires_in * 1000);
+
             let user = await userRepository.getByGuildId(profile.id);
             if (user) {
               user = await userRepository.update(user._id.toString(), userToSave);

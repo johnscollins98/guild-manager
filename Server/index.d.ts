@@ -7,6 +7,7 @@ declare global {
       id: string;
       username: string;
       accessToken: string;
+      expires: Date;
     }
   }
 }

@@ -13,4 +13,7 @@ export class User {
 
   @Column()
   accessToken!: string;
+
+  @Column()
+  expires!: Date;
 }
