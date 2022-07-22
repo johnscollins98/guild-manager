@@ -4,6 +4,7 @@ import { config } from '../../config';
 import AuthInfo from '../../models/interfaces/authinfo.interface';
 import DiscordMember from '../../models/interfaces/discordmember.interface';
 import { DiscordApi } from '../discord/api.discord.service';
+import { SymmetricEncryption } from './encrypt.service';
 
 const notLoggedIn = {
   loggedIn: false,
@@ -13,7 +14,7 @@ const notLoggedIn = {
 
 @Service()
 export class AuthService {
-  constructor() {}
+  constructor(private readonly symmetricEncryption: SymmetricEncryption) {}
 
   async getUserAuthInfo(user?: Express.User): Promise<AuthInfo> {
     if (!user) return notLoggedIn;
@@ -23,9 +24,9 @@ export class AuthService {
     let isAdmin = false;
 
     try {
-      const discordApi = new DiscordApi(user.accessToken, true);
       let guildMemberPromise: Promise<DiscordMember> | null = cache.get('auth-guild-member');
       if (!guildMemberPromise) {
+        const discordApi = new DiscordApi(this.symmetricEncryption.decrypt(user.accessToken), true);
         guildMemberPromise = discordApi.get<DiscordMember>(
           `users/@me/guilds/${config.discordGuildId}/member`
         );

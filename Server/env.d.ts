@@ -12,6 +12,7 @@ declare namespace NodeJS {
     ADMIN_ROLES: string;
     EVENT_ROLES: string;
     SESSION_SECRET: string;
+    ACCESS_TOKEN_ENCRYPTION_KEY: string;
     FRONT_END_BASE_URL: string;
     INVITE_LINK: string;
   }

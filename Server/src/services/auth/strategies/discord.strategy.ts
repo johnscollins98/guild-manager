@@ -3,24 +3,22 @@ import PassportDiscord, { Profile } from 'passport-discord';
 import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
-import { User } from '../../../models/user.model';
-import { UserRepository } from '../../repositories/user.repository';
+import { SymmetricEncryption } from '../encrypt.service';
 
 const DiscordStrategy = PassportDiscord.Strategy;
 
 @Service()
 export class DiscordStrategySetup {
-  constructor(userRepository: UserRepository) {
+  constructor(symmetricEncryption: SymmetricEncryption) {
     passport.serializeUser((user, done) => {
-      done(null, user._id);
+      done(null, user);
     });
 
-    passport.deserializeUser(async (id, done) => {
-      const user = await userRepository.getById(id as string);
-
+    passport.deserializeUser(async (user: Express.User, done) => {
       // return false if access token has expired
       if (user) {
         const currentDate = Date.now();
+        user.expires = new Date(user.expires);
         if (!user.expires || currentDate >= user.expires.getTime()) {
           return done(null, false);
         }
@@ -45,18 +43,13 @@ export class DiscordStrategySetup {
           done: OAuth2Strategy.VerifyCallback
         ) => {
           try {
-            const userToSave = new User();
-            userToSave.id = profile.id;
-            userToSave.username = profile.username;
-            userToSave.accessToken = accessToken;
-            userToSave.expires = new Date(Date.now() + params.expires_in * 1000);
+            const user: Express.User = {
+              id: profile.id,
+              username: profile.username,
+              accessToken: symmetricEncryption.encrypt(accessToken),
+              expires: new Date(Date.now() + params.expires_in * 1000)
+            };
 
-            let user = await userRepository.getByGuildId(profile.id);
-            if (user) {
-              user = await userRepository.update(user._id.toString(), userToSave);
-            } else {
-              user = await userRepository.create(userToSave);
-            }
             done(null, user);
           } catch (err) {
             console.error(err);

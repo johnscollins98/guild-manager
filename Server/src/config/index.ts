@@ -25,5 +25,6 @@ export const config = {
   eventRoles: process.env.EVENT_ROLES.split(','),
   sessionSecret: process.env.SESSION_SECRET,
   frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
-  discordInviteLink: process.env.INVITE_LINK
+  discordInviteLink: process.env.INVITE_LINK,
+  accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY
 };
