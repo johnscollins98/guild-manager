@@ -20,7 +20,6 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import Grid from 'react-virtualized/dist/commonjs/Grid';
 import 'react-virtualized/styles.css';
 import DiscordMember from '../../Interfaces/DiscordMember';
-import { FetchError } from 'node-fetch';
 import KickModal from './KickModal';
 import { AlertColor } from '@mui/material/Alert';
 
@@ -149,7 +148,7 @@ const RosterDisplay = ({
     await kickDiscordMember(kickInfo.discordId, kickInfo.reinvite, kickInfo.reason);
   };
 
-  const kickMutation = useMutation<void, FetchError, KickInfo, { previousData?: DiscordMember[] }>(
+  const kickMutation = useMutation<void, Error, KickInfo, { previousData?: DiscordMember[] }>(
     kickFunc,
     {
       onMutate: async kickInfo => {

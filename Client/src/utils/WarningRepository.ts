@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import Warning, { WarningPost } from '../Interfaces/Warning';
 
 const WarningRepository = {

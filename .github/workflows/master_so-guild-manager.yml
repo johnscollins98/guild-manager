@@ -23,6 +23,7 @@ jobs:
 
       - name: yarn install and build
         run: |
+          set NODE_ENV=production
           yarn install
           yarn build
       

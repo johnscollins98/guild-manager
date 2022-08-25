@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import Event from '../Interfaces/Event';
 import EventSettings from '../Interfaces/EventSettings';
 
