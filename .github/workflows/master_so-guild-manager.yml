@@ -16,25 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v1
-        with:
-          node-version: '16.x'
-
-      - name: yarn install and build
-        run: |
-          set NODE_ENV=production
-          yarn install
-          yarn build
-
-      - name: move files to deployment folder
-        run: |
-          mkdir deployment/Client
-          mkdir deployment/Server
-          copy ./Client/build ./deployment/Client
-          copy ./Server/build ./deployment/Server
-          copy ./Server/node_modules ./deployment/Server
-      
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -42,4 +23,4 @@ jobs:
           app-name: 'so-guild-manager'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_389A051CCD954CF48AA394ACD0939DCA }}
-          package: ./deployment
+          package: .
