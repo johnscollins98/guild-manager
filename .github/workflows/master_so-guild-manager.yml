@@ -34,7 +34,6 @@ jobs:
           copy ./Client/build ./deployment/Client
           copy ./Server/build ./deployment/Server
           copy ./Server/node_modules ./deployment/Server
-          copy ./package.json ./deployment
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
