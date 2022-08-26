@@ -1,14 +1,14 @@
 {
   "name": "guild-manager",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./Server/build/index.js",
   "repository": "https://github.com/johnscollins98/guild-manager",
   "author": "John Collins <johnscollins98@gmail.com>",
   "license": "MIT",
   "scripts": {
     "postinstall": "yarn --cwd Client && yarn --cwd Server",
     "build": "yarn --cwd Client build && yarn --cwd Server build",
-    "start": "yarn --cwd Server start",
+    "start": "node ./Server/build/index.js",
     "dev-server": "yarn --cwd Server dev",
     "dev-client": "yarn --cwd Client start",
     "dev": "concurrently \"yarn dev-server\" \"set PORT=5001 && yarn dev-client\""
