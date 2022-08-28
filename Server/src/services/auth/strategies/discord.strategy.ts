@@ -20,6 +20,7 @@ export class DiscordStrategySetup {
         const currentDate = Date.now();
         user.expires = new Date(user.expires);
         if (!user.expires || currentDate >= user.expires.getTime()) {
+          console.error("User access token has expired");
           return done(null, false);
         }
       }
