@@ -42,19 +42,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-createConnection({
-  type: 'mongodb',
-  url: config.atlasUri,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  synchronize: true,
-  logging: true,
-  entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
-}).then(() => {
-  console.log('Connected to MongoDB');
-  Container.get(DiscordStrategySetup);
-});
-
 useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*.controller.*')],
@@ -74,4 +61,17 @@ app.use('*', (_, res) => {
   if (!res.headersSent) res.redirect('/');
 });
 
-app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
+createConnection({
+  type: 'mongodb',
+  url: config.atlasUri,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  synchronize: true,
+  logging: true,
+  entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
+}).then(() => {
+  console.log('Connected to MongoDB');
+  Container.get(DiscordStrategySetup);
+  app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
+});
+
