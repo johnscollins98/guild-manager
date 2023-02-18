@@ -49,7 +49,7 @@ const EventEntry = ({
   const [modified, setModified] = useState(false);
 
   const validationHelper = useCallback(
-    event => {
+    (event: Event) => {
       const anyEmpty = Object.keys(event)
         .filter(k => !k.startsWith('_'))
         .some(k => !event[k]);
@@ -79,7 +79,7 @@ const EventEntry = ({
     try {
       validationHelper(localEvent);
     } catch (err) {
-      openToast(err.message, 'warning');
+      err instanceof Error && openToast(err.message, 'warning');
       return;
     }
 
@@ -97,7 +97,7 @@ const EventEntry = ({
     try {
       validationHelper(localEvent);
     } catch (err) {
-      openToast(err.message, 'warning');
+      err instanceof Error && openToast(err.message, 'warning');
       return;
     }
 
@@ -121,7 +121,7 @@ const EventEntry = ({
   }, [localEvent, deleteEvent]);
 
   const onSubmit = useCallback(
-    e => {
+    (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       create ? onCreate() : onUpdate();
     },

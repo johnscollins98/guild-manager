@@ -1,17 +1,13 @@
 import { Check, FilterList, ImportExport, Refresh } from '@mui/icons-material';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
-import Switch from '@mui/material/Switch';
 import React, { useCallback, useState } from 'react';
 
 import './RosterControl.scss';
 
 interface Props {
-  singleColumn: boolean;
-  setSingleColumn: (val: boolean) => void;
   filterBy: string;
   setFilterBy: (val: string) => void;
   sortBy: string;
@@ -21,8 +17,6 @@ interface Props {
 }
 
 const RosterControl = ({
-  singleColumn,
-  setSingleColumn,
   filterBy,
   setFilterBy,
   sortBy,
@@ -87,17 +81,6 @@ const RosterControl = ({
           <IconButton size="small" onClick={refetchData} className="refresh" disabled={isFetching}>
             <Refresh />
           </IconButton>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={singleColumn}
-                onChange={e => {
-                  setSingleColumn(e.target.checked);
-                }}
-              />
-            }
-            label="Full Width Members?"
-          />
         </span>
       </Paper>
       <Menu

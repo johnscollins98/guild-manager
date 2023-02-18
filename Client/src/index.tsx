@@ -1,6 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import QueryProvider from './Components/QueryProvider';
-require('dotenv').config();
 
-ReactDOM.render(<QueryProvider />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')!).render(<QueryProvider />);
