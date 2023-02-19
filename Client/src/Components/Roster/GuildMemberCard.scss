@@ -1,4 +1,10 @@
 .member-card {
+  flex: 1 0 300px;
+
+  &.fullWidth {
+    flex-basis: 100%;
+  }
+
   &.MuiPaper-outlined {
     border-left: 4px solid;
     transition: border-left 0.1s;

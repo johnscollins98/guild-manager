@@ -1,4 +1,5 @@
-import { Check, FilterList, ImportExport, Refresh } from '@mui/icons-material';
+import { Apps, Check, FilterList, ImportExport, Refresh, TableRows } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,6 +15,8 @@ interface Props {
   setSortBy: (val: string) => void;
   refetchData: () => void;
   isFetching: boolean;
+  fullWidth: boolean;
+  setFullWidth: (val: boolean) => void;
 }
 
 const RosterControl = ({
@@ -22,7 +25,9 @@ const RosterControl = ({
   sortBy,
   setSortBy,
   refetchData,
-  isFetching
+  isFetching,
+  fullWidth,
+  setFullWidth
 }: Props) => {
   const [anchorElement, setAnchorElement] = useState<(EventTarget & Element) | null>(null);
   const [sortOpen, setSortOpen] = useState(false);
@@ -70,17 +75,33 @@ const RosterControl = ({
     <>
       <Paper variant="outlined" className="roster-bar">
         <span className="left">
-          <IconButton size="small" onClick={onFilterOpen}>
-            <FilterList />
-          </IconButton>
-          <IconButton size="small" onClick={onSortOpen}>
-            <ImportExport />
-          </IconButton>
+          <Tooltip title="Filter Members">
+            <IconButton size="small" onClick={onFilterOpen}>
+              <FilterList />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Sort Members">
+            <IconButton size="small" onClick={onSortOpen}>
+              <ImportExport />
+            </IconButton>
+          </Tooltip>
         </span>
         <span className="right">
-          <IconButton size="small" onClick={refetchData} className="refresh" disabled={isFetching}>
-            <Refresh />
-          </IconButton>
+          <Tooltip title={fullWidth ? 'Show Members As Grid' : 'Show Members As Rows'}>
+            <IconButton size="small" onClick={() => setFullWidth(!fullWidth)}>
+              {fullWidth ? <Apps /> : <TableRows />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Refresh Data">
+            <IconButton
+              size="small"
+              onClick={refetchData}
+              className="refresh"
+              disabled={isFetching}
+            >
+              <Refresh />
+            </IconButton>
+          </Tooltip>
         </span>
       </Paper>
       <Menu

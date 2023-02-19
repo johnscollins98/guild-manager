@@ -9,7 +9,7 @@ import {
   Create,
   Refresh
 } from '@mui/icons-material';
-import { AlertColor, Card, MenuItem, IconButton, TextField, Theme } from '@mui/material';
+import { AlertColor, Card, MenuItem, IconButton, TextField, Theme, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/system';
 import React, { useCallback, useState } from 'react';
 import DiscordMember from '../../Interfaces/DiscordMember';
@@ -165,18 +165,24 @@ const EventEntry = ({
         </div>
         <div className="field buttons">
           {create ? null : (
-            <IconButton size="small" onClick={onDelete}>
-              <Close />
-            </IconButton>
+            <Tooltip title="Delete Event">
+              <IconButton size="small" onClick={onDelete}>
+                <Close />
+              </IconButton>
+            </Tooltip>
           )}
           {modified ? (
             <>
-              <IconButton size="small" onClick={create ? onCreate : onUpdate}>
-                {create ? <Add /> : <Create />}
-              </IconButton>
-              <IconButton size="small" onClick={onReset}>
-                <Refresh />
-              </IconButton>
+              <Tooltip title="Apply Changes">
+                <IconButton size="small" onClick={create ? onCreate : onUpdate}>
+                  {create ? <Add /> : <Create />}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Reset Changes">
+                <IconButton size="small" onClick={onReset}>
+                  <Refresh />
+                </IconButton>
+              </Tooltip>
             </>
           ) : null}
         </div>

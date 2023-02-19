@@ -54,6 +54,7 @@ const RosterDisplay = ({
   const [selectedRecord, setSelectedRecord] = useState<MemberRecord | null>(null);
   const [recordState, setRecordState] = useState(records);
   const [filteredRecords, setFilteredRecords] = useState(recordState);
+  const [fullWidth, setFullWidth] = useState(true);
 
   useEffect(() => {
     setRecordState(records);
@@ -262,25 +263,27 @@ const RosterDisplay = ({
         setFilterBy={setFilterBy}
         refetchData={refetchData}
         isFetching={isFetching}
+        fullWidth={fullWidth}
+        setFullWidth={setFullWidth}
       />
       <div className="roster-container">
         {filteredRecords.map(member => {
           return (
-            <div key={member.memberId ?? member.discordId} style={{ padding: 5 }}>
-              <GuildMemberCard
-                member={member}
-                discordRoles={discordRoles}
-                onKick={record => {
-                  setSelectedRecord(record);
-                  setKickModalShow(true);
-                }}
-                onGiveWarning={onGiveWarning}
-                onDeleteWarning={onDeleteWarning}
-                onEdit={openEdit}
-                onChangeNickname={onEditNickname}
-                isAdmin={authInfo.isAdmin}
-              />
-            </div>
+            <GuildMemberCard
+              key={member.memberId ?? member.discordId}
+              member={member}
+              discordRoles={discordRoles}
+              onKick={record => {
+                setSelectedRecord(record);
+                setKickModalShow(true);
+              }}
+              onGiveWarning={onGiveWarning}
+              onDeleteWarning={onDeleteWarning}
+              onEdit={openEdit}
+              onChangeNickname={onEditNickname}
+              isAdmin={authInfo.isAdmin}
+              fullWidth={fullWidth}
+            />
           );
         })}
       </div>

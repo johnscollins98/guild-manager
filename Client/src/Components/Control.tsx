@@ -1,5 +1,5 @@
 import { Brightness3, Brightness6 } from '@mui/icons-material';
-import { Box, Grid, IconButton, PaletteMode, TextField } from '@mui/material';
+import { Box, Grid, IconButton, PaletteMode, TextField, Tooltip } from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -23,9 +23,11 @@ const Control = ({ handleFilterChange, theme, toggleTheme }: Props) => {
           />
         </Grid>
         <Grid item>
-          <IconButton onClick={() => toggleTheme()}>
-            {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
-          </IconButton>
+          <Tooltip title="Change Theme">
+            <IconButton onClick={() => toggleTheme()}>
+              {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
+            </IconButton>
+          </Tooltip>
         </Grid>
       </Grid>
     </Box>

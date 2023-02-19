@@ -1,4 +1,8 @@
 .roster-container {
   flex-grow: 1;
   overflow: auto;
+  display: flex;
+  align-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
 }
