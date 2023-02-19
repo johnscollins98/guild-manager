@@ -1,5 +1,7 @@
-import { CalendarToday, AccessTime } from '@mui/icons-material';
-import { Card, Typography } from '@mui/material';
+import AccessTime from '@mui/icons-material/AccessTime';
+import CalendarToday from '@mui/icons-material/CalendarToday';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 import GW2LogEntry from '../../Interfaces/GW2LogEntry';
 import './LogEntry.scss';
 

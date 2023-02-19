@@ -1,4 +1,4 @@
-import { AlertColor } from '@mui/material';
+import { AlertColor } from '@mui/material/Alert';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import GW2LogEntry from '../../Interfaces/GW2LogEntry';

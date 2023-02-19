@@ -1,4 +1,4 @@
 export const config = {
-  backEndBaseUrl: process.env.NODE_ENV === 'production' ? '' : process.env.REACT_APP_BACKEND_BASE_URL || '',
-  discordReinviteUrl: process.env.REACT_APP_DISCORD_REINVITE_LINK
+  backEndBaseUrl: import.meta.env.PROD ? '' : import.meta.env.VITE_BACKEND_BASE_URL || '',
+  discordReinviteUrl: import.meta.env.VITE_DISCORD_REINVITE_LINK
 };

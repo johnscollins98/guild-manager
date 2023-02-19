@@ -1,9 +1,14 @@
-import { Apps, Check, FilterList, ImportExport, Refresh, TableRows } from '@mui/icons-material';
-import { Tooltip } from '@mui/material';
+import Apps from '@mui/icons-material/Apps';
+import Check from '@mui/icons-material/Check';
+import FilterList from '@mui/icons-material/FilterList';
+import ImportExport from '@mui/icons-material/ImportExport';
+import Refresh from '@mui/icons-material/Refresh';
+import TableRows from '@mui/icons-material/TableRows';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
+import Tooltip from '@mui/material/Tooltip';
 import React, { useCallback, useState } from 'react';
 
 import './RosterControl.scss';

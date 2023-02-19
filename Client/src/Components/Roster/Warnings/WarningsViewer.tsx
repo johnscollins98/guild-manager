@@ -1,5 +1,13 @@
-import { CalendarToday, Person, Assignment, Close } from '@mui/icons-material';
-import { Dialog, DialogTitle, DialogContent, Card, Typography, IconButton } from '@mui/material';
+import Assignment from '@mui/icons-material/Assignment';
+import CalendarToday from '@mui/icons-material/CalendarToday';
+import Close from '@mui/icons-material/Close';
+import Person from '@mui/icons-material/Person';
+import Card from '@mui/material/Card';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
 import MemberRecord from '../../../Interfaces/MemberRecord';
 import Warning from '../../../Interfaces/Warning';

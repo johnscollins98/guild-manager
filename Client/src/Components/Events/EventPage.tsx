@@ -1,4 +1,8 @@
-import { AlertColor, Button, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { AlertColor } from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import DiscordMember from '../../Interfaces/DiscordMember';

@@ -2,7 +2,20 @@
   "name": "guild-manager-client",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
+  "type": "module",
+  "proxy": "http://localhost:5000",
+  "scripts": {
+    "start": "set NODE_ENV=development&&vite",
+    "build": "tsc && vite build"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^3.1.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4",
+    "vite": "^4.1.2",
+    "vite-plugin-svgr": "^2.4.0",
+    "vite-tsconfig-paths": "^4.0.5",
+    "yarn-audit-fix": "^9.3.8",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.9",
@@ -16,36 +29,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
-    "react-scripts": "5.0.1",
     "sass": "^1.58.3",
     "typescript": "^4.9.5"
-  },
-  "proxy": "http://localhost:5000",
-  "scripts": {
-    "start": "set NODE_ENV=development&&react-scripts start",
-    "build": "react-scripts build"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20",
-    "prettier": "^2.8.4",
-    "yarn-audit-fix": "^9.3.8"
   }
 }

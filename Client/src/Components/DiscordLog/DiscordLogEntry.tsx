@@ -1,5 +1,10 @@
-import { ExpandMore, CalendarToday, AccessTime } from '@mui/icons-material';
-import { Accordion, AccordionSummary, Typography, AccordionDetails } from '@mui/material';
+import AccessTime from '@mui/icons-material/AccessTime';
+import CalendarToday from '@mui/icons-material/CalendarToday';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Typography from '@mui/material/Typography';
 import { DiscordLogDisplay } from '../../Interfaces/DiscordLogStringGenerator';
 import './DiscordLogEntry.scss';
 

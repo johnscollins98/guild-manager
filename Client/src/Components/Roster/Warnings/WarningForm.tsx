@@ -1,5 +1,9 @@
-import { Dialog, DialogTitle, DialogContent, TextField, Button } from '@mui/material';
-import React, { useState, useCallback } from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import React, { useCallback, useState } from 'react';
 
 import './WarningForm.scss';
 

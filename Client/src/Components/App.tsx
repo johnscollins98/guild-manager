@@ -2,34 +2,32 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import AuthInfo from '../Interfaces/AuthInfo';
 
+import { fetchAuthInfo } from '../utils/DataRetrieval';
 import './App.scss';
-import Log from './Log/Log';
-import Roster from './Roster/Roster';
 import Control from './Control';
 import EventPage from './Events/EventPage';
+import Log from './Log/Log';
 import LoginPage from './LoginPage';
-import { fetchAuthInfo } from '../utils/DataRetrieval';
+import Roster from './Roster/Roster';
 
 import 'fontsource-roboto';
 
+import TabContext from '@mui/lab/TabContext';
+import TabPanel from '@mui/lab/TabPanel';
+import { PaletteMode } from '@mui/material';
+import Alert, { AlertColor } from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Snackbar from '@mui/material/Snackbar';
+import ThemeProvider from '@mui/material/styles/ThemeProvider';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import createTheme from '@mui/system/createTheme';
 import { useQuery } from 'react-query';
-import DiscordLog from './DiscordLog/DiscordLog';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
-import {
-  Alert,
-  AlertColor,
-  Box,
-  createTheme,
-  CssBaseline,
-  PaletteMode,
-  Snackbar,
-  Tab,
-  Tabs,
-  ThemeProvider,
-  useMediaQuery
-} from '@mui/material';
-import { TabPanel, TabContext } from '@mui/lab';
+import DiscordLog from './DiscordLog/DiscordLog';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');

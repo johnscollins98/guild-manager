@@ -1,4 +1,4 @@
-import { AlertColor } from '@mui/material';
+import { AlertColor } from '@mui/material/Alert';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import {

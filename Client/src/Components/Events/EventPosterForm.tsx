@@ -1,4 +1,8 @@
-import { AlertColor, Button, FormControlLabel, Switch, TextField } from '@mui/material';
+import { AlertColor } from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import EventRepository from '../../utils/EventRepository';

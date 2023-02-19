@@ -1,4 +1,8 @@
-import { Close, Edit, List, Search, Warning } from '@mui/icons-material';
+import Close from '@mui/icons-material/Close';
+import Edit from '@mui/icons-material/Edit';
+import List from '@mui/icons-material/List';
+import Search from '@mui/icons-material/Search';
+import Warning from '@mui/icons-material/Warning';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import { PopoverPosition } from '@mui/material/Popover';

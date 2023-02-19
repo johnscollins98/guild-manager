@@ -1,4 +1,6 @@
-import { CalendarToday, SyncProblem, Timer } from '@mui/icons-material';
+import CalendarToday from '@mui/icons-material/CalendarToday';
+import SyncProblem from '@mui/icons-material/SyncProblem';
+import Timer from '@mui/icons-material/Timer';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
