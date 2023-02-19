@@ -14,7 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { Theme } from '@mui/material/styles/createTheme';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import useTheme from '@mui/system/useTheme';
+import { useTheme } from '@mui/material/styles';
 import React, { useCallback, useState } from 'react';
 import DiscordMember from '../../Interfaces/DiscordMember';
 import Event from '../../Interfaces/Event';

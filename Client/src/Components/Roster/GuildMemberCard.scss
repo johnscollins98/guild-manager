@@ -84,6 +84,11 @@
           margin: 0 2px;
         }
 
+        span {
+          display: flex;
+          align-items: center;
+        }
+
         .number {
           height: 24px;
           width: 24px;

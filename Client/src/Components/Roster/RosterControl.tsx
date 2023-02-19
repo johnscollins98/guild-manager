@@ -97,15 +97,17 @@ const RosterControl = ({
               {fullWidth ? <Apps /> : <TableRows />}
             </IconButton>
           </Tooltip>
-          <Tooltip title="Refresh Data">
-            <IconButton
-              size="small"
-              onClick={refetchData}
-              className="refresh"
-              disabled={isFetching}
-            >
-              <Refresh />
-            </IconButton>
+          <Tooltip title={isFetching ? "Refreshing..." : "Refresh Data"}>
+            <span>
+              <IconButton
+                size="small"
+                onClick={refetchData}
+                className="refresh"
+                disabled={isFetching}
+              >
+                <Refresh />
+              </IconButton>
+            </span>
           </Tooltip>
         </span>
       </Paper>

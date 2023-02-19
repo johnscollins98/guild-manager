@@ -94,7 +94,6 @@ const GuildMemberCard = ({
         className={`member-card${fullWidth ? ' fullWidth' : ''}`}
         style={{ borderLeftColor: color }}
         onClick={openMenu}
-        raised
       >
         <CardContent>
           <div className="top-row">
@@ -138,7 +137,9 @@ const GuildMemberCard = ({
               ) : null}
               {member.issues.missingDiscord ? (
                 <Tooltip title="Discord Account Not Found">
-                  <DiscordLogo width="24" height="24" className="error" />
+                  <span>
+                    <DiscordLogo width="24" height="24" className="error" />
+                  </span>
                 </Tooltip>
               ) : null}
               {member.issues.over24h ? (
@@ -148,7 +149,9 @@ const GuildMemberCard = ({
               ) : null}
               {member.discordName ? (
                 <Tooltip title={member.discordName}>
-                  <DiscordLogo width="24" height="24" />
+                  <span>
+                    <DiscordLogo width="24" height="24" />
+                  </span>
                 </Tooltip>
               ) : null}
               {member.rankImage && member.rank ? (

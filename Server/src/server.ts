@@ -56,7 +56,7 @@ useExpressServer(app, {
   currentUserChecker: (action: Action) => action.request.user
 });
 
-app.use(express.static(path.join(__dirname, '..', '..', 'Client', 'build')));
+app.use(express.static(path.join(__dirname, '..', '..', 'Client', 'dist')));
 app.use('*', (_, res) => {
   if (!res.headersSent) res.redirect('/');
 });
