@@ -4,15 +4,19 @@
   "main": "./Server/build/index.js",
   "repository": "https://github.com/johnscollins98/guild-manager",
   "author": "John Collins <johnscollins98@gmail.com>",
+  "private": true,
   "license": "MIT",
   "scripts": {
-    "postinstall": "yarn --cwd Client && yarn --cwd Server",
-    "build": "yarn --cwd Client build && yarn --cwd Server build",
-    "start": "yarn --cwd Server start",
-    "dev-server": "yarn --cwd Server dev",
-    "dev-client": "yarn --cwd Client start",
+    "build": "yarn workspaces run build",
+    "start": "yarn workspace server start",
+    "dev-server": "yarn workspace server dev",
+    "dev-client": "yarn workspace client start",
     "dev": "concurrently \"yarn dev-server\" \"set PORT=5001 && yarn dev-client\""
   },
+  "workspaces": [
+    "./Client",
+    "./Server"
+  ],
   "devDependencies": {
     "concurrently": "^6.2.0",
     "prettier": "^2.3.2"
