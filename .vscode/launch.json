@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Run",
+      "configurations": ["Client", "Server", "Launch Chrome against localhost"]
+    }
+  ],
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome against localhost",
+      "url": "http://localhost:5001",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node-terminal",
+      "name": "Client",
+      "request": "launch",
+      "command": "yarn run dev-client",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node-terminal",
+      "name": "Server",
+      "request": "launch",
+      "command": "yarn run dev-server",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
