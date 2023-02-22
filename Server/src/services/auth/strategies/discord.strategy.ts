@@ -54,7 +54,7 @@ export class DiscordStrategySetup {
             done(null, user);
           } catch (err) {
             console.error(err);
-            done(err, undefined);
+            done(err instanceof Error ? err : null, undefined);
           }
         }
       )
