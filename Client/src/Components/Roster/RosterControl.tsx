@@ -97,7 +97,7 @@ const RosterControl = ({
               {fullWidth ? <Apps /> : <TableRows />}
             </IconButton>
           </Tooltip>
-          <Tooltip title={isFetching ? "Refreshing..." : "Refresh Data"}>
+          <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
             <span>
               <IconButton
                 size="small"
