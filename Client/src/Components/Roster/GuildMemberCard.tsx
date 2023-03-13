@@ -12,7 +12,8 @@ import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
 import gw2Image from '../../assets/images/gw2.png';
 import DiscordRole from '../../Interfaces/DiscordRole';
 import MemberRecord from '../../Interfaces/MemberRecord';
-import { WarningPost } from '../../Interfaces/Warning';
+import { useUpdateDiscordMember } from '../../utils/apis/discord-api';
+import { useAddWarningMutation } from '../../utils/apis/warnings-api';
 import { getDateString } from '../../utils/DataProcessing';
 import { getColorFromRole } from '../../utils/Helpers';
 import './GuildMemberCard.scss';
@@ -28,22 +29,9 @@ interface Props {
   fullWidth: boolean;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
-  onChangeNickname: (member: MemberRecord) => void;
-  onGiveWarning: (warning: WarningPost) => Promise<any>;
-  onDeleteWarning: (warningId: string) => Promise<any>;
 }
 
-const GuildMemberCard = ({
-  member,
-  discordRoles,
-  onKick,
-  onEdit,
-  onChangeNickname,
-  onGiveWarning,
-  onDeleteWarning,
-  isAdmin,
-  fullWidth
-}: Props) => {
+const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin, fullWidth }: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
@@ -51,6 +39,8 @@ const GuildMemberCard = ({
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
+
+  const addWarningMutation = useAddWarningMutation();
 
   const openDetails = useCallback(
     (e: React.MouseEvent) => {
@@ -80,12 +70,26 @@ const GuildMemberCard = ({
   const warningSubmitHandler = useCallback(
     async (reason: string) => {
       if (!member.memberId) {
-        throw new Error('test');
+        throw new Error('Member does not exist');
       }
-      await onGiveWarning({ givenTo: member.memberId, reason });
+      await addWarningMutation.mutateAsync({ givenTo: member.memberId, reason });
     },
-    [onGiveWarning, member]
+    [addWarningMutation, member]
   );
+
+  const changeMemberMutation = useUpdateDiscordMember();
+  const onEditNickname = async (member: MemberRecord) => {
+    const newNickname = window.prompt(
+      'Enter new nickname: ',
+      member.nickname || member.discordName || ''
+    );
+    if (newNickname && member.discordId) {
+      changeMemberMutation.mutate({
+        memberId: member.discordId,
+        nick: newNickname
+      });
+    }
+  };
 
   return (
     <>
@@ -182,7 +186,7 @@ const GuildMemberCard = ({
           closeMenu={closeMenu}
           onKick={onKick}
           onEdit={onEdit}
-          onChangeNickname={onChangeNickname}
+          onChangeNickname={onEditNickname}
           setWarningOpen={setWarningOpen}
           setWarningViewerOpen={setWarningViewerOpen}
         />
@@ -202,7 +206,6 @@ const GuildMemberCard = ({
       <WarningsViewer
         isOpen={warningViewerOpen}
         onClose={() => setWarningViewerOpen(false)}
-        onDeleteWarning={onDeleteWarning}
         member={member}
       />
     </>

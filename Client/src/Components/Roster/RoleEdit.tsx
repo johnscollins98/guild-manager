@@ -1,101 +1,49 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import './RoleEdit.scss';
+import React, { ChangeEvent, useState } from 'react';
 import { getColorFromRole } from '../../utils/Helpers';
-import { addDiscordRole, fetchDiscordRoles, removeDiscordRole } from '../../utils/DataRetrieval';
+import './RoleEdit.scss';
 
-import MemberRecord from '../../Interfaces/MemberRecord';
-import DiscordRole from '../../Interfaces/DiscordRole';
-import { AlertColor } from '@mui/material/Alert';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormGroup from '@mui/material/FormGroup';
-import DialogContent from '@mui/material/DialogContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import MemberRecord from '../../Interfaces/MemberRecord';
+import {
+  useAddDiscordRole,
+  useDiscordRoles,
+  useRemoveDiscordRole
+} from '../../utils/apis/discord-api';
 
 interface Props {
-  selectedRecord: MemberRecord | null;
-  setSelectedRecord: (member: MemberRecord | null) => void;
+  selectedRecord: MemberRecord | undefined;
+  setSelectedRecord: (member: undefined) => void;
   modalShow: boolean;
   setModalShow: (val: boolean) => void;
-  records: MemberRecord[];
-  setRecords: (members: MemberRecord[]) => void;
-  openToast: (msg: string, status: AlertColor) => void;
 }
 
-const RoleEdit = ({
-  selectedRecord,
-  setSelectedRecord,
-  modalShow,
-  setModalShow,
-  records,
-  setRecords,
-  openToast
-}: Props) => {
-  const [allRoles, setAllRoles] = useState<DiscordRole[]>([]);
-  const [edittingRole, setEdittingRole] = useState(false);
-  const [anyChanges, setAnyChanges] = useState(false);
+const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }: Props) => {
+  const { data: roles } = useDiscordRoles();
+  const addRoleMutation = useAddDiscordRole();
+  const removeRoleMutation = useRemoveDiscordRole();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setAllRoles(await fetchDiscordRoles());
-    };
-    fetchData();
-  }, []);
-
-  const roleChangeHandler = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-    roleId: string,
-    roleName: string,
-    roleColor: number
-  ) => {
-    setEdittingRole(true);
-
+  const roleChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>, roleId: string) => {
     if (!selectedRecord || !selectedRecord.discordId) {
       throw new Error('Cannot change roles for this member - no discord id');
     }
 
-    if (e.target.checked) {
-      const res = await addDiscordRole(selectedRecord.discordId, roleId);
-      if (res) {
-        setSelectedRecord({
-          ...selectedRecord,
-          roles: [...(selectedRecord.roles || []), { id: roleId, name: roleName, color: roleColor }]
-        });
-      } else {
-        openToast('Something went wrong changing roles', 'error');
-      }
-    } else {
-      const res = await removeDiscordRole(selectedRecord.discordId, roleId);
-      if (res) {
-        setSelectedRecord({
-          ...selectedRecord,
-          roles: selectedRecord.roles.filter(r => r.id !== roleId)
-        });
-      } else {
-        openToast('Something went wrong changing roles', 'error');
-      }
-    }
+    const body = { memberId: selectedRecord.discordId, roleId };
 
-    setAnyChanges(true);
-    setEdittingRole(false);
+    if (e.target.checked) {
+      addRoleMutation.mutateAsync(body);
+    } else {
+      removeRoleMutation.mutateAsync(body);
+    }
   };
 
   const closeEdit = async () => {
-    if (!edittingRole) {
-      setModalShow(false);
-      setSelectedRecord(null);
-    }
-
-    if (anyChanges && selectedRecord) {
-      const recordsCopy = [...records];
-      const toEdit = recordsCopy.find(record => record.discordId === selectedRecord.discordId);
-      if (toEdit) {
-        toEdit.roles = selectedRecord.roles;
-        setRecords(recordsCopy);
-      }
-      setAnyChanges(false);
-    }
+    setModalShow(false);
+    setSelectedRecord(undefined);
   };
 
   if (!selectedRecord) return null;
@@ -103,15 +51,15 @@ const RoleEdit = ({
     <Dialog open={modalShow} onClose={closeEdit} className="role-edit-modal">
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
-        {allRoles.map(role => (
+        {roles?.map(role => (
           <FormGroup row key={role.id}>
             <FormControlLabel
               control={
                 <StyledCheckbox
-                  color={getColorFromRole(role.name, allRoles) || ''}
+                  color={getColorFromRole(role.name, roles) || ''}
                   checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    roleChangeHandler(e, role.id, role.name, role.color)
+                    roleChangeHandler(e, role.id)
                   }
                 />
               }

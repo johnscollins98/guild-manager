@@ -8,7 +8,7 @@ import Menu from '@mui/material/Menu';
 import { PopoverPosition } from '@mui/material/Popover';
 import { useCallback, useEffect, useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
-import { getAdminRoles } from '../../utils/DataRetrieval';
+import { useAdminRoles } from '../../utils/apis/auth-api';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
 
 interface Props {
@@ -34,13 +34,8 @@ const GuildMemberMenu = ({
   setWarningOpen,
   setWarningViewerOpen
 }: Props) => {
-  const [memberIsAdmin, setMemberIsAdmin] = useState(true);
-
-  useEffect(() => {
-    getAdminRoles().then(adminRoles => {
-      setMemberIsAdmin(member.roles.some(r => adminRoles.includes(r.id)));
-    });
-  }, [member]);
+  const { data: adminRoles } = useAdminRoles();
+  const memberIsAdmin = member.roles.some(role => adminRoles?.includes(role.id) ?? false);
 
   const menuAction = useCallback(
     async (func: Function) => {
