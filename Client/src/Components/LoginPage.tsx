@@ -15,13 +15,13 @@ import AlertTitle from '@mui/material/AlertTitle';
 
 interface Props {
   isLoading: boolean;
-  authInfo: AuthInfo;
+  authInfo?: AuthInfo;
 }
 
 const LoginPage = ({ isLoading, authInfo }: Props) => {
   const [logo, setLogo] = useState(SOStatic);
 
-  if (isLoading) {
+  if (isLoading || !authInfo) {
     return <LoaderPage />;
   }
   return (

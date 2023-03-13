@@ -48,12 +48,6 @@ const App = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  const [authInfo, setAuthInfo] = useState<AuthInfo>({
-    loggedIn: false,
-    isAdmin: false,
-    username: ''
-  });
-
   const darkTheme = useMemo(
     () =>
       createTheme({
@@ -90,19 +84,7 @@ const App = () => {
     [setFilterString]
   );
 
-  const authInfoQuery = useAuth();
-  useEffect(() => {
-    if (authInfoQuery.isLoading) return;
-
-    if (authInfoQuery.error) {
-      console.error(authInfoQuery.error);
-      openToast('There was an error getting authentication info', 'error');
-    }
-
-    if (authInfoQuery.data) {
-      setAuthInfo(authInfoQuery.data);
-    }
-  }, [authInfoQuery, openToast]);
+  const { data: authInfo, isLoading } = useAuth();
 
   const TABS = {
     ROSTER: 'Roster',
@@ -123,7 +105,7 @@ const App = () => {
           </Snackbar>
           <ToastContext.Provider value={openToast}>
             <div className="content">
-              {authInfo.loggedIn && authInfo.isAdmin ? (
+              {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
                 <>
                   <Control
                     handleFilterChange={handleFilterChange}
@@ -157,7 +139,7 @@ const App = () => {
                   </TabContext>
                 </>
               ) : (
-                <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
+                <LoginPage isLoading={isLoading} authInfo={authInfo} />
               )}
             </div>
           </ToastContext.Provider>
