@@ -1,12 +1,10 @@
-import { AlertColor } from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import { usePostEvents } from '../../utils/apis/discord-api';
-import { useCreateEventMutation, useEventSettings } from '../../utils/apis/event-api';
+import { useEventSettings } from '../../utils/apis/event-api';
 import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 
@@ -29,7 +27,6 @@ const EventPosterForm = ({ onClose }: Props) => {
   const [posting, setPosting] = useState(false);
   const { isLoading, error, data } = useEventSettings();
   const postEventsMutation = usePostEvents();
-  const openToast = useToast();
 
   useEffect(() => {
     if (data) {
@@ -62,7 +59,7 @@ const EventPosterForm = ({ onClose }: Props) => {
       onClose();
       setPosting(false);
     },
-    [postChannel, editMessages, existingMessageIds, setPosting, openToast, onClose]
+    [postChannel, editMessages, existingMessageIds, setPosting, onClose]
   );
 
   const handleChange = useCallback(
@@ -74,10 +71,9 @@ const EventPosterForm = ({ onClose }: Props) => {
   );
 
   if (error) {
-    openToast('There was an error getting the log', 'error');
-    console.error(error);
-    return null;
+    return <>There was an error getting event post settings.</>;
   }
+
   if (isLoading || posting)
     return (
       <div style={{ height: '300px' }}>
