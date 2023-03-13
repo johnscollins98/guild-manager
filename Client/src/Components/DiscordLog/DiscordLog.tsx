@@ -3,15 +3,14 @@ import { DiscordLogDisplayGenerator } from '../../Interfaces/DiscordLogStringGen
 import { useDiscordLog } from '../../utils/apis/discord-api';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
 import { snowflakeToDate } from '../../utils/Helpers';
+import { useFilterString } from '../../utils/useFilterString';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './DiscordLog.scss';
 import DiscordLogEntry from './DiscordLogEntry';
-interface Props {
-  filterString: string;
-}
 
-const DiscordLog = ({ filterString }: Props) => {
+const DiscordLog = () => {
+  const filterString = useFilterString();
   const { isLoading, data, error } = useDiscordLog();
 
   const logData = useMemo(() => {
@@ -33,13 +32,10 @@ const DiscordLog = ({ filterString }: Props) => {
 
   const filteredLogData = useMemo(() => {
     if (!logData) return undefined;
-    const lowerCaseFilterString = filterString.toLowerCase();
     return logData.filter(
       entry =>
-        entry.discordDisplay.summary.toLowerCase().includes(lowerCaseFilterString) ||
-        entry.discordDisplay.details?.some(detail =>
-          detail.toLowerCase().includes(lowerCaseFilterString)
-        )
+        entry.discordDisplay.summary.toLowerCase().includes(filterString) ||
+        entry.discordDisplay.details?.some(detail => detail.toLowerCase().includes(filterString))
     );
   }, [logData, filterString]);
 

@@ -12,16 +12,13 @@ import {
   useEvents,
   useUpdateEventMutation
 } from '../../utils/apis/event-api';
+import { useFilterString } from '../../utils/useFilterString';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import EventEntry from './EventEntry';
 import './EventPage.scss';
 import EventPosterForm from './EventPosterForm';
-
-interface Props {
-  filterString: string;
-}
 
 const sorter = new Map<string, number>([
   ['Monday', 1],
@@ -33,7 +30,9 @@ const sorter = new Map<string, number>([
   ['Sunday', 7]
 ]);
 
-const EventPage = ({ filterString }: Props) => {
+const EventPage = () => {
+  const filterString = useFilterString();
+
   const eventsQuery = useEvents();
   const eventRolesQuery = useEventRoles();
   const discordQuery = useDiscordMembers();
@@ -58,7 +57,11 @@ const EventPage = ({ filterString }: Props) => {
 
   // sort events
   const sortedEvents = eventsQuery.data
-    .filter(event => event.title.includes(filterString) || event.day.includes(filterString))
+    .filter(
+      event =>
+        event.title.toLowerCase().includes(filterString) ||
+        event.day.toLowerCase().includes(filterString)
+    )
     .sort((a, b) => {
       const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
       if (dateSort !== 0) return dateSort;
