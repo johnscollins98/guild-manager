@@ -7,11 +7,9 @@ import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './DiscordLog.scss';
 import DiscordLogEntry from './DiscordLogEntry';
-interface Props {
-  filterString: string;
-}
 
-const DiscordLog = ({ filterString }: Props) => {
+const DiscordLog = () => {
+  const filterString = '';
   const { isLoading, data, error } = useDiscordLog();
 
   const logData = useMemo(() => {

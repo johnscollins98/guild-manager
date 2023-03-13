@@ -20,11 +20,31 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { useAuth } from '../utils/apis/auth-api';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 import { ToastContext } from './Common/ToastContext';
 import DiscordLog from './DiscordLog/DiscordLog';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Roster />
+  },
+  {
+    path: '/log',
+    element: <Log />
+  },
+  {
+    path: 'discord-log',
+    element: <DiscordLog />
+  },
+  {
+    path: 'events',
+    element: <EventPage />
+  }
+]);
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -108,31 +128,7 @@ const App = () => {
                     theme={theme}
                     toggleTheme={toggleTheme}
                   />
-                  <TabContext value={tab}>
-                    <Tabs
-                      value={tab}
-                      onChange={(_, v) => setTab(v)}
-                      scrollButtons="auto"
-                      variant="scrollable"
-                    >
-                      <Tab label={TABS.ROSTER} value="roster" />
-                      <Tab label={TABS.LOG} value="log" />
-                      <Tab label={TABS.DISCORD_LOG} value="discord-log" />
-                      <Tab label={TABS.EVENTS} value="events" />
-                    </Tabs>
-                    <TabPanel value="roster">
-                      <Roster filterString={filterString} />
-                    </TabPanel>
-                    <TabPanel value="log">
-                      <Log filterString={filterString} />
-                    </TabPanel>
-                    <TabPanel value="discord-log">
-                      <DiscordLog filterString={filterString} />
-                    </TabPanel>
-                    <TabPanel value="events">
-                      <EventPage filterString={filterString} />
-                    </TabPanel>
-                  </TabContext>
+                  <RouterProvider router={router} />
                 </>
               ) : (
                 <LoginPage />

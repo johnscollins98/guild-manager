@@ -19,10 +19,6 @@ import EventEntry from './EventEntry';
 import './EventPage.scss';
 import EventPosterForm from './EventPosterForm';
 
-interface Props {
-  filterString: string;
-}
-
 const sorter = new Map<string, number>([
   ['Monday', 1],
   ['Tuesday', 2],
@@ -33,7 +29,9 @@ const sorter = new Map<string, number>([
   ['Sunday', 7]
 ]);
 
-const EventPage = ({ filterString }: Props) => {
+const EventPage = () => {
+  const filterString = '';
+
   const eventsQuery = useEvents();
   const eventRolesQuery = useEventRoles();
   const discordQuery = useDiscordMembers();

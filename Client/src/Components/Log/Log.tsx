@@ -4,11 +4,8 @@ import LoaderPage from '../LoaderPage';
 import './Log.scss';
 import LogEntry from './LogEntry';
 
-interface Props {
-  filterString: string;
-}
-
-const Log = ({ filterString }: Props) => {
+const Log = () => {
+  const filterString = '';
   const { isLoading, data, error } = useGW2Log();
 
   if (error) {

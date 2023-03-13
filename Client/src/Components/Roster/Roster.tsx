@@ -11,11 +11,8 @@ import RosterControl from './RosterControl';
 
 import { useRoster } from './useRoster';
 
-interface Props {
-  filterString: string;
-}
-
-const Roster = ({ filterString }: Props) => {
+const Roster = () => {
+  const filterString = '';
   const [sortBy, setSortBy] = useState('rank');
   const [filterBy, setFilterBy] = useState('none');
   const [fullWidth, setFullWidth] = useState(true);
