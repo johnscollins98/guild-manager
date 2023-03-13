@@ -80,8 +80,7 @@ const App = () => {
     [setFilterString]
   );
 
-  const authQuery = useAuth();
-  const authInfo = authQuery.data;
+  const { data: authInfo } = useAuth();
 
   const TABS = {
     ROSTER: 'Roster',
@@ -136,7 +135,7 @@ const App = () => {
                   </TabContext>
                 </>
               ) : (
-                <LoginPage {...authQuery} />
+                <LoginPage />
               )}
             </div>
           </ToastContext.Provider>

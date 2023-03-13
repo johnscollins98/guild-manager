@@ -13,14 +13,10 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { ErrorMessage } from './Common/ErrorMessage';
+import { useAuth } from '../utils/apis/auth-api';
 
-interface Props {
-  isLoading: boolean;
-  isError: boolean;
-  authInfo?: AuthInfo;
-}
-
-const LoginPage = ({ isLoading, authInfo, isError }: Props) => {
+const LoginPage = () => {
+  const { isError, isLoading, data: authInfo } = useAuth();
   const [logo, setLogo] = useState(SOStatic);
 
   if (isError) {
