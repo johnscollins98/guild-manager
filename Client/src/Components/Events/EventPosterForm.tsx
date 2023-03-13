@@ -5,15 +5,16 @@ import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import EventRepository from '../../utils/EventRepository';
+import { usePostEvents } from '../../utils/apis/discord-api';
+import { useCreateEventMutation, useEventSettings } from '../../utils/apis/event-api';
+import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 
 interface Props {
   onClose: () => void;
-  openToast: (msg: string, status: AlertColor) => void;
 }
 
-const EventPosterForm = ({ onClose, openToast }: Props) => {
+const EventPosterForm = ({ onClose }: Props) => {
   const [editMessages, setEditMessages] = useState(false);
   const [postChannel, setPostChannel] = useState('');
   const [existingMessageIds, setExistingMessageIds] = useState({
@@ -26,9 +27,9 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
     Sunday: ''
   });
   const [posting, setPosting] = useState(false);
-  const { isLoading, error, data } = useQuery('event-settings', () =>
-    EventRepository.getSettings()
-  );
+  const { isLoading, error, data } = useEventSettings();
+  const postEventsMutation = usePostEvents();
+  const openToast = useToast();
 
   useEffect(() => {
     if (data) {
@@ -52,22 +53,14 @@ const EventPosterForm = ({ onClose, openToast }: Props) => {
   const submitHandler = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-
-      try {
-        setPosting(true);
-        await EventRepository.postEventsToDiscord({
-          channelId: postChannel,
-          editMessages,
-          existingMessageIds
-        });
-        openToast('Posted!', 'success');
-        onClose();
-      } catch (err) {
-        console.error(err);
-        openToast('Something went wrong posting to discord', 'error');
-      } finally {
-        setPosting(false);
-      }
+      setPosting(true);
+      await postEventsMutation.mutateAsync({
+        channelId: postChannel,
+        editMessages,
+        existingMessageIds
+      });
+      onClose();
+      setPosting(false);
     },
     [postChannel, editMessages, existingMessageIds, setPosting, openToast, onClose]
   );

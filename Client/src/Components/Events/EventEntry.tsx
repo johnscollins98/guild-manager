@@ -7,17 +7,17 @@ import HourglassFull from '@mui/icons-material/HourglassFull';
 import Person from '@mui/icons-material/Person';
 import Refresh from '@mui/icons-material/Refresh';
 import WatchLater from '@mui/icons-material/WatchLater';
-import { AlertColor } from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
+import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles/createTheme';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
 import React, { useCallback, useState } from 'react';
 import DiscordMember from '../../Interfaces/DiscordMember';
 import Event from '../../Interfaces/Event';
+import { useToast } from '../Common/ToastContext';
 import './EventEntry.scss';
 
 const emptyEvent: Event = {
@@ -35,9 +35,8 @@ interface Props {
   event?: Event;
   possibleLeaders: DiscordMember[];
   deleteEvent?: (e: Event) => Promise<void>;
-  updateEvent?: (e: Event) => Promise<Event | undefined>;
-  createEvent?: (e: Event) => Promise<Event | undefined>;
-  openToast: (msg: string, status: AlertColor) => void;
+  updateEvent?: (e: Event) => Promise<void>;
+  createEvent?: (e: Event) => Promise<void>;
 }
 
 const EventEntry = ({
@@ -46,11 +45,11 @@ const EventEntry = ({
   possibleLeaders,
   deleteEvent,
   updateEvent,
-  createEvent,
-  openToast
+  createEvent
 }: Props) => {
   const [localEvent, setLocalEvent] = useState(event ? event : emptyEvent);
   const [modified, setModified] = useState(false);
+  const openToast = useToast();
 
   const validationHelper = useCallback(
     (event: Event) => {
@@ -91,10 +90,8 @@ const EventEntry = ({
       throw new Error('No update event function passed in');
     }
 
-    const updatedEvent = await updateEvent(localEvent);
-    if (updatedEvent) {
-      setModified(false);
-    }
+    await updateEvent(localEvent);
+    setModified(false);
   }, [updateEvent, validationHelper, localEvent, setModified, openToast]);
 
   const onCreate = useCallback(async () => {
@@ -109,11 +106,9 @@ const EventEntry = ({
       throw new Error('No create event function passed in');
     }
 
-    const createdEvent = await createEvent(localEvent);
-    if (createdEvent) {
-      setModified(false);
-      setLocalEvent(emptyEvent);
-    }
+    await createEvent(localEvent);
+    setModified(false);
+    setLocalEvent(emptyEvent);
   }, [createEvent, validationHelper, localEvent, setModified, setLocalEvent, openToast]);
 
   const onDelete = useCallback(() => {

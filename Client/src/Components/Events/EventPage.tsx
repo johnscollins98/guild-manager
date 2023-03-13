@@ -7,9 +7,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import DiscordMember from '../../Interfaces/DiscordMember';
 import Event from '../../Interfaces/Event';
-import { fetchDiscordMembers, getEventRoles } from '../../utils/DataRetrieval';
-import EventRepo from '../../utils/EventRepository';
+import { useEventRoles } from '../../utils/apis/auth-api';
+import { useDiscordMembers } from '../../utils/apis/discord-api';
+import {
+  useCreateEventMutation,
+  useDeleteEventMutation,
+  useEvents,
+  useUpdateEventMutation
+} from '../../utils/apis/event-api';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
+import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 import EventEntry from './EventEntry';
 import './EventPage.scss';
@@ -17,159 +24,74 @@ import EventPosterForm from './EventPosterForm';
 
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: AlertColor) => void;
 }
 
-const EventPage = ({ filterString, openToast }: Props) => {
-  const eventsQuery = useQuery('eventsData', () => EventRepo.getAll());
-  const discordQuery = useQuery('discordMembers', () => fetchDiscordMembers());
+const sorter = new Map<string, number>([
+  ['Monday', 1],
+  ['Tuesday', 2],
+  ['Wednesday', 3],
+  ['Thursday', 4],
+  ['Friday', 5],
+  ['Saturday', 6],
+  ['Sunday', 7]
+]);
 
-  const [localEvents, setLocalEvents] = useState<Event[]>([]);
-  const [sortedEvents, setSortedEvents] = useState<Event[]>([]);
+const EventPage = ({ filterString }: Props) => {
+  const eventsQuery = useEvents();
+  const { data: eventRoles } = useEventRoles();
+  const discordQuery = useDiscordMembers();
+  const deleteEventMutation = useDeleteEventMutation();
+  const updateEventMutation = useUpdateEventMutation();
+  const createEventMutation = useCreateEventMutation();
+
   const [showModal, setShowModal] = useState(false);
 
-  const [possibleLeaders, setPossibleLeaders] = useState<DiscordMember[]>([]);
   const { confirm } = useConfirm();
 
-  useEffect(() => {
-    const getPossibleLeaders = async () => {
-      if (!discordQuery.data) return;
-      const eventLeaderRoles = await getEventRoles();
-      setPossibleLeaders(
-        discordQuery.data.filter(
-          member => !!member.roles.find(r => eventLeaderRoles.includes(r.id)) // hardcoded for now, to be improved.
-        )
-      );
-    };
-    getPossibleLeaders();
-  }, [discordQuery.data]);
+  if (!eventRoles || !eventsQuery.data || !discordQuery.data) return <LoaderPage />;
 
-  useEffect(() => {
-    if (eventsQuery.data) {
-      setLocalEvents(eventsQuery.data);
-    }
-  }, [eventsQuery.data, setLocalEvents]);
+  // get possible leaders
+  const leaders = discordQuery.data.filter(d => d.roles.some(role => eventRoles.includes(role.id)));
 
-  useEffect(() => {
-    const sorter = new Map<string, number>([
-      ['Monday', 1],
-      ['Tuesday', 2],
-      ['Wednesday', 3],
-      ['Thursday', 4],
-      ['Friday', 5],
-      ['Saturday', 6],
-      ['Sunday', 7]
-    ]);
-    setSortedEvents(
-      [...localEvents]
-        .filter(event => event.title.includes(filterString) || event.day.includes(filterString))
-        .sort((a, b) => {
-          const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
-          if (dateSort !== 0) return dateSort;
+  // sort events
+  const sortedEvents = eventsQuery.data
+    .filter(event => event.title.includes(filterString) || event.day.includes(filterString))
+    .sort((a, b) => {
+      const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
+      if (dateSort !== 0) return dateSort;
 
-          const parseTime = (startTime: string) => {
-            return Date.parse(`1970/01/01 ${startTime}`);
-          };
+      const parseTime = (startTime: string) => {
+        return Date.parse(`1970/01/01 ${startTime}`);
+      };
 
-          const aTime = parseTime(a.startTime);
-          const bTime = parseTime(b.startTime);
+      const aTime = parseTime(a.startTime);
+      const bTime = parseTime(b.startTime);
 
-          return aTime - bTime;
-        })
+      return aTime - bTime;
+    });
+
+  const deleteEvent = async (eventToDelete: Event) => {
+    const res = await confirm(
+      `Are you sure you want to delete '${eventToDelete.title}'?`,
+      'Delete Event'
     );
-  }, [localEvents, setSortedEvents, filterString]);
+    if (!res) return;
 
-  const deleteEvent = useCallback(
-    async (eventToDelete: Event) => {
-      try {
-        const res = await confirm(
-          `Are you sure you want to delete '${eventToDelete.title}'?`,
-          'Delete Event'
-        );
-        if (!res) return;
+    if (eventToDelete._id) {
+      await deleteEventMutation.mutateAsync(eventToDelete._id);
+    }
+  };
 
-        const deletedEvent =
-          eventToDelete._id === undefined ? null : await EventRepo.deleteById(eventToDelete._id);
+  const updateEvent = async (eventToUpdate: Event) => {
+    if (eventToUpdate._id) {
+      await updateEventMutation.mutateAsync({ id: eventToUpdate._id, event: eventToUpdate });
+    }
+  };
 
-        if (deletedEvent) {
-          setLocalEvents(localEvents.filter(event => event._id !== eventToDelete._id));
-          openToast('Successfully deleted event!', 'success');
-        } else {
-          throw new Error('Could not delete event');
-        }
-      } catch (err) {
-        console.error(err);
-        openToast('There was an error deleting the event', 'error');
-      }
-    },
-    [localEvents, setLocalEvents, openToast, confirm]
-  );
+  const createEvent = async (eventToCreate: Event) => {
+    await createEventMutation.mutateAsync(eventToCreate);
+  };
 
-  const updateEvent = useCallback(
-    async (eventToUpdate: Event): Promise<Event | undefined> => {
-      try {
-        const updatedEvent =
-          eventToUpdate._id === undefined
-            ? null
-            : await EventRepo.updateById(eventToUpdate._id, eventToUpdate);
-
-        if (updatedEvent) {
-          const eventsCopy = [...localEvents];
-          const index = eventsCopy.findIndex(event => event._id === updatedEvent._id);
-
-          if (index !== null && index !== undefined) {
-            eventsCopy[index] = updatedEvent;
-            setLocalEvents(eventsCopy);
-            openToast('Successfully updated the event!', 'success');
-            return updatedEvent;
-          } else {
-            throw new Error('Something went wrong');
-          }
-        } else {
-          throw new Error('Could not update event');
-        }
-      } catch (err) {
-        console.error(err);
-        openToast('There was an error updating the event', 'error');
-        return undefined;
-      }
-    },
-    [localEvents, setLocalEvents, openToast]
-  );
-
-  const createEvent = useCallback(
-    async (eventToCreate: Event): Promise<Event | undefined> => {
-      try {
-        const createdEvent = await EventRepo.create(eventToCreate);
-        if (createdEvent) {
-          setLocalEvents([...localEvents, createdEvent]);
-          openToast('Successfully created the event!', 'success');
-          return createdEvent;
-        } else {
-          throw new Error('Could not create event');
-        }
-      } catch (err) {
-        console.error(err);
-        openToast('There was an error creating the event', 'error');
-        return undefined;
-      }
-    },
-    [localEvents, setLocalEvents, openToast]
-  );
-
-  if (discordQuery.error) {
-    openToast('There was an error getting discord data', 'error');
-    console.error(discordQuery.error);
-    return null;
-  }
-
-  if (eventsQuery.error) {
-    openToast('There was an error getting event data', 'error');
-    console.error(eventsQuery.error);
-    return null;
-  }
-
-  if (discordQuery.isLoading || eventsQuery.isLoading) return <LoaderPage />;
   return (
     <>
       <div className="event-page">
@@ -178,17 +100,11 @@ const EventPage = ({ filterString, openToast }: Props) => {
             event={event}
             deleteEvent={deleteEvent}
             updateEvent={updateEvent}
-            possibleLeaders={possibleLeaders}
+            possibleLeaders={leaders}
             key={event._id}
-            openToast={openToast}
           />
         ))}
-        <EventEntry
-          create={true}
-          createEvent={createEvent}
-          possibleLeaders={possibleLeaders}
-          openToast={openToast}
-        />
+        <EventEntry create={true} createEvent={createEvent} possibleLeaders={leaders} />
       </div>
       <Button
         onClick={() => setShowModal(true)}
@@ -200,7 +116,7 @@ const EventPage = ({ filterString, openToast }: Props) => {
       <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth={true} maxWidth="sm">
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
-          <EventPosterForm onClose={() => setShowModal(false)} openToast={openToast} />
+          <EventPosterForm onClose={() => setShowModal(false)} />
         </DialogContent>
       </Dialog>
     </>

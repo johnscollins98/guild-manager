@@ -9,28 +9,29 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FunctionComponent, useCallback, useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
+import { useKickDiscordMember } from '../../utils/apis/discord-api';
 import './KickModal.scss';
 
 interface KickModalProps {
   user: MemberRecord;
   isOpen: boolean;
   onClose: () => void;
-  onKick: (userId: string, reinvite: boolean, reason?: string) => Promise<void>;
 }
 
-const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose, onKick }) => {
+const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose }) => {
   const [reasonText, setReasonText] = useState<string>('');
   const [reinvite, setReinvite] = useState<boolean>(false);
+  const kickMutation = useKickDiscordMember();
 
   const onFormSubmitted: React.FormEventHandler<HTMLFormElement> = useCallback(
     async e => {
       e.preventDefault();
       if (user.discordId) {
-        await onKick(user.discordId, reinvite, reasonText);
+        await kickMutation.mutateAsync({ memberId: user.discordId, reason: reasonText, reinvite });
       }
       onClose();
     },
-    [user, reinvite, reasonText, onClose, onKick]
+    [user, reinvite, reasonText, onClose]
   );
 
   return (

@@ -1,10 +1,17 @@
 import App from './App';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+import axios from 'axios';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false
+      async queryFn({ queryKey: [url] }) {
+        if (typeof url === 'string') {
+          const { data } = await axios.get(`/api/${url}`);
+          return data;
+        }
+        throw new Error('Invalid QueryKey');
+      }
     }
   }
 });

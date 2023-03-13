@@ -36,7 +36,7 @@ const DiscordLogEntry = ({ displayEntry, date }: Props) => {
         <AccordionDetails>
           <ul style={{ margin: 0 }}>
             {displayEntry.details.map(d => (
-              <li>
+              <li key={d}>
                 <Typography>{d}</Typography>
               </li>
             ))}

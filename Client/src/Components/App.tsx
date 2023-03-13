@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import AuthInfo from '../Interfaces/AuthInfo';
 
-import { fetchAuthInfo } from '../utils/DataRetrieval';
 import './App.scss';
 import Control from './Control';
 import EventPage from './Events/EventPage';
@@ -28,13 +27,12 @@ import { useQuery } from 'react-query';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 import DiscordLog from './DiscordLog/DiscordLog';
+import { ToastContext } from './Common/ToastContext';
+import { useAuth } from '../utils/apis/auth-api';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
   const [tab, setTab] = useState('roster');
-
-  const [sortBy, setSortBy] = useState('rank');
-  const [filterBy, setFilterBy] = useState('none');
 
   const [showToast, setShowToast] = useState(false);
   const [toastStatus, setToastStatus] = useState<AlertColor>('info');
@@ -92,7 +90,7 @@ const App = () => {
     [setFilterString]
   );
 
-  const authInfoQuery = useQuery('authInfo', fetchAuthInfo);
+  const authInfoQuery = useAuth();
   useEffect(() => {
     if (authInfoQuery.isLoading) return;
 
@@ -123,51 +121,46 @@ const App = () => {
               {toastMessage}
             </Alert>
           </Snackbar>
-          <div className="content">
-            {authInfo.loggedIn && authInfo.isAdmin ? (
-              <>
-                <Control
-                  handleFilterChange={handleFilterChange}
-                  theme={theme}
-                  toggleTheme={toggleTheme}
-                />
-                <TabContext value={tab}>
-                  <Tabs
-                    value={tab}
-                    onChange={(_, v) => setTab(v)}
-                    scrollButtons="auto"
-                    variant="scrollable"
-                  >
-                    <Tab label={TABS.ROSTER} value="roster" />
-                    <Tab label={TABS.LOG} value="log" />
-                    <Tab label={TABS.DISCORD_LOG} value="discord-log" />
-                    <Tab label={TABS.EVENTS} value="events" />
-                  </Tabs>
-                  <TabPanel value="roster">
-                    <Roster
-                      filterString={filterString}
-                      openToast={openToast}
-                      sortBy={sortBy}
-                      setSortBy={setSortBy}
-                      filterBy={filterBy}
-                      setFilterBy={setFilterBy}
-                    />
-                  </TabPanel>
-                  <TabPanel value="log">
-                    <Log filterString={filterString} openToast={openToast} />
-                  </TabPanel>
-                  <TabPanel value="discord-log">
-                    <DiscordLog filterString={filterString} openToast={openToast} />
-                  </TabPanel>
-                  <TabPanel value="events">
-                    <EventPage filterString={filterString} openToast={openToast} />
-                  </TabPanel>
-                </TabContext>
-              </>
-            ) : (
-              <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
-            )}
-          </div>
+          <ToastContext.Provider value={openToast}>
+            <div className="content">
+              {authInfo.loggedIn && authInfo.isAdmin ? (
+                <>
+                  <Control
+                    handleFilterChange={handleFilterChange}
+                    theme={theme}
+                    toggleTheme={toggleTheme}
+                  />
+                  <TabContext value={tab}>
+                    <Tabs
+                      value={tab}
+                      onChange={(_, v) => setTab(v)}
+                      scrollButtons="auto"
+                      variant="scrollable"
+                    >
+                      <Tab label={TABS.ROSTER} value="roster" />
+                      <Tab label={TABS.LOG} value="log" />
+                      <Tab label={TABS.DISCORD_LOG} value="discord-log" />
+                      <Tab label={TABS.EVENTS} value="events" />
+                    </Tabs>
+                    <TabPanel value="roster">
+                      <Roster filterString={filterString} />
+                    </TabPanel>
+                    <TabPanel value="log">
+                      <Log filterString={filterString} />
+                    </TabPanel>
+                    <TabPanel value="discord-log">
+                      <DiscordLog filterString={filterString} />
+                    </TabPanel>
+                    <TabPanel value="events">
+                      <EventPage filterString={filterString} />
+                    </TabPanel>
+                  </TabContext>
+                </>
+              ) : (
+                <LoginPage isLoading={authInfoQuery.isLoading} authInfo={authInfo} />
+              )}
+            </div>
+          </ToastContext.Provider>
         </Box>
         <ConfirmDialog />
       </ConfirmContextProvider>

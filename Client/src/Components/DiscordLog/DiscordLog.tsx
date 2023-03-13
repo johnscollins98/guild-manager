@@ -1,24 +1,24 @@
 import { AlertColor } from '@mui/material/Alert';
 import { useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
 import {
   DiscordLogDisplay,
   DiscordLogDisplayGenerator
 } from '../../Interfaces/DiscordLogStringGenerator';
-import { fetchDiscordLog } from '../../utils/DataRetrieval';
+import { useDiscordLog } from '../../utils/apis/discord-api';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
 import { snowflakeToDate } from '../../utils/Helpers';
+import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 import './DiscordLog.scss';
 import DiscordLogEntry from './DiscordLogEntry';
 interface Props {
   filterString: string;
-  openToast: (msg: string, status: AlertColor) => void;
 }
 
-const DiscordLog = ({ filterString, openToast }: Props) => {
-  const { isLoading, data, error } = useQuery('discordLog', fetchDiscordLog);
+const DiscordLog = ({ filterString }: Props) => {
+  const { isLoading, data, error } = useDiscordLog();
   const [logData, setLogData] = useState<{ discordDisplay: DiscordLogDisplay; date: Date }[]>([]);
+  const openToast = useToast();
 
   useEffect(() => {
     if (error) {
@@ -53,7 +53,13 @@ const DiscordLog = ({ filterString, openToast }: Props) => {
   return (
     <div className="log-container">
       {logData.map(entry => {
-        return <DiscordLogEntry displayEntry={entry.discordDisplay} date={entry.date} />;
+        return (
+          <DiscordLogEntry
+            displayEntry={entry.discordDisplay}
+            date={entry.date}
+            key={entry.date.toISOString()}
+          />
+        );
       })}
     </div>
   );

@@ -11,32 +11,29 @@ import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
 import MemberRecord from '../../../Interfaces/MemberRecord';
 import Warning from '../../../Interfaces/Warning';
+import { useDeleteWarningMutation } from '../../../utils/apis/warnings-api';
 import useConfirm from '../../Common/ConfirmDialog/useConfirm';
 import './WarningsViewer.scss';
 
 interface Props {
   isOpen: boolean;
   onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
-  onDeleteWarning: (warningId: string) => Promise<any>;
   member: MemberRecord;
 }
 
-const WarningsViewer = ({ isOpen, onClose, onDeleteWarning, member }: Props) => {
+const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   const { confirm } = useConfirm();
+  const deleteWarningMutation = useDeleteWarningMutation();
 
   const handleDeleteWarning = useCallback(
     async (warning: Warning) => {
       const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
       if (res) {
-        if (member.memberId) {
-          await onDeleteWarning(warning._id);
-        } else {
-          throw new Error('Chosen member has no memberId');
-        }
+        await deleteWarningMutation.mutateAsync(warning._id);
       }
       onClose();
     },
-    [onDeleteWarning, onClose, member, confirm]
+    [deleteWarningMutation, onClose, member, confirm]
   );
 
   return (
