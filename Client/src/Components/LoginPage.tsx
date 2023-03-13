@@ -12,14 +12,20 @@ import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { ErrorMessage } from './Common/ErrorMessage';
 
 interface Props {
   isLoading: boolean;
+  isError: boolean;
   authInfo?: AuthInfo;
 }
 
-const LoginPage = ({ isLoading, authInfo }: Props) => {
+const LoginPage = ({ isLoading, authInfo, isError }: Props) => {
   const [logo, setLogo] = useState(SOStatic);
+
+  if (isError) {
+    return <ErrorMessage>There was an error getting authentication data.</ErrorMessage>;
+  }
 
   if (isLoading || !authInfo) {
     return <LoaderPage />;

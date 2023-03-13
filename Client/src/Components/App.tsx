@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import AuthInfo from '../Interfaces/AuthInfo';
-
 import './App.scss';
 import Control from './Control';
 import EventPage from './Events/EventPage';
@@ -13,22 +11,20 @@ import 'fontsource-roboto';
 
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import { PaletteMode } from '@mui/material';
+import { CssBaseline, PaletteMode } from '@mui/material';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { CssBaseline } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
+import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createTheme } from '@mui/material/styles';
-import { useQuery } from 'react-query';
+import { useAuth } from '../utils/apis/auth-api';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
-import DiscordLog from './DiscordLog/DiscordLog';
 import { ToastContext } from './Common/ToastContext';
-import { useAuth } from '../utils/apis/auth-api';
+import DiscordLog from './DiscordLog/DiscordLog';
 
 const App = () => {
   const [filterString, setFilterString] = useState('');
@@ -84,7 +80,8 @@ const App = () => {
     [setFilterString]
   );
 
-  const { data: authInfo, isLoading } = useAuth();
+  const authQuery = useAuth();
+  const authInfo = authQuery.data;
 
   const TABS = {
     ROSTER: 'Roster',
@@ -139,7 +136,7 @@ const App = () => {
                   </TabContext>
                 </>
               ) : (
-                <LoginPage isLoading={isLoading} authInfo={authInfo} />
+                <LoginPage {...authQuery} />
               )}
             </div>
           </ToastContext.Provider>
