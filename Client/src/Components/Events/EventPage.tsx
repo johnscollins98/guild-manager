@@ -38,7 +38,7 @@ const sorter = new Map<string, number>([
 
 const EventPage = ({ filterString }: Props) => {
   const eventsQuery = useEvents();
-  const { data: eventRoles } = useEventRoles();
+  const eventRolesQuery = useEventRoles();
   const discordQuery = useDiscordMembers();
   const deleteEventMutation = useDeleteEventMutation();
   const updateEventMutation = useUpdateEventMutation();
@@ -48,10 +48,16 @@ const EventPage = ({ filterString }: Props) => {
 
   const { confirm } = useConfirm();
 
-  if (!eventRoles || !eventsQuery.data || !discordQuery.data) return <LoaderPage />;
+  if (eventsQuery.error || discordQuery.error || eventRolesQuery.error) {
+    return <>There was an error gathering events data.</>;
+  }
+
+  if (!eventRolesQuery.data || !eventsQuery.data || !discordQuery.data) return <LoaderPage />;
 
   // get possible leaders
-  const leaders = discordQuery.data.filter(d => d.roles.some(role => eventRoles.includes(role.id)));
+  const leaders = discordQuery.data.filter(d =>
+    d.roles.some(role => eventRolesQuery.data.includes(role.id))
+  );
 
   // sort events
   const sortedEvents = eventsQuery.data
