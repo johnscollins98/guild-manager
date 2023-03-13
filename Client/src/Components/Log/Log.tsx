@@ -1,11 +1,12 @@
 import { useGW2Log } from '../../utils/apis/gw2-api';
+import { useFilterString } from '../../utils/useFilterString';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './Log.scss';
 import LogEntry from './LogEntry';
 
 const Log = () => {
-  const filterString = '';
+  const filterString = useFilterString();
   const { isLoading, data, error } = useGW2Log();
 
   if (error) {
@@ -14,10 +15,7 @@ const Log = () => {
 
   if (isLoading || !data) return <LoaderPage />;
 
-  const lowerCaseFilterString = filterString.toLowerCase();
-  const filteredData = data.filter(entry =>
-    entry.message.toLowerCase().includes(lowerCaseFilterString)
-  );
+  const filteredData = data.filter(entry => entry.message.toLowerCase().includes(filterString));
 
   return (
     <div className="log-container">

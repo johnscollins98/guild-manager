@@ -106,10 +106,10 @@ const onFilter = (
 ) => {
   const filtered = toFilter.filter(
     r =>
-      r.accountName.includes(filterString) ||
-      r.discordName?.includes(filterString) ||
-      r.nickname?.includes(filterString) ||
-      r.memberId?.includes(filterString)
+      r.accountName.toLowerCase().includes(filterString) ||
+      r.discordName?.toLowerCase().includes(filterString) ||
+      r.nickname?.toLowerCase().includes(filterString) ||
+      r.memberId?.toLowerCase().includes(filterString)
   );
 
   switch (filterBy) {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
 import { useAuth } from '../../utils/apis/auth-api';
+import { useFilterString } from '../../utils/useFilterString';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import GuildMemberCard from './GuildMemberCard';
@@ -12,7 +13,7 @@ import RosterControl from './RosterControl';
 import { useRoster } from './useRoster';
 
 const Roster = () => {
-  const filterString = '';
+  const filterString = useFilterString();
   const [sortBy, setSortBy] = useState('rank');
   const [filterBy, setFilterBy] = useState('none');
   const [fullWidth, setFullWidth] = useState(true);

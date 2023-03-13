@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import './App.scss';
-import Control from './Control';
 import EventPage from './Events/EventPage';
 import Log from './Log/Log';
 import LoginPage from './LoginPage';
@@ -9,47 +8,22 @@ import Roster from './Roster/Roster';
 
 import 'fontsource-roboto';
 
-import TabContext from '@mui/lab/TabContext';
-import TabPanel from '@mui/lab/TabPanel';
 import { CssBaseline, PaletteMode } from '@mui/material';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../utils/apis/auth-api';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 import { ToastContext } from './Common/ToastContext';
+import Control from './Control';
 import DiscordLog from './DiscordLog/DiscordLog';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Roster />
-  },
-  {
-    path: '/log',
-    element: <Log />
-  },
-  {
-    path: 'discord-log',
-    element: <DiscordLog />
-  },
-  {
-    path: 'events',
-    element: <EventPage />
-  }
-]);
-
 const App = () => {
-  const [filterString, setFilterString] = useState('');
-  const [tab, setTab] = useState('roster');
-
   const [showToast, setShowToast] = useState(false);
   const [toastStatus, setToastStatus] = useState<AlertColor>('info');
   const [toastMessage, setToastMessage] = useState('');
@@ -93,13 +67,6 @@ const App = () => {
     setShowToast(false);
   }, [setToastMessage, setShowToast]);
 
-  const handleFilterChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFilterString(event.target.value);
-    },
-    [setFilterString]
-  );
-
   const { data: authInfo } = useAuth();
 
   const TABS = {
@@ -123,12 +90,15 @@ const App = () => {
             <div className="content">
               {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
                 <>
-                  <Control
-                    handleFilterChange={handleFilterChange}
-                    theme={theme}
-                    toggleTheme={toggleTheme}
-                  />
-                  <RouterProvider router={router} />
+                  <HashRouter>
+                    <Control theme={theme} toggleTheme={toggleTheme} />
+                    <Routes>
+                      <Route path="/" Component={Roster} />
+                      <Route path="/log" Component={Log} />
+                      <Route path="/discord-log" Component={DiscordLog} />
+                      <Route path="/events" Component={EventPage} />
+                    </Routes>
+                  </HashRouter>
                 </>
               ) : (
                 <LoginPage />
