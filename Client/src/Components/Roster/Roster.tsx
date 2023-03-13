@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MemberRecord from '../../Interfaces/MemberRecord';
 import { useAuth } from '../../utils/apis/auth-api';
+import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import GuildMemberCard from './GuildMemberCard';
 import KickModal from './KickModal';
@@ -34,9 +35,9 @@ const Roster = ({ filterString }: Props) => {
     setModalShow(true);
   };
 
-  if (isLoading || !roster || !discordRoles) return <LoaderPage />;
+  if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
-  if (isError) return <>There was an error getting roster data.</>;
+  if (isLoading || !roster || !discordRoles) return <LoaderPage />;
 
   const selectedRecord = roster.find(r => r.discordId === selectedRecordId);
 

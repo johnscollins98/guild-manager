@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import React, { useCallback, useEffect, useState } from 'react';
 import { usePostEvents } from '../../utils/apis/discord-api';
 import { useEventSettings } from '../../utils/apis/event-api';
+import { ErrorMessage } from '../Common/ErrorMessage';
 import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 
@@ -71,7 +72,7 @@ const EventPosterForm = ({ onClose }: Props) => {
   );
 
   if (error) {
-    return <>There was an error getting event post settings.</>;
+    return <ErrorMessage>There was an error getting event post settings.</ErrorMessage>;
   }
 
   if (isLoading || posting)

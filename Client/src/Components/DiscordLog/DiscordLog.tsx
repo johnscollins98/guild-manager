@@ -1,13 +1,9 @@
-import { AlertColor } from '@mui/material/Alert';
-import { useEffect, useMemo, useState } from 'react';
-import {
-  DiscordLogDisplay,
-  DiscordLogDisplayGenerator
-} from '../../Interfaces/DiscordLogStringGenerator';
+import { useMemo } from 'react';
+import { DiscordLogDisplayGenerator } from '../../Interfaces/DiscordLogStringGenerator';
 import { useDiscordLog } from '../../utils/apis/discord-api';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/DiscordLogStringFactory';
 import { snowflakeToDate } from '../../utils/Helpers';
-import { useToast } from '../Common/ToastContext';
+import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './DiscordLog.scss';
 import DiscordLogEntry from './DiscordLogEntry';
@@ -18,11 +14,8 @@ interface Props {
 const DiscordLog = ({ filterString }: Props) => {
   const { isLoading, data, error } = useDiscordLog();
 
-  if (error) return <>There was an error gathering log data.</>;
-
-  if (isLoading || !data) return <LoaderPage />;
-
   const logData = useMemo(() => {
+    if (!data) return undefined;
     const factory = new DiscordLogEntryFactory(data);
     return data.audit_log_entries
       .filter(entry => !!factory.getDiscordLogStringGenerator(entry.id))
@@ -39,6 +32,7 @@ const DiscordLog = ({ filterString }: Props) => {
   }, [data]);
 
   const filteredLogData = useMemo(() => {
+    if (!logData) return undefined;
     const lowerCaseFilterString = filterString.toLowerCase();
     return logData.filter(
       entry =>
@@ -48,6 +42,10 @@ const DiscordLog = ({ filterString }: Props) => {
         )
     );
   }, [logData, filterString]);
+
+  if (error) return <ErrorMessage>There was an error gathering log data.</ErrorMessage>;
+
+  if (isLoading || !filteredLogData) return <LoaderPage />;
 
   return (
     <div className="log-container">

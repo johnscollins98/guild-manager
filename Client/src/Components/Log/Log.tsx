@@ -1,4 +1,5 @@
 import { useGW2Log } from '../../utils/apis/gw2-api';
+import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './Log.scss';
 import LogEntry from './LogEntry';
@@ -11,7 +12,7 @@ const Log = ({ filterString }: Props) => {
   const { isLoading, data, error } = useGW2Log();
 
   if (error) {
-    return <>There was an error loading log data.</>;
+    return <ErrorMessage>There was an error loading log data.</ErrorMessage>;
   }
 
   if (isLoading || !data) return <LoaderPage />;

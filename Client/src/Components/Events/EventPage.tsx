@@ -1,11 +1,8 @@
-import { AlertColor } from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useCallback, useEffect, useState } from 'react';
-import { useQuery } from 'react-query';
-import DiscordMember from '../../Interfaces/DiscordMember';
+import { useState } from 'react';
 import Event from '../../Interfaces/Event';
 import { useEventRoles } from '../../utils/apis/auth-api';
 import { useDiscordMembers } from '../../utils/apis/discord-api';
@@ -16,7 +13,7 @@ import {
   useUpdateEventMutation
 } from '../../utils/apis/event-api';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
-import { useToast } from '../Common/ToastContext';
+import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import EventEntry from './EventEntry';
 import './EventPage.scss';
@@ -49,7 +46,7 @@ const EventPage = ({ filterString }: Props) => {
   const { confirm } = useConfirm();
 
   if (eventsQuery.error || discordQuery.error || eventRolesQuery.error) {
-    return <>There was an error gathering events data.</>;
+    return <ErrorMessage>There was an error gathering events data.</ErrorMessage>;
   }
 
   if (!eventRolesQuery.data || !eventsQuery.data || !discordQuery.data) return <LoaderPage />;
