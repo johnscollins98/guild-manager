@@ -1,13 +1,13 @@
 import Brightness3 from '@mui/icons-material/Brightness3';
 import Brightness6 from '@mui/icons-material/Brightness6';
-import { PaletteMode } from '@mui/material';
+import { AppBar, Button, ButtonBase, PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { NavLink, useSearchParams } from 'react-router-dom';
+import './Control.scss';
 
 interface Props {
   theme: PaletteMode;
@@ -41,9 +41,23 @@ const Control = ({ theme, toggleTheme }: Props) => {
   };
 
   return (
-    <Box paddingTop={1}>
-      <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={3}>
-        <Grid item xs>
+    <AppBar position="static" color="transparent">
+      <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
+        <Box>
+          <Button component={NavLink} to="/">
+            Roster
+          </Button>
+          <Button component={NavLink} to="/log">
+            Log
+          </Button>
+          <Button component={NavLink} to="/discord-log">
+            Discord Log
+          </Button>
+          <Button component={NavLink} to="/events">
+            Events
+          </Button>
+        </Box>
+        <Box display="flex">
           <form onSubmit={filterSubmitHandler}>
             <TextField
               id="filter"
@@ -55,16 +69,14 @@ const Control = ({ theme, toggleTheme }: Props) => {
               defaultValue={filterString}
             />
           </form>
-        </Grid>
-        <Grid item>
           <Tooltip title="Change Theme">
             <IconButton onClick={() => toggleTheme()}>
               {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
             </IconButton>
           </Tooltip>
-        </Grid>
-      </Grid>
-    </Box>
+        </Box>
+      </Box>
+    </AppBar>
   );
 };
 

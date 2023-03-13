@@ -92,12 +92,14 @@ const App = () => {
                 <>
                   <HashRouter>
                     <Control theme={theme} toggleTheme={toggleTheme} />
-                    <Routes>
-                      <Route path="/" Component={Roster} />
-                      <Route path="/log" Component={Log} />
-                      <Route path="/discord-log" Component={DiscordLog} />
-                      <Route path="/events" Component={EventPage} />
-                    </Routes>
+                    <div className="outlet">
+                      <Routes>
+                        <Route path="/" Component={Roster} />
+                        <Route path="/log" Component={Log} />
+                        <Route path="/discord-log" Component={DiscordLog} />
+                        <Route path="/events" Component={EventPage} />
+                      </Routes>
+                    </div>
                   </HashRouter>
                 </>
               ) : (
