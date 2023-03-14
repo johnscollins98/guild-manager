@@ -14,8 +14,8 @@
     "dev": "concurrently \"yarn dev-server\" \"set PORT=5001 && yarn dev-client\""
   },
   "workspaces": [
-    "./Client",
-    "./Server"
+    "client",
+    "server"
   ],
   "devDependencies": {
     "concurrently": "^6.2.0",
