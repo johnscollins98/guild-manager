@@ -6,8 +6,6 @@ import Log from './Log/Log';
 import LoginPage from './LoginPage';
 import Roster from './Roster/Roster';
 
-import 'fontsource-roboto';
-
 import { CssBaseline, PaletteMode } from '@mui/material';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -43,6 +41,9 @@ const App = () => {
       createTheme({
         palette: {
           mode: theme
+        },
+        typography: {
+          fontFamily: ['"Lato"', 'sans-serif'].join(',')
         },
         components: {
           MuiDialogContent: {
