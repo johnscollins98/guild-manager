@@ -85,11 +85,7 @@ export const useKickDiscordMember = () => {
   const sendMessage = useSendMessage();
 
   return useMutation<void, AxiosError, KickMemberDTO>({
-    mutationFn({ memberId }) {
-      return axios.delete(`/api/discord/members/${memberId}`);
-    },
-    onSuccess(_, { memberId, reason, reinvite }) {
-      queryClient.invalidateQueries('discord/members');
+    async mutationFn({ reinvite, reason, memberId }) {
       if (reinvite) {
         let content = 'You have been kicked from Sunspear Order';
         if (reason) {
@@ -100,11 +96,17 @@ export const useKickDiscordMember = () => {
           content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
         }
 
-        sendMessage.mutate({
+        await sendMessage.mutateAsync({
           memberId,
           content
         });
       }
+
+      return axios.delete(`/api/discord/members/${memberId}`);
+    },
+    onSuccess() {
+      queryClient.invalidateQueries('discord/members');
+      openToast('Successfully kicked member.', 'success');
     },
     onError() {
       openToast('Failed to kick member.', 'error');
