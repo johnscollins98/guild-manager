@@ -26,8 +26,8 @@ export class AuthController {
   @Get('/redirect')
   @UseBefore(
     passport.authenticate('discord', {
-      failureRedirect: `${config.frontEndBaseUrl}/`,
-      successRedirect: `${config.frontEndBaseUrl}/`
+      failureRedirect: `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`,
+      successRedirect: `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`
     })
   )
   redirect() {}
