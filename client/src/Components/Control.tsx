@@ -1,6 +1,7 @@
 import Brightness3 from '@mui/icons-material/Brightness3';
 import Brightness6 from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { PaletteMode } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import React, { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
+import SOStatic from '../assets/images/SO_Static.gif';
 import './Control.scss';
 
 interface Props {
@@ -56,14 +58,17 @@ const Control = ({ theme, toggleTheme }: Props) => {
   };
 
   return (
-    <AppBar position="static" color="transparent">
+    <AppBar position="static" color="default">
       <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
-        <Box sx={{ display: { md: 'block', xs: 'none' } }}>
-          {LINKS.map(l => (
-            <Button key={l.link} component={NavLink} to={l.link}>
-              {l.label}
-            </Button>
-          ))}
+        <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
+          <img src={SOStatic} height={40} width={40} alt="logo" />
+          <div>
+            {LINKS.map(l => (
+              <Button key={l.link} component={NavLink} to={l.link}>
+                {l.label}
+              </Button>
+            ))}
+          </div>
         </Box>
         <IconButton
           sx={{ display: { md: 'none', xs: 'inline-flex' } }}
@@ -90,12 +95,13 @@ const Control = ({ theme, toggleTheme }: Props) => {
           </Tooltip>
         </Box>
       </Box>
-      <Drawer
-        anchor="left"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        PaperProps={{ elevation: 0 }}
-      >
+      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Box justifyContent="space-between" display="flex" padding={1}>
+          <IconButton onClick={() => setDrawerOpen(false)}>
+            <MenuOpenIcon />
+          </IconButton>
+          <img src={SOStatic} height={40} width={40} alt="logo" />
+        </Box>
         <List sx={{ width: '200px' }}>
           {LINKS.map(l => (
             <ListItemButton
