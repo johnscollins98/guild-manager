@@ -17,11 +17,9 @@ import './RosterControl.scss';
 interface Props {
   refetchData: () => void;
   isFetching: boolean;
-  fullWidth: boolean;
-  setFullWidth: (val: boolean) => void;
 }
 
-const RosterControl = ({ refetchData, isFetching, fullWidth, setFullWidth }: Props) => {
+const RosterControl = ({ refetchData, isFetching }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy');
   const filterBy = searchParams.get('filterBy');
@@ -84,11 +82,6 @@ const RosterControl = ({ refetchData, isFetching, fullWidth, setFullWidth }: Pro
           </Tooltip>
         </span>
         <span className="right">
-          <Tooltip title={fullWidth ? 'Show Members As Grid' : 'Show Members As Rows'}>
-            <IconButton size="small" onClick={() => setFullWidth(!fullWidth)}>
-              {fullWidth ? <Apps /> : <TableRows />}
-            </IconButton>
-          </Tooltip>
           <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
             <span>
               <IconButton

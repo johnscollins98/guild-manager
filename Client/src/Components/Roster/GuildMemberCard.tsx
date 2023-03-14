@@ -26,12 +26,11 @@ interface Props {
   member: MemberRecord;
   discordRoles: DiscordRole[];
   isAdmin: boolean;
-  fullWidth: boolean;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
 }
 
-const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin, fullWidth }: Props) => {
+const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin }: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
@@ -95,7 +94,7 @@ const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin, fullWi
     <>
       <Card
         variant="outlined"
-        className={`member-card${fullWidth ? ' fullWidth' : ''}`}
+        className="member-card"
         style={{ borderLeftColor: color }}
         onClick={openMenu}
       >

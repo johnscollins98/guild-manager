@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List } from 'react-window';
 import MemberRecord from '../../Interfaces/MemberRecord';
 import { useAuth } from '../../utils/apis/auth-api';
 import { useFilterString } from '../../utils/useFilterString';
@@ -8,7 +10,6 @@ import LoaderPage from '../LoaderPage';
 import GuildMemberCard from './GuildMemberCard';
 import KickModal from './KickModal';
 import RoleEdit from './RoleEdit';
-import './Roster.scss';
 import RosterControl from './RosterControl';
 
 import { useRoster } from './useRoster';
@@ -18,7 +19,6 @@ const Roster = () => {
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy') ?? '';
   const filterBy = searchParams.get('filterBy') ?? '';
-  const [fullWidth, setFullWidth] = useState(true);
   const { isLoading, isFetching, refetch, isError, discordRoles, roster } = useRoster(
     sortBy,
     filterString,
@@ -43,29 +43,32 @@ const Roster = () => {
 
   return (
     <>
-      <RosterControl
-        refetchData={refetch}
-        isFetching={isFetching}
-        fullWidth={fullWidth}
-        setFullWidth={setFullWidth}
-      />
-      <div className="roster-container">
-        {roster.map(member => {
-          return (
-            <GuildMemberCard
-              key={member.memberId ?? member.discordId}
-              member={member}
-              discordRoles={discordRoles}
-              onKick={record => {
-                setSelectedRecordId(record.discordId);
-                setKickModalShow(true);
+      <RosterControl refetchData={refetch} isFetching={isFetching} />
+      <div style={{ flex: 1 }}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List height={height} width={width} itemCount={roster.length} itemSize={76}>
+              {({ index, style }) => {
+                const member = roster[index];
+                return (
+                  <div style={style}>
+                    <GuildMemberCard
+                      key={member.memberId ?? member.discordId}
+                      member={member}
+                      discordRoles={discordRoles}
+                      onKick={record => {
+                        setSelectedRecordId(record.discordId);
+                        setKickModalShow(true);
+                      }}
+                      onEdit={openEdit}
+                      isAdmin={authInfo?.isAdmin ?? false}
+                    />
+                  </div>
+                );
               }}
-              onEdit={openEdit}
-              isAdmin={authInfo?.isAdmin ?? false}
-              fullWidth={fullWidth}
-            />
-          );
-        })}
+            </List>
+          )}
+        </AutoSizer>
       </div>
       <RoleEdit
         modalShow={modalShow}
