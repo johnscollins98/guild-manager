@@ -10,30 +10,22 @@ import MenuItem from '@mui/material/MenuItem';
 import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import React, { useCallback, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import './RosterControl.scss';
 
 interface Props {
-  filterBy: string;
-  setFilterBy: (val: string) => void;
-  sortBy: string;
-  setSortBy: (val: string) => void;
   refetchData: () => void;
   isFetching: boolean;
   fullWidth: boolean;
   setFullWidth: (val: boolean) => void;
 }
 
-const RosterControl = ({
-  filterBy,
-  setFilterBy,
-  sortBy,
-  setSortBy,
-  refetchData,
-  isFetching,
-  fullWidth,
-  setFullWidth
-}: Props) => {
+const RosterControl = ({ refetchData, isFetching, fullWidth, setFullWidth }: Props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sortBy = searchParams.get('sortBy');
+  const filterBy = searchParams.get('filterBy');
+
   const [anchorElement, setAnchorElement] = useState<(EventTarget & Element) | null>(null);
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
@@ -62,18 +54,18 @@ const RosterControl = ({
 
   const sortHandler = useCallback(
     (sortBy: string) => {
-      setSortBy(sortBy);
+      setSearchParams({ ...searchParams, sortBy });
       closeMenu();
     },
-    [setSortBy, closeMenu]
+    [closeMenu]
   );
 
   const filterHandler = useCallback(
     (filterBy: string) => {
-      setFilterBy(filterBy);
+      setSearchParams({ ...searchParams, filterBy });
       closeMenu();
     },
-    [setFilterBy, closeMenu]
+    [closeMenu]
   );
 
   return (

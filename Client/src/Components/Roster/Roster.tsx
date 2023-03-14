@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import MemberRecord from '../../Interfaces/MemberRecord';
 import { useAuth } from '../../utils/apis/auth-api';
 import { useFilterString } from '../../utils/useFilterString';
@@ -14,8 +15,9 @@ import { useRoster } from './useRoster';
 
 const Roster = () => {
   const filterString = useFilterString();
-  const [sortBy, setSortBy] = useState('rank');
-  const [filterBy, setFilterBy] = useState('none');
+  const [searchParams] = useSearchParams();
+  const sortBy = searchParams.get('sortBy') ?? '';
+  const filterBy = searchParams.get('filterBy') ?? '';
   const [fullWidth, setFullWidth] = useState(true);
   const { isLoading, isFetching, refetch, isError, discordRoles, roster } = useRoster(
     sortBy,
@@ -42,10 +44,6 @@ const Roster = () => {
   return (
     <>
       <RosterControl
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        filterBy={filterBy}
-        setFilterBy={setFilterBy}
         refetchData={refetch}
         isFetching={isFetching}
         fullWidth={fullWidth}
