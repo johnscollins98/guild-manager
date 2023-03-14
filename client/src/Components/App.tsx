@@ -15,7 +15,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../utils/apis/auth-api';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
@@ -90,7 +90,7 @@ const App = () => {
             <div className="content">
               {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
                 <>
-                  <HashRouter>
+                  <BrowserRouter>
                     <Control theme={theme} toggleTheme={toggleTheme} />
                     <div className="outlet">
                       <Routes>
@@ -100,7 +100,7 @@ const App = () => {
                         <Route path="/events" Component={EventPage} />
                       </Routes>
                     </div>
-                  </HashRouter>
+                  </BrowserRouter>
                 </>
               ) : (
                 <LoginPage />
