@@ -90,6 +90,7 @@ const EventPosterForm = ({ onClose }: Props) => {
           value={postChannel}
           label="Channel ID to post to"
           size="small"
+          variant="standard"
           margin="dense"
           fullWidth
           disabled={posting}
@@ -116,7 +117,7 @@ const EventPosterForm = ({ onClose }: Props) => {
               size="small"
               margin="dense"
               key={day}
-              variant="outlined"
+              variant="standard"
               placeholder="Enter Message ID"
               label={day}
               InputLabelProps={{ shrink: true }}

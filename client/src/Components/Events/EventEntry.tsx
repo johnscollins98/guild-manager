@@ -203,7 +203,7 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldPro
   const theme = useTheme<Theme>();
   return (
     <TextField
-      variant="outlined"
+      variant="standard"
       size="small"
       className="entry-input"
       value={event[fieldKey]}
