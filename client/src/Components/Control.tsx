@@ -34,7 +34,8 @@ const LINKS = [
   { label: 'Roster', link: '/' },
   { label: 'Log', link: '/log' },
   { label: 'Discord Log', link: '/discord-log' },
-  { label: 'Events', link: '/events' }
+  { label: 'Events', link: '/events' },
+  { label: 'Recruitment', link: '/recruitment' }
 ];
 
 const Control = ({ theme, toggleTheme }: Props) => {
