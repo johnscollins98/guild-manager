@@ -1,7 +1,10 @@
 import { Button, TextField } from '@mui/material';
 import { Box } from '@mui/system';
+import axios from 'axios';
+import copy from 'copy-to-clipboard';
 import { FC, FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { useRecruitmentPost, useRecruitmentPostMutation } from '../../utils/apis/recruitment-api';
+import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 
 interface RecruitmentPageProps {}
@@ -10,6 +13,7 @@ const RecruitmentPage: FC<RecruitmentPageProps> = () => {
   const { data, isSuccess, isLoading } = useRecruitmentPost();
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
+  const toast = useToast();
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -27,6 +31,20 @@ const RecruitmentPage: FC<RecruitmentPageProps> = () => {
     [message]
   );
 
+  const handleCopyClick = async (isHtml: boolean) => {
+    const response = await axios.get('/api/recruitment-post/generate', {
+      params: {
+        html: isHtml ? true : false
+      }
+    });
+
+    const post = response.data;
+
+    copy(post);
+
+    toast('Copied message to clipboard', 'success');
+  };
+
   if (isLoading) {
     return <LoaderPage />;
   }
@@ -38,7 +56,13 @@ const RecruitmentPage: FC<RecruitmentPageProps> = () => {
     >
       <Box justifyContent="space-between" alignItems="center" display="flex">
         <h2>Recruitment Post</h2>
-        <Button type="submit">Save Message</Button>
+        <Box display="flex" alignItems="center" gap="8px">
+          <Button onClick={() => handleCopyClick(true)}>Copy HTML</Button>
+          <Button onClick={() => handleCopyClick(false)}>Copy Markdown</Button>
+          <Button variant="contained" color="primary" type="submit">
+            Save Message
+          </Button>
+        </Box>
       </Box>
       <div style={{ overflow: 'auto' }}>
         <TextField
