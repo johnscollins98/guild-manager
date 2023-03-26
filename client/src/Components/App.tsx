@@ -20,6 +20,7 @@ import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 import { ToastContext } from './Common/ToastContext';
 import Control from './Control';
 import DiscordLog from './DiscordLog/DiscordLog';
+import RecruitmentPage from './Recruitment/RecruitmentPage';
 
 const App = () => {
   const [showToast, setShowToast] = useState(false);
@@ -70,13 +71,6 @@ const App = () => {
 
   const { data: authInfo } = useAuth();
 
-  const TABS = {
-    ROSTER: 'Roster',
-    LOG: 'Log',
-    DISCORD_LOG: 'Discord Log',
-    EVENTS: 'Events'
-  };
-
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -99,6 +93,7 @@ const App = () => {
                         <Route path="/log" Component={Log} />
                         <Route path="/discord-log" Component={DiscordLog} />
                         <Route path="/events" Component={EventPage} />
+                        <Route path="/recruitment" Component={RecruitmentPage} />
                       </Routes>
                     </div>
                   </BrowserRouter>
