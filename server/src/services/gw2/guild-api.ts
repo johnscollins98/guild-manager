@@ -29,4 +29,3 @@ export class GW2GuildApi {
     return await this.gw2Api.get(`guild/${this.guildId}/${endpoint}`);
   }
 }
-

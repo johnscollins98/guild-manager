@@ -15,4 +15,3 @@ class WarningsRepository extends BaseRepository<Warning> {
 }
 
 export default WarningsRepository;
-

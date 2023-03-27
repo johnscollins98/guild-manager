@@ -14,4 +14,3 @@ export class EventRepository extends BaseRepository<Event> {
     return await this.repo.find({ day });
   }
 }
-

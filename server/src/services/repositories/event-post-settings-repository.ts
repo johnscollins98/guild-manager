@@ -26,4 +26,3 @@ export class EventPostSettingsRepository extends BaseRepository<EventPostSetting
     return this.findOrCreateByGuildId(guildId);
   }
 }
-

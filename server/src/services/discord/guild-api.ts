@@ -45,4 +45,3 @@ export class DiscordGuildApi {
     return await this.discordApi.patch(`${this.baseUrl}/members/${memberId}`, updates);
   }
 }
-

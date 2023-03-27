@@ -29,4 +29,3 @@ export class GW2Controller {
     return this.gw2GuildApi.getRanks();
   }
 }
-

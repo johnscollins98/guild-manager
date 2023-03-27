@@ -65,4 +65,3 @@ export class DiscordMemberFormatter {
     return [...rankStrings, ...extraRanks];
   }
 }
-

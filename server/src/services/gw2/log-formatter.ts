@@ -41,4 +41,3 @@ export class GW2LogFormatter {
     return { date, time, message };
   }
 }
-

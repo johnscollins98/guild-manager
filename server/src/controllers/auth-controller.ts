@@ -57,4 +57,3 @@ export class AuthController {
     return config.eventRoles.concat(config.adminRoles);
   }
 }
-

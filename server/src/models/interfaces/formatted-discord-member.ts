@@ -8,4 +8,3 @@ export default interface FormattedDiscordMember {
   joined: string;
   avatar?: string;
 }
-

@@ -61,5 +61,3 @@ export class EventsController {
     return this.eventRepo.update(id, event);
   }
 }
-
-

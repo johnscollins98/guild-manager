@@ -74,6 +74,3 @@ createConnection({
   Container.get(DiscordStrategySetup);
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });
-
-
-

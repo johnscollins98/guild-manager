@@ -50,4 +50,3 @@ export class WarningsController {
     return this.warningRepo.update(id, warning);
   }
 }
-

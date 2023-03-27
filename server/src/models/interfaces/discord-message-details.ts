@@ -4,4 +4,3 @@ export interface DiscordMessageDetails {
   id: string;
   embeds: DiscordEmbed[];
 }
-

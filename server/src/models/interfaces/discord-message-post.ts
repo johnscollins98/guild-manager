@@ -4,4 +4,3 @@ export interface DiscordMessagePost {
   content?: string;
   embeds?: DiscordEmbed[];
 }
-

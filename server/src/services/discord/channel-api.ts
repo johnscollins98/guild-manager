@@ -75,4 +75,3 @@ export class DiscordChannelApi {
     return true;
   }
 }
-

@@ -62,4 +62,3 @@ export class RecruitmentPostController {
     await this.recruitmentRepo.delete(post._id);
   }
 }
-

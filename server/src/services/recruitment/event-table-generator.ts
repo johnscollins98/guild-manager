@@ -56,4 +56,3 @@ export class EventTableGenerator {
     return Object.fromEntries(days.map(day => [day, events.filter(e => e.day === day)]));
   }
 }
-

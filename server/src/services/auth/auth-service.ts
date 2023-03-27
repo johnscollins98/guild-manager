@@ -41,6 +41,3 @@ export class AuthService {
     return { loggedIn, isAdmin, username };
   }
 }
-
-
-
