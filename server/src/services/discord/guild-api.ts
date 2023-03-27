@@ -1,10 +1,8 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
-import DiscordMember, {
-  DiscordMemberUpdate
-} from '../../models/interfaces/discordmember.interface';
-import DiscordRole from '../../models/interfaces/discordrole.interface';
-import { DiscordApi } from './api.discord.service';
+import DiscordMember, { DiscordMemberUpdate } from '../../models/interfaces/discord-member';
+import DiscordRole from '../../models/interfaces/discord-role';
+import { DiscordApi } from './discord-api';
 
 @Service()
 export class DiscordGuildApi {
@@ -47,3 +45,4 @@ export class DiscordGuildApi {
     return await this.discordApi.patch(`${this.baseUrl}/members/${memberId}`, updates);
   }
 }
+

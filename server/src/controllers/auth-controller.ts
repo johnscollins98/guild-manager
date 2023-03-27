@@ -12,7 +12,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { AuthService } from '../services/auth/auth.service';
+import { AuthService } from '../services/auth/auth-service';
 
 @Service()
 @JsonController('/auth')
@@ -57,3 +57,4 @@ export class AuthController {
     return config.eventRoles.concat(config.adminRoles);
   }
 }
+

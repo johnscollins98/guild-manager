@@ -1,10 +1,10 @@
 import { Service } from 'typedi';
-import { DiscordChannel } from '../../models/interfaces/discordchannel.interface';
-import DiscordEmbed from '../../models/interfaces/discordembed.interface';
-import DiscordMessage from '../../models/interfaces/discordmessage.interface';
-import { DiscordMessageDetails } from '../../models/interfaces/discordmessagedetails.interface';
-import { DiscordMessagePost } from '../../models/interfaces/discordmessagepost.interface';
-import { DiscordApi } from './api.discord.service';
+import { DiscordChannel } from '../../models/interfaces/discord-channel';
+import DiscordEmbed from '../../models/interfaces/discord-embed';
+import DiscordMessage from '../../models/interfaces/discord-message';
+import { DiscordMessageDetails } from '../../models/interfaces/discord-message-details';
+import { DiscordMessagePost } from '../../models/interfaces/discord-message-post';
+import { DiscordApi } from './discord-api';
 
 @Service()
 export class DiscordChannelApi {
@@ -75,3 +75,4 @@ export class DiscordChannelApi {
     return true;
   }
 }
+

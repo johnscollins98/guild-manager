@@ -3,7 +3,7 @@ import PassportDiscord, { Profile } from 'passport-discord';
 import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
-import { SymmetricEncryption } from '../encrypt.service';
+import { SymmetricEncryption } from '../encryption-service';
 
 const DiscordStrategy = PassportDiscord.Strategy;
 
@@ -61,3 +61,4 @@ export class DiscordStrategySetup {
     );
   }
 }
+

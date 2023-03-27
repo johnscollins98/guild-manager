@@ -1,10 +1,10 @@
 import cache from 'memory-cache';
 import { Service } from 'typedi';
 import { config } from '../../config';
-import AuthInfo from '../../models/interfaces/authinfo.interface';
-import DiscordMember from '../../models/interfaces/discordmember.interface';
-import { DiscordApi } from '../discord/api.discord.service';
-import { SymmetricEncryption } from './encrypt.service';
+import AuthInfo from '../../models/interfaces/auth-info';
+import DiscordMember from '../../models/interfaces/discord-member';
+import { DiscordApi } from '../discord/discord-api';
+import { SymmetricEncryption } from './encryption-service';
 
 const notLoggedIn = {
   loggedIn: false,
@@ -41,3 +41,6 @@ export class AuthService {
     return { loggedIn, isAdmin, username };
   }
 }
+
+
+

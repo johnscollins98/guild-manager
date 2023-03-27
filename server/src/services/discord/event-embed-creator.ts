@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import DiscordEmbed from '../../models/interfaces/discordembed.interface';
+import DiscordEmbed from '../../models/interfaces/discord-embed';
 import { Event } from '../../models/event.model';
 
 @Service()
@@ -22,3 +22,4 @@ export class EventEmbedCreator {
     };
   }
 }
+

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import { Event } from '../../models/event.model';
-import { EventRepository } from '../repositories/event.repository';
+import { EventRepository } from '../repositories/event-repository';
 import markdownTable from 'markdown-table';
 
 @Service()
@@ -56,3 +56,4 @@ export class EventTableGenerator {
     return Object.fromEntries(days.map(day => [day, events.filter(e => e.day === day)]));
   }
 }
+

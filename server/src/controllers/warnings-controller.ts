@@ -11,7 +11,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { Warning } from '../models/warning.model';
-import WarningsRepository from '../services/repositories/warnings.repository';
+import WarningsRepository from '../services/repositories/warnings-repository';
 
 @JsonController('/api/warnings', { transformResponse: false })
 @Authorized()
@@ -50,3 +50,4 @@ export class WarningsController {
     return this.warningRepo.update(id, warning);
   }
 }
+

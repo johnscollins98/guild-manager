@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { EventPostSettings } from '../../models/eventPostSettings.model';
-import { BaseRepository } from './base.repository';
+import { EventPostSettings } from '../../models/event-post-settings.model';
+import { BaseRepository } from './base-repository';
 
 @Service()
 export class EventPostSettingsRepository extends BaseRepository<EventPostSettings> {
@@ -26,3 +26,4 @@ export class EventPostSettingsRepository extends BaseRepository<EventPostSetting
     return this.findOrCreateByGuildId(guildId);
   }
 }
+

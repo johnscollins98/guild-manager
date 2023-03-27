@@ -9,9 +9,9 @@ import {
   Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { EventRepository } from '../services/repositories/event.repository';
+import { EventRepository } from '../services/repositories/event-repository';
 import { Event } from '../models/event.model';
-import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
+import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { config } from '../config';
 
 @JsonController('/api/events', { transformResponse: false })
@@ -61,3 +61,5 @@ export class EventsController {
     return this.eventRepo.update(id, event);
   }
 }
+
+

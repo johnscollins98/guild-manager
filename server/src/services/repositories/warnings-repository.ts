@@ -2,7 +2,7 @@ import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 import { Warning } from '../../models/warning.model';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { BaseRepository } from './base.repository';
+import { BaseRepository } from './base-repository';
 @Service()
 class WarningsRepository extends BaseRepository<Warning> {
   constructor(@InjectRepository(Warning) repo: Repository<Warning>) {
@@ -15,3 +15,4 @@ class WarningsRepository extends BaseRepository<Warning> {
 }
 
 export default WarningsRepository;
+

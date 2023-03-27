@@ -1,7 +1,7 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { GW2GuildApi } from '../services/gw2/guildapi.gw2.service';
-import { GW2LogFormatter } from '../services/gw2/logformatter.gw2.service';
+import { GW2GuildApi } from '../services/gw2/guild-api';
+import { GW2LogFormatter } from '../services/gw2/log-formatter';
 
 @JsonController('/api/gw2')
 @Authorized()
@@ -29,3 +29,4 @@ export class GW2Controller {
     return this.gw2GuildApi.getRanks();
   }
 }
+

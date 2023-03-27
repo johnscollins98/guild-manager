@@ -1,6 +1,7 @@
-import DiscordEmbed from './discordembed.interface';
+import DiscordEmbed from './discord-embed';
 
 export interface DiscordMessagePost {
   content?: string;
   embeds?: DiscordEmbed[];
 }
+

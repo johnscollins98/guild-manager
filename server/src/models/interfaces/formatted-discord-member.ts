@@ -1,4 +1,4 @@
-import DiscordRole from './discordrole.interface';
+import DiscordRole from './discord-role';
 
 export default interface FormattedDiscordMember {
   name?: string;
@@ -8,3 +8,4 @@ export default interface FormattedDiscordMember {
   joined: string;
   avatar?: string;
 }
+

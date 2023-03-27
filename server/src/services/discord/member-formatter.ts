@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
-import DiscordMember from '../../models/interfaces/discordmember.interface';
-import DiscordRole from '../../models/interfaces/discordrole.interface';
-import FormattedDiscordMember from '../../models/interfaces/formatteddiscordmember.interface';
-import { GW2GuildApi } from '../gw2/guildapi.gw2.service';
+import DiscordMember from '../../models/interfaces/discord-member';
+import DiscordRole from '../../models/interfaces/discord-role';
+import FormattedDiscordMember from '../../models/interfaces/formatted-discord-member';
+import { GW2GuildApi } from '../gw2/guild-api';
 
 @Service()
 export class DiscordMemberFormatter {
@@ -65,3 +65,4 @@ export class DiscordMemberFormatter {
     return [...rankStrings, ...extraRanks];
   }
 }
+

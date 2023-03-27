@@ -14,16 +14,16 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discordmember.interface';
-import DiscordRole from '../models/interfaces/discordrole.interface';
-import { EventPostSettings } from '../models/eventPostSettings.model';
-import { DiscordChannelApi } from '../services/discord/channelapi.discord.service';
-import { DiscordGuildApi } from '../services/discord/guildapi.discord.service';
-import { DiscordMemberFormatter } from '../services/discord/memberformatter.discord.service';
-import { EventEmbedCreator } from '../services/discord/eventembedcreator.discord.service';
-import { EventRepository } from '../services/repositories/event.repository';
-import { EventPostSettingsRepository } from '../services/repositories/eventpostsettings.repository';
-import { DiscordMessagePost } from '../models/interfaces/discordmessagepost.interface';
+import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
+import DiscordRole from '../models/interfaces/discord-role';
+import { EventPostSettings } from '../models/event-post-settings.model';
+import { DiscordChannelApi } from '../services/discord/channel-api';
+import { DiscordGuildApi } from '../services/discord/guild-api';
+import { DiscordMemberFormatter } from '../services/discord/member-formatter';
+import { EventEmbedCreator } from '../services/discord/event-embed-creator';
+import { EventRepository } from '../services/repositories/event-repository';
+import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
+import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
 
 @Service()
 @Authorized()
@@ -158,3 +158,9 @@ export class DiscordController {
     }
   }
 }
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
-import { FormattedLogEntry } from '../../models/interfaces/formattedlogentry.interface';
-import GW2LogEntry from '../../models/interfaces/gw2logentry.interface';
+import { FormattedLogEntry } from '../../models/interfaces/formatted-log-entry';
+import GW2LogEntry from '../../models/interfaces/gw2-log-entry';
 
 @Service()
 export class GW2LogFormatter {
@@ -41,3 +41,4 @@ export class GW2LogFormatter {
     return { date, time, message };
   }
 }
+
