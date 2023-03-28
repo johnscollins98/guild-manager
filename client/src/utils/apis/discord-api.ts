@@ -2,10 +2,10 @@ import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../Components/Common/ToastContext';
 import { config } from '../../Config';
-import { DiscordLog } from '../../Interfaces/DiscordLog';
-import DiscordMember from '../../Interfaces/DiscordMember';
-import DiscordRole from '../../Interfaces/DiscordRole';
-import EventSettings from '../../Interfaces/EventSettings';
+import { DiscordLog } from '../../interfaces/DiscordLog';
+import DiscordMember from '../../interfaces/DiscordMember';
+import DiscordRole from '../../interfaces/DiscordRole';
+import EventSettings from '../../interfaces/EventSettings';
 
 export const useDiscordMembers = () => useQuery<DiscordMember[], AxiosError>('discord/members');
 export const useDiscordRoles = () => useQuery<DiscordRole[], AxiosError>('discord/roles');

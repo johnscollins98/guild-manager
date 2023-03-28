@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import './LoginPage.scss';
 
-import AuthInfo from '../Interfaces/AuthInfo';
+import AuthInfo from '../interfaces/AuthInfo';
 import { config } from '../Config';
 
 import LoaderPage from './LoaderPage';

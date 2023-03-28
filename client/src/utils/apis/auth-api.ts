@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { useQuery } from 'react-query';
-import AuthInfo from '../../Interfaces/AuthInfo';
+import AuthInfo from '../../interfaces/AuthInfo';
 
 export const useAuth = () =>
   useQuery<AuthInfo, AxiosError>('auth/authorization', async () => {

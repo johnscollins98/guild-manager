@@ -1,8 +1,8 @@
-import { DiscordLogChange, DiscordLogUser } from '../../Interfaces/DiscordLog';
+import { DiscordLogChange, DiscordLogUser } from '../../interfaces/DiscordLog';
 import {
   DiscordLogDisplay,
   DiscordLogDisplayGenerator
-} from '../../Interfaces/DiscordLogStringGenerator';
+} from '../../interfaces/DiscordLogStringGenerator';
 
 export class MemberUpdate implements DiscordLogDisplayGenerator {
   constructor(

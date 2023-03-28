@@ -8,7 +8,7 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FunctionComponent, useCallback, useState } from 'react';
-import MemberRecord from '../../Interfaces/MemberRecord';
+import MemberRecord from '../../interfaces/MemberRecord';
 import { useKickDiscordMember } from '../../utils/apis/discord-api';
 import './KickModal.scss';
 

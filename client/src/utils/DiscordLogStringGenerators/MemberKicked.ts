@@ -1,8 +1,8 @@
-import { DiscordLogUser } from '../../Interfaces/DiscordLog';
+import { DiscordLogUser } from '../../interfaces/DiscordLog';
 import {
   DiscordLogDisplay,
   DiscordLogDisplayGenerator
-} from '../../Interfaces/DiscordLogStringGenerator';
+} from '../../interfaces/DiscordLogStringGenerator';
 
 export class MemberKicked implements DiscordLogDisplayGenerator {
   constructor(private readonly kicker: DiscordLogUser, private readonly kickee: DiscordLogUser) {}

@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../Components/Common/ToastContext';
-import Event from '../../Interfaces/Event';
-import EventSettings from '../../Interfaces/EventSettings';
+import Event from '../../interfaces/Event';
+import EventSettings from '../../interfaces/EventSettings';
 
 export const useEvents = () => useQuery<Event[], AxiosError>('events');
 export const useEventSettings = () => useQuery<EventSettings, AxiosError>('events/settings');

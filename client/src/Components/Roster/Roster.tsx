@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
-import MemberRecord from '../../Interfaces/MemberRecord';
+import MemberRecord from '../../interfaces/MemberRecord';
 import { useAuth } from '../../utils/apis/auth-api';
 import { useFilterString } from '../../utils/useFilterString';
 import { ErrorMessage } from '../Common/ErrorMessage';

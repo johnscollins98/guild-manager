@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import Event from '../../Interfaces/Event';
+import Event from '../../interfaces/Event';
 import { useEventRoles } from '../../utils/apis/auth-api';
 import { useDiscordMembers } from '../../utils/apis/discord-api';
 import {

@@ -1,4 +1,4 @@
-import DiscordRole from '../Interfaces/DiscordRole';
+import DiscordRole from '../interfaces/DiscordRole';
 
 export const getColorFromRole = (rank: string, discordRoles: DiscordRole[]): string | undefined => {
   const found = discordRoles.find(r => r.name === rank);

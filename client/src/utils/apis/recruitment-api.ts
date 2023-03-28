@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../Components/Common/ToastContext';
-import { RecruitmentPost } from '../../Interfaces/RecruitmentPost';
+import { RecruitmentPost } from '../../interfaces/RecruitmentPost';
 
 export const useRecruitmentPost = () => useQuery<RecruitmentPost, AxiosError>('recruitment-post');
 
