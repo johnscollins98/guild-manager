@@ -8,8 +8,8 @@ import { Action, useContainer as rc_useContainer, useExpressServer } from 'routi
 import { createConnection, useContainer } from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { config } from './config';
-import { AuthService } from './services/auth/auth.service';
-import { DiscordStrategySetup } from './services/auth/strategies/discord.strategy';
+import { AuthService } from './services/auth/auth-service';
+import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -44,7 +44,7 @@ app.use(passport.session());
 
 useExpressServer(app, {
   cors: true,
-  controllers: [path.join(__dirname + '/controllers/*.controller.*')],
+  controllers: [path.join(__dirname + '/controllers/*-controller.*')],
   authorizationChecker: async (action: Action) => {
     if (!action.request.user) {
       return false;
