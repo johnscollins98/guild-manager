@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import './LoginPage.scss';
 
-import AuthInfo from '../interfaces/AuthInfo';
-import { config } from '../Config';
+import { config } from '../config';
 
 import LoaderPage from './LoaderPage';
 import SOGif from '../assets/images/SO_Logo.gif';
