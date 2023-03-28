@@ -9,9 +9,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import MemberRecord from '../../../interfaces/member-record';
-import Warning from '../../../interfaces/warning';
-import { useDeleteWarningMutation } from '../../../utils/apis/warnings-api';
+import MemberRecord from '../../../lib/interfaces/member-record';
+import Warning from '../../../lib/interfaces/warning';
+import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import useConfirm from '../../Common/ConfirmDialog/useConfirm';
 import './WarningsViewer.scss';
 

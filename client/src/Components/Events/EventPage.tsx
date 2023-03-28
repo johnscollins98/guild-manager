@@ -3,16 +3,16 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import Event from '../../interfaces/event';
-import { useEventRoles } from '../../utils/apis/auth-api';
-import { useDiscordMembers } from '../../utils/apis/discord-api';
+import Event from '../../lib/interfaces/event';
+import { useEventRoles } from '../../lib/apis/auth-api';
+import { useDiscordMembers } from '../../lib/apis/discord-api';
 import {
   useCreateEventMutation,
   useDeleteEventMutation,
   useEvents,
   useUpdateEventMutation
-} from '../../utils/apis/event-api';
-import { useFilterString } from '../../utils/use-filter-string';
+} from '../../lib/apis/event-api';
+import { useFilterString } from '../../lib/utils/use-filter-string';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';

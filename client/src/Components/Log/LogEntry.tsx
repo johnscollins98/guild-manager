@@ -2,7 +2,7 @@ import AccessTime from '@mui/icons-material/AccessTime';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import GW2LogEntry from '../../interfaces/gw2-log-entry';
+import GW2LogEntry from '../../lib/interfaces/gw2-log-entry';
 import './LogEntry.scss';
 
 interface Props {

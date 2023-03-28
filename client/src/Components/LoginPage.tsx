@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import './LoginPage.scss';
 
-import { config } from '../config';
+import { config } from '../lib/config';
 
 import LoaderPage from './LoaderPage';
 import SOGif from '../assets/images/SO_Logo.gif';
@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { ErrorMessage } from './Common/ErrorMessage';
-import { useAuth } from '../utils/apis/auth-api';
+import { useAuth } from '../lib/apis/auth-api';
 
 const LoginPage = () => {
   const { isError, isLoading, data: authInfo } = useAuth();

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { DiscordLogDisplayGenerator } from '../../interfaces/discord-log-string-generator';
-import { useDiscordLog } from '../../utils/apis/discord-api';
-import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../utils/discord-log-string-factory';
-import { snowflakeToDate } from '../../utils/helpers';
-import { useFilterString } from '../../utils/use-filter-string';
+import { DiscordLogDisplayGenerator } from '../../lib/interfaces/discord-log-string-generator';
+import { useDiscordLog } from '../../lib/apis/discord-api';
+import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
+import { snowflakeToDate } from '../../lib/utils/helpers';
+import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './DiscordLog.scss';

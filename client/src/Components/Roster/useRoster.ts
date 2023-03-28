@@ -1,16 +1,16 @@
-import DiscordMember from '../../interfaces/discord-member';
-import GW2Member from '../../interfaces/gw2-member';
-import GW2Rank from '../../interfaces/gw2-rank';
-import MemberRecord from '../../interfaces/member-record';
-import Warning from '../../interfaces/warning';
-import { useDiscordMembers, useDiscordRoles } from '../../utils/apis/discord-api';
-import { useGW2Members, useGW2Ranks } from '../../utils/apis/gw2-api';
-import { useWarnings } from '../../utils/apis/warnings-api';
+import DiscordMember from '../../lib/interfaces/discord-member';
+import GW2Member from '../../lib/interfaces/gw2-member';
+import GW2Rank from '../../lib/interfaces/gw2-rank';
+import MemberRecord from '../../lib/interfaces/member-record';
+import Warning from '../../lib/interfaces/warning';
+import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
+import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
+import { useWarnings } from '../../lib/apis/warnings-api';
 import {
   compareRank,
   generateGW2RosterRecords,
   getExcessDiscordRecords
-} from '../../utils/data-processing';
+} from '../../lib/utils/data-processing';
 
 export const useRoster = (sortString?: string, filterString?: string, filterBy?: string) => {
   const queries = [

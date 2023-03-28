@@ -7,8 +7,8 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import { PopoverPosition } from '@mui/material/Popover';
 import { useCallback, useEffect, useState } from 'react';
-import MemberRecord from '../../interfaces/member-record';
-import { useAdminRoles } from '../../utils/apis/auth-api';
+import MemberRecord from '../../lib/interfaces/member-record';
+import { useAdminRoles } from '../../lib/apis/auth-api';
 import GuildMemberMenuItem from './GuildMemberMenuItem';
 
 interface Props {

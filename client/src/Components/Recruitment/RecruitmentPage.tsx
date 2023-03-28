@@ -3,7 +3,7 @@ import { Box } from '@mui/system';
 import axios from 'axios';
 import copy from 'copy-to-clipboard';
 import { FC, FormEventHandler, useCallback, useEffect, useState } from 'react';
-import { useRecruitmentPost, useRecruitmentPostMutation } from '../../utils/apis/recruitment-api';
+import { useRecruitmentPost, useRecruitmentPostMutation } from '../../lib/apis/recruitment-api';
 import { useToast } from '../Common/ToastContext';
 import LoaderPage from '../LoaderPage';
 

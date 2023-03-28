@@ -14,7 +14,7 @@ import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useAuth } from '../utils/apis/auth-api';
+import { useAuth } from '../lib/apis/auth-api';
 import { ConfirmContextProvider } from './Common/ConfirmDialog/ConfirmContextProvider';
 import ConfirmDialog from './Common/ConfirmDialog/ConfirmDialog';
 import { ToastContext } from './Common/ToastContext';

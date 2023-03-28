@@ -1,5 +1,5 @@
-import { useGW2Log } from '../../utils/apis/gw2-api';
-import { useFilterString } from '../../utils/use-filter-string';
+import { useGW2Log } from '../../lib/apis/gw2-api';
+import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import './Log.scss';
