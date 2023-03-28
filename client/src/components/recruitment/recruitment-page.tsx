@@ -5,7 +5,7 @@ import copy from 'copy-to-clipboard';
 import { FC, FormEventHandler, useCallback, useEffect, useState } from 'react';
 import { useRecruitmentPost, useRecruitmentPostMutation } from '../../lib/apis/recruitment-api';
 import { useToast } from '../common/toast-context';
-import LoaderPage from '../loader-page';
+import LoaderPage from '../common/loader-page';
 
 interface RecruitmentPageProps {}
 

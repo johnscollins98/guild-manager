@@ -4,7 +4,7 @@ import './login-page.scss';
 
 import { config } from '../lib/config';
 
-import LoaderPage from './loader-page';
+import LoaderPage from './common/loader-page';
 import SOGif from '../assets/images/SO_Logo.gif';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';

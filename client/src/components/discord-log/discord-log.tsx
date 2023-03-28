@@ -5,7 +5,7 @@ import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/ut
 import { snowflakeToDate } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../loader-page';
+import LoaderPage from '../common/loader-page';
 import './discord-log.scss';
 import DiscordLogEntry from './discord-log-entry';
 

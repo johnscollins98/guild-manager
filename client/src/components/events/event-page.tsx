@@ -15,7 +15,7 @@ import {
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import useConfirm from '../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../loader-page';
+import LoaderPage from '../common/loader-page';
 import EventEntry from './event-entry';
 import './event-page.scss';
 import EventPosterForm from './event-poster-form';

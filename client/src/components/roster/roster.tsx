@@ -6,7 +6,7 @@ import MemberRecord from '../../lib/interfaces/member-record';
 import { useAuth } from '../../lib/apis/auth-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../loader-page';
+import LoaderPage from '../common/loader-page';
 import GuildMemberCard from './guild-member-card';
 import KickModal from './kick-modal';
 import RoleEdit from './role-edit';

@@ -7,7 +7,7 @@ import { usePostEvents } from '../../lib/apis/discord-api';
 import { useEventSettings } from '../../lib/apis/event-api';
 import { ErrorMessage } from '../common/error-message';
 import { useToast } from '../common/toast-context';
-import LoaderPage from '../loader-page';
+import LoaderPage from '../common/loader-page';
 
 interface Props {
   onClose: () => void;
