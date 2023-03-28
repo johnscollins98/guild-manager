@@ -1,6 +1,6 @@
-import { DiscordActionType } from '../interfaces/DiscordActionType';
-import { DiscordLog } from '../interfaces/DiscordLog';
-import { DiscordLogDisplayGenerator } from '../interfaces/DiscordLogStringGenerator';
+import { DiscordActionType } from '../interfaces/discord-action-type';
+import { DiscordLog } from '../interfaces/discord-log';
+import { DiscordLogDisplayGenerator } from '../interfaces/discord-log-string-generator';
 import { MemberKicked } from './DiscordLogStringGenerators/MemberKicked';
 import { MemberRoleUpdate } from './DiscordLogStringGenerators/MemberRoleUpdate';
 import { MemberUpdate } from './DiscordLogStringGenerators/MemberUpdate';

@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import MemberRecord from '../../interfaces/MemberRecord';
+import MemberRecord from '../../interfaces/member-record';
 import {
   useAddDiscordRole,
   useDiscordRoles,

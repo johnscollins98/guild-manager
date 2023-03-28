@@ -15,8 +15,8 @@ import { Theme } from '@mui/material/styles/createTheme';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import React, { useCallback, useState } from 'react';
-import DiscordMember from '../../interfaces/DiscordMember';
-import Event from '../../interfaces/Event';
+import DiscordMember from '../../interfaces/discord-member';
+import Event from '../../interfaces/event';
 import { useToast } from '../Common/ToastContext';
 import './EventEntry.scss';
 

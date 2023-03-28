@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../Components/Common/ToastContext';
-import Warning, { WarningPost } from '../../interfaces/Warning';
+import Warning, { WarningPost } from '../../interfaces/warning';
 
 export const useWarnings = () => useQuery<Warning[], AxiosError>('warnings');
 export const useMemberWarnings = (memberId: string) =>

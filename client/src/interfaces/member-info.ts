@@ -1,4 +1,4 @@
-import Warning from './Warning';
+import Warning from './warning';
 
 export default interface MemberInfo {
   memberId: string;

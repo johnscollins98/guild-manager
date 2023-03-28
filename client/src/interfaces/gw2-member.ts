@@ -1,4 +1,4 @@
-import Warning from './Warning';
+import Warning from './warning';
 
 export default interface GW2Member {
   name: string;

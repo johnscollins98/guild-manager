@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import DiscordRole from './DiscordRole';
-import Warning from './Warning';
+import DiscordRole from './discord-role';
+import Warning from './warning';
 
 export default interface MemberRecord {
   accountName: string;

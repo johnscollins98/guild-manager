@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
-import DiscordMember from '../interfaces/DiscordMember';
-import GW2Member from '../interfaces/GW2Member';
-import GW2Rank from '../interfaces/GW2Rank';
-import MemberRecord from '../interfaces/MemberRecord';
-import Warning from '../interfaces/Warning';
+import DiscordMember from '../interfaces/discord-member';
+import GW2Member from '../interfaces/gw2-member';
+import GW2Rank from '../interfaces/gw2-rank';
+import MemberRecord from '../interfaces/member-record';
+import Warning from '../interfaces/warning';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],

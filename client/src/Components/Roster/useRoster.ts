@@ -1,8 +1,8 @@
-import DiscordMember from '../../interfaces/DiscordMember';
-import GW2Member from '../../interfaces/GW2Member';
-import GW2Rank from '../../interfaces/GW2Rank';
-import MemberRecord from '../../interfaces/MemberRecord';
-import Warning from '../../interfaces/Warning';
+import DiscordMember from '../../interfaces/discord-member';
+import GW2Member from '../../interfaces/gw2-member';
+import GW2Rank from '../../interfaces/gw2-rank';
+import MemberRecord from '../../interfaces/member-record';
+import Warning from '../../interfaces/warning';
 import { useDiscordMembers, useDiscordRoles } from '../../utils/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../utils/apis/gw2-api';
 import { useWarnings } from '../../utils/apis/warnings-api';

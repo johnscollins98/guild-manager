@@ -1,5 +1,5 @@
 import './GuildMemberDetails.scss';
-import MemberRecord from '../../interfaces/MemberRecord';
+import MemberRecord from '../../interfaces/member-record';
 import Popover, { PopoverPosition } from '@mui/material/Popover';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';

@@ -1,4 +1,4 @@
-import { DiscordActionType } from './DiscordActionType';
+import { DiscordActionType } from './discord-action-type';
 
 export interface DiscordLogOptions {
   channel_id?: string;
