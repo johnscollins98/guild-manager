@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useToast } from '../../Components/Common/ToastContext';
+import { useToast } from '../../components/Common/ToastContext';
 import Warning, { WarningPost } from '../interfaces/warning';
 
 export const useWarnings = () => useQuery<Warning[], AxiosError>('warnings');

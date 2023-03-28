@@ -1,4 +1,4 @@
 import ReactDOM from 'react-dom/client';
-import QueryProvider from './Components/QueryProvider';
+import QueryProvider from './components/QueryProvider';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(<QueryProvider />);
