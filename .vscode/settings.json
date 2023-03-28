@@ -1,5 +1,8 @@
 {
-  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.organizeImports": true
+  },
   "npm.packageManager": "yarn",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
