@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useToast } from '../../components/Common/ToastContext';
+import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
 import { DiscordLog } from '../interfaces/discord-log';
 import DiscordMember from '../interfaces/discord-member';
