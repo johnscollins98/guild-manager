@@ -7,7 +7,8 @@
     "dev": "set NODE_ENV=development&&nodemon --exec ts-node --files ./src/server.ts",
     "env-check": "ts-node ./src/check-env.ts",
     "regen-types": "npx gen-env-types .env",
-    "start": "set NODE_ENV=production&&node ./build/server.js"
+    "start": "set NODE_ENV=production&&node ./build/server.js",
+    "link": "eslint . --ext .ts"
   },
   "dependencies": {
     "@types/connect-mongodb-session": "^2.4.4",
