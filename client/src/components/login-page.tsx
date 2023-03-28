@@ -4,15 +4,15 @@ import './login-page.scss';
 
 import { config } from '../lib/config';
 
-import LoaderPage from './common/loader-page';
-import SOGif from '../assets/images/SO_Logo.gif';
-import SOStatic from '../assets/images/SO_Static.gif';
-import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
-import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { ErrorMessage } from './common/error-message';
+import Button from '@mui/material/Button';
+import { ReactComponent as DiscordLogo } from '../assets/images/discord.svg';
+import SOGif from '../assets/images/SO_Logo.gif';
+import SOStatic from '../assets/images/SO_Static.gif';
 import { useAuth } from '../lib/apis/auth-api';
+import { ErrorMessage } from './common/error-message';
+import LoaderPage from './common/loader-page';
 
 const LoginPage = () => {
   const { isError, isLoading, data: authInfo } = useAuth();

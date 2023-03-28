@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
-import { DiscordLogDisplayGenerator } from '../../lib/interfaces/discord-log-string-generator';
 import { useDiscordLog } from '../../lib/apis/discord-api';
+import { DiscordLogDisplayGenerator } from '../../lib/interfaces/discord-log-string-generator';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
 import { snowflakeToDate } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../common/error-message';
 import LoaderPage from '../common/loader-page';
-import './discord-log.scss';
 import DiscordLogEntry from './discord-log-entry';
+import './discord-log.scss';
 
 const DiscordLog = () => {
   const filterString = useFilterString();

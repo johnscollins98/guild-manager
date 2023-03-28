@@ -1,7 +1,7 @@
 import App from './app';
 
-import { QueryClient, QueryClientProvider } from 'react-query';
 import axios from 'axios';
+import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

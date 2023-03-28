@@ -6,7 +6,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { usePostEvents } from '../../lib/apis/discord-api';
 import { useEventSettings } from '../../lib/apis/event-api';
 import { ErrorMessage } from '../common/error-message';
-import { useToast } from '../common/toast-context';
 import LoaderPage from '../common/loader-page';
 
 interface Props {

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import { getColorFromRole } from '../../lib/utils/helpers';
 import './role-edit.scss';
 
@@ -8,12 +8,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import MemberRecord from '../../lib/interfaces/member-record';
 import {
   useAddDiscordRole,
   useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
+import MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {
   selectedRecord: MemberRecord | undefined;

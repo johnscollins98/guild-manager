@@ -10,9 +10,9 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { RecruitmentPost } from '../models/recruitment-post.model';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
+import { RecruitmentPost } from '../models/recruitment-post.model';
 import { PostGeneratorFactory } from '../services/recruitment/post-generator-factory';
 
 @JsonController('/api/recruitment-post', { transformResponse: false })

@@ -1,9 +1,9 @@
-import './guild-member-details.scss';
-import MemberRecord from '../../lib/interfaces/member-record';
-import Popover, { PopoverPosition } from '@mui/material/Popover';
 import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import Popover, { PopoverPosition } from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import MemberRecord from '../../lib/interfaces/member-record';
+import './guild-member-details.scss';
 
 interface Props {
   member: MemberRecord;

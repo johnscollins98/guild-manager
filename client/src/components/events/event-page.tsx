@@ -3,7 +3,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import Event from '../../lib/interfaces/event';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import {
@@ -12,6 +11,7 @@ import {
   useEvents,
   useUpdateEventMutation
 } from '../../lib/apis/event-api';
+import Event from '../../lib/interfaces/event';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import useConfirm from '../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../common/error-message';

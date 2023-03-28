@@ -14,16 +14,16 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
-import DiscordRole from '../models/interfaces/discord-role';
 import { EventPostSettings } from '../models/event-post-settings.model';
+import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
+import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
+import DiscordRole from '../models/interfaces/discord-role';
 import { DiscordChannelApi } from '../services/discord/channel-api';
+import { EventEmbedCreator } from '../services/discord/event-embed-creator';
 import { DiscordGuildApi } from '../services/discord/guild-api';
 import { DiscordMemberFormatter } from '../services/discord/member-formatter';
-import { EventEmbedCreator } from '../services/discord/event-embed-creator';
-import { EventRepository } from '../services/repositories/event-repository';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
-import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
+import { EventRepository } from '../services/repositories/event-repository';
 
 @Service()
 @Authorized()

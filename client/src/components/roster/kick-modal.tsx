@@ -8,8 +8,8 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FunctionComponent, useCallback, useState } from 'react';
-import MemberRecord from '../../lib/interfaces/member-record';
 import { useKickDiscordMember } from '../../lib/apis/discord-api';
+import MemberRecord from '../../lib/interfaces/member-record';
 import './kick-modal.scss';
 
 interface KickModalProps {

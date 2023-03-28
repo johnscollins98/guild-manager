@@ -1,6 +1,6 @@
 import { useReducer } from 'react';
-import { initialState, reducer } from './confirm-dialog-reducer';
 import ConfirmContext from './confirm-dialog-context';
+import { initialState, reducer } from './confirm-dialog-reducer';
 
 interface Props {
   children: React.ReactNode;

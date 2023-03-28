@@ -9,10 +9,10 @@ import {
   Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { EventRepository } from '../services/repositories/event-repository';
+import { config } from '../config';
 import { Event } from '../models/event.model';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
-import { config } from '../config';
+import { EventRepository } from '../services/repositories/event-repository';
 
 @JsonController('/api/events', { transformResponse: false })
 @Service()
