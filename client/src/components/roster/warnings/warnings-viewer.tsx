@@ -17,7 +17,7 @@ import './warnings-viewer.scss';
 
 interface Props {
   isOpen: boolean;
-  onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
+  onClose: () => void;
   member: MemberRecord;
 }
 
@@ -33,7 +33,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
       }
       onClose();
     },
-    [deleteWarningMutation, onClose, member, confirm]
+    [deleteWarningMutation, onClose, confirm]
   );
 
   return (

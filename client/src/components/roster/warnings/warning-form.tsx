@@ -9,8 +9,8 @@ import './warning-form.scss';
 
 interface Props {
   isOpen: boolean;
-  onClose: (event?: {}, reason?: 'backdropClick' | 'escapeKeyDown') => void;
-  onSubmit: (reason: string) => Promise<any>;
+  onClose: () => void;
+  onSubmit: (reason: string) => Promise<void>;
 }
 
 const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {

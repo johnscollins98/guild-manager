@@ -29,7 +29,7 @@ export const generateGW2RosterRecords = (
         : accountName.toLowerCase();
 
       // check for exact match
-      let discordMember = discordMembers.find(m => {
+      const discordMember = discordMembers.find(m => {
         const discordName = m.name
           .toLowerCase()
           .replace(

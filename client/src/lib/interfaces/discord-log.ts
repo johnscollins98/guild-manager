@@ -13,8 +13,8 @@ export interface DiscordLogOptions {
 
 export interface DiscordLogChange {
   key: string;
-  old_value?: any;
-  new_value?: any;
+  old_value?: unknown;
+  new_value?: unknown;
 }
 
 export interface DiscordLogEntry {

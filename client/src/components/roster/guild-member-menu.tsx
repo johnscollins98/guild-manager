@@ -38,7 +38,7 @@ const GuildMemberMenu = ({
   const memberIsAdmin = member.roles.some(role => adminRoles?.includes(role.id) ?? false);
 
   const menuAction = useCallback(
-    async (func: Function) => {
+    async (func: (member: MemberRecord) => Promise<void> | void) => {
       await func(member);
       closeMenu();
     },

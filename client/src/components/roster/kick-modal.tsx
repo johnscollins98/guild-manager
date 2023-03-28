@@ -31,12 +31,12 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose })
       }
       onClose();
     },
-    [user, reinvite, reasonText, onClose]
+    [user, reinvite, reasonText, onClose, kickMutation]
   );
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>Kick User "{user.accountName}"</DialogTitle>
+      <DialogTitle>Kick User &quot;{user.accountName}&quot;</DialogTitle>
       <DialogContent className="kick-modal-content">
         <form onSubmit={onFormSubmitted} onReset={onClose}>
           <Typography className="kick-modal-message">

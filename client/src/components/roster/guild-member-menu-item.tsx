@@ -5,7 +5,7 @@ import './guild-member-menu-item.scss';
 
 interface Props {
   action: () => void;
-  Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
+  Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
   label: string;
   disabled: boolean;
   className?: string;

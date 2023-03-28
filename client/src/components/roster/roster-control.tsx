@@ -53,7 +53,7 @@ const RosterControl = ({ refetchData, isFetching }: Props) => {
       setSearchParams({ ...searchParams, sortBy });
       closeMenu();
     },
-    [closeMenu]
+    [closeMenu, searchParams, setSearchParams]
   );
 
   const filterHandler = useCallback(
@@ -61,7 +61,7 @@ const RosterControl = ({ refetchData, isFetching }: Props) => {
       setSearchParams({ ...searchParams, filterBy });
       closeMenu();
     },
-    [closeMenu]
+    [closeMenu, searchParams, setSearchParams]
   );
 
   return (
