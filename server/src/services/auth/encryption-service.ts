@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import { Service } from 'typedi';
 import { config } from '../../config';
-import crypto from 'crypto';
 
 @Service()
 export class SymmetricEncryption {

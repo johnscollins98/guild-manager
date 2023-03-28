@@ -21,6 +21,7 @@ export class AuthController {
 
   @Get('/')
   @UseBefore(passport.authenticate('discord'))
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   authenticate() {}
 
   @Get('/redirect')
@@ -30,6 +31,7 @@ export class AuthController {
       successRedirect: `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`
     })
   )
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   redirect() {}
 
   @Get('/logout')
