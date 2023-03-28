@@ -1,9 +1,9 @@
 import { DiscordActionType } from '../interfaces/discord-action-type';
 import { DiscordLog } from '../interfaces/discord-log';
 import { DiscordLogDisplayGenerator } from '../interfaces/discord-log-string-generator';
-import { MemberKicked } from './DiscordLogStringGenerators/MemberKicked';
-import { MemberRoleUpdate } from './DiscordLogStringGenerators/MemberRoleUpdate';
-import { MemberUpdate } from './DiscordLogStringGenerators/MemberUpdate';
+import { MemberKicked } from './discord-log-string-generators/member-kicked';
+import { MemberRoleUpdate } from './discord-log-string-generators/member-role-update';
+import { MemberUpdate } from './discord-log-string-generators/member-update';
 
 export class DiscordLogDisplayFactory {
   constructor(private readonly log: DiscordLog) {}

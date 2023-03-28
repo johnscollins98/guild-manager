@@ -10,7 +10,7 @@ import {
   compareRank,
   generateGW2RosterRecords,
   getExcessDiscordRecords
-} from '../../utils/DataProcessing';
+} from '../../utils/data-processing';
 
 export const useRoster = (sortString?: string, filterString?: string, filterBy?: string) => {
   const queries = [

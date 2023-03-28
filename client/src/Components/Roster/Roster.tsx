@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
 import MemberRecord from '../../interfaces/member-record';
 import { useAuth } from '../../utils/apis/auth-api';
-import { useFilterString } from '../../utils/useFilterString';
+import { useFilterString } from '../../utils/use-filter-string';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
 import GuildMemberCard from './GuildMemberCard';

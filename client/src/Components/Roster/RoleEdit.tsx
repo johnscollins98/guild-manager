@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { getColorFromRole } from '../../utils/Helpers';
+import { getColorFromRole } from '../../utils/helpers';
 import './RoleEdit.scss';
 
 import Checkbox from '@mui/material/Checkbox';

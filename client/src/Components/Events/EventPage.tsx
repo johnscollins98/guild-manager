@@ -12,7 +12,7 @@ import {
   useEvents,
   useUpdateEventMutation
 } from '../../utils/apis/event-api';
-import { useFilterString } from '../../utils/useFilterString';
+import { useFilterString } from '../../utils/use-filter-string';
 import useConfirm from '../Common/ConfirmDialog/useConfirm';
 import { ErrorMessage } from '../Common/ErrorMessage';
 import LoaderPage from '../LoaderPage';
