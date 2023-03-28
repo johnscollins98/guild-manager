@@ -34,7 +34,7 @@ export abstract class BaseRepository<T extends IMayHaveId> {
 
   async update(id: string, updatedItem: QueryDeepPartialEntity<T>): Promise<T | undefined> {
     // MongoDB limitation if you try to update with the _id - so just strip it out.
-    if (updatedItem.hasOwnProperty('_id')) {
+    if ('_id' in updatedItem) {
       delete updatedItem._id;
     }
 

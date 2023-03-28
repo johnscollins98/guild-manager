@@ -59,7 +59,7 @@ const EventPosterForm = ({ onClose }: Props) => {
       onClose();
       setPosting(false);
     },
-    [postChannel, editMessages, existingMessageIds, setPosting, onClose]
+    [postChannel, editMessages, existingMessageIds, setPosting, onClose, postEventsMutation]
   );
 
   const handleChange = useCallback(

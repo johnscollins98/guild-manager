@@ -24,7 +24,7 @@ function useConfirm() {
         title
       }
     });
-    return new Promise((res, _rej) => {
+    return new Promise(res => {
       resolveCallback = res;
     });
   };

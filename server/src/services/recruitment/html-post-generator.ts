@@ -1,7 +1,7 @@
+import md from 'markdown-it';
 import { Service } from 'typedi';
 import { MdPostGenerator } from './md-post-generator';
 import { PostGenerator } from './post-generator';
-import md from 'markdown-it';
 
 @Service()
 export class HtmlPostGenerator implements PostGenerator {

@@ -1,7 +1,7 @@
-import { Service } from 'typedi';
-import { config } from '../../config';
 import fetch from 'node-fetch';
 import { HttpError } from 'routing-controllers';
+import { Service } from 'typedi';
+import { config } from '../../config';
 
 @Service()
 export class GW2Api {
@@ -24,7 +24,9 @@ export class GW2Api {
 
       try {
         console.error(await response.json());
-      } catch (_) {}
+      } catch (err) {
+        console.error(err);
+      }
 
       throw new HttpError(500, `Error getting gw2 data: (${response.status}) ${message}`);
     }

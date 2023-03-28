@@ -38,7 +38,7 @@ export class DiscordMemberFormatter {
     memberRoleIds: string[],
     validRoleIds: string[]
   ): DiscordRole[] {
-    let roles = [];
+    const roles = [];
 
     for (const memberRoleId of memberRoleIds) {
       for (const discordRole of allRoles) {

@@ -20,11 +20,11 @@ export const initialState: ModalState = {
   title: 'Confirm'
 };
 
-export const reducer = (_state = initialState, action: ModalAction) => {
+export const reducer = (state = initialState, action: ModalAction) => {
   switch (action.type) {
     case ActionTypes.SHOW:
       return { ...action.payload, show: true };
     default:
-      return initialState;
+      return state;
   }
 };

@@ -7,9 +7,7 @@ import { useRecruitmentPost, useRecruitmentPostMutation } from '../../lib/apis/r
 import LoaderPage from '../common/loader-page';
 import { useToast } from '../common/toast-context';
 
-interface RecruitmentPageProps {}
-
-const RecruitmentPage: FC<RecruitmentPageProps> = () => {
+const RecruitmentPage: FC = () => {
   const { data, isSuccess, isLoading } = useRecruitmentPost();
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
@@ -28,7 +26,7 @@ const RecruitmentPage: FC<RecruitmentPageProps> = () => {
 
       recruitmentPostMutation.mutate({ content: message });
     },
-    [message]
+    [message, recruitmentPostMutation]
   );
 
   const handleCopyClick = async (isHtml: boolean) => {

@@ -1,7 +1,7 @@
+import fetch, { RequestInit } from 'node-fetch';
 import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../../config';
-import fetch, { RequestInit } from 'node-fetch';
 
 @Service()
 export class DiscordApi {
@@ -43,7 +43,7 @@ export class DiscordApi {
     });
   }
 
-  private async makeRequest<T>(endpoint: string, init?: RequestInit): Promise<T | any> {
+  private async makeRequest<T = unknown>(endpoint: string, init?: RequestInit): Promise<T> {
     const defInit: RequestInit = {
       headers: {
         Authorization: `${this.isBearer ? 'Bearer' : 'Bot'} ${this.apiKey}`,
@@ -56,10 +56,12 @@ export class DiscordApi {
       const message = response.statusText;
       try {
         console.error(await response.json());
-      } catch (_) {}
+      } catch (err) {
+        console.error(err);
+      }
       throw new HttpError(500, `Error getting discord data: (${response.status}) ${message}`);
     }
 
-    return await response.json().catch(() => {});
+    return await response.json().catch();
   }
 }

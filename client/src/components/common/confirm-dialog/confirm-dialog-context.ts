@@ -4,6 +4,6 @@ import { initialState, ModalAction, ModalState } from './confirm-dialog-reducer'
 const ConfirmContext = React.createContext<{
   confirmModalState: ModalState;
   dispatch: React.Dispatch<ModalAction>;
-}>({ confirmModalState: initialState, dispatch: () => {} });
+}>({ confirmModalState: initialState, dispatch: () => console.error('Empty dispatch called') });
 
 export default ConfirmContext;
