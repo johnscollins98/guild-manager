@@ -15,6 +15,7 @@ import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
+import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import { ConfirmContextProvider } from './common/confirm-dialog/confirm-context-provider';
 import ConfirmDialog from './common/confirm-dialog/confirm-dialog';
 import { ToastContext } from './common/toast-context';
@@ -26,6 +27,8 @@ const App = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastStatus, setToastStatus] = useState<AlertColor>('info');
   const [toastMessage, setToastMessage] = useState('');
+
+  usePrefetchGW2Log();
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [theme, setTheme] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
