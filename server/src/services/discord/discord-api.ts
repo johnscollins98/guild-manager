@@ -62,6 +62,8 @@ export class DiscordApi {
       throw new HttpError(500, `Error getting discord data: (${response.status}) ${message}`);
     }
 
-    return await response.json().catch();
+    return await response.json().catch(err => {
+      console.error(err);
+    });
   }
 }
