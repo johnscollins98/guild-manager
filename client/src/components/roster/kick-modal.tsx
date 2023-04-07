@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
@@ -65,8 +66,13 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose })
             <Button variant="text" type="reset">
               Cancel
             </Button>
-            <Button variant="contained" type="submit" color="primary">
-              Kick
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={kickMutation.isLoading}
+              color="primary"
+            >
+              {kickMutation.isLoading ? <CircularProgress size={25} /> : 'Kick'}
             </Button>
           </div>
         </form>
