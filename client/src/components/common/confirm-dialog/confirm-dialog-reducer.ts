@@ -23,7 +23,9 @@ export const initialState: ModalState = {
 export const reducer = (state = initialState, action: ModalAction) => {
   switch (action.type) {
     case ActionTypes.SHOW:
-      return { ...action.payload, show: true };
+      return { ...state, ...action.payload, show: true };
+    case ActionTypes.HIDE:
+      return { ...state, ...action.payload, show: false };
     default:
       return state;
   }
