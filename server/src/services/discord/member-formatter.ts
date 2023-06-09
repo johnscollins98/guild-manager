@@ -22,7 +22,7 @@ export class DiscordMemberFormatter {
     validRoles: string[]
   ): FormattedDiscordMember {
     return {
-      name: member.nick ? member.nick : member?.user?.username,
+      name: member.nick ?? member.user?.global_name ?? member.user?.username,
       nickname: member.nick,
       id: member?.user?.id,
       roles: this.getRoleInfo(roles, member.roles, validRoles),
