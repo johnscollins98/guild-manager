@@ -3,6 +3,7 @@ export default interface DiscordMember {
     id: string;
     username: string;
     avatar?: string;
+    global_name?: string;
   };
   roles: string[];
   nick?: string;
