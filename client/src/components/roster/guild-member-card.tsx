@@ -1,4 +1,5 @@
 import CalendarToday from '@mui/icons-material/CalendarToday';
+import MailIcon from '@mui/icons-material/Mail';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
 import Avatar from '@mui/material/Avatar';
@@ -131,6 +132,11 @@ const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin }: Prop
                   })`}
                 >
                   <SyncProblem className="error" />
+                </Tooltip>
+              ) : null}
+              {member.issues.invited ? (
+                <Tooltip title={`Unaccepted invitation`}>
+                  <MailIcon className="error" />
                 </Tooltip>
               ) : null}
               {member.issues.missingGW2 ? (
