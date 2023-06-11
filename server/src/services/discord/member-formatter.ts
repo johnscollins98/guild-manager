@@ -56,7 +56,7 @@ export class DiscordMemberFormatter {
 
   async getValidRoles(): Promise<string[]> {
     const gw2ranks = await this.gw2GuildApi.getRanks();
-    const extraRanks = ['Guest', 'Bots'];
+    const extraRanks = ['Guest', 'Bots', 'invited'];
 
     if (gw2ranks === undefined) {
       return extraRanks;

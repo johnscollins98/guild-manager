@@ -53,6 +53,7 @@ export const generateGW2RosterRecords = (
 
       const missingDiscord = rank !== 'Alt' && !discordName;
       const unmatchingRoles = rank !== 'Alt' && !!(discordName && rank !== roles[0]?.name);
+      const invited = rank.toLowerCase() === 'invited';
 
       return {
         accountName,
@@ -68,7 +69,8 @@ export const generateGW2RosterRecords = (
         avatar,
         issues: {
           missingDiscord,
-          unmatchingRoles
+          unmatchingRoles,
+          invited
         }
       };
     })
