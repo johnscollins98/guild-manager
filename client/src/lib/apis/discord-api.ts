@@ -13,22 +13,40 @@ export const useDiscordLog = () => useQuery<DiscordLog, AxiosError>('discord/log
 
 export interface ChangeRoleDTO {
   memberId: string;
-  roleId: string;
+  role: DiscordRole;
 }
 
 export const useAddDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO>({
-    mutationFn({ memberId, roleId }) {
-      return axios.put(`/api/discord/members/${memberId}/roles/${roleId}`);
+  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMember[]>({
+    mutationFn({ memberId, role }) {
+      return axios.put(`/api/discord/members/${memberId}/roles/${role.id}`);
     },
-    onSuccess() {
-      queryClient.invalidateQueries(['discord/members']);
+    async onMutate({ role, memberId }) {
+      await queryClient.cancelQueries('discord/members');
+
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+
+      queryClient.setQueryData<DiscordMember[]>(
+        'discord/members',
+        old =>
+          old?.map(member => {
+            if (member.id !== memberId) return member;
+
+            return { ...member, roles: [...member.roles, role] };
+          }) ?? []
+      );
+
+      return previousMembers;
     },
-    onError() {
+    onError(_err, _var, previous) {
       openToast('Failed to add role', 'error');
+      queryClient.setQueryData('discord/members', previous);
+    },
+    onSettled() {
+      queryClient.invalidateQueries(['discord/members']);
     }
   });
 };
@@ -37,15 +55,33 @@ export const useRemoveDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO>({
-    mutationFn({ memberId, roleId }) {
-      return axios.delete(`/api/discord/members/${memberId}/roles/${roleId}`);
+  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMember[]>({
+    mutationFn({ memberId, role }) {
+      return axios.delete(`/api/discord/members/${memberId}/roles/${role.id}`);
     },
-    onSuccess() {
-      queryClient.invalidateQueries(['discord/members']);
+    async onMutate({ role, memberId }) {
+      await queryClient.cancelQueries('discord/members');
+
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+
+      queryClient.setQueryData<DiscordMember[]>(
+        'discord/members',
+        old =>
+          old?.map(member => {
+            if (member.id !== memberId) return member;
+
+            return { ...member, roles: member.roles.filter(r => r.id !== role.id) };
+          }) ?? []
+      );
+
+      return previousMembers;
     },
-    onError() {
+    onError(_err, _var, previous) {
       openToast('Failed to remove role', 'error');
+      queryClient.setQueryData('discord/members', previous);
+    },
+    onSettled() {
+      queryClient.invalidateQueries(['discord/members']);
     }
   });
 };
@@ -84,7 +120,7 @@ export const useKickDiscordMember = () => {
   const openToast = useToast();
   const sendMessage = useSendMessage();
 
-  return useMutation<void, AxiosError, KickMemberDTO>({
+  return useMutation<void, AxiosError, KickMemberDTO, DiscordMember[]>({
     async mutationFn({ reinvite, reason, memberId }) {
       if (reinvite) {
         let content = 'You have been kicked from Sunspear Order';
@@ -104,12 +140,27 @@ export const useKickDiscordMember = () => {
 
       return axios.delete(`/api/discord/members/${memberId}`);
     },
+    async onMutate({ memberId }) {
+      await queryClient.cancelQueries('discord/members');
+
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+
+      queryClient.setQueryData<DiscordMember[]>(
+        'discord/members',
+        old => old?.filter(m => m.id !== memberId) ?? []
+      );
+
+      return previousMembers;
+    },
     onSuccess() {
-      queryClient.invalidateQueries('discord/members');
       openToast('Successfully kicked member.', 'success');
     },
-    onError() {
+    onError(_err, _dto, context) {
       openToast('Failed to kick member.', 'error');
+      queryClient.setQueryData('discord/members', context);
+    },
+    onSettled() {
+      queryClient.invalidateQueries('discord/members');
     }
   });
 };

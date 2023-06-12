@@ -13,6 +13,7 @@ import {
   useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
+import DiscordRole from '../../lib/interfaces/discord-role';
 import MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {
@@ -27,12 +28,12 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
 
-  const roleChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>, roleId: string) => {
+  const roleChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>, role: DiscordRole) => {
     if (!selectedRecord || !selectedRecord.discordId) {
       throw new Error('Cannot change roles for this member - no discord id');
     }
 
-    const body = { memberId: selectedRecord.discordId, roleId };
+    const body = { memberId: selectedRecord.discordId, role };
 
     if (e.target.checked) {
       addRoleMutation.mutateAsync(body);
@@ -58,9 +59,7 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
                 <StyledCheckbox
                   color={getColorFromRole(role.name, roles) || ''}
                   checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    roleChangeHandler(e, role.id)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => roleChangeHandler(e, role)}
                 />
               }
               label={role.name}
