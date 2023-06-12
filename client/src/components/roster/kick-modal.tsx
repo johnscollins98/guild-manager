@@ -28,7 +28,7 @@ const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose })
     async e => {
       e.preventDefault();
       if (user.discordId) {
-        await kickMutation.mutateAsync({ memberId: user.discordId, reason: reasonText, reinvite });
+        kickMutation.mutate({ memberId: user.discordId, reason: reasonText, reinvite });
       }
       onClose();
     },
