@@ -79,7 +79,7 @@ const App = () => {
       <CssBaseline />
       <ConfirmContextProvider>
         <Box className="paper-container">
-          <Snackbar open={showToast} autoHideDuration={6000} onClose={() => closeToast()}>
+          <Snackbar open={showToast} autoHideDuration={1000}>
             <Alert onClose={() => closeToast()} severity={toastStatus}>
               {toastMessage}
             </Alert>
