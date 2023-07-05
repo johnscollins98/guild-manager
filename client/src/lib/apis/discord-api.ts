@@ -158,8 +158,6 @@ export const useKickDiscordMember = () => {
     onError(_err, _dto, context) {
       openToast('Failed to kick member.', 'error');
       queryClient.setQueryData('discord/members', context);
-    },
-    onSettled() {
       queryClient.invalidateQueries('discord/members');
     }
   });
