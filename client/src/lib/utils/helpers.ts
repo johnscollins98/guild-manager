@@ -1,7 +1,7 @@
 import DiscordRole from '../interfaces/discord-role';
 
 export const getColorFromRole = (rank: string, discordRoles: DiscordRole[]): string | undefined => {
-  const found = discordRoles.find(r => r.name === rank);
+  const found = discordRoles.find(r => r.name.toLowerCase() === rank.toLowerCase());
   return found ? `#${found.color.toString(16)}` : undefined;
 };
 
