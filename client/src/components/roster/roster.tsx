@@ -49,7 +49,8 @@ const Roster = () => {
           {({ height, width }) => (
             <List height={height} width={width} itemCount={roster.length} itemSize={76}>
               {({ index, style }) => {
-                const member = roster[index];
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const member = roster[index]!;
                 return (
                   <div style={style}>
                     <GuildMemberCard

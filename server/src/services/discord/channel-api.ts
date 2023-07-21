@@ -33,7 +33,7 @@ export class DiscordChannelApi {
     const currentMessage = await this.getChannelMessage(channelId, messageId);
 
     // check there is a change before posting
-    const areEmbedsTheSame = this.areEmbedsTheSame(currentMessage.embeds[0], embed);
+    const areEmbedsTheSame = this.areEmbedsTheSame(embed, currentMessage.embeds[0]);
     if (!areEmbedsTheSame) {
       await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, { embed });
     }
@@ -50,16 +50,13 @@ export class DiscordChannelApi {
     return true;
   }
 
-  private areEmbedsTheSame(embedA: DiscordEmbed, embedB: DiscordEmbed): boolean {
-    if (!embedA && !embedB) return false;
-    if (embedA && !embedB) return false;
-    if (!embedA && embedB) return false;
+  private areEmbedsTheSame(newEmbed: DiscordEmbed, existingEmbed?: DiscordEmbed): boolean {
+    if (!existingEmbed) return false;
+    if (newEmbed.title !== existingEmbed.title) return false;
+    if (parseInt(newEmbed.color) !== parseInt(existingEmbed.color)) return false;
 
-    if (embedA.title !== embedB.title) return false;
-    if (parseInt(embedA.color) !== parseInt(embedB.color)) return false;
-
-    const embedAFields = embedA.fields || [];
-    const embedBFields = embedB.fields || [];
+    const embedAFields = newEmbed.fields || [];
+    const embedBFields = existingEmbed.fields || [];
     const longerLength = Math.max(embedAFields.length, embedBFields.length);
     for (let i = 0; i < longerLength; i++) {
       const fieldA = embedAFields[i];

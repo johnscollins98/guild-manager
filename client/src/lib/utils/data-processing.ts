@@ -13,7 +13,8 @@ export const generateGW2RosterRecords = (
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
     .map(gw2Member => {
-      const accountName = gw2Member.name.split('.')[0];
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const accountName = gw2Member.name.split('.')[0]!;
       const memberId = gw2Member.name;
       const rank = gw2Member.rank;
       const rankImage = ranks.find(r => r.id === rank)?.icon;
@@ -24,9 +25,8 @@ export const generateGW2RosterRecords = (
       const exceptions: { [key: string]: string } = {
         Zerumii: 'Zerumi'
       };
-      const testName = exceptions[accountName]
-        ? exceptions[accountName].toLowerCase()
-        : accountName.toLowerCase();
+      const exception = exceptions[accountName];
+      const testName = exception ? exception.toLowerCase() : accountName.toLowerCase();
 
       // check for exact match
       const discordMember = discordMembers.find(m => {
@@ -75,7 +75,7 @@ export const generateGW2RosterRecords = (
         }
       };
     })
-    .sort((a: MemberRecord, b: MemberRecord) => {
+    .sort((a, b) => {
       let value = 0;
       if (a.rank && b.rank) value = compareRank(ranks, a.rank, b.rank);
       if (value === 0) {
@@ -123,7 +123,11 @@ export const getExcessDiscordRecords = (
     .sort((a, b) => compareRank(ranks, a.roles[0]?.name, b.roles[0]?.name));
 };
 
-export const compareRank = (ranks: GW2Rank[], aRank: string, bRank: string): number => {
+export const compareRank = (
+  ranks: GW2Rank[],
+  aRank: string | undefined,
+  bRank: string | undefined
+): number => {
   ranks.push({ id: 'Guest', order: ranks.length + 1, permissions: [], icon: '' });
   ranks.push({ id: 'Bots', order: ranks.length + 1, permissions: [], icon: '' });
 
