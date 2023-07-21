@@ -15,8 +15,8 @@ export class GW2LogFormatter {
   formatLogEntry(entry: GW2LogEntry): FormattedLogEntry {
     const type = entry.type;
 
-    const date = entry.time.split('T')[0].replace(/-/g, '/');
-    const time = entry.time.split('T')[1].split('.')[0];
+    const date = entry.time.split('T')[0]?.replace(/-/g, '/') ?? '-';
+    const time = entry.time.split('T')[1]?.split('.')[0] ?? '-';
     let message = '';
 
     switch (type) {
