@@ -29,15 +29,10 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
   const isLoading = queries.some(q => q.isLoading);
   const isError = queries.some(q => q.isError);
 
-  const roster = getRoster(
-    gw2Members.data,
-    discordMembers.data,
-    guildRanks.data,
-    warnings.data,
-    sortString,
-    filterBy,
-    filterString
-  );
+  const roster = getRoster(gw2Members.data, discordMembers.data, guildRanks.data, warnings.data);
+
+  const filteredRoster = onFilter(roster, filterBy, filterString);
+  const rosterForDisplay = onSort(filteredRoster, sortString, guildRanks.data ?? []);
 
   return {
     isFetching,
@@ -45,6 +40,7 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
     isError,
     refetch,
     roster,
+    rosterForDisplay,
     discordRoles: discordRoles.data
   };
 };
@@ -53,28 +49,19 @@ const getRoster = (
   gw2Members?: GW2Member[],
   discordMembers?: DiscordMember[],
   guildRanks?: GW2Rank[],
-  warnings?: Warning[],
-  sortBy?: string,
-  filterBy?: string,
-  filterString?: string
+  warnings?: Warning[]
 ) => {
   if (!gw2Members || !discordMembers || !guildRanks || !warnings) return undefined;
 
   let roster = generateGW2RosterRecords(gw2Members, discordMembers, guildRanks, warnings);
   roster = roster.concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks, warnings));
 
-  if (filterBy || filterString) {
-    roster = onFilter(roster, filterBy, filterString);
-  }
-
-  if (sortBy) {
-    roster = onSort(roster, sortBy, guildRanks);
-  }
-
   return roster;
 };
 
-const onSort = (toSort: MemberRecord[], sortBy: string, guildRanks: GW2Rank[]) => {
+const onSort = (toSort: MemberRecord[] | undefined, sortBy = 'default', guildRanks: GW2Rank[]) => {
+  if (!toSort) return undefined;
+
   switch (sortBy) {
     case 'name':
       return toSort.sort((a, b) => {
@@ -99,7 +86,9 @@ const onSort = (toSort: MemberRecord[], sortBy: string, guildRanks: GW2Rank[]) =
   }
 };
 
-const onFilter = (toFilter: MemberRecord[], filterBy = 'none', filterString = '') => {
+const onFilter = (toFilter: MemberRecord[] | undefined, filterBy = 'none', filterString = '') => {
+  if (!toFilter) return undefined;
+
   const filtered = toFilter.filter(
     r =>
       r.accountName.toLowerCase().includes(filterString) ||

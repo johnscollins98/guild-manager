@@ -19,11 +19,9 @@ const Roster = () => {
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy') ?? '';
   const filterBy = searchParams.get('filterBy') ?? '';
-  const { isLoading, isFetching, refetch, isError, discordRoles, roster } = useRoster(
-    sortBy,
-    filterString,
-    filterBy
-  );
+  const { isLoading, isFetching, refetch, isError, discordRoles, rosterForDisplay, roster } =
+    useRoster(sortBy, filterString, filterBy);
+
   const { data: authInfo } = useAuth();
 
   const [modalShow, setModalShow] = useState(false);
@@ -37,7 +35,7 @@ const Roster = () => {
 
   if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
-  if (isLoading || !roster || !discordRoles) return <LoaderPage />;
+  if (isLoading || !roster || !rosterForDisplay || !discordRoles) return <LoaderPage />;
 
   const selectedRecord = roster.find(r => r.discordId === selectedRecordId);
 
@@ -47,10 +45,10 @@ const Roster = () => {
       <div style={{ flex: 1 }}>
         <AutoSizer>
           {({ height, width }) => (
-            <List height={height} width={width} itemCount={roster.length} itemSize={76}>
+            <List height={height} width={width} itemCount={rosterForDisplay.length} itemSize={76}>
               {({ index, style }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const member = roster[index]!;
+                const member = rosterForDisplay[index]!;
                 return (
                   <div style={style}>
                     <GuildMemberCard
