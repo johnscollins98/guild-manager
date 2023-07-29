@@ -35,7 +35,9 @@ export class DiscordChannelApi {
     // check there is a change before posting
     const areEmbedsTheSame = this.areEmbedsTheSame(embed, currentMessage.embeds[0]);
     if (!areEmbedsTheSame) {
-      await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, { embed });
+      await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, {
+        embeds: [embed]
+      });
     }
     return true;
   }
