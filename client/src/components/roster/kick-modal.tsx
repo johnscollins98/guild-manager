@@ -9,39 +9,38 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { FunctionComponent, useCallback, useState } from 'react';
-import { useKickDiscordMember } from '../../lib/apis/discord-api';
-import MemberRecord from '../../lib/interfaces/member-record';
+import { useKickDiscordMembers } from '../../lib/apis/discord-api';
 import './kick-modal.scss';
 
 interface KickModalProps {
-  user: MemberRecord;
+  ids: string[];
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
 }
 
-const KickModal: FunctionComponent<KickModalProps> = ({ user, isOpen, onClose }) => {
+const KickModal: FunctionComponent<KickModalProps> = ({ ids, isOpen, onClose, onConfirm }) => {
   const [reasonText, setReasonText] = useState<string>('');
   const [reinvite, setReinvite] = useState<boolean>(false);
-  const kickMutation = useKickDiscordMember();
+  const kickMutation = useKickDiscordMembers();
 
   const onFormSubmitted: React.FormEventHandler<HTMLFormElement> = useCallback(
     async e => {
       e.preventDefault();
-      if (user.discordId) {
-        kickMutation.mutate({ memberId: user.discordId, reason: reasonText, reinvite });
-      }
+      kickMutation.mutate({ memberIds: ids, reason: reasonText, reinvite });
+      onConfirm();
       onClose();
     },
-    [user, reinvite, reasonText, onClose, kickMutation]
+    [ids, reinvite, reasonText, onClose, kickMutation, onConfirm]
   );
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>Kick User &quot;{user.accountName}&quot;</DialogTitle>
+      <DialogTitle>Kick User(s)</DialogTitle>
       <DialogContent className="kick-modal-content">
         <form onSubmit={onFormSubmitted} onReset={onClose}>
           <Typography className="kick-modal-message">
-            Are you sure you want to kick {user.accountName}?
+            Are you sure you want to kick these user(s)?
           </Typography>
           <div className="kick-reinvite-form">
             <FormGroup>

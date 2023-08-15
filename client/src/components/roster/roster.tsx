@@ -22,6 +22,9 @@ const Roster = () => {
   const { isLoading, isFetching, refetch, isError, discordRoles, rosterForDisplay, roster } =
     useRoster(sortBy, filterString, filterBy);
 
+  const [kickMode, setKickMode] = useState(false);
+  const [selection, setSelection] = useState<string[]>([]);
+
   const { data: authInfo } = useAuth();
 
   const [modalShow, setModalShow] = useState(false);
@@ -41,7 +44,15 @@ const Roster = () => {
 
   return (
     <>
-      <RosterControl refetchData={refetch} isFetching={isFetching} />
+      <RosterControl
+        refetchData={refetch}
+        isFetching={isFetching}
+        kickMode={kickMode}
+        setKickMode={setKickMode}
+        selection={selection}
+        setSelection={setSelection}
+        onKick={() => setKickModalShow(true)}
+      />
       <div style={{ flex: 1 }}>
         <AutoSizer>
           {({ height, width }) => (
@@ -56,11 +67,16 @@ const Roster = () => {
                       member={member}
                       discordRoles={discordRoles}
                       onKick={record => {
-                        setSelectedRecordId(record.discordId);
-                        setKickModalShow(true);
+                        if (record.discordId) {
+                          setSelection([record.discordId]);
+                          setKickModalShow(true);
+                        }
                       }}
                       onEdit={openEdit}
                       isAdmin={authInfo?.isAdmin ?? false}
+                      selection={selection}
+                      setSelection={setSelection}
+                      kickMode={kickMode}
                     />
                   </div>
                 );
@@ -75,13 +91,15 @@ const Roster = () => {
         selectedRecord={selectedRecord}
         setSelectedRecord={setSelectedRecordId}
       />
-      {selectedRecord && (
-        <KickModal
-          isOpen={kickModalShow}
-          onClose={() => setKickModalShow(false)}
-          user={selectedRecord}
-        />
-      )}
+      <KickModal
+        isOpen={kickModalShow}
+        onClose={() => setKickModalShow(false)}
+        ids={selection}
+        onConfirm={() => {
+          setSelection([]);
+          setKickMode(false);
+        }}
+      />
     </>
   );
 };

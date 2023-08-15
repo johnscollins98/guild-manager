@@ -9,6 +9,10 @@
       }
       border-left: 8px solid;
       cursor: pointer;
+
+      &.kick-mode {
+        border-left: 4px solid;
+      }
     }
   }
 

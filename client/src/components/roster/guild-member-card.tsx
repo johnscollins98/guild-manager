@@ -2,13 +2,14 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
+import { Checkbox } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import React, { useCallback, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
 import gw2Image from '../../assets/images/gw2.png';
 import { useUpdateDiscordMember } from '../../lib/apis/discord-api';
@@ -29,9 +30,21 @@ interface Props {
   isAdmin: boolean;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
+  selection: string[];
+  setSelection: Dispatch<SetStateAction<string[]>>;
+  kickMode: boolean;
 }
 
-const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin }: Props) => {
+const GuildMemberCard = ({
+  member,
+  discordRoles,
+  onKick,
+  onEdit,
+  isAdmin,
+  selection,
+  setSelection,
+  kickMode
+}: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
@@ -91,29 +104,45 @@ const GuildMemberCard = ({ member, discordRoles, onKick, onEdit, isAdmin }: Prop
     }
   };
 
+  const selected = !!member.discordId && selection.includes(member.discordId);
+  const onClickKickMode = () => {
+    const id = member.discordId;
+    if (!id) return;
+
+    if (selected) {
+      setSelection(old => old.filter(m => m !== id));
+    } else {
+      setSelection(old => [...old, id]);
+    }
+  };
+
   return (
     <>
       <Card
         variant="outlined"
-        className="member-card"
+        className={`member-card ${kickMode ? 'kick-mode' : ''}`}
         style={{ borderLeftColor: color }}
-        onClick={openMenu}
+        onClick={kickMode ? () => onClickKickMode() : openMenu}
       >
         <CardContent>
           <div className="top-row">
             <div className="name">
-              <Avatar
-                className="avatar"
-                alt={member.memberId || member.discordName}
-                src={member.avatar}
-                onClick={openDetails}
-              >
-                {member.memberId
-                  ? member.memberId[0]
-                  : member.discordName
-                  ? member.discordName[0]
-                  : null}
-              </Avatar>
+              {kickMode && member.discordId ? (
+                <Checkbox checked={selected} />
+              ) : (
+                <Avatar
+                  className="avatar"
+                  alt={member.memberId || member.discordName}
+                  src={member.avatar}
+                  onClick={openDetails}
+                >
+                  {member.memberId
+                    ? member.memberId[0]
+                    : member.discordName
+                    ? member.discordName[0]
+                    : null}
+                </Avatar>
+              )}
               <span className="details">
                 <Typography className="name">{member.memberId || member.discordName}</Typography>
                 {member.joinDate ? (
