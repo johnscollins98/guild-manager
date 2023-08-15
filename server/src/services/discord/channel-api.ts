@@ -6,8 +6,18 @@ import { DiscordMessageDetails } from '../../models/interfaces/discord-message-d
 import { DiscordMessagePost } from '../../models/interfaces/discord-message-post';
 import { DiscordApi } from './discord-api';
 
+export interface IDiscordChannelApi {
+  getChannel(channelId: string): Promise<DiscordChannel>;
+  createDirectMessageChannel(userId: string): Promise<string>;
+  getChannelMessages(channelId: string): Promise<DiscordMessage[]>;
+  getChannelMessage(channelId: string, messageId: string): Promise<DiscordMessageDetails>;
+  editEmbed(channelId: string, messageId: string, embed: DiscordEmbed): Promise<boolean>;
+  addEmbed(channelId: string, embed: DiscordEmbed): Promise<boolean>;
+  sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean>;
+}
+
 @Service()
-export class DiscordChannelApi {
+export class DiscordChannelApi implements IDiscordChannelApi {
   constructor(private readonly discordApi: DiscordApi) {}
 
   async getChannel(channelId: string): Promise<DiscordChannel> {

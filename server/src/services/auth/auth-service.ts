@@ -12,11 +12,21 @@ const notLoggedIn = {
   username: ''
 };
 
+const skipAuth = {
+  loggedIn: true,
+  isAdmin: true,
+  username: 'dev'
+};
+
 @Service()
 export class AuthService {
   constructor(private readonly symmetricEncryption: SymmetricEncryption) {}
 
   async getUserAuthInfo(user?: Express.User): Promise<AuthInfo> {
+    if (process.env.NODE_ENV === 'development' && config.skipAuth) {
+      return skipAuth;
+    }
+
     if (!user) return notLoggedIn;
 
     const loggedIn = true;

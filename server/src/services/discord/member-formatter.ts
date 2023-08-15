@@ -2,11 +2,15 @@ import { Service } from 'typedi';
 import DiscordMember from '../../models/interfaces/discord-member';
 import DiscordRole from '../../models/interfaces/discord-role';
 import FormattedDiscordMember from '../../models/interfaces/formatted-discord-member';
-import { GW2GuildApi } from '../gw2/guild-api';
+import { GW2ApiFactory } from '../gw2/api-factory';
+import { IGW2GuildApi } from '../gw2/guild-api';
 
 @Service()
 export class DiscordMemberFormatter {
-  constructor(private readonly gw2GuildApi: GW2GuildApi) {}
+  private readonly gw2GuildApi: IGW2GuildApi;
+  constructor(gw2ApiFactory: GW2ApiFactory) {
+    this.gw2GuildApi = gw2ApiFactory.guildApi();
+  }
 
   async formatMembers(
     members: DiscordMember[],

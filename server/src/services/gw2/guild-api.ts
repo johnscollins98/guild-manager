@@ -5,8 +5,14 @@ import GW2Member from '../../models/interfaces/gw2-member';
 import GW2Rank from '../../models/interfaces/gw2-rank';
 import { GW2Api } from './gw2-api';
 
+export interface IGW2GuildApi {
+  getMembers(): Promise<GW2Member[]>;
+  getLog(): Promise<GW2LogEntry[]>;
+  getRanks(): Promise<GW2Rank[]>;
+}
+
 @Service()
-export class GW2GuildApi {
+export class GW2GuildApi implements IGW2GuildApi {
   private readonly guildId: string;
 
   constructor(private readonly gw2Api: GW2Api) {
