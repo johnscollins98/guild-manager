@@ -1,4 +1,6 @@
 import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 import FilterList from '@mui/icons-material/FilterList';
 import ImportExport from '@mui/icons-material/ImportExport';
 import Refresh from '@mui/icons-material/Refresh';
@@ -15,9 +17,25 @@ import './roster-control.scss';
 interface Props {
   refetchData: () => void;
   isFetching: boolean;
+
+  kickMode: boolean;
+  setKickMode: (v: boolean) => void;
+
+  selection: string[];
+  setSelection: (v: string[]) => void;
+
+  onKick: () => void;
 }
 
-const RosterControl = ({ refetchData, isFetching }: Props) => {
+const RosterControl = ({
+  refetchData,
+  isFetching,
+  kickMode,
+  setKickMode,
+  selection,
+  setSelection,
+  onKick
+}: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy');
   const filterBy = searchParams.get('filterBy');
@@ -64,6 +82,11 @@ const RosterControl = ({ refetchData, isFetching }: Props) => {
     [closeMenu, searchParams, setSearchParams]
   );
 
+  const cancelKickMode = useCallback(() => {
+    setSelection([]);
+    setKickMode(false);
+  }, [setSelection, setKickMode]);
+
   return (
     <>
       <Paper variant="outlined" className="roster-bar">
@@ -80,6 +103,34 @@ const RosterControl = ({ refetchData, isFetching }: Props) => {
           </Tooltip>
         </span>
         <span className="right">
+          {!kickMode && (
+            <Tooltip title={'Mass kick'}>
+              <span>
+                <IconButton size="small" onClick={() => setKickMode(true)}>
+                  <DeleteForever />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
+          {kickMode && (
+            <>
+              <span className="selection-length">{selection.length} selected</span>
+              <Tooltip title={'Confirm Mass Kick'}>
+                <span>
+                  <IconButton size="small" onClick={onKick} disabled={selection.length === 0}>
+                    <Check />
+                  </IconButton>
+                </span>
+              </Tooltip>
+              <Tooltip title={'Cancel Mass Kick'}>
+                <span>
+                  <IconButton size="small" onClick={cancelKickMode}>
+                    <Close />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </>
+          )}
           <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
             <span>
               <IconButton

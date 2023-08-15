@@ -110,53 +110,57 @@ export const useUpdateDiscordMember = () => {
 };
 
 export interface KickMemberDTO {
-  memberId: string;
+  memberIds: string[];
   reinvite?: boolean;
   reason?: string;
 }
 
-export const useKickDiscordMember = () => {
+export const useKickDiscordMembers = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
   const sendMessage = useSendMessage();
 
   return useMutation<void, AxiosError, KickMemberDTO, DiscordMember[]>({
-    async mutationFn({ reinvite, reason, memberId }) {
-      if (reinvite) {
-        let content = 'You have been kicked from Sunspear Order';
-        if (reason) {
-          content += ` for the following reason: "${reason}"`;
+    async mutationFn({ reinvite, reason, memberIds }) {
+      const promises = memberIds.map(async memberId => {
+        if (reinvite) {
+          let content = 'You have been kicked from Sunspear Order';
+          if (reason) {
+            content += ` for the following reason: "${reason}"`;
+          }
+
+          if (config.discordReinviteUrl) {
+            content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
+          }
+
+          await sendMessage.mutateAsync({
+            memberId,
+            content
+          });
         }
 
-        if (config.discordReinviteUrl) {
-          content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
-        }
+        return axios.delete(`/api/discord/members/${memberId}`);
+      });
 
-        await sendMessage.mutateAsync({
-          memberId,
-          content
-        });
-      }
-
-      return axios.delete(`/api/discord/members/${memberId}`);
+      await Promise.all(promises);
     },
-    async onMutate({ memberId }) {
+    async onMutate({ memberIds }) {
       await queryClient.cancelQueries('discord/members');
 
       const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
 
       queryClient.setQueryData<DiscordMember[]>(
         'discord/members',
-        old => old?.filter(m => m.id !== memberId) ?? []
+        old => old?.filter(m => !memberIds.includes(m.id)) ?? []
       );
 
       return previousMembers;
     },
     onSuccess() {
-      openToast('Successfully kicked member.', 'success');
+      openToast('Successfully kicked members.', 'success');
     },
     onError(_err, _dto, context) {
-      openToast('Failed to kick member.', 'error');
+      openToast('Failed to kick members.', 'error');
       queryClient.setQueryData('discord/members', context);
       queryClient.invalidateQueries('discord/members');
     }
