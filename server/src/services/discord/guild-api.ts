@@ -1,8 +1,20 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
+import { DiscordLog } from '../../models/interfaces/discord-log';
 import DiscordMember, { DiscordMemberUpdate } from '../../models/interfaces/discord-member';
 import DiscordRole from '../../models/interfaces/discord-role';
 import { DiscordApi } from './discord-api';
+
+export interface IDiscordGuildApi {
+  getMembers(): Promise<DiscordMember[]>;
+  getMemberById(memberId: string): Promise<DiscordMember>;
+  getRoles(): Promise<DiscordRole[]>;
+  getLogs(): Promise<DiscordLog>;
+  kickMember(id: string): Promise<boolean>;
+  removeRoleFromMember(memberId: string, roleId: string): Promise<boolean>;
+  addRoleToMember(memberId: string, roleId: string): Promise<boolean>;
+  updateMember(memberId: string, updates: DiscordMemberUpdate): Promise<DiscordMember>;
+}
 
 @Service()
 export class DiscordGuildApi {
@@ -23,7 +35,7 @@ export class DiscordGuildApi {
     return await this.discordApi.get(`${this.baseUrl}/roles`);
   }
 
-  async getLogs() {
+  async getLogs(): Promise<DiscordLog> {
     return await this.discordApi.get(`${this.baseUrl}/audit-logs?limit=100`);
   }
 

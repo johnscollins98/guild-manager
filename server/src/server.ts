@@ -46,6 +46,10 @@ useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*-controller.*')],
   authorizationChecker: async (action: Action) => {
+    if (process.env.NODE_ENV === 'development' && config.skipAuth) {
+      return true;
+    }
+
     if (!action.request.user) {
       return false;
     }
@@ -71,6 +75,9 @@ createConnection({
   entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
 }).then(() => {
   console.log('Connected to MongoDB');
-  Container.get(DiscordStrategySetup);
+
+  if (!(process.env.NODE_ENV === 'development' && config.skipAuth)) {
+    Container.get(DiscordStrategySetup);
+  }
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });

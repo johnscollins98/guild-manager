@@ -18,9 +18,10 @@ import { EventPostSettings } from '../models/event-post-settings.model';
 import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
 import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
 import DiscordRole from '../models/interfaces/discord-role';
-import { DiscordChannelApi } from '../services/discord/channel-api';
+import { DiscordApiFactory } from '../services/discord/api-factory';
+import { IDiscordChannelApi } from '../services/discord/channel-api';
 import { EventEmbedCreator } from '../services/discord/event-embed-creator';
-import { DiscordGuildApi } from '../services/discord/guild-api';
+import { IDiscordGuildApi } from '../services/discord/guild-api';
 import { DiscordMemberFormatter } from '../services/discord/member-formatter';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
@@ -29,14 +30,18 @@ import { EventRepository } from '../services/repositories/event-repository';
 @Authorized()
 @JsonController('/api/discord')
 export class DiscordController {
+  private readonly discordGuildApi: IDiscordGuildApi;
+  private readonly discordChannelApi: IDiscordChannelApi;
   constructor(
-    private readonly discordGuildApi: DiscordGuildApi,
-    private readonly discordChannelApi: DiscordChannelApi,
+    discordApiFactory: DiscordApiFactory,
     private readonly discordMemberFormatter: DiscordMemberFormatter,
     private readonly discordEventEmbedCreator: EventEmbedCreator,
     private readonly eventRepository: EventRepository,
     private readonly eventSettingsRepository: EventPostSettingsRepository
-  ) {}
+  ) {
+    this.discordChannelApi = discordApiFactory.channelApi();
+    this.discordGuildApi = discordApiFactory.guildApi();
+  }
 
   @Get('/roles')
   async getRoles() {

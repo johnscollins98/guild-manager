@@ -1,16 +1,18 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { GW2GuildApi } from '../services/gw2/guild-api';
+import { GW2ApiFactory } from '../services/gw2/api-factory';
+import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
 
 @JsonController('/api/gw2')
 @Authorized()
 @Service()
 export class GW2Controller {
-  constructor(
-    private readonly gw2GuildApi: GW2GuildApi,
-    private readonly logFormatter: GW2LogFormatter
-  ) {}
+  private readonly gw2GuildApi: IGW2GuildApi;
+
+  constructor(gw2GuildApiFactory: GW2ApiFactory, private readonly logFormatter: GW2LogFormatter) {
+    this.gw2GuildApi = gw2GuildApiFactory.guildApi();
+  }
 
   @Get('/log')
   async getLog() {

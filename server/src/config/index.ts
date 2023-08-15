@@ -21,10 +21,10 @@ export const config = {
   discordClientId: process.env.DISCORD_CLIENT_ID,
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
-  adminRoles: process.env.ADMIN_ROLES.split(','),
-  eventRoles: process.env.EVENT_ROLES.split(','),
+  adminRoles: process.env.ADMIN_ROLES?.split(',') ?? [],
+  eventRoles: process.env.EVENT_ROLES?.split(',') ?? [],
   sessionSecret: process.env.SESSION_SECRET,
   frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
-  discordInviteLink: process.env.INVITE_LINK,
-  accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY
-};
+  accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY,
+  skipAuth: process.env.SKIP_AUTH === 'true'
+} as const;

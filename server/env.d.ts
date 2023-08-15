@@ -14,6 +14,7 @@ declare namespace NodeJS {
     SESSION_SECRET: string;
     ACCESS_TOKEN_ENCRYPTION_KEY: string;
     FRONT_END_BASE_URL: string;
-    INVITE_LINK: string;
+    NODE_ENV: string;
+    SKIP_AUTH: string;
   }
 }
