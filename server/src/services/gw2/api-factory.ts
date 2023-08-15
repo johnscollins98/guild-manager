@@ -1,7 +1,7 @@
 import Container, { Service } from 'typedi';
 import { config } from '../../config';
 import { GW2GuildApi, IGW2GuildApi } from './guild-api';
-import { MockGW2GuildApi } from './mocks/guild-api';
+import { MockGW2GuildApi } from './mocks/guild-api-mock';
 
 @Service()
 export class GW2ApiFactory {
