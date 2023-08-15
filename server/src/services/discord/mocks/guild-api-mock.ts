@@ -16,6 +16,15 @@ const members: DiscordMember[] = [
       username: '1',
       global_name: '1'
     }
+  },
+  {
+    joined_at: '2021-10-10T10:10:00Z',
+    roles: ['2'],
+    user: {
+      id: '2',
+      username: '2',
+      global_name: '2'
+    }
   }
 ];
 
