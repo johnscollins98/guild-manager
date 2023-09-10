@@ -3,7 +3,7 @@
     "source.fixAll": true,
     "source.organizeImports": true
   },
-  "npm.packageManager": "yarn",
+  "npm.packageManager": "pnpm",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

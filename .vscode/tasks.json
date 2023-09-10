@@ -10,7 +10,7 @@
       },
       "problemMatcher": [],
       "label": "npm: build",
-      "detail": "yarn workspaces run build"
+      "detail": "pnpm -r run build"
     }
   ]
 }
