@@ -6,6 +6,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install modules
-      run: yarn
+      run: pnpm
     - name: Run ESLint
-      run: yarn lint
+      run: pnpm lint

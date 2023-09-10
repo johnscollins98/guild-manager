@@ -18,14 +18,14 @@
       "type": "node-terminal",
       "name": "Client",
       "request": "launch",
-      "command": "yarn run dev-client",
+      "command": "pnpm run dev-client",
       "cwd": "${workspaceFolder}"
     },
     {
       "type": "node-terminal",
       "name": "Server",
       "request": "launch",
-      "command": "yarn run dev-server",
+      "command": "pnpm run dev-server",
       "cwd": "${workspaceFolder}"
     }
   ]

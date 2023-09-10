@@ -7,12 +7,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "yarn workspaces run build",
-    "start": "yarn workspace server start",
-    "dev-server": "yarn workspace server dev",
-    "dev-client": "yarn workspace client start",
-    "dev": "concurrently \"yarn dev-server\" \"set PORT=5001 && yarn dev-client\"",
-    "lint": "yarn workspaces run lint"
+    "build": "pnpm -r run build",
+    "start": "pnpm --filter server start",
+    "dev-server": "pnpm --filter server dev",
+    "dev-client": "pnpm --filter client start",
+    "dev": "concurrently \"pnpm dev-server\" \"set PORT=5001 && pnpm dev-client\"",
+    "lint": "pnpm -r run lint"
   },
   "workspaces": [
     "client",

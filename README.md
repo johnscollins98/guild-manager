@@ -30,22 +30,22 @@ To run this you do need to set up the following env variables:
 
 In the project directory, you can run:
 
-### `yarn start`
+### `pnpm start`
 
 Starts the Express server with node.
 
-### `yarn dev-server`
+### `pnpm dev-server`
 
 Run express server with nodemon.
 
-### `yarn dev-client`
+### `pnpm dev-client`
 
 Run front end in local development server
 
-### `yarn dev`
+### `pnpm dev`
 
 Run both back-end and front-end concurrently
 
-### `yarn build`
+### `pnpm build`
 
 Builds the front end for production/deployment.
