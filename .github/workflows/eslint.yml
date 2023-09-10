@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: pnpm/action-setup@v2
       - with:
           version: 8
           run_install: true
-    - uses: pnpm/action-setup@v2
     - name: Install modules
       run: pnpm
     - name: Run ESLint
