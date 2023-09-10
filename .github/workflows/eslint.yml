@@ -9,8 +9,8 @@ jobs:
     - uses: pnpm/action-setup@v2
       with:
         version: 8
-        run_install: true
-    - name: Install modules
-      run: pnpm
+        run_install: |
+          - recursive: true
+            args: [--frozen-lockfile, --strict-peer-dependencies]
     - name: Run ESLint
       run: pnpm lint
