@@ -52,9 +52,13 @@ const Control = ({ theme, toggleTheme }: Props) => {
 
     const filterStringVal = e.currentTarget.elements.filter.value;
 
-    setSearchParams({
-      ...searchParams,
-      filterString: filterStringVal
+    setSearchParams(old => {
+      if (filterStringVal === '') {
+        old.delete('filterString');
+      } else {
+        old.set('filterString', filterStringVal);
+      }
+      return old;
     });
   };
 
@@ -65,7 +69,11 @@ const Control = ({ theme, toggleTheme }: Props) => {
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
             {LINKS.map(l => (
-              <Button key={l.link} component={NavLink} to={l.link}>
+              <Button
+                key={l.link}
+                component={NavLink}
+                to={`${l.link}${filterString ? `?filterString=${filterString}` : ''}`}
+              >
                 {l.label}
               </Button>
             ))}

@@ -68,18 +68,24 @@ const RosterControl = ({
 
   const sortHandler = useCallback(
     (sortBy: string) => {
-      setSearchParams({ ...searchParams, sortBy });
+      setSearchParams(old => {
+        old.set('sortBy', sortBy);
+        return old;
+      });
       closeMenu();
     },
-    [closeMenu, searchParams, setSearchParams]
+    [closeMenu, setSearchParams]
   );
 
   const filterHandler = useCallback(
     (filterBy: string) => {
-      setSearchParams({ ...searchParams, filterBy });
+      setSearchParams(old => {
+        old.set('filterBy', filterBy);
+        return old;
+      });
       closeMenu();
     },
-    [closeMenu, searchParams, setSearchParams]
+    [closeMenu, setSearchParams]
   );
 
   const cancelKickMode = useCallback(() => {
