@@ -62,6 +62,10 @@ const Control = ({ theme, toggleTheme }: Props) => {
     });
   };
 
+  const linkSearchParamString = filterString
+    ? new URLSearchParams({ filterString }).toString()
+    : '';
+
   return (
     <AppBar position="static" color="default">
       <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
@@ -69,11 +73,7 @@ const Control = ({ theme, toggleTheme }: Props) => {
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
             {LINKS.map(l => (
-              <Button
-                key={l.link}
-                component={NavLink}
-                to={`${l.link}${filterString ? `?filterString=${filterString}` : ''}`}
-              >
+              <Button key={l.link} component={NavLink} to={`${l.link}?${linkSearchParamString}`}>
                 {l.label}
               </Button>
             ))}
@@ -116,7 +116,7 @@ const Control = ({ theme, toggleTheme }: Props) => {
             <ListItemButton
               key={l.link}
               component={NavLink}
-              to={l.link}
+              to={`${l.link}?${searchParams}`}
               onClick={() => setDrawerOpen(false)}
             >
               {l.label}
