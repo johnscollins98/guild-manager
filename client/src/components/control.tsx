@@ -69,7 +69,11 @@ const Control = ({ theme, toggleTheme }: Props) => {
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
             {LINKS.map(l => (
-              <Button key={l.link} component={NavLink} to={l.link} search={searchParams.toString()}>
+              <Button
+                key={l.link}
+                component={NavLink}
+                to={`${l.link}${filterString ? `?filterString=${filterString}` : ''}`}
+              >
                 {l.label}
               </Button>
             ))}
