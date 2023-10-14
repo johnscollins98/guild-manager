@@ -1,11 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
-import './app.scss';
-import EventPage from './events/event-page';
-import Log from './log/log';
-import LoginPage from './login-page';
-import Roster from './roster/roster';
-
 import { CssBaseline, PaletteMode } from '@mui/material';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -13,15 +5,23 @@ import Snackbar from '@mui/material/Snackbar';
 import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import React, { lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
+import './app.scss';
 import { ConfirmContextProvider } from './common/confirm-dialog/confirm-context-provider';
 import ConfirmDialog from './common/confirm-dialog/confirm-dialog';
+import LoaderPage from './common/loader-page';
 import { ToastContext } from './common/toast-context';
 import Control from './control';
-import DiscordLog from './discord-log/discord-log';
-import RecruitmentPage from './recruitment/recruitment-page';
+
+const LoginPage = lazy(() => import('./login-page'));
+const Roster = lazy(() => import('./roster/roster'));
+const Log = lazy(() => import('./log/log'));
+const DiscordLog = lazy(() => import('./discord-log/discord-log'));
+const EventPage = lazy(() => import('./events/event-page'));
+const RecruitmentPage = lazy(() => import('./recruitment/recruitment-page'));
 
 const App = () => {
   const [showToast, setShowToast] = useState(false);
@@ -86,24 +86,26 @@ const App = () => {
           </Snackbar>
           <ToastContext.Provider value={openToast}>
             <div className="content">
-              {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
-                <>
-                  <BrowserRouter>
-                    <Control theme={theme} toggleTheme={toggleTheme} />
-                    <div className="outlet">
-                      <Routes>
-                        <Route path="/" Component={Roster} />
-                        <Route path="/log" Component={Log} />
-                        <Route path="/discord-log" Component={DiscordLog} />
-                        <Route path="/events" Component={EventPage} />
-                        <Route path="/recruitment" Component={RecruitmentPage} />
-                      </Routes>
-                    </div>
-                  </BrowserRouter>
-                </>
-              ) : (
-                <LoginPage />
-              )}
+              <React.Suspense fallback={<LoaderPage />}>
+                {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
+                  <>
+                    <BrowserRouter>
+                      <Control theme={theme} toggleTheme={toggleTheme} />
+                      <div className="outlet">
+                        <Routes>
+                          <Route path="/" Component={Roster} />
+                          <Route path="/log" Component={Log} />
+                          <Route path="/discord-log" Component={DiscordLog} />
+                          <Route path="/events" Component={EventPage} />
+                          <Route path="/recruitment" Component={RecruitmentPage} />
+                        </Routes>
+                      </div>
+                    </BrowserRouter>
+                  </>
+                ) : (
+                  <LoginPage />
+                )}
+              </React.Suspense>
             </div>
           </ToastContext.Provider>
         </Box>
