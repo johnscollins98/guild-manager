@@ -14,9 +14,9 @@ export class EventEmbedCreator {
         );
         return {
           name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
-          value: `⏰ [${event.startTime} UTC](${timeLink})${`\u200b\u3000`.repeat(15)}\n⏳ ${
-            event.duration
-          }\n👑 <@${event.leaderId}>`
+          value: `⏰ ${
+            event.startTime ? `[${event.startTime} UTC](${timeLink})` : 'TBD'
+          }${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`
         };
       })
     };

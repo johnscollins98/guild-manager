@@ -10,10 +10,10 @@ import WatchLater from '@mui/icons-material/WatchLater';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles/createTheme';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import { useTheme } from '@mui/material/styles';
+import { Theme } from '@mui/material/styles/createTheme';
 import React, { useCallback, useState } from 'react';
 import DiscordMember from '../../lib/interfaces/discord-member';
 import Event from '../../lib/interfaces/event';
@@ -28,7 +28,16 @@ const emptyEvent: Event = {
   leaderId: ''
 };
 
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const daysOfWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+  'Dynamic'
+];
 
 interface Props {
   create?: boolean;
@@ -51,19 +60,12 @@ const EventEntry = ({
   const [modified, setModified] = useState(false);
   const openToast = useToast();
 
-  const validationHelper = useCallback(
-    (event: Event) => {
-      const anyEmpty = Object.keys(event)
-        .filter(k => !k.startsWith('_'))
-        .some(k => !event[k]);
-      if (anyEmpty) throw new Error('Ensure all fields have a value!');
-
-      if (!daysOfWeek.includes(event.day))
-        throw new Error("Day field must be a capitalised day of the week. e.g. 'Monday'");
-    },
-
-    []
-  );
+  const validationHelper = useCallback((event: Event) => {
+    if (!event.title) throw new Error('A title must be provided');
+    if (!event.leaderId) throw new Error('A leader must be selected');
+    if (!daysOfWeek.includes(event.day))
+      throw new Error("Day field must be a capitalised day of the week. e.g. 'Monday'");
+  }, []);
 
   const onEdit = useCallback(
     (field: string, value: string) => {
@@ -132,11 +134,11 @@ const EventEntry = ({
       <form onSubmit={onSubmit} className="event-form">
         <div className="field long">
           <Assignment className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="title" />
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
         </div>
         <div className="field">
           <CalendarToday className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select>
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select required>
             {daysOfWeek.map(day => (
               <MenuItem value={day} key={day}>
                 {day}
@@ -154,7 +156,7 @@ const EventEntry = ({
         </div>
         <div className="field long">
           <Person className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" select>
+          <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" required select>
             {possibleLeaders.map(leader => (
               <MenuItem value={leader.id} key={leader.id}>
                 {leader.name}
@@ -197,9 +199,10 @@ interface EditFieldProps {
   children?: React.ReactNode;
   select?: boolean;
   type?: string;
+  required?: boolean;
 }
 
-const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldProps) => {
+const EditField = ({ event, onEdit, fieldKey, children, required, ...props }: EditFieldProps) => {
   const theme = useTheme<Theme>();
   return (
     <TextField
@@ -212,7 +215,7 @@ const EditField = ({ event, onEdit, fieldKey, children, ...props }: EditFieldPro
       }}
       style={{ colorScheme: theme.palette.mode }}
       fullWidth
-      required
+      required={required}
       {...props}
     >
       {children}

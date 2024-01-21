@@ -10,7 +10,8 @@ const daysOfWeek = [
   'Thursday',
   'Friday',
   'Saturday',
-  'Sunday'
+  'Sunday',
+  'Dynamic'
 ] as const;
 
 type DaysOfWeek = typeof daysOfWeek;

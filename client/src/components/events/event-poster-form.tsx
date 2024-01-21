@@ -22,7 +22,8 @@ const EventPosterForm = ({ onClose }: Props) => {
     Thursday: '',
     Friday: '',
     Saturday: '',
-    Sunday: ''
+    Sunday: '',
+    Dynamic: ''
   });
   const [posting, setPosting] = useState(false);
   const { isLoading, error, data } = useEventSettings();
@@ -41,7 +42,8 @@ const EventPosterForm = ({ onClose }: Props) => {
           Thursday: data.existingMessageIds.Thursday || '',
           Friday: data.existingMessageIds.Friday || '',
           Saturday: data.existingMessageIds.Saturday || '',
-          Sunday: data.existingMessageIds.Sunday || ''
+          Sunday: data.existingMessageIds.Sunday || '',
+          Dynamic: data.existingMessageIds.Dynamic || ''
         });
       }
     }

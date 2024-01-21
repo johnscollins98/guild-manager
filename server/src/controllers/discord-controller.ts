@@ -132,7 +132,8 @@ export class DiscordController {
       'Thursday',
       'Friday',
       'Saturday',
-      'Sunday'
+      'Sunday',
+      'Dynamic'
     ];
 
     for (const day of daysOfWeek) {
