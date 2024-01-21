@@ -9,5 +9,6 @@ export default interface EventSettings {
     Friday: string;
     Saturday: string;
     Sunday: string;
+    Dynamic: string;
   };
 }

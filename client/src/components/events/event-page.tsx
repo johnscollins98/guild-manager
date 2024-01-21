@@ -27,7 +27,8 @@ const sorter = new Map<string, number>([
   ['Thursday', 4],
   ['Friday', 5],
   ['Saturday', 6],
-  ['Sunday', 7]
+  ['Sunday', 7],
+  ['Dynamic', 8]
 ]);
 
 const EventPage = () => {

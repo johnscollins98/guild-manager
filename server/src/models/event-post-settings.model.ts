@@ -9,6 +9,7 @@ export interface MessageIDs {
   Friday: string;
   Saturday: string;
   Sunday: string;
+  Dynamic: string;
 }
 
 @Entity()
