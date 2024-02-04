@@ -45,6 +45,10 @@ export class EventTableGenerator {
   }
 
   private generateStartTimeLink(event: Event): string {
+    if (!event.startTime) {
+      return '-';
+    }
+
     return this.generateLink(`${event.startTime} UTC`, this.generateStartTimeUrl(event));
   }
 
