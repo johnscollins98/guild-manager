@@ -9,6 +9,7 @@ import { PopoverPosition } from '@mui/material/Popover';
 import { useCallback } from 'react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
 import MemberRecord from '../../lib/interfaces/member-record';
+import GuildMemberDetails from './guild-member-details';
 import GuildMemberMenuItem from './guild-member-menu-item';
 
 interface Props {
@@ -61,6 +62,8 @@ const GuildMemberMenu = ({
       open={Boolean(menuAnchor)}
       onClose={closeMenu}
     >
+      <GuildMemberDetails member={member} />
+      <Divider />
       <GuildMemberMenuItem
         Icon={Close}
         label="Kick"
