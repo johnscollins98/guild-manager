@@ -2,7 +2,9 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import { useState } from 'react';
+import { ReactComponent as DiscordSvg } from '../../assets/images/discord.svg';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import {
@@ -111,15 +113,15 @@ const EventPage = () => {
             key={event._id}
           />
         ))}
+        <Divider />
         <EventEntry create={true} createEvent={createEvent} possibleLeaders={leaders} />
       </div>
-      <Button
-        onClick={() => setShowModal(true)}
-        style={{ width: 'fit-content', margin: '4px' }}
-        variant="contained"
-      >
-        Post to Discord
-      </Button>
+      <div className="button-container">
+        <Button onClick={() => setShowModal(true)} variant="contained" className="discord-button">
+          <DiscordSvg width={24} />
+          Post to Discord
+        </Button>
+      </div>
       <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth={true} maxWidth="sm">
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
