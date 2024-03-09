@@ -129,7 +129,7 @@ const EventEntry = ({
   );
 
   return (
-    <Card variant="outlined" className="event-entry">
+    <Card variant="elevation" className="event-entry">
       <form onSubmit={onSubmit} className="event-form">
         <div className="field long">
           <Assignment color="secondary" className="field-label" />
@@ -211,7 +211,7 @@ const EditField = ({ event, onEdit, fieldKey, children, required, ...props }: Ed
   const theme = useTheme<Theme>();
   return (
     <TextField
-      variant="standard"
+      variant="outlined"
       size="small"
       className="entry-input"
       value={event[fieldKey]}
