@@ -67,7 +67,7 @@ const Control = ({ theme, toggleTheme }: Props) => {
     : '';
 
   return (
-    <AppBar position="static" color="default">
+    <AppBar position="static" className="my-nav" color="default">
       <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
         <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
           <img src={SOStatic} height={40} width={40} alt="logo" />
@@ -104,7 +104,14 @@ const Control = ({ theme, toggleTheme }: Props) => {
           </Tooltip>
         </Box>
       </Box>
-      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <Drawer
+        anchor="left"
+        classes={{
+          paper: 'my-nav'
+        }}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      >
         <Box justifyContent="space-between" display="flex" padding={1}>
           <IconButton onClick={() => setDrawerOpen(false)}>
             <MenuOpenIcon />
