@@ -4,7 +4,11 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  height: calc(100% + env(safe-area-inset-top));
+  max-height: calc(100% + env(safe-area-inset-top));
+}
+
 body,
 #root {
   height: 100%;
@@ -24,9 +28,12 @@ body,
     flex-direction: column;
     height: 100%;
     overflow: hidden;
-
-    .outlet {
-      padding: 12px;
+    
+    div.outlet {
+      padding-top: 12px;
+      padding-right: max(env(safe-area-inset-right), 12px);
+      padding-bottom: max(env(safe-area-inset-bottom), 12px);
+      padding-left: max(env(safe-area-inset-left), 12px);
       overflow: hidden;
       flex: 1;
       display: flex;
