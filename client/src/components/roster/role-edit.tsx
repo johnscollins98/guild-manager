@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { getColorFromRole } from '../../lib/utils/helpers';
 import './role-edit.scss';
 
+import { MenuItem } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -53,18 +54,22 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
         {roles?.map(role => (
-          <FormGroup row key={role.id}>
-            <FormControlLabel
-              control={
-                <StyledCheckbox
-                  color={getColorFromRole(role.name, roles) || ''}
-                  checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => roleChangeHandler(e, role)}
-                />
-              }
-              label={role.name}
-            />
-          </FormGroup>
+          <MenuItem className="role-menu-item" key={role.id}>
+            <FormGroup row key={role.id}>
+              <FormControlLabel
+                control={
+                  <StyledCheckbox
+                    color={getColorFromRole(role.name, roles) || ''}
+                    checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      roleChangeHandler(e, role)
+                    }
+                  />
+                }
+                label={role.name}
+              />
+            </FormGroup>
+          </MenuItem>
         ))}
       </DialogContent>
     </Dialog>

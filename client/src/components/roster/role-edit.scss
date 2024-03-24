@@ -1,6 +1,10 @@
 div.role-edit-modal {
   div.role-edit-content {
-    padding-top: 0;
-    padding-bottom: 16px;
+    padding-top: 0px !important;
+    padding: 0px;
+
+    .role-menu-item {
+      padding-right: 80px;
+    }
   }
 }

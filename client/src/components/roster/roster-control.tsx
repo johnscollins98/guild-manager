@@ -155,24 +155,25 @@ const RosterControl = ({
         open={sortOpen}
         anchorEl={anchorElement}
         onClose={closeMenu}
+        className="control-menu"
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right'
         }}
       >
-        <MenuItem onClick={() => sortHandler('rank')}>
+        <MenuItem className="control-menu-item" onClick={() => sortHandler('rank')}>
           {sortBy === 'rank' ? <Check className="selected" /> : null}
           Rank
         </MenuItem>
-        <MenuItem onClick={() => sortHandler('name')}>
+        <MenuItem className="control-menu-item" onClick={() => sortHandler('name')}>
           {sortBy === 'name' ? <Check className="selected" /> : null}
           Name
         </MenuItem>
-        <MenuItem onClick={() => sortHandler('date')}>
+        <MenuItem className="control-menu-item" onClick={() => sortHandler('date')}>
           {sortBy === 'date' ? <Check className="selected" /> : null}
           Join Date
         </MenuItem>
-        <MenuItem onClick={() => sortHandler('warnings')}>
+        <MenuItem className="control-menu-item" onClick={() => sortHandler('warnings')}>
           {sortBy === 'warnings' ? <Check className="selected" /> : null}
           Warnings
         </MenuItem>
@@ -181,28 +182,29 @@ const RosterControl = ({
         open={filterOpen}
         anchorEl={anchorElement}
         onClose={closeMenu}
+        className="control-menu"
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right'
         }}
       >
-        <MenuItem onClick={() => filterHandler('none')}>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('none')}>
           {filterBy === 'none' ? <Check className="selected" /> : null}
           No filters
         </MenuItem>
-        <MenuItem onClick={() => filterHandler('has-gw2')}>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('has-gw2')}>
           {filterBy === 'has-gw2' ? <Check className="selected" /> : null}
           Has GW2 Account
         </MenuItem>
-        <MenuItem onClick={() => filterHandler('excess-discord')}>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('excess-discord')}>
           {filterBy === 'excess-discord' ? <Check className="selected" /> : null}
           Excess Discord
         </MenuItem>
-        <MenuItem onClick={() => filterHandler('issues')}>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('issues')}>
           {filterBy === 'issues' ? <Check className="selected" /> : null}
           Any issues
         </MenuItem>
-        <MenuItem onClick={() => filterHandler('warnings')}>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('warnings')}>
           {filterBy === 'warnings' ? <Check className="selected" /> : null}
           Any warnings
         </MenuItem>
