@@ -1,5 +1,4 @@
-import fetch from 'node-fetch';
-import { HttpError } from 'routing-controllers';
+import axios from 'axios';
 import { Service } from 'typedi';
 import { config } from '../../config';
 
@@ -13,25 +12,13 @@ export class GW2Api {
   }
 
   async get<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}/${endpoint}`, {
+    const response = await axios.get(endpoint, {
       headers: {
         Authorization: `Bearer ${this.apiKey}`
-      }
+      },
+      baseURL: this.baseUrl
     });
 
-    if (!response.ok) {
-      const message = response.statusText;
-
-      try {
-        console.error(await response.json());
-      } catch (err) {
-        console.error(err);
-      }
-
-      throw new HttpError(500, `Error getting gw2 data: (${response.status}) ${message}`);
-    }
-
-    const data: T = await response.json();
-    return data;
+    return response.data;
   }
 }
