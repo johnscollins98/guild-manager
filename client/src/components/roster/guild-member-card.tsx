@@ -20,7 +20,6 @@ import MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
 import './guild-member-card.scss';
-import GuildMemberDetails from './guild-member-details';
 import GuildMemberMenu from './guild-member-menu';
 import WarningForm from './warnings/warning-form';
 import WarningsViewer from './warnings/warnings-viewer';
@@ -49,25 +48,11 @@ const GuildMemberCard = ({
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
-  const [detailsAnchor, setDetailsAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
   const addWarningMutation = useAddWarningMutation();
-
-  const openDetails = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setDetailsAnchor({ top: e.clientY, left: e.clientX });
-    },
-    [setDetailsAnchor]
-  );
-
-  const closeDetails = useCallback(() => {
-    setDetailsAnchor(undefined);
-  }, [setDetailsAnchor]);
 
   const openMenu = useCallback(
     (e: React.MouseEvent) => {
@@ -140,7 +125,6 @@ const GuildMemberCard = ({
                   className="avatar"
                   alt={member.memberId || member.discordName}
                   src={member.avatar}
-                  onClick={openDetails}
                 >
                   {member.memberId
                     ? member.memberId[0]
@@ -230,13 +214,6 @@ const GuildMemberCard = ({
           onChangeNickname={onEditNickname}
           setWarningOpen={setWarningOpen}
           setWarningViewerOpen={setWarningViewerOpen}
-        />
-      ) : null}
-      {detailsAnchor ? (
-        <GuildMemberDetails
-          member={member}
-          detailsAnchor={detailsAnchor}
-          closeDetails={closeDetails}
         />
       ) : null}
       <WarningForm
