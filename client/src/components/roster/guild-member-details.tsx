@@ -2,7 +2,7 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { ReactComponent as DiscordSvg } from '../../assets/images/discord.svg';
-import Gw2Logo from '../../assets/images/gw2.png';
+import { ReactComponent as Gw2Logo } from '../../assets/images/gw2.svg';
 import MemberRecord from '../../lib/interfaces/member-record';
 import './guild-member-details.scss';
 
@@ -20,7 +20,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <img src={Gw2Logo} width={24} />
+          <Gw2Logo width={24} height={24} />
         </div>
         <div>
           <div className="detail name">{member.memberId || 'N/A'}</div>
@@ -30,7 +30,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <DiscordSvg width={24} />
+          <DiscordSvg width={24} height={24} />
         </div>
         <div>
           <div className="detail name">{member.discordName || 'N/A'}</div>
