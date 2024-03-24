@@ -61,7 +61,7 @@ const GuildMemberMenu = ({
       onClose={closeMenu}
     >
       <GuildMemberDetails member={member} />
-      <Divider />
+      <Divider sx={{ marginBottom: '8px' }} />
       <GuildMemberMenuItem
         Icon={Close}
         label="Kick"
