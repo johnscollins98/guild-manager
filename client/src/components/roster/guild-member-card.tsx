@@ -117,6 +117,7 @@ const GuildMemberCard = ({
     if (selected) {
       setSelection(old => old.filter(m => m !== id));
     } else {
+      if (selection.length >= 5) return;
       setSelection(old => [...old, id]);
     }
   };
@@ -133,7 +134,7 @@ const GuildMemberCard = ({
           <div className="top-row">
             <div className="name">
               {kickMode && member.discordId && !memberIsAdmin ? (
-                <Checkbox checked={selected} />
+                <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
               ) : (
                 <Avatar
                   className="avatar"
