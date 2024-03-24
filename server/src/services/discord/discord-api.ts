@@ -1,5 +1,4 @@
-import fetch, { RequestInit } from 'node-fetch';
-import { HttpError } from 'routing-controllers';
+import axios, { AxiosRequestConfig } from 'axios';
 import { Service } from 'typedi';
 import { config } from '../../config';
 
@@ -11,23 +10,23 @@ export class DiscordApi {
     this.baseUrl = `https://discord.com/api`;
   }
 
-  async get<T>(endpoint: string, init?: RequestInit): Promise<T> {
+  async get<T>(endpoint: string, init?: AxiosRequestConfig): Promise<T> {
     return await this.makeRequest<T>(endpoint, { method: 'get', ...init });
   }
 
-  async put<In, Out>(endpoint: string, body: In, init?: RequestInit): Promise<Out> {
+  async put<In, Out>(endpoint: string, body: In, init?: AxiosRequestConfig): Promise<Out> {
     return await this.makeRequestWithBody<In, Out>(endpoint, body, { method: 'put', ...init });
   }
 
-  async post<In, Out>(endpoint: string, body: In, init?: RequestInit): Promise<Out> {
+  async post<In, Out>(endpoint: string, body: In, init?: AxiosRequestConfig): Promise<Out> {
     return await this.makeRequestWithBody<In, Out>(endpoint, body, { method: 'post', ...init });
   }
 
-  async patch<In, Out>(endpoint: string, body: In, init?: RequestInit): Promise<Out> {
+  async patch<In, Out>(endpoint: string, body: In, init?: AxiosRequestConfig): Promise<Out> {
     return await this.makeRequestWithBody<In, Out>(endpoint, body, { method: 'patch', ...init });
   }
 
-  async delete(endpoint: string, init?: RequestInit): Promise<boolean> {
+  async delete(endpoint: string, init?: AxiosRequestConfig): Promise<boolean> {
     await this.makeRequest(endpoint, { method: 'delete', ...init });
     return true;
   }
@@ -35,35 +34,26 @@ export class DiscordApi {
   private async makeRequestWithBody<In, Out>(
     endpoint: string,
     body: In,
-    init?: RequestInit
+    init?: AxiosRequestConfig
   ): Promise<Out> {
     return await this.makeRequest<Out>(endpoint, {
-      body: JSON.stringify(body),
+      data: JSON.stringify(body),
       ...init
     });
   }
 
-  private async makeRequest<T = unknown>(endpoint: string, init?: RequestInit): Promise<T> {
-    const defInit: RequestInit = {
+  private async makeRequest<T = unknown>(endpoint: string, init?: AxiosRequestConfig): Promise<T> {
+    const response = await axios({
       headers: {
         Authorization: `${this.isBearer ? 'Bearer' : 'Bot'} ${this.apiKey}`,
-        'Content-Type': 'application/json'
-      }
-    };
-
-    const response = await fetch(`${this.baseUrl}/${endpoint}`, { ...defInit, ...init });
-    if (!response.ok) {
-      const message = response.statusText;
-      try {
-        console.error(await response.json());
-      } catch (err) {
-        console.error(err);
-      }
-      throw new HttpError(500, `Error getting discord data: (${response.status}) ${message}`);
-    }
-
-    return await response.json().catch(err => {
-      console.error(err);
+        'Content-Type': 'application/json',
+        ...init?.headers
+      },
+      baseURL: this.baseUrl,
+      url: endpoint,
+      ...init
     });
+
+    return response.data;
   }
 }

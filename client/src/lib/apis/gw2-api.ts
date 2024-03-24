@@ -8,7 +8,10 @@ export const useGW2Members = () => useQuery<GW2Member[], AxiosError>('gw2/member
 export const useGW2Log = () => useQuery<GW2LogEntry[], AxiosError>('gw2/log');
 export const useGW2Ranks = () => useQuery<GW2Rank[], AxiosError>('gw2/ranks');
 
-export const usePrefetchGW2Log = () => {
+export const usePrefetchGW2Log = (isAuthenticated: boolean) => {
   const queryClient = useQueryClient();
-  queryClient.prefetchQuery('gw2/log');
+
+  if (isAuthenticated) {
+    queryClient.prefetchQuery('gw2/log');
+  }
 };
