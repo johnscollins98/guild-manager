@@ -110,7 +110,7 @@ const RosterControl = ({
         </span>
         <span className="right">
           {!kickMode && (
-            <Tooltip title={'Mass kick'}>
+            <Tooltip title={'Mass kick (up to 5 members)'}>
               <span>
                 <IconButton size="small" onClick={() => setKickMode(true)}>
                   <DeleteForever />

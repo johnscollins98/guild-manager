@@ -7,7 +7,6 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import { PopoverPosition } from '@mui/material/Popover';
 import { useCallback } from 'react';
-import { useAdminRoles } from '../../lib/apis/auth-api';
 import MemberRecord from '../../lib/interfaces/member-record';
 import GuildMemberMenuItem from './guild-member-menu-item';
 
@@ -15,6 +14,7 @@ interface Props {
   member: MemberRecord;
   menuAnchor: PopoverPosition | undefined;
   isAdmin: boolean;
+  memberIsAdmin: boolean;
   closeMenu: () => void;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
@@ -27,6 +27,7 @@ const GuildMemberMenu = ({
   member,
   menuAnchor,
   isAdmin,
+  memberIsAdmin,
   closeMenu,
   onKick,
   onEdit,
@@ -34,9 +35,6 @@ const GuildMemberMenu = ({
   setWarningOpen,
   setWarningViewerOpen
 }: Props) => {
-  const { data: adminRoles } = useAdminRoles();
-  const memberIsAdmin = member.roles.some(role => adminRoles?.includes(role.id) ?? false);
-
   const menuAction = useCallback(
     async (func: (member: MemberRecord) => Promise<void> | void) => {
       await func(member);

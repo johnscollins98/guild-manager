@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
 import gw2Image from '../../assets/images/gw2.png';
+import { useAdminRoles } from '../../lib/apis/auth-api';
 import { useUpdateDiscordMember } from '../../lib/apis/discord-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import DiscordRole from '../../lib/interfaces/discord-role';
@@ -104,14 +105,19 @@ const GuildMemberCard = ({
     }
   };
 
+  const { data: adminRoles } = useAdminRoles();
+  const memberIsAdmin = member.roles.some(role => adminRoles?.includes(role.id) ?? false);
+
   const selected = !!member.discordId && selection.includes(member.discordId);
   const onClickKickMode = () => {
     const id = member.discordId;
     if (!id) return;
+    if (memberIsAdmin) return;
 
     if (selected) {
       setSelection(old => old.filter(m => m !== id));
     } else {
+      if (selection.length >= 5) return;
       setSelection(old => [...old, id]);
     }
   };
@@ -127,8 +133,8 @@ const GuildMemberCard = ({
         <CardContent>
           <div className="top-row">
             <div className="name">
-              {kickMode && member.discordId ? (
-                <Checkbox checked={selected} />
+              {kickMode && member.discordId && !memberIsAdmin ? (
+                <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
               ) : (
                 <Avatar
                   className="avatar"
@@ -217,6 +223,7 @@ const GuildMemberCard = ({
           member={member}
           menuAnchor={menuAnchor}
           isAdmin={isAdmin}
+          memberIsAdmin={memberIsAdmin}
           closeMenu={closeMenu}
           onKick={onKick}
           onEdit={onEdit}
