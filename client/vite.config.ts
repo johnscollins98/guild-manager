@@ -9,10 +9,10 @@ export default defineConfig({
   plugins: [react(), viteTsconfigPaths(), svgrPlugin(), eslint()],
   server: {
     open: true,
-    port: 5001,
+    port: 3001,
     proxy: {
-      '/auth': 'http://localhost:5000',
-      '/api': 'http://localhost:5000'
+      '/auth': 'http://localhost:3000',
+      '/api': 'http://localhost:3000'
     }
   }
 });

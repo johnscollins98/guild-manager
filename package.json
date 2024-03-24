@@ -11,7 +11,7 @@
     "start": "pnpm --filter server start",
     "dev-server": "pnpm --filter server dev",
     "dev-client": "pnpm --filter client start",
-    "dev": "concurrently \"pnpm dev-server\" \"set PORT=5001 && pnpm dev-client\"",
+    "dev": "concurrently \"pnpm dev-server\" \"pnpm dev-client\"",
     "lint": "pnpm -r run lint"
   },
   "workspaces": [

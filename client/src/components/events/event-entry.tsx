@@ -1,12 +1,11 @@
-import Add from '@mui/icons-material/Add';
 import Assignment from '@mui/icons-material/Assignment';
 import CalendarToday from '@mui/icons-material/CalendarToday';
-import Close from '@mui/icons-material/Close';
-import Create from '@mui/icons-material/Create';
+import DeleteForever from '@mui/icons-material/DeleteForever';
 import HourglassFull from '@mui/icons-material/HourglassFull';
 import Person from '@mui/icons-material/Person';
 import Refresh from '@mui/icons-material/Refresh';
 import WatchLater from '@mui/icons-material/WatchLater';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
@@ -130,14 +129,14 @@ const EventEntry = ({
   );
 
   return (
-    <Card variant="outlined" className="event-entry">
+    <Card variant="elevation" className="event-entry">
       <form onSubmit={onSubmit} className="event-form">
         <div className="field long">
-          <Assignment className="field-label" />
+          <Assignment color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
         </div>
         <div className="field">
-          <CalendarToday className="field-label" />
+          <CalendarToday color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select required>
             {daysOfWeek.map(day => (
               <MenuItem value={day} key={day}>
@@ -147,15 +146,15 @@ const EventEntry = ({
           </EditField>
         </div>
         <div className="field">
-          <WatchLater className="field-label" />
+          <WatchLater color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="startTime" type="time" />
         </div>
         <div className="field">
-          <HourglassFull className="field-label" />
+          <HourglassFull color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
         </div>
         <div className="field long">
-          <Person className="field-label" />
+          <Person color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" required select>
             {possibleLeaders.map(leader => (
               <MenuItem value={leader.id} key={leader.id}>
@@ -165,19 +164,18 @@ const EventEntry = ({
           </EditField>
         </div>
         <div className="field buttons">
-          {create ? null : (
-            <Tooltip title="Delete Event">
-              <IconButton size="small" onClick={onDelete}>
-                <Close />
-              </IconButton>
-            </Tooltip>
-          )}
           {modified ? (
             <>
               <Tooltip title="Apply Changes">
-                <IconButton size="small" onClick={create ? onCreate : onUpdate}>
-                  {create ? <Add /> : <Create />}
-                </IconButton>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className="save"
+                  onClick={create ? onCreate : onUpdate}
+                >
+                  Save
+                </Button>
               </Tooltip>
               <Tooltip title="Reset Changes">
                 <IconButton size="small" onClick={onReset}>
@@ -186,6 +184,13 @@ const EventEntry = ({
               </Tooltip>
             </>
           ) : null}
+          {create ? null : (
+            <Tooltip title="Delete Event">
+              <IconButton color="error" size="small" onClick={onDelete}>
+                <DeleteForever />
+              </IconButton>
+            </Tooltip>
+          )}
         </div>
       </form>
     </Card>
@@ -206,7 +211,7 @@ const EditField = ({ event, onEdit, fieldKey, children, required, ...props }: Ed
   const theme = useTheme<Theme>();
   return (
     <TextField
-      variant="standard"
+      variant="outlined"
       size="small"
       className="entry-input"
       value={event[fieldKey]}

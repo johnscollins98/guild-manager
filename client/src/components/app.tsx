@@ -28,8 +28,6 @@ const App = () => {
   const [toastStatus, setToastStatus] = useState<AlertColor>('info');
   const [toastMessage, setToastMessage] = useState('');
 
-  usePrefetchGW2Log();
-
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [theme, setTheme] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
   useEffect(() => {
@@ -73,6 +71,8 @@ const App = () => {
   }, [setToastMessage, setShowToast]);
 
   const { data: authInfo } = useAuth();
+
+  usePrefetchGW2Log(!!authInfo && !!authInfo.loggedIn);
 
   return (
     <ThemeProvider theme={darkTheme}>

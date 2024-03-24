@@ -23,6 +23,10 @@
         flex-grow: 0;
         min-width: auto;
         justify-content: flex-end;
+
+        .save {
+          margin-right: 6px;
+        }
       }
 
       .field-label {
