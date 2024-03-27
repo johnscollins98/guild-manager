@@ -1,4 +1,5 @@
 import ConnectMongoDBSession from 'connect-mongodb-session';
+import { Client, GatewayIntentBits } from 'discord.js';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -11,6 +12,7 @@ import { config } from './config';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
 import { ErrorCatcherMiddleware } from './services/middleware/error-handler';
+import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
 useContainer(Container);
@@ -84,3 +86,25 @@ createConnection({
   }
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });
+
+// Bot listening to member leaving to save to DB
+const client = new Client({
+  intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers]
+});
+
+client.on('ready', () => console.log('Bot listening'));
+
+client.on('guildMemberRemove', async m => {
+  const memberLeftRepo = Container.get(MemberLeftRepository);
+  console.log(`Logging ${m.displayName} left`);
+  memberLeftRepo.create({
+    displayName: m.displayName,
+    nickname: m.nickname ?? undefined,
+    username: m.user.username,
+    userDisplayName: m.user.displayName,
+    globalName: m.user.globalName ?? undefined,
+    time: new Date()
+  });
+});
+
+client.login(config.botToken);
