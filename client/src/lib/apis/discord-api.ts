@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
-import { DiscordLog } from '../interfaces/discord-log';
+import { DiscordLeaver, DiscordLog } from '../interfaces/discord-log';
 import DiscordMember from '../interfaces/discord-member';
 import DiscordRole from '../interfaces/discord-role';
 import EventSettings from '../interfaces/event-settings';
@@ -10,6 +10,7 @@ import EventSettings from '../interfaces/event-settings';
 export const useDiscordMembers = () => useQuery<DiscordMember[], AxiosError>('discord/members');
 export const useDiscordRoles = () => useQuery<DiscordRole[], AxiosError>('discord/roles');
 export const useDiscordLog = () => useQuery<DiscordLog, AxiosError>('discord/log');
+export const useDiscordLeavers = () => useQuery<DiscordLeaver[], AxiosError>('discord/leavers');
 
 export interface ChangeRoleDTO {
   memberId: string;

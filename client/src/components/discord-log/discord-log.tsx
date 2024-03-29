@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
-import { useDiscordLog } from '../../lib/apis/discord-api';
-import { DiscordLogDisplayGenerator } from '../../lib/interfaces/discord-log-string-generator';
+import { useDiscordLeavers, useDiscordLog } from '../../lib/apis/discord-api';
+import {
+  DiscordLogDisplay,
+  DiscordLogDisplayGenerator
+} from '../../lib/interfaces/discord-log-string-generator';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
 import { snowflakeToDate } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
@@ -9,14 +12,22 @@ import LoaderPage from '../common/loader-page';
 import DiscordLogEntry from './discord-log-entry';
 import './discord-log.scss';
 
+interface DiscordLogEntry {
+  discordDisplay: DiscordLogDisplay;
+  date: Date;
+}
+
 const DiscordLog = () => {
   const filterString = useFilterString();
   const { isLoading, data, error } = useDiscordLog();
+  const { isLoading: isLeaversLoading, data: leavers, error: leaversError } = useDiscordLeavers();
 
-  const logData = useMemo(() => {
+  const logData: DiscordLogEntry[] | undefined = useMemo(() => {
     if (!data) return undefined;
+    if (!leavers) return undefined;
+
     const factory = new DiscordLogEntryFactory(data);
-    return data.audit_log_entries
+    const auditData = data.audit_log_entries
       .filter(entry => !!factory.getDiscordLogStringGenerator(entry.id))
       .map(entry => {
         const date = snowflakeToDate(entry.id);
@@ -28,7 +39,16 @@ const DiscordLog = () => {
           discordDisplay: generator.getEntry()
         };
       });
-  }, [data]);
+
+    const leaversData = leavers.map(l => ({
+      discordDisplay: {
+        summary: `${l.displayName} left/kicked.`
+      },
+      date: new Date(l.time)
+    }));
+
+    return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
+  }, [data, leavers]);
 
   const filteredLogData = useMemo(() => {
     if (!logData) return undefined;
@@ -39,9 +59,10 @@ const DiscordLog = () => {
     );
   }, [logData, filterString]);
 
-  if (error) return <ErrorMessage>There was an error gathering log data.</ErrorMessage>;
+  if (error || leaversError)
+    return <ErrorMessage>There was an error gathering log data.</ErrorMessage>;
 
-  if (isLoading || !filteredLogData) return <LoaderPage />;
+  if (isLoading || isLeaversLoading || !filteredLogData) return <LoaderPage />;
 
   return (
     <div className="log-container">

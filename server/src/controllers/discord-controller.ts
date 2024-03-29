@@ -25,6 +25,7 @@ import { IDiscordGuildApi } from '../services/discord/guild-api';
 import { DiscordMemberFormatter } from '../services/discord/member-formatter';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
+import { MemberLeftRepository } from '../services/repositories/member-left-repository';
 
 @Service()
 @Authorized()
@@ -37,7 +38,8 @@ export class DiscordController {
     private readonly discordMemberFormatter: DiscordMemberFormatter,
     private readonly discordEventEmbedCreator: EventEmbedCreator,
     private readonly eventRepository: EventRepository,
-    private readonly eventSettingsRepository: EventPostSettingsRepository
+    private readonly eventSettingsRepository: EventPostSettingsRepository,
+    private readonly memberLeftRepository: MemberLeftRepository
   ) {
     this.discordChannelApi = discordApiFactory.channelApi();
     this.discordGuildApi = discordApiFactory.guildApi();
@@ -70,6 +72,11 @@ export class DiscordController {
   @Get('/log')
   async getLogs() {
     return await this.discordGuildApi.getLogs();
+  }
+
+  @Get('/leavers')
+  async getLeavers() {
+    return await this.memberLeftRepository.getAll();
   }
 
   @OnUndefined(204)
