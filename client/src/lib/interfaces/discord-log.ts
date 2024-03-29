@@ -40,3 +40,12 @@ export interface DiscordLog {
   audit_log_entries: DiscordLogEntry[];
   users: DiscordLogUser[];
 }
+
+export interface DiscordLeaver {
+  displayName: string;
+  username: string;
+  nickname?: string;
+  userDisplayName: string;
+  globalName?: string;
+  time: string; // date string
+}
