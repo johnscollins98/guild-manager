@@ -42,7 +42,13 @@ const DiscordLog = () => {
 
     const leaversData = leavers.map(l => ({
       discordDisplay: {
-        summary: `${l.displayName} left/kicked.`
+        summary: `${l.displayName} left/kicked.`,
+        details: [
+          `Account Name: ${l.username ?? ''}`,
+          `User Display Name: ${l.userDisplayName ?? ''}`,
+          `Global Name: ${l.globalName ?? ''}`,
+          ...(l.nickname ? [`Nickname: ${l.nickname}`] : [])
+        ]
       },
       date: new Date(l.time)
     }));
