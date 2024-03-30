@@ -1,5 +1,5 @@
 import ConnectMongoDBSession from 'connect-mongodb-session';
-import { Client, GatewayIntentBits } from 'discord.js';
+import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -89,7 +89,8 @@ createConnection({
 
 // Bot listening to member leaving to save to DB
 const client = new Client({
-  intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers]
+  intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
+  partials: [Partials.GuildMember]
 });
 
 client.on('ready', () => console.log('Bot listening'));
