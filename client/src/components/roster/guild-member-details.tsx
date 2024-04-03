@@ -1,8 +1,8 @@
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import { ReactComponent as DiscordSvg } from '../../assets/images/discord.svg';
-import { ReactComponent as Gw2Logo } from '../../assets/images/gw2.svg';
+import DiscordSvg from '../../assets/images/discord.svg?react';
+import Gw2Logo from '../../assets/images/gw2.svg?react';
 import MemberRecord from '../../lib/interfaces/member-record';
 import './guild-member-details.scss';
 

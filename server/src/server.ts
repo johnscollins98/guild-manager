@@ -6,7 +6,7 @@ import passport from 'passport';
 import path from 'path';
 import 'reflect-metadata';
 import { Action, useContainer as rc_useContainer, useExpressServer } from 'routing-controllers';
-import { createConnection, useContainer } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { config } from './config';
 import { AuthService } from './services/auth/auth-service';
@@ -15,7 +15,6 @@ import { ErrorCatcherMiddleware } from './services/middleware/error-handler';
 import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
-useContainer(Container);
 
 const app = express();
 app.use(express.json());
@@ -70,15 +69,17 @@ app.use('*', (_, res) => {
   if (!res.headersSent) res.redirect('/');
 });
 
-createConnection({
+export const dataSource = new DataSource({
   type: 'mongodb',
   url: config.atlasUri,
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
   synchronize: true,
   logging: true,
   entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
-}).then(() => {
+});
+
+export const Manager = dataSource.manager;
+
+dataSource.initialize().then(() => {
   console.log('Connected to MongoDB');
 
   if (!(process.env.NODE_ENV === 'development' && config.skipAuth)) {

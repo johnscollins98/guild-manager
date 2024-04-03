@@ -5,6 +5,9 @@ import {
   Delete,
   Get,
   JsonController,
+  NotFoundError,
+  OnNull,
+  OnUndefined,
   Param,
   Post,
   Put
@@ -20,33 +23,40 @@ export class WarningsController {
   constructor(private readonly warningRepo: WarningsRepository) {}
 
   @Get('/')
-  getAll() {
+  getAll(): Promise<Warning[]> {
     return this.warningRepo.getAll();
   }
 
   @Get('/:id')
-  get(@Param('id') id: string) {
+  @OnNull(404)
+  get(@Param('id') id: string): Promise<Warning | null> {
     return this.warningRepo.getById(id);
   }
 
   @Get('/member/:id')
-  getForMember(@Param('id') id: string) {
+  getForMember(@Param('id') id: string): Promise<Warning[]> {
     return this.warningRepo.getForMember(id);
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.warningRepo.delete(id);
+  @OnUndefined(204)
+  async delete(@Param('id') id: string): Promise<undefined> {
+    const res = await this.warningRepo.delete(id);
+
+    if (!res) {
+      throw new NotFoundError('Cannot find warning');
+    }
   }
 
   @Post('/')
-  create(@Body() warning: Warning, @CurrentUser() user: Express.User) {
+  create(@Body() warning: Warning, @CurrentUser() user: Express.User): Promise<Warning> {
     warning.givenBy = user.username;
     return this.warningRepo.create(warning);
   }
 
   @Put('/:id')
-  update(@Param('id') id: string, @Body() warning: Warning) {
+  @OnNull(404)
+  update(@Param('id') id: string, @Body() warning: Warning): Promise<Warning | null> {
     return this.warningRepo.update(id, warning);
   }
 }

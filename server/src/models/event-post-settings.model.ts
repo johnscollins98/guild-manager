@@ -1,4 +1,4 @@
-import { Column, Entity, ObjectID, ObjectIdColumn, PrimaryColumn } from 'typeorm';
+import { Column, Entity, ObjectId, ObjectIdColumn, PrimaryColumn } from 'typeorm';
 
 export interface MessageIDs {
   [key: string]: string;
@@ -15,7 +15,7 @@ export interface MessageIDs {
 @Entity()
 export class EventPostSettings {
   @ObjectIdColumn()
-  public readonly _id!: ObjectID;
+  public readonly _id!: ObjectId;
 
   @PrimaryColumn()
   guildId!: string;

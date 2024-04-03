@@ -10,8 +10,8 @@ import { PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
-import { ReactComponent as DiscordLogo } from '../../assets/images/discord.svg';
-import { ReactComponent as Gw2Logo } from '../../assets/images/gw2.svg';
+import DiscordLogo from '../../assets/images/discord.svg?react';
+import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
 import { useUpdateDiscordMember } from '../../lib/apis/discord-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
@@ -129,8 +129,8 @@ const GuildMemberCard = ({
                   {member.memberId
                     ? member.memberId[0]
                     : member.discordName
-                    ? member.discordName[0]
-                    : null}
+                      ? member.discordName[0]
+                      : null}
                 </Avatar>
               )}
               <span className="details">

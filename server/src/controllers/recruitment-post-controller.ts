@@ -5,55 +5,58 @@ import {
   Get,
   JsonController,
   NotFoundError,
+  OnNull,
   OnUndefined,
   Put,
   QueryParam
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { Repository } from 'typeorm';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 import { RecruitmentPost } from '../models/recruitment-post.model';
 import { PostGeneratorFactory } from '../services/recruitment/post-generator-factory';
+import { RecruitmentPostRepository } from '../services/repositories/recruitment-post-repository';
 
 @JsonController('/api/recruitment-post', { transformResponse: false })
 @Authorized()
 @Service()
 export class RecruitmentPostController {
   constructor(
-    @InjectRepository(RecruitmentPost)
-    private readonly recruitmentRepo: Repository<RecruitmentPost>,
+    private readonly recruitmentRepo: RecruitmentPostRepository,
     private readonly postGeneratorFactory: PostGeneratorFactory
   ) {}
 
   @Get('/')
-  @OnUndefined(404)
-  get() {
-    return this.recruitmentRepo.findOne();
+  @OnNull(404)
+  get(): Promise<RecruitmentPost | null> {
+    return this.recruitmentRepo.getOne();
   }
 
   @Get('/generate')
-  @OnUndefined(404)
-  getGeneratedPost(@QueryParam('html', { type: 'boolean' }) isHtml: boolean) {
+  @OnNull(404)
+  getGeneratedPost(
+    @QueryParam('html', { type: 'boolean' }) isHtml: boolean
+  ): Promise<string | null> {
     const generator = this.postGeneratorFactory.getPostGenerator(isHtml);
     return generator.generateRecruitmentPost();
   }
 
   @Put('/')
-  async upsert(@Body() body: RecruitmentPost) {
-    const post = await this.recruitmentRepo.findOne();
+  async upsert(@Body() body: RecruitmentPost): Promise<RecruitmentPost> {
+    const post = await this.recruitmentRepo.getOne();
 
     if (post) {
       await this.recruitmentRepo.update(post._id, body);
-      return this.recruitmentRepo.findOne(post._id);
+      const updatedPost = await this.recruitmentRepo.getById(post._id);
+      if (!updatedPost) throw new NotFoundError();
+      return updatedPost;
     } else {
-      return this.recruitmentRepo.save(body);
+      return this.recruitmentRepo.create(body);
     }
   }
 
   @Delete('/')
   @OnUndefined(204)
-  async delete() {
-    const post = await this.recruitmentRepo.findOne();
+  async delete(): Promise<undefined> {
+    const post = await this.recruitmentRepo.getOne();
 
     if (!post) {
       throw new NotFoundError();

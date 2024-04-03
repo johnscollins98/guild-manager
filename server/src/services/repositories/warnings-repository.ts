@@ -1,16 +1,15 @@
 import { Service } from 'typedi';
-import { Repository } from 'typeorm';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Warning } from '../../models/warning.model';
+import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 @Service()
 class WarningsRepository extends BaseRepository<Warning> {
-  constructor(@InjectRepository(Warning) repo: Repository<Warning>) {
-    super(repo);
+  constructor() {
+    super(dataSource.getMongoRepository(Warning));
   }
 
   async getForMember(memberId: string): Promise<Warning[]> {
-    return await this.repo.find({ givenTo: memberId });
+    return await this.repo.find({ where: { givenTo: memberId } });
   }
 }
 

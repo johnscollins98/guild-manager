@@ -15,9 +15,12 @@ import {
 import { Service } from 'typedi';
 import { config } from '../config';
 import { EventPostSettings } from '../models/event-post-settings.model';
+import { DiscordLog } from '../models/interfaces/discord-log';
 import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
 import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
 import DiscordRole from '../models/interfaces/discord-role';
+import FormattedDiscordMember from '../models/interfaces/formatted-discord-member';
+import { MemberLeft } from '../models/member-left.model';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
 import { EventEmbedCreator } from '../services/discord/event-embed-creator';
@@ -46,7 +49,7 @@ export class DiscordController {
   }
 
   @Get('/roles')
-  async getRoles() {
+  async getRoles(): Promise<DiscordRole[]> {
     const results: [DiscordRole[], string[]] = await Promise.all([
       await this.discordGuildApi.getRoles(),
       await this.discordMemberFormatter.getValidRoles()
@@ -61,7 +64,7 @@ export class DiscordController {
 
   @Get('/members')
   @Header('Cache-control', `public, max-age=0`)
-  async getMembers() {
+  async getMembers(): Promise<FormattedDiscordMember[]> {
     const results: [DiscordMember[], DiscordRole[]] = await Promise.all([
       this.discordGuildApi.getMembers(),
       this.discordGuildApi.getRoles()
@@ -70,36 +73,45 @@ export class DiscordController {
   }
 
   @Get('/log')
-  async getLogs() {
+  async getLogs(): Promise<DiscordLog> {
     return await this.discordGuildApi.getLogs();
   }
 
   @Get('/leavers')
-  async getLeavers() {
+  async getLeavers(): Promise<MemberLeft[]> {
     return await this.memberLeftRepository.getAll();
   }
 
   @OnUndefined(204)
   @Put('/members/:memberId/roles/:roleId')
-  async addRoleToMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
+  async addRoleToMember(
+    @Param('memberId') memberId: string,
+    @Param('roleId') roleId: string
+  ): Promise<undefined> {
     await this.discordGuildApi.addRoleToMember(memberId, roleId);
   }
 
   @OnUndefined(204)
   @Delete('/members/:memberId/roles/:roleId')
-  async removeRoleFromMember(@Param('memberId') memberId: string, @Param('roleId') roleId: string) {
+  async removeRoleFromMember(
+    @Param('memberId') memberId: string,
+    @Param('roleId') roleId: string
+  ): Promise<undefined> {
     await this.discordGuildApi.removeRoleFromMember(memberId, roleId);
   }
 
   @OnUndefined(204)
   @Put('/members/:memberId')
-  async updateMember(@Param('memberId') memberId: string, @Body() updates: DiscordMemberUpdate) {
-    return await this.discordGuildApi.updateMember(memberId, updates);
+  async updateMember(
+    @Param('memberId') memberId: string,
+    @Body() updates: DiscordMemberUpdate
+  ): Promise<undefined> {
+    await this.discordGuildApi.updateMember(memberId, updates);
   }
 
   @OnUndefined(204)
   @Delete('/members/:memberId')
-  async deleteMember(@Param('memberId') memberId: string) {
+  async deleteMember(@Param('memberId') memberId: string): Promise<undefined> {
     await this.discordGuildApi.kickMember(memberId);
   }
 
@@ -108,14 +120,14 @@ export class DiscordController {
   async sendMessageToMember(
     @Param('memberId') memberId: string,
     @Body() messageData: DiscordMessagePost
-  ) {
+  ): Promise<undefined> {
     const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
     await this.discordChannelApi.sendMessage(dmChannelId, messageData);
   }
 
   @OnUndefined(200)
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() settings: EventPostSettings) {
+  async postEventUpdates(@Body() settings: EventPostSettings): Promise<undefined> {
     await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, settings);
     if (!(await this.discordChannelApi.getChannel(settings.channelId))) {
       throw new NotFoundError('Channel not found');

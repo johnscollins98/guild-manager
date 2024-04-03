@@ -12,6 +12,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
+import AuthInfo from '../models/interfaces/auth-info';
 import { AuthService } from '../services/auth/auth-service';
 
 @Service()
@@ -35,7 +36,7 @@ export class AuthController {
   redirect() {}
 
   @Get('/logout')
-  logout(@Req() req: Request, @Res() res: Response) {
+  logout(@Req() req: Request, @Res() res: Response): void {
     req.logout(() => {
       res.redirect('/');
     });
@@ -43,19 +44,19 @@ export class AuthController {
 
   @Get('/authorization')
   @Header('Cache-control', 'no-store')
-  getAuthorization(@CurrentUser() user: Express.User) {
+  getAuthorization(@CurrentUser() user: Express.User): Promise<AuthInfo> {
     return this.authService.getUserAuthInfo(user);
   }
 
   @Get('/admin_roles')
   @Authorized()
-  getAdminRoles() {
+  getAdminRoles(): string[] {
     return config.adminRoles;
   }
 
   @Get('/event_roles')
   @Authorized()
-  getEventRoles() {
+  getEventRoles(): string[] {
     return config.eventRoles.concat(config.adminRoles);
   }
 }

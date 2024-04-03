@@ -68,10 +68,10 @@ const KickModal: FunctionComponent<KickModalProps> = ({ ids, isOpen, onClose, on
             <Button
               variant="contained"
               type="submit"
-              disabled={kickMutation.isLoading}
+              disabled={kickMutation.isPending}
               color="primary"
             >
-              {kickMutation.isLoading ? <CircularProgress size={25} /> : 'Kick'}
+              {kickMutation.isPending ? <CircularProgress size={25} /> : 'Kick'}
             </Button>
           </div>
         </form>

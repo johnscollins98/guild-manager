@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
-import { ReactComponent as DiscordSvg } from '../../assets/images/discord.svg';
+import DiscordSvg from '../../assets/images/discord.svg?react';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import {
