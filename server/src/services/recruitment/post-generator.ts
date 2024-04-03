@@ -1,3 +1,3 @@
 export interface PostGenerator {
-  generateRecruitmentPost(): Promise<string | undefined>;
+  generateRecruitmentPost(): Promise<string | null>;
 }

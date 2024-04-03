@@ -1,44 +1,48 @@
 import { Service } from 'typedi';
-import { DeepPartial, ObjectID, Repository } from 'typeorm';
+import { DeepPartial, MongoRepository, ObjectId } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 interface IMayHaveId {
-  _id?: ObjectID;
+  _id: ObjectId;
 }
 
 @Service()
 export abstract class BaseRepository<T extends IMayHaveId> {
-  constructor(protected readonly repo: Repository<T>) {}
+  constructor(protected readonly repo: MongoRepository<T>) {}
 
   async getAll(): Promise<T[]> {
     return await this.repo.find();
   }
 
-  async getById(id: string): Promise<T | undefined> {
-    return await this.repo.findOne(id);
+  async getOne(): Promise<T | null> {
+    return await this.repo.findOne({ where: {} });
+  }
+
+  async getById(id: string | ObjectId): Promise<T | null> {
+    return await this.repo.findOne({ where: { _id: new ObjectId(id) } });
   }
 
   async create(newItem: DeepPartial<T>): Promise<T> {
     return await this.repo.save(newItem);
   }
 
-  async delete(id: string): Promise<T | undefined> {
-    const toDelete = await this.repo.findOne(id);
+  async delete(id: string | ObjectId): Promise<T | null> {
+    const toDelete = await this.getById(id);
     const deleteResult = await this.repo.delete(id);
     if (deleteResult.affected === 1 && toDelete) {
       return toDelete;
     } else {
-      return undefined;
+      return null;
     }
   }
 
-  async update(id: string, updatedItem: QueryDeepPartialEntity<T>): Promise<T | undefined> {
+  async update(id: string | ObjectId, updatedItem: QueryDeepPartialEntity<T>): Promise<T | null> {
     // MongoDB limitation if you try to update with the _id - so just strip it out.
     if ('_id' in updatedItem) {
       delete updatedItem._id;
     }
 
     await this.repo.update(id, updatedItem);
-    return await this.repo.findOne(id);
+    return await this.getById(id);
   }
 }

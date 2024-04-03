@@ -7,11 +7,11 @@ import { PostGenerator } from './post-generator';
 export class HtmlPostGenerator implements PostGenerator {
   constructor(private readonly mdPostGenerator: MdPostGenerator) {}
 
-  async generateRecruitmentPost(): Promise<string | undefined> {
+  async generateRecruitmentPost(): Promise<string | null> {
     const mdPost = await this.mdPostGenerator.generateRecruitmentPost();
 
     if (!mdPost) {
-      return undefined;
+      return null;
     }
 
     const renderer = new md();

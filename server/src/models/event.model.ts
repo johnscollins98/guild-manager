@@ -1,9 +1,9 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
 @Entity()
 export class Event {
   @ObjectIdColumn()
-  public readonly _id!: ObjectID;
+  public readonly _id!: ObjectId;
 
   @Column()
   title!: string;
