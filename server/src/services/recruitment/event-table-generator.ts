@@ -1,4 +1,3 @@
-import markdownTable from 'markdown-table';
 import { Service } from 'typedi';
 import { Event } from '../../models/event.model';
 import { EventRepository } from '../repositories/event-repository';
@@ -40,7 +39,7 @@ export class EventTableGenerator {
         })
       );
     }
-
+    const { markdownTable } = await import('markdown-table');
     return markdownTable(tableArray);
   }
 
