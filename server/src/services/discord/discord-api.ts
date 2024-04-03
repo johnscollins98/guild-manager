@@ -6,7 +6,10 @@ import { config } from '../../config';
 export class DiscordApi {
   private readonly baseUrl: string;
 
-  constructor(private readonly apiKey = config.botToken, private readonly isBearer = false) {
+  constructor(
+    private readonly apiKey = config.botToken,
+    private readonly isBearer = false
+  ) {
     this.baseUrl = `https://discord.com/api`;
   }
 

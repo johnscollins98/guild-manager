@@ -10,7 +10,10 @@ import { GW2LogFormatter } from '../services/gw2/log-formatter';
 export class GW2Controller {
   private readonly gw2GuildApi: IGW2GuildApi;
 
-  constructor(gw2GuildApiFactory: GW2ApiFactory, private readonly logFormatter: GW2LogFormatter) {
+  constructor(
+    gw2GuildApiFactory: GW2ApiFactory,
+    private readonly logFormatter: GW2LogFormatter
+  ) {
     this.gw2GuildApi = gw2GuildApiFactory.guildApi();
   }
 

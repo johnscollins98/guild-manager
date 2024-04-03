@@ -129,8 +129,8 @@ const GuildMemberCard = ({
                   {member.memberId
                     ? member.memberId[0]
                     : member.discordName
-                    ? member.discordName[0]
-                    : null}
+                      ? member.discordName[0]
+                      : null}
                 </Avatar>
               )}
               <span className="details">
