@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "dev": "set NODE_ENV=development&&nodemon --exec ts-node --files ./src/server.ts",
+    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node --files ./src/server.ts",
     "env-check": "ts-node ./src/check-env.ts",
     "regen-types": "npx gen-env-types .env",
-    "start": "set NODE_ENV=production&&node ./build/server.js",
+    "start": "cross-env NODE_ENV=production node ./build/server.js",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
@@ -47,6 +47,7 @@
     "typescript": "^5.4.3"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1"
   }

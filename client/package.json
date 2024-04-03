@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
-    "start": "set NODE_ENV=development&&vite",
+    "build": "cross-env NODE_ENV=production tsc && vite build",
+    "start": "cross-env NODE_ENV=development vite",
     "lint": "eslint . --ext .ts --ext .tsx"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
     "@vitejs/plugin-react": "^3.1.0",
     "axios": "^1.3.4",
     "copy-to-clipboard": "^3.3.3",
+    "cross-env": "^7.0.3",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "luxon": "^3.2.1",

@@ -18,14 +18,14 @@
       "type": "node-terminal",
       "name": "Client",
       "request": "launch",
-      "command": "pnpm run dev-client",
+      "command": "bun run dev-client",
       "cwd": "${workspaceFolder}"
     },
     {
       "type": "node-terminal",
       "name": "Server",
       "request": "launch",
-      "command": "pnpm run dev-server",
+      "command": "bun run dev-server",
       "cwd": "${workspaceFolder}"
     }
   ]
