@@ -40,12 +40,14 @@ export class RecruitmentPostController {
   }
 
   @Put('/')
-  async upsert(@Body() body: RecruitmentPost) {
+  async upsert(@Body() body: RecruitmentPost): Promise<RecruitmentPost> {
     const post = await this.recruitmentRepo.getOne();
 
     if (post) {
       await this.recruitmentRepo.update(post._id, body);
-      return this.recruitmentRepo.getById(post._id);
+      const updatedPost = await this.recruitmentRepo.getById(post._id);
+      if (!updatedPost) throw new NotFoundError();
+      return updatedPost;
     } else {
       return this.recruitmentRepo.create(body);
     }
@@ -53,7 +55,7 @@ export class RecruitmentPostController {
 
   @Delete('/')
   @OnUndefined(204)
-  async delete() {
+  async delete(): Promise<undefined> {
     const post = await this.recruitmentRepo.getOne();
 
     if (!post) {

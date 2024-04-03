@@ -1,5 +1,8 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
+import { FormattedLogEntry } from '../models/interfaces/formatted-log-entry';
+import GW2Member from '../models/interfaces/gw2-member';
+import GW2Rank from '../models/interfaces/gw2-rank';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
@@ -18,19 +21,19 @@ export class GW2Controller {
   }
 
   @Get('/log')
-  async getLog() {
+  async getLog(): Promise<FormattedLogEntry[]> {
     const unformattedLog = await this.gw2GuildApi.getLog();
     return this.logFormatter.formatLogEntries(unformattedLog);
   }
 
   @Get('/members')
   @Header('Cache-control', `public, max-age=0`)
-  getMembers() {
+  getMembers(): Promise<GW2Member[]> {
     return this.gw2GuildApi.getMembers();
   }
 
   @Get('/ranks')
-  getRanks() {
+  getRanks(): Promise<GW2Rank[]> {
     return this.gw2GuildApi.getRanks();
   }
 }
