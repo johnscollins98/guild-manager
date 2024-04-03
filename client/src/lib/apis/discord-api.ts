@@ -1,5 +1,5 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
 import { DiscordLeaver, DiscordLog } from '../interfaces/discord-log';
@@ -7,10 +7,13 @@ import DiscordMember from '../interfaces/discord-member';
 import DiscordRole from '../interfaces/discord-role';
 import EventSettings from '../interfaces/event-settings';
 
-export const useDiscordMembers = () => useQuery<DiscordMember[], AxiosError>('discord/members');
-export const useDiscordRoles = () => useQuery<DiscordRole[], AxiosError>('discord/roles');
-export const useDiscordLog = () => useQuery<DiscordLog, AxiosError>('discord/log');
-export const useDiscordLeavers = () => useQuery<DiscordLeaver[], AxiosError>('discord/leavers');
+export const useDiscordMembers = () =>
+  useQuery<DiscordMember[], AxiosError>({ queryKey: ['discord/members'] });
+export const useDiscordRoles = () =>
+  useQuery<DiscordRole[], AxiosError>({ queryKey: ['discord/roles'] });
+export const useDiscordLog = () => useQuery<DiscordLog, AxiosError>({ queryKey: ['discord/log'] });
+export const useDiscordLeavers = () =>
+  useQuery<DiscordLeaver[], AxiosError>({ queryKey: ['discord/leavers'] });
 
 export interface ChangeRoleDTO {
   memberId: string;
@@ -25,13 +28,13 @@ export const useAddDiscordRole = () => {
     mutationFn({ memberId, role }) {
       return axios.put(`/api/discord/members/${memberId}/roles/${role.id}`);
     },
-    async onMutate({ role, memberId }) {
-      await queryClient.cancelQueries('discord/members');
+    async onMutate({ memberId, role }) {
+      await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
 
       queryClient.setQueryData<DiscordMember[]>(
-        'discord/members',
+        ['discord/members'],
         old =>
           old?.map(member => {
             if (member.id !== memberId) return member;
@@ -44,10 +47,10 @@ export const useAddDiscordRole = () => {
     },
     onError(_err, _var, previous) {
       openToast('Failed to add role', 'error');
-      queryClient.setQueryData('discord/members', previous);
+      queryClient.setQueryData(['discord/members'], previous);
     },
     onSettled() {
-      queryClient.invalidateQueries(['discord/members']);
+      queryClient.invalidateQueries({ queryKey: ['discord/members'] });
     }
   });
 };
@@ -61,12 +64,12 @@ export const useRemoveDiscordRole = () => {
       return axios.delete(`/api/discord/members/${memberId}/roles/${role.id}`);
     },
     async onMutate({ role, memberId }) {
-      await queryClient.cancelQueries('discord/members');
+      await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
 
       queryClient.setQueryData<DiscordMember[]>(
-        'discord/members',
+        ['discord/members'],
         old =>
           old?.map(member => {
             if (member.id !== memberId) return member;
@@ -79,10 +82,10 @@ export const useRemoveDiscordRole = () => {
     },
     onError(_err, _var, previous) {
       openToast('Failed to remove role', 'error');
-      queryClient.setQueryData('discord/members', previous);
+      queryClient.setQueryData(['discord/members'], previous);
     },
     onSettled() {
-      queryClient.invalidateQueries(['discord/members']);
+      queryClient.invalidateQueries({ queryKey: ['discord/members'] });
     }
   });
 };
@@ -101,7 +104,7 @@ export const useUpdateDiscordMember = () => {
       return axios.put(`/api/discord/members/${memberId}`, { nick });
     },
     onSuccess() {
-      queryClient.invalidateQueries(['discord/members']);
+      queryClient.invalidateQueries({ queryKey: ['discord/members'] });
       openToast('Successfully updated nickname.', 'success');
     },
     onError() {
@@ -146,12 +149,12 @@ export const useKickDiscordMembers = () => {
       await Promise.all(promises);
     },
     async onMutate({ memberIds }) {
-      await queryClient.cancelQueries('discord/members');
+      await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>('discord/members');
+      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
 
       queryClient.setQueryData<DiscordMember[]>(
-        'discord/members',
+        ['discord/members'],
         old => old?.filter(m => !memberIds.includes(m.id)) ?? []
       );
 
@@ -162,8 +165,8 @@ export const useKickDiscordMembers = () => {
     },
     onError(_err, _dto, context) {
       openToast('Failed to kick members.', 'error');
-      queryClient.setQueryData('discord/members', context);
-      queryClient.invalidateQueries('discord/members');
+      queryClient.setQueryData(['discord/members'], context);
+      queryClient.invalidateQueries({ queryKey: ['discord/members'] });
     }
   });
 };
@@ -204,7 +207,7 @@ export const usePostEvents = () => {
       openToast('Failed to post events to discord.', 'error');
     },
     onSettled() {
-      queryClient.invalidateQueries('events/settings');
+      queryClient.invalidateQueries({ queryKey: ['events/settings'] });
     }
   });
 };

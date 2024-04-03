@@ -1,11 +1,12 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../components/common/toast-context';
 import Event from '../interfaces/event';
 import EventSettings from '../interfaces/event-settings';
 
-export const useEvents = () => useQuery<Event[], AxiosError>('events');
-export const useEventSettings = () => useQuery<EventSettings, AxiosError>('events/settings');
+export const useEvents = () => useQuery<Event[], AxiosError>({ queryKey: ['events'] });
+export const useEventSettings = () =>
+  useQuery<EventSettings, AxiosError>({ queryKey: ['events/settings'] });
 
 export const useCreateEventMutation = () => {
   const queryClient = useQueryClient();
@@ -17,7 +18,7 @@ export const useCreateEventMutation = () => {
     },
     onSuccess() {
       openToast('Created event.', 'success');
-      queryClient.invalidateQueries('events');
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError() {
       openToast('Failed to create event.', 'error');
@@ -35,7 +36,7 @@ export const useDeleteEventMutation = () => {
     },
     onSuccess() {
       openToast('Deleted event.', 'success');
-      queryClient.invalidateQueries('events');
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError() {
       openToast('Failed to delete event.', 'error');
@@ -53,7 +54,7 @@ export const useUpdateEventMutation = () => {
     },
     onSuccess() {
       openToast('Updated event.', 'success');
-      queryClient.invalidateQueries('events');
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     },
     onError() {
       openToast('Failed to update event.', 'error');

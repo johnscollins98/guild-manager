@@ -1,13 +1,16 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useToast } from '../../components/common/toast-context';
 import Warning, { WarningPost } from '../interfaces/warning';
 
-export const useWarnings = () => useQuery<Warning[], AxiosError>('warnings');
+export const useWarnings = () => useQuery<Warning[], AxiosError>({ queryKey: ['warnings'] });
 export const useMemberWarnings = (memberId: string) =>
-  useQuery<Warning[], AxiosError>(['warnings', memberId], async () => {
-    const response = await axios.get<Warning[]>(`/api/warnings/${memberId}`);
-    return response.data;
+  useQuery<Warning[], AxiosError>({
+    queryKey: ['warnings', memberId],
+    queryFn: async () => {
+      const response = await axios.get<Warning[]>(`/api/warnings/${memberId}`);
+      return response.data;
+    }
   });
 
 export const useAddWarningMutation = () => {
@@ -20,7 +23,7 @@ export const useAddWarningMutation = () => {
     },
     onSuccess() {
       openToast('Successfully added warning', 'success');
-      queryClient.invalidateQueries(['warnings']);
+      queryClient.invalidateQueries({ queryKey: ['warnings'] });
     },
     onError() {
       openToast('Failed to add warning', 'error');
@@ -38,7 +41,7 @@ export const useDeleteWarningMutation = () => {
     },
     onSuccess() {
       openToast('Successfully deleted warning', 'success');
-      queryClient.invalidateQueries(['warnings']);
+      queryClient.invalidateQueries({ queryKey: ['warnings'] });
     },
     onError() {
       openToast('Failed to delete warning', 'error');
