@@ -3,7 +3,7 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
-  "npm.packageManager": "pnpm",
+  "npm.packageManager": "bun",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

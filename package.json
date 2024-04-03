@@ -7,12 +7,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -r run build",
-    "start": "pnpm --filter server start",
-    "dev-server": "pnpm --filter server dev",
-    "dev-client": "pnpm --filter client start",
-    "dev": "concurrently \"pnpm dev-server\" \"pnpm dev-client\"",
-    "lint": "pnpm -r run lint"
+    "build": "bun run --cwd ./server build && bun run --cwd ./client build",
+    "start": "bun run --cwd server start",
+    "dev-server": "bun run --cwd server dev",
+    "dev-client": "bun run --cwd client start",
+    "dev": "concurrently \"bun run dev-server\" \"bun run dev-client\"",
+    "lint": "bun run --cwd client lint && bun run --cwd server lint"
   },
   "workspaces": [
     "client",

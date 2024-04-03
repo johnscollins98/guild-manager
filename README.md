@@ -30,22 +30,22 @@ To run this you do need to set up the following env variables:
 
 In the project directory, you can run:
 
-### `pnpm start`
+### `bun run start`
 
 Starts the Express server with node.
 
-### `pnpm dev-server`
+### `bun run dev-server`
 
 Run express server with nodemon.
 
-### `pnpm dev-client`
+### `bun run dev-client`
 
 Run front end in local development server
 
-### `pnpm dev`
+### `bun run dev`
 
 Run both back-end and front-end concurrently
 
-### `pnpm build`
+### `bun run build`
 
 Builds the front end for production/deployment.

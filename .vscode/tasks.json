@@ -10,7 +10,7 @@
       },
       "problemMatcher": [],
       "label": "npm: build",
-      "detail": "pnpm -r run build"
+      "detail": "bun run build"
     }
   ]
 }
