@@ -1,5 +1,6 @@
+import { ObjectId } from 'mongodb';
 import { Service } from 'typedi';
-import { DeepPartial, MongoRepository, ObjectId } from 'typeorm';
+import { DeepPartial, MongoRepository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 interface IMayHaveId {
