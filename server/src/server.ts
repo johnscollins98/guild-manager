@@ -11,7 +11,6 @@ import { Container } from 'typeorm-typedi-extensions';
 import { config } from './config';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
-import { ErrorCatcherMiddleware } from './services/middleware/error-handler';
 import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
@@ -48,7 +47,6 @@ useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*-controller.*')],
   defaultErrorHandler: false,
-  middlewares: [ErrorCatcherMiddleware],
   authorizationChecker: async (action: Action) => {
     if (process.env.NODE_ENV === 'development' && config.skipAuth) {
       return true;
