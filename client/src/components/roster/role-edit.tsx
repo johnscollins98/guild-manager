@@ -1,4 +1,3 @@
-import React, { ChangeEvent } from 'react';
 import { getColorFromRole } from '../../lib/utils/helpers';
 import './role-edit.scss';
 
@@ -29,14 +28,16 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
 
-  const roleChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>, role: DiscordRole) => {
+  const roleChangeHandler = async (role: DiscordRole) => {
     if (!selectedRecord || !selectedRecord.discordId) {
       throw new Error('Cannot change roles for this member - no discord id');
     }
 
+    const enabled = selectedRecord.roles.find(r => r.id === role.id);
+
     const body = { memberId: selectedRecord.discordId, role };
 
-    if (e.target.checked) {
+    if (!enabled) {
       addRoleMutation.mutateAsync(body);
     } else {
       removeRoleMutation.mutateAsync(body);
@@ -54,16 +55,17 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
         {roles?.map(role => (
-          <MenuItem className="role-menu-item" key={role.id}>
+          <MenuItem
+            className="role-menu-item"
+            key={role.id}
+            onClick={() => roleChangeHandler(role)}
+          >
             <FormGroup row key={role.id}>
               <FormControlLabel
                 control={
                   <StyledCheckbox
                     color={getColorFromRole(role.name, roles) || ''}
                     checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      roleChangeHandler(e, role)
-                    }
                   />
                 }
                 label={role.name}
@@ -81,7 +83,6 @@ export default RoleEdit;
 interface StyleProps {
   color: string;
   checked: boolean;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const StyledCheckbox = ({ color, ...props }: StyleProps) => (
