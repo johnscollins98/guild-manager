@@ -13,12 +13,12 @@ import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
-import { useUpdateDiscordMember } from '../../lib/apis/discord-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import DiscordRole from '../../lib/interfaces/discord-role';
 import MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
+import { EditNickName } from './edit-nickname';
 import './guild-member-card.scss';
 import GuildMemberMenu from './guild-member-menu';
 import WarningForm from './warnings/warning-form';
@@ -76,18 +76,9 @@ const GuildMemberCard = ({
     [addWarningMutation, member]
   );
 
-  const changeMemberMutation = useUpdateDiscordMember();
-  const onEditNickname = async (member: MemberRecord) => {
-    const newNickname = window.prompt(
-      'Enter new nickname: ',
-      member.nickname || member.discordName || ''
-    );
-    if (newNickname && member.discordId) {
-      changeMemberMutation.mutate({
-        memberId: member.discordId,
-        nick: newNickname
-      });
-    }
+  const [editOpen, setEditOpen] = useState(false);
+  const onEditNickname = () => {
+    setEditOpen(true);
   };
 
   const { data: adminRoles } = useAdminRoles();
@@ -226,6 +217,7 @@ const GuildMemberCard = ({
         onClose={() => setWarningViewerOpen(false)}
         member={member}
       />
+      <EditNickName isOpen={editOpen} onClose={() => setEditOpen(false)} member={member} />
     </>
   );
 };
