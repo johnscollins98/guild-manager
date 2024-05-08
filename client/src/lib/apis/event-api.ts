@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
 import { useToast } from '../../components/common/toast-context';
 import Event from '../interfaces/event';
-import EventSettings from '../interfaces/event-settings';
+import { EventSettings } from '../interfaces/event-settings';
 
 export const useEvents = () => useQuery<Event[], AxiosError>({ queryKey: ['events'] });
 export const useEventSettings = () =>

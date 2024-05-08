@@ -5,7 +5,7 @@ import { config } from '../config';
 import { DiscordLeaver, DiscordLog } from '../interfaces/discord-log';
 import DiscordMember from '../interfaces/discord-member';
 import DiscordRole from '../interfaces/discord-role';
-import EventSettings from '../interfaces/event-settings';
+import { EventPostSettings } from '../interfaces/event-settings';
 
 export const useDiscordMembers = () =>
   useQuery<DiscordMember[], AxiosError>({ queryKey: ['discord/members'] });
@@ -196,7 +196,7 @@ export const usePostEvents = () => {
   const openToast = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<void, AxiosError, EventSettings>({
+  return useMutation<void, AxiosError, EventPostSettings>({
     mutationFn(settings) {
       return axios.post(`/api/discord/eventUpdate`, settings);
     },
