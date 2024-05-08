@@ -1,4 +1,4 @@
-export default interface EventSettings {
+export interface EventSettings {
   channelId: string;
   editMessages: boolean;
   Monday: string;
@@ -9,4 +9,19 @@ export default interface EventSettings {
   Saturday: string;
   Sunday: string;
   Dynamic: string;
+}
+
+export interface EventPostSettings {
+  channelId: string;
+  editMessages: boolean;
+  existingMessageIds: {
+    Monday: string;
+    Tuesday: string;
+    Wednesday: string;
+    Thursday: string;
+    Friday: string;
+    Saturday: string;
+    Sunday: string;
+    Dynamic: string;
+  };
 }

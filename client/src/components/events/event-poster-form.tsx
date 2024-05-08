@@ -53,7 +53,7 @@ const EventPosterForm = ({ onClose }: Props) => {
       await postEventsMutation.mutateAsync({
         channelId: postChannel,
         editMessages,
-        ...existingMessageIds
+        existingMessageIds
       });
       onClose();
       setPosting(false);
