@@ -86,14 +86,14 @@ const EventPage = () => {
     );
     if (!res) return;
 
-    if (eventToDelete._id) {
-      await deleteEventMutation.mutateAsync(eventToDelete._id);
+    if (eventToDelete.id) {
+      await deleteEventMutation.mutateAsync(eventToDelete.id);
     }
   };
 
   const updateEvent = async (eventToUpdate: Event) => {
-    if (eventToUpdate._id) {
-      await updateEventMutation.mutateAsync({ id: eventToUpdate._id, event: eventToUpdate });
+    if (eventToUpdate.id) {
+      await updateEventMutation.mutateAsync({ id: eventToUpdate.id, event: eventToUpdate });
     }
   };
 
@@ -110,7 +110,7 @@ const EventPage = () => {
             deleteEvent={deleteEvent}
             updateEvent={updateEvent}
             possibleLeaders={leaders}
-            key={event._id}
+            key={event.id}
           />
         ))}
         <Divider />

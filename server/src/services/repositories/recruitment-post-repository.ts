@@ -6,6 +6,6 @@ import { BaseRepository } from './base-repository';
 @Service()
 export class RecruitmentPostRepository extends BaseRepository<RecruitmentPost> {
   constructor() {
-    super(dataSource.getMongoRepository(RecruitmentPost));
+    super(dataSource.getRepository(RecruitmentPost));
   }
 }

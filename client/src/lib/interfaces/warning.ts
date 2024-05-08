@@ -3,7 +3,7 @@ export default interface Warning {
   givenTo: string;
   reason: string;
   timestamp: string;
-  _id: string;
+  id: number;
 }
 
 export interface WarningPost {

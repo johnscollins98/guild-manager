@@ -1,9 +1,9 @@
-import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class RecruitmentPost {
-  @ObjectIdColumn()
-  public readonly _id!: ObjectId;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   content!: string;

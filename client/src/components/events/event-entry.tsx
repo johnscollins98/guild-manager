@@ -200,7 +200,7 @@ const EventEntry = ({
 interface EditFieldProps {
   event: Event;
   onEdit: (key: string, value: string) => void;
-  fieldKey: string;
+  fieldKey: keyof Event;
   children?: React.ReactNode;
   select?: boolean;
   type?: string;

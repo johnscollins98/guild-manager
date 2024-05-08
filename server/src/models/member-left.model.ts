@@ -1,14 +1,14 @@
-import { Column, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class MemberLeft {
-  @ObjectIdColumn()
-  public readonly _id!: ObjectId;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   username!: string;
 
-  @Column()
+  @Column({ nullable: true })
   nickname?: string;
 
   @Column()
@@ -17,7 +17,7 @@ export class MemberLeft {
   @Column()
   userDisplayName!: string;
 
-  @Column()
+  @Column({ nullable: true })
   globalName?: string;
 
   @Column()

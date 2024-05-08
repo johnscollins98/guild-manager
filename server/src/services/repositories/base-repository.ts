@@ -1,15 +1,14 @@
-import { ObjectId } from 'mongodb';
 import { Service } from 'typedi';
-import { DeepPartial, MongoRepository } from 'typeorm';
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 interface IMayHaveId {
-  _id: ObjectId;
+  id: number;
 }
 
 @Service()
 export abstract class BaseRepository<T extends IMayHaveId> {
-  constructor(protected readonly repo: MongoRepository<T>) {}
+  constructor(protected readonly repo: Repository<T>) {}
 
   async getAll(): Promise<T[]> {
     return await this.repo.find();
@@ -19,15 +18,15 @@ export abstract class BaseRepository<T extends IMayHaveId> {
     return await this.repo.findOne({ where: {} });
   }
 
-  async getById(id: string | ObjectId): Promise<T | null> {
-    return await this.repo.findOne({ where: { _id: new ObjectId(id) } });
+  async getById(id: number): Promise<T | null> {
+    return await this.repo.findOneBy({ id } as FindOptionsWhere<T>);
   }
 
   async create(newItem: DeepPartial<T>): Promise<T> {
     return await this.repo.save(newItem);
   }
 
-  async delete(id: string | ObjectId): Promise<T | null> {
+  async delete(id: number): Promise<T | null> {
     const toDelete = await this.getById(id);
     const deleteResult = await this.repo.delete(id);
     if (deleteResult.affected === 1 && toDelete) {
@@ -37,12 +36,7 @@ export abstract class BaseRepository<T extends IMayHaveId> {
     }
   }
 
-  async update(id: string | ObjectId, updatedItem: QueryDeepPartialEntity<T>): Promise<T | null> {
-    // MongoDB limitation if you try to update with the _id - so just strip it out.
-    if ('_id' in updatedItem) {
-      delete updatedItem._id;
-    }
-
+  async update(id: number, updatedItem: QueryDeepPartialEntity<T>): Promise<T | null> {
     await this.repo.update(id, updatedItem);
     return await this.getById(id);
   }

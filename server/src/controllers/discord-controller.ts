@@ -14,12 +14,12 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { EventPostSettings } from '../models/event-post-settings.model';
 import { DiscordLog } from '../models/interfaces/discord-log';
 import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
 import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
 import DiscordRole from '../models/interfaces/discord-role';
 import FormattedDiscordMember from '../models/interfaces/formatted-discord-member';
+import { PostEventDto } from '../models/interfaces/post-event-dto';
 import { MemberLeft } from '../models/member-left.model';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
@@ -127,8 +127,12 @@ export class DiscordController {
 
   @OnUndefined(200)
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() settings: EventPostSettings): Promise<undefined> {
-    await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, settings);
+  async postEventUpdates(@Body() settings: PostEventDto): Promise<undefined> {
+    await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
+      channelId: settings.channelId,
+      editMessages: settings.editMessages,
+      ...settings.existingMessageIds
+    });
     if (!(await this.discordChannelApi.getChannel(settings.channelId))) {
       throw new NotFoundError('Channel not found');
     }
@@ -170,7 +174,7 @@ export class DiscordController {
       });
 
       const embed = this.discordEventEmbedCreator.createEmbed(day, sorted);
-      if (settings.editMessages) {
+      if (settings.editMessages && settings.existingMessageIds) {
         const messageId = settings.existingMessageIds[day];
         if (!messageId) throw 'Invalid Message IDs';
 

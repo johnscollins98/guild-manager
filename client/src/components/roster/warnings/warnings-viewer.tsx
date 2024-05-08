@@ -29,7 +29,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     async (warning: Warning) => {
       const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
       if (res) {
-        await deleteWarningMutation.mutateAsync(warning._id);
+        await deleteWarningMutation.mutateAsync(warning.id);
       }
       onClose();
     },
@@ -44,7 +44,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
           <Card
             variant="outlined"
             className="warning-card"
-            key={warning._id}
+            key={warning.id}
             sx={{ backgroundColor: 'inherit' }}
           >
             <div className="data">

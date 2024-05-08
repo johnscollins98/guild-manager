@@ -1,31 +1,40 @@
-import { Column, Entity, ObjectId, ObjectIdColumn, PrimaryColumn } from 'typeorm';
-
-export interface MessageIDs {
-  [key: string]: string;
-  Monday: string;
-  Tuesday: string;
-  Wednesday: string;
-  Thursday: string;
-  Friday: string;
-  Saturday: string;
-  Sunday: string;
-  Dynamic: string;
-}
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class EventPostSettings {
-  @ObjectIdColumn()
-  public readonly _id!: ObjectId;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  @PrimaryColumn()
+  @Column()
   guildId!: string;
 
-  @Column()
-  channelId!: string;
+  @Column({ nullable: true })
+  channelId?: string;
 
-  @Column()
-  editMessages!: boolean;
+  @Column({ default: false })
+  editMessages?: boolean;
 
-  @Column()
-  existingMessageIds!: MessageIDs;
+  @Column({ nullable: true })
+  Monday?: string;
+
+  @Column({ nullable: true })
+  Tuesday?: string;
+
+  @Column({ nullable: true })
+  Wednesday?: string;
+
+  @Column({ nullable: true })
+  Thursday?: string;
+
+  @Column({ nullable: true })
+  Friday?: string;
+
+  @Column({ nullable: true })
+  Saturday?: string;
+
+  @Column({ nullable: true })
+  Sunday?: string;
+
+  @Column({ nullable: true })
+  Dynamic?: string;
 }
