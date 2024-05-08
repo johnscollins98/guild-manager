@@ -30,7 +30,7 @@ export const useDeleteEventMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, string>({
+  return useMutation<void, AxiosError, number>({
     mutationFn(id) {
       return axios.delete(`/api/events/${id}`);
     },
@@ -48,7 +48,7 @@ export const useUpdateEventMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Event, AxiosError, { id: string; event: Event }>({
+  return useMutation<Event, AxiosError, { id: number; event: Event }>({
     mutationFn({ id, event }) {
       return axios.put(`/api/events/${id}`, event);
     },

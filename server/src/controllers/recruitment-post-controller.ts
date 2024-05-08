@@ -44,8 +44,8 @@ export class RecruitmentPostController {
     const post = await this.recruitmentRepo.getOne();
 
     if (post) {
-      await this.recruitmentRepo.update(post._id, body);
-      const updatedPost = await this.recruitmentRepo.getById(post._id);
+      await this.recruitmentRepo.update(post.id, body);
+      const updatedPost = await this.recruitmentRepo.getById(post.id);
       if (!updatedPost) throw new NotFoundError();
       return updatedPost;
     } else {
@@ -62,6 +62,6 @@ export class RecruitmentPostController {
       throw new NotFoundError();
     }
 
-    await this.recruitmentRepo.delete(post._id);
+    await this.recruitmentRepo.delete(post.id);
   }
 }

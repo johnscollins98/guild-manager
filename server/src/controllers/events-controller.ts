@@ -41,7 +41,7 @@ export class EventsController {
 
   @Get('/:id')
   @OnNull(404)
-  get(@Param('id') id: string): Promise<Event | null> {
+  get(@Param('id') id: number): Promise<Event | null> {
     return this.eventRepo.getById(id);
   }
 
@@ -52,7 +52,7 @@ export class EventsController {
 
   @Delete('/:id')
   @OnUndefined(204)
-  async delete(@Param('id') id: string): Promise<undefined> {
+  async delete(@Param('id') id: number): Promise<undefined> {
     const res = await this.eventRepo.delete(id);
 
     if (!res) {
@@ -67,7 +67,7 @@ export class EventsController {
 
   @Put('/:id')
   @OnNull(404)
-  update(@Param('id') id: string, @Body() event: Event): Promise<Event | null> {
+  update(@Param('id') id: number, @Body() event: Event): Promise<Event | null> {
     return this.eventRepo.update(id, event);
   }
 }

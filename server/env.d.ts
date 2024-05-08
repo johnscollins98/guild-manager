@@ -5,7 +5,7 @@ declare namespace NodeJS {
     GW2_GUILD_ID: string;
     GW2_API_TOKEN: string;
     PORT: string;
-    ATLAS_URI: string;
+    DATABASE_URL: string;
     DISCORD_CLIENT_ID: string;
     DISCORD_CLIENT_SECRET: string;
     DISCORD_AUTH_REDIRECT: string;

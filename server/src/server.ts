@@ -1,4 +1,4 @@
-import ConnectMongoDBSession from 'connect-mongodb-session';
+import PgConnection from 'connect-pg-simple';
 import { Client, GatewayIntentBits, Partials } from 'discord.js';
 import express from 'express';
 import session from 'express-session';
@@ -18,13 +18,13 @@ rc_useContainer(Container);
 const app = express();
 app.use(express.json());
 
-const MongoDBStore = ConnectMongoDBSession(session);
+const DBStore = PgConnection(session);
 
 const store =
   process.env.NODE_ENV === 'production'
-    ? new MongoDBStore({
-        uri: config.atlasUri,
-        collection: 'sessions'
+    ? new DBStore({
+        conString: config.databaseUrl,
+        createTableIfMissing: true
       })
     : undefined;
 
@@ -68,8 +68,8 @@ app.use('*', (_, res) => {
 });
 
 export const dataSource = new DataSource({
-  type: 'mongodb',
-  url: config.atlasUri,
+  type: 'postgres',
+  url: config.databaseUrl,
   synchronize: true,
   logging: true,
   entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
@@ -78,7 +78,7 @@ export const dataSource = new DataSource({
 export const Manager = dataSource.manager;
 
 dataSource.initialize().then(() => {
-  console.log('Connected to MongoDB');
+  console.log('Connected to Postgres');
 
   if (!(process.env.NODE_ENV === 'development' && config.skipAuth)) {
     Container.get(DiscordStrategySetup);

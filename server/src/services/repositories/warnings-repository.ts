@@ -5,7 +5,7 @@ import { BaseRepository } from './base-repository';
 @Service()
 class WarningsRepository extends BaseRepository<Warning> {
   constructor() {
-    super(dataSource.getMongoRepository(Warning));
+    super(dataSource.getRepository(Warning));
   }
 
   async getForMember(memberId: string): Promise<Warning[]> {

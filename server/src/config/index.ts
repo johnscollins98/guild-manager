@@ -17,7 +17,7 @@ export const config = {
   gw2guildId: process.env.GW2_GUILD_ID,
   gw2apiToken: process.env.GW2_API_TOKEN,
   port: process.env.PORT ?? 3000,
-  atlasUri: process.env.ATLAS_URI,
+  databaseUrl: process.env.DATABASE_URL,
   discordClientId: process.env.DISCORD_CLIENT_ID,
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,

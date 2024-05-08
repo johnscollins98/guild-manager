@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Warning {
-  @ObjectIdColumn()
-  public readonly _id!: ObjectId;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   reason!: string;

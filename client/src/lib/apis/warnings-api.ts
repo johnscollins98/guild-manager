@@ -35,7 +35,7 @@ export const useDeleteWarningMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Warning, AxiosError, string>({
+  return useMutation<Warning, AxiosError, number>({
     mutationFn(warningId) {
       return axios.delete(`/api/warnings/${warningId}`);
     },

@@ -6,10 +6,10 @@ import { BaseRepository } from './base-repository';
 @Service()
 export class EventRepository extends BaseRepository<Event> {
   constructor() {
-    super(dataSource.getMongoRepository(Event));
+    super(dataSource.getRepository(Event));
   }
 
   async getEventsOnADay(day: string): Promise<Event[]> {
-    return await this.repo.find({ day });
+    return await this.repo.findBy({ day });
   }
 }

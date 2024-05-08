@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import { DeepPartial } from 'typeorm';
 import { EventPostSettings } from '../../models/event-post-settings.model';
 import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
@@ -6,7 +7,7 @@ import { BaseRepository } from './base-repository';
 @Service()
 export class EventPostSettingsRepository extends BaseRepository<EventPostSettings> {
   constructor() {
-    super(dataSource.getMongoRepository(EventPostSettings));
+    super(dataSource.getRepository(EventPostSettings));
   }
 
   async findOrCreateByGuildId(guildId: string): Promise<EventPostSettings> {
@@ -18,7 +19,10 @@ export class EventPostSettingsRepository extends BaseRepository<EventPostSetting
     }
   }
 
-  async updateByGuildId(guildId: string, updated: EventPostSettings): Promise<EventPostSettings> {
+  async updateByGuildId(
+    guildId: string,
+    updated: DeepPartial<EventPostSettings>
+  ): Promise<EventPostSettings> {
     await this.repo.update({ guildId }, updated);
     return this.findOrCreateByGuildId(guildId);
   }

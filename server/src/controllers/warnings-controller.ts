@@ -29,7 +29,7 @@ export class WarningsController {
 
   @Get('/:id')
   @OnNull(404)
-  get(@Param('id') id: string): Promise<Warning | null> {
+  get(@Param('id') id: number): Promise<Warning | null> {
     return this.warningRepo.getById(id);
   }
 
@@ -40,7 +40,7 @@ export class WarningsController {
 
   @Delete('/:id')
   @OnUndefined(204)
-  async delete(@Param('id') id: string): Promise<undefined> {
+  async delete(@Param('id') id: number): Promise<undefined> {
     const res = await this.warningRepo.delete(id);
 
     if (!res) {
@@ -56,7 +56,7 @@ export class WarningsController {
 
   @Put('/:id')
   @OnNull(404)
-  update(@Param('id') id: string, @Body() warning: Warning): Promise<Warning | null> {
+  update(@Param('id') id: number, @Body() warning: Warning): Promise<Warning | null> {
     return this.warningRepo.update(id, warning);
   }
 }
