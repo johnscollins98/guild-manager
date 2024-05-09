@@ -1,3 +1,3 @@
-export default interface DiscordMessage {
+export interface DiscordMessage {
   id: string;
 }

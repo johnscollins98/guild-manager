@@ -1,4 +1,4 @@
-export default interface GW2LogEntry {
+export interface GW2LogEntry {
   type: string;
   time: string;
   user?: string;

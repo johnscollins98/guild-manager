@@ -1,4 +1,4 @@
-export default interface AuthInfo {
+export interface AuthInfo {
   loggedIn: boolean;
   isAdmin: boolean;
   username: string;

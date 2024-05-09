@@ -14,13 +14,16 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { DiscordLog } from '../models/interfaces/discord-log';
-import DiscordMember, { DiscordMemberUpdate } from '../models/interfaces/discord-member';
-import { DiscordMessagePost } from '../models/interfaces/discord-message-post';
-import DiscordRole from '../models/interfaces/discord-role';
-import FormattedDiscordMember from '../models/interfaces/formatted-discord-member';
-import { PostEventDto } from '../models/interfaces/post-event-dto';
-import { MemberLeft } from '../models/member-left.model';
+import {
+  DiscordLog,
+  DiscordMember,
+  DiscordMemberUpdate,
+  DiscordMessagePost,
+  DiscordRole,
+  FormattedDiscordMember,
+  MemberLeft,
+  PostEventDto
+} from '../models';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
 import { EventEmbedCreator } from '../services/discord/event-embed-creator';

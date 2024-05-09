@@ -12,7 +12,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import AuthInfo from '../models/interfaces/auth-info';
+import { AuthInfo } from '../models';
 import { AuthService } from '../services/auth/auth-service';
 
 @Service()

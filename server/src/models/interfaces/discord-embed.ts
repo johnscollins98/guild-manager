@@ -1,4 +1,4 @@
-export default interface DiscordEmbed {
+export interface DiscordEmbed {
   color: string;
   title: string;
   fields: Field[];

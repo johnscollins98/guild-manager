@@ -1,8 +1,6 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
-import GW2LogEntry from '../../models/interfaces/gw2-log-entry';
-import GW2Member from '../../models/interfaces/gw2-member';
-import GW2Rank from '../../models/interfaces/gw2-rank';
+import { GW2LogEntry, GW2Member, GW2Rank } from '../../models';
 import { GW2Api } from './gw2-api';
 
 export interface IGW2GuildApi {

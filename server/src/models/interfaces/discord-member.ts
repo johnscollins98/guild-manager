@@ -1,4 +1,4 @@
-export default interface DiscordMember {
+export interface DiscordMember {
   user?: {
     id: string;
     username: string;

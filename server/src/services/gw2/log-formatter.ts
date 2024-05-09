@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
+import { GW2LogEntry } from '../../models';
 import { FormattedLogEntry } from '../../models/interfaces/formatted-log-entry';
-import GW2LogEntry from '../../models/interfaces/gw2-log-entry';
 
 @Service()
 export class GW2LogFormatter {

@@ -1,4 +1,4 @@
-export default interface DiscordRole {
+export interface DiscordRole {
   name: string;
   id: string;
   color: number;

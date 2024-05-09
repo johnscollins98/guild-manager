@@ -34,6 +34,7 @@
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.10",
     "sass": "^1.72.0",
+    "server": "workspace:*",
     "typescript": "^5.4.3",
     "vite": "^5.2.8",
     "vite-plugin-eslint": "^1.8.1",
