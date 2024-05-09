@@ -1,11 +1,13 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { FormattedLogEntry, GW2Member, type GW2ControllerApi, type GW2Rank } from 'server';
+import { IGW2Controller } from 'server';
+import { createApi } from './axios-wrapper';
 
-const gw2Api: GW2ControllerApi = {
-  getLog: async () => (await axios.get<FormattedLogEntry[]>('/api/gw2/log')).data,
-  getMembers: async () => (await axios.get<GW2Member[]>('/api/gw2/members')).data,
-  getRanks: async () => (await axios.get<GW2Rank[]>('/api/gw2/ranks')).data
+const api = createApi('/api/gw2');
+
+const gw2Api: IGW2Controller = {
+  getLog: () => api('log'),
+  getMembers: () => api('members'),
+  getRanks: () => api('ranks')
 };
 
 export const useGW2Members = () =>

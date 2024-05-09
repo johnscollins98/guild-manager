@@ -4,13 +4,12 @@ import { FormattedLogEntry, GW2Member, GW2Rank } from '../models';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
-
-export interface GW2ControllerApi extends Omit<GW2Controller, 'gw2GuildApi' | 'logFormatter'> {}
+import { IGW2Controller } from './interfaces/gw2-interface';
 
 @JsonController('/api/gw2')
 @Authorized()
 @Service()
-export class GW2Controller {
+export class GW2Controller implements IGW2Controller {
   private readonly gw2GuildApi: IGW2GuildApi;
 
   constructor(
