@@ -1,4 +1,4 @@
-name: lint
+name: prettier
 on: pull_request
 jobs:
   lint:
