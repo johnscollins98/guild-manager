@@ -12,7 +12,9 @@
     "dev-server": "bun run --cwd server dev",
     "dev-client": "bun run --cwd client start",
     "dev": "concurrently \"bun run dev-server\" \"bun run dev-client\"",
-    "lint": "bun run --cwd client lint && bun run --cwd server lint"
+    "lint": "bun run --cwd client lint && bun run --cwd server lint",
+    "prettier:check": "bun run prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md}' -c",
+    "prettier:write": "bun run prettier '**/*.{js,jsx,jts,tsx,html,scss,json,md}' -w"
   },
   "workspaces": [
     "client",

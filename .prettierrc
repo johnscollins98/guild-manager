@@ -4,5 +4,6 @@
   "trailingComma": "none",
   "endOfLine": "auto",
   "arrowParens": "avoid",
-  "semi": true
+  "semi": true,
+  "plugins": ["prettier-plugin-organize-imports"]
 }

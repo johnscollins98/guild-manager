@@ -3,6 +3,7 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit"
   },
+  "editor.formatOnSave": true,
   "npm.packageManager": "bun",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
