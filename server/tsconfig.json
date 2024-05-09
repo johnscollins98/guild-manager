@@ -17,6 +17,6 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noUncheckedIndexedAccess": true,
+    "noUncheckedIndexedAccess": true
   }
 }

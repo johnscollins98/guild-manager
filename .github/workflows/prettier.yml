@@ -1,0 +1,15 @@
+name: prettier
+on: pull_request
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: 1.1.0
+    - name: Install Dependencies
+      run: bun install --frozen-lockfile
+    - name: Run Prettier
+      run: bun run prettier:check
