@@ -9,7 +9,7 @@ To run this you do need to set up the following env variables:
 | value                           | description                                                                                                               |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | **PORT**                        | Port to run Express server on                                                                                             |
-| **DATABASE_URI**                   | Postgres Database URI                                                                                                               |
+| **DATABASE_URI**                | Postgres Database URI                                                                                                     |
 | **SESSION_SECRET**              | Secret for Express Session                                                                                                |
 | **ACCESS_TOKEN_ENCRYPTION_KEY** | Key for encrypting access token                                                                                           |
 | BOT_TOKEN                       | (Optional, mock services used if ommitted) Discord bot access token from the Guild's discord server                       |
