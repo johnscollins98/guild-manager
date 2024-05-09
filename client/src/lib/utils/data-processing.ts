@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
+import { GW2Member, GW2Rank } from 'server';
 import DiscordMember from '../interfaces/discord-member';
-import GW2Member from '../interfaces/gw2-member';
-import GW2Rank from '../interfaces/gw2-rank';
 import MemberRecord from '../interfaces/member-record';
 import Warning from '../interfaces/warning';
 

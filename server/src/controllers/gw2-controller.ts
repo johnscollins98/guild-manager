@@ -5,6 +5,8 @@ import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
 
+export interface GW2ControllerApi extends Omit<GW2Controller, 'gw2GuildApi' | 'logFormatter'> {}
+
 @JsonController('/api/gw2')
 @Authorized()
 @Service()
