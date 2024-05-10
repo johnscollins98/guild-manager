@@ -10,11 +10,11 @@ import { PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import React, { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { DiscordRole } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
-import DiscordRole from '../../lib/interfaces/discord-role';
 import MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
@@ -151,7 +151,9 @@ const GuildMemberCard = ({
               ) : null}
               {member.issues.missingGW2 ? (
                 <Tooltip title="GW2 Account Not Found">
-                  <Gw2Logo width="24" height="24" className="error" />
+                  <span>
+                    <Gw2Logo width="24" height="24" className="error" />
+                  </span>
                 </Tooltip>
               ) : null}
               {member.issues.missingDiscord ? (

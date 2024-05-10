@@ -13,5 +13,5 @@ export * from './formatted-log-entry';
 export * from './gw2-log-entry';
 export * from './gw2-member';
 export * from './gw2-rank';
+export * from './member-left-dto';
 export * from './post-event-dto';
-

@@ -1,19 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { DiscordRole, FormattedDiscordMember, IDiscordController, PostEventDto } from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
-import { DiscordLeaver, DiscordLog } from '../interfaces/discord-log';
-import DiscordMember from '../interfaces/discord-member';
-import DiscordRole from '../interfaces/discord-role';
-import { EventPostSettings } from '../interfaces/event-settings';
+import { createApi } from './axios-wrapper';
+
+const api = createApi('/api/discord');
+
+const discordApi: IDiscordController = {
+  getRoles: () => api('roles'),
+  getMembers: () => api('members'),
+  getLogs: () => api('log'),
+  getLeavers: () => api('leavers'),
+  addRoleToMember: (memberId, roleId) =>
+    api(`members/${memberId}/roles/${roleId}`, { method: 'PUT' }),
+  removeRoleFromMember: (memberId, roleId) =>
+    api(`members/${memberId}/roles/${roleId}`, { method: 'DELETE' }),
+  updateMember: (memberId, updates) => api(`members/${memberId}`, { method: 'PUT', data: updates }),
+  deleteMember: memberId => api(`members/${memberId}`, { method: 'DELETE' }),
+  sendMessageToMember: (memberId, messageData) =>
+    api(`members/${memberId}/messages`, { method: 'POST', data: messageData }),
+  postEventUpdates: settings => api('eventUpdate', { method: 'POST', data: settings })
+};
 
 export const useDiscordMembers = () =>
-  useQuery<DiscordMember[], AxiosError>({ queryKey: ['discord/members'] });
+  useQuery({ queryKey: ['discord/members'], queryFn: discordApi.getMembers });
 export const useDiscordRoles = () =>
-  useQuery<DiscordRole[], AxiosError>({ queryKey: ['discord/roles'] });
-export const useDiscordLog = () => useQuery<DiscordLog, AxiosError>({ queryKey: ['discord/log'] });
+  useQuery({ queryKey: ['discord/roles'], queryFn: discordApi.getRoles });
+export const useDiscordLog = () =>
+  useQuery({ queryKey: ['discord/log'], queryFn: discordApi.getLogs });
 export const useDiscordLeavers = () =>
-  useQuery<DiscordLeaver[], AxiosError>({ queryKey: ['discord/leavers'] });
+  useQuery({ queryKey: ['discord/leavers'], queryFn: discordApi.getLeavers });
 
 export interface ChangeRoleDTO {
   memberId: string;
@@ -24,16 +41,18 @@ export const useAddDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMember[]>({
+  return useMutation<void, AxiosError, ChangeRoleDTO, FormattedDiscordMember[]>({
     mutationFn({ memberId, role }) {
-      return axios.put(`/api/discord/members/${memberId}/roles/${role.id}`);
+      return discordApi.addRoleToMember(memberId, role.id);
     },
     async onMutate({ memberId, role }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
+      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
+        'discord/members'
+      ]);
 
-      queryClient.setQueryData<DiscordMember[]>(
+      queryClient.setQueryData<FormattedDiscordMember[]>(
         ['discord/members'],
         old =>
           old?.map(member => {
@@ -59,16 +78,18 @@ export const useRemoveDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMember[]>({
+  return useMutation<void, AxiosError, ChangeRoleDTO, FormattedDiscordMember[]>({
     mutationFn({ memberId, role }) {
-      return axios.delete(`/api/discord/members/${memberId}/roles/${role.id}`);
+      return discordApi.removeRoleFromMember(memberId, role.id);
     },
     async onMutate({ role, memberId }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
+      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
+        'discord/members'
+      ]);
 
-      queryClient.setQueryData<DiscordMember[]>(
+      queryClient.setQueryData<FormattedDiscordMember[]>(
         ['discord/members'],
         old =>
           old?.map(member => {
@@ -101,7 +122,7 @@ export const useUpdateDiscordMember = () => {
 
   return useMutation<void, AxiosError, UpdateMemberDTO>({
     mutationFn({ memberId, nick }) {
-      return axios.put(`/api/discord/members/${memberId}`, { nick });
+      return discordApi.updateMember(memberId, { nick });
     },
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['discord/members'] });
@@ -124,7 +145,7 @@ export const useKickDiscordMembers = () => {
   const openToast = useToast();
   const sendMessage = useSendMessage();
 
-  return useMutation<void, AxiosError, KickMemberDTO, DiscordMember[]>({
+  return useMutation<void, AxiosError, KickMemberDTO, FormattedDiscordMember[]>({
     async mutationFn({ reinvite, reason, memberIds }) {
       const promises = memberIds.map(async memberId => {
         if (reinvite) {
@@ -143,7 +164,7 @@ export const useKickDiscordMembers = () => {
           });
         }
 
-        return axios.delete(`/api/discord/members/${memberId}`);
+        return discordApi.deleteMember(memberId);
       });
 
       await Promise.all(promises);
@@ -151,11 +172,13 @@ export const useKickDiscordMembers = () => {
     async onMutate({ memberIds }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<DiscordMember[]>(['discord/members']);
+      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
+        'discord/members'
+      ]);
 
-      queryClient.setQueryData<DiscordMember[]>(
+      queryClient.setQueryData<FormattedDiscordMember[]>(
         ['discord/members'],
-        old => old?.filter(m => !memberIds.includes(m.id)) ?? []
+        old => old?.filter(m => !(m.id && memberIds.includes(m.id))) ?? []
       );
 
       return previousMembers;
@@ -181,7 +204,7 @@ export const useSendMessage = () => {
 
   return useMutation<void, AxiosError, SendMessageDTO>({
     mutationFn({ memberId, content }) {
-      return axios.post(`/api/discord/members/${memberId}/messages`, { content });
+      return discordApi.sendMessageToMember(memberId, { content });
     },
     onSuccess() {
       openToast('Sent message.', 'success');
@@ -196,9 +219,9 @@ export const usePostEvents = () => {
   const openToast = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<void, AxiosError, EventPostSettings>({
+  return useMutation<void, AxiosError, PostEventDto>({
     mutationFn(settings) {
-      return axios.post(`/api/discord/eventUpdate`, settings);
+      return discordApi.postEventUpdates(settings);
     },
     onSuccess() {
       openToast('Posted events to discord.', 'success');

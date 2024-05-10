@@ -1,4 +1,4 @@
-import { DiscordLogChange, DiscordLogUser } from '../../interfaces/discord-log';
+import { DiscordLogChange, DiscordLogUser } from 'server';
 import {
   DiscordLogDisplay,
   DiscordLogDisplayGenerator

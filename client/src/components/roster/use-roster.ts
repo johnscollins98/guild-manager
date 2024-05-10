@@ -1,8 +1,7 @@
-import { GW2Member, GW2Rank } from 'server';
+import { FormattedDiscordMember, GW2Member, GW2Rank } from 'server';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
-import DiscordMember from '../../lib/interfaces/discord-member';
 import MemberRecord from '../../lib/interfaces/member-record';
 import Warning from '../../lib/interfaces/warning';
 import {
@@ -46,13 +45,11 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
 
 const getRoster = (
   gw2Members?: GW2Member[],
-  discordMembers?: DiscordMember[],
+  discordMembers?: FormattedDiscordMember[],
   guildRanks?: GW2Rank[],
   warnings?: Warning[]
 ) => {
   if (!gw2Members || !discordMembers || !guildRanks || !warnings) return undefined;
-
-  console.log(gw2Members);
 
   let roster = generateGW2RosterRecords(gw2Members, discordMembers, guildRanks, warnings);
   roster = roster.concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks, warnings));

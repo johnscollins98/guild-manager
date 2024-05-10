@@ -18,8 +18,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "noUncheckedIndexedAccess": true,
-    "experimentalDecorators": true
+    "noUncheckedIndexedAccess": true
   },
   "include": ["src"]
 }

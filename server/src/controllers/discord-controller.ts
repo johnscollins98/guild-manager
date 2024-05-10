@@ -21,7 +21,7 @@ import {
   DiscordMessagePost,
   DiscordRole,
   FormattedDiscordMember,
-  MemberLeft,
+  MemberLeftDTO,
   PostEventDto
 } from '../models';
 import { DiscordApiFactory } from '../services/discord/api-factory';
@@ -32,11 +32,12 @@ import { DiscordMemberFormatter } from '../services/discord/member-formatter';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
+import { IDiscordController } from './interfaces/discord-interface';
 
 @Service()
 @Authorized()
 @JsonController('/api/discord')
-export class DiscordController {
+export class DiscordController implements IDiscordController {
   private readonly discordGuildApi: IDiscordGuildApi;
   private readonly discordChannelApi: IDiscordChannelApi;
   constructor(
@@ -81,7 +82,7 @@ export class DiscordController {
   }
 
   @Get('/leavers')
-  async getLeavers(): Promise<MemberLeft[]> {
+  async getLeavers(): Promise<MemberLeftDTO[]> {
     return await this.memberLeftRepository.getAll();
   }
 
@@ -90,7 +91,7 @@ export class DiscordController {
   async addRoleToMember(
     @Param('memberId') memberId: string,
     @Param('roleId') roleId: string
-  ): Promise<undefined> {
+  ): Promise<void> {
     await this.discordGuildApi.addRoleToMember(memberId, roleId);
   }
 
@@ -99,7 +100,7 @@ export class DiscordController {
   async removeRoleFromMember(
     @Param('memberId') memberId: string,
     @Param('roleId') roleId: string
-  ): Promise<undefined> {
+  ): Promise<void> {
     await this.discordGuildApi.removeRoleFromMember(memberId, roleId);
   }
 
@@ -108,7 +109,7 @@ export class DiscordController {
   async updateMember(
     @Param('memberId') memberId: string,
     @Body() updates: DiscordMemberUpdate
-  ): Promise<undefined> {
+  ): Promise<void> {
     await this.discordGuildApi.updateMember(memberId, updates);
   }
 
@@ -123,14 +124,14 @@ export class DiscordController {
   async sendMessageToMember(
     @Param('memberId') memberId: string,
     @Body() messageData: DiscordMessagePost
-  ): Promise<undefined> {
+  ): Promise<void> {
     const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
     await this.discordChannelApi.sendMessage(dmChannelId, messageData);
   }
 
   @OnUndefined(200)
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() settings: PostEventDto): Promise<undefined> {
+  async postEventUpdates(@Body() settings: PostEventDto): Promise<void> {
     await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
       channelId: settings.channelId,
       editMessages: settings.editMessages,

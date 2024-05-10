@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import DiscordRole from './discord-role';
+import { DiscordRole } from 'server';
 import Warning from './warning';
 
 export default interface MemberRecord {

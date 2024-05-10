@@ -1,5 +1,4 @@
 export interface PostEventDto {
-  guildId: string;
   channelId: string;
   editMessages: boolean;
   existingMessageIds?: {
