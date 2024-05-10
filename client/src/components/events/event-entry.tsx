@@ -13,8 +13,8 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles/createTheme';
-import React, { useCallback, useState } from 'react';
-import { DiscordMemberDTO, EventCreateDTO, EventDTO } from 'server';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { DiscordMemberDTO, EventCreateDTO, daysOfWeek } from 'server';
 import { useToast } from '../common/toast-context';
 import './event-entry.scss';
 
@@ -26,37 +26,28 @@ const emptyEvent: EventCreateDTO = {
   leaderId: ''
 };
 
-const daysOfWeek = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-  'Dynamic'
-];
-
 interface Props {
-  create?: boolean;
-  event?: EventDTO;
+  initialData?: EventCreateDTO;
   possibleLeaders: DiscordMemberDTO[];
-  deleteEvent?: (e: EventDTO) => Promise<void>;
-  updateEvent?: (id: number, e: EventCreateDTO) => Promise<void>;
-  createEvent?: (e: EventCreateDTO) => Promise<void>;
+  onDelete?: () => Promise<void>;
+  onSubmit: (e: EventCreateDTO) => Promise<void>;
+  resetOnSubmit?: boolean;
 }
 
 const EventEntry = ({
-  create = false,
-  event,
+  initialData = emptyEvent,
   possibleLeaders,
-  deleteEvent,
-  updateEvent,
-  createEvent
+  onSubmit,
+  onDelete,
+  resetOnSubmit
 }: Props) => {
-  const [localEvent, setLocalEvent] = useState<EventCreateDTO>(event ? event : emptyEvent);
-  const [modified, setModified] = useState(false);
+  const [localEvent, setLocalEvent] = useState(initialData);
+  const modified = useMemo(() => localEvent !== initialData, [localEvent, initialData]);
   const openToast = useToast();
+
+  useEffect(() => {
+    setLocalEvent(initialData);
+  }, [initialData]);
 
   const validationHelper = useCallback((event: EventCreateDTO) => {
     if (!event.title) throw new Error('A title must be provided');
@@ -68,72 +59,38 @@ const EventEntry = ({
   const onEdit = useCallback(
     (field: string, value: string) => {
       setLocalEvent({ ...localEvent, [field]: value });
-      setModified(true);
     },
-    [localEvent, setLocalEvent, setModified]
+    [localEvent, setLocalEvent]
   );
 
   const onReset = useCallback(() => {
-    setLocalEvent(event ? event : emptyEvent);
-    setModified(false);
-  }, [event, setLocalEvent, setModified]);
+    setLocalEvent(initialData);
+  }, [setLocalEvent, initialData]);
 
-  const onUpdate = useCallback(async () => {
-    try {
-      validationHelper(localEvent);
-    } catch (err) {
-      err instanceof Error && openToast(err.message, 'warning');
-      return;
-    }
-
-    if (!updateEvent) {
-      throw new Error('No update event function passed in');
-    }
-
-    if (!event) {
-      throw new Error('No event to update'); // TODO: this is messy and could use a refactor
-    }
-
-    if (localEvent) await updateEvent(event.id, localEvent);
-    setModified(false);
-  }, [updateEvent, validationHelper, localEvent, setModified, openToast, event]);
-
-  const onCreate = useCallback(async () => {
-    try {
-      validationHelper(localEvent);
-    } catch (err) {
-      err instanceof Error && openToast(err.message, 'warning');
-      return;
-    }
-
-    if (!createEvent) {
-      throw new Error('No create event function passed in');
-    }
-
-    await createEvent(localEvent);
-    setModified(false);
-    setLocalEvent(emptyEvent);
-  }, [createEvent, validationHelper, localEvent, setModified, setLocalEvent, openToast]);
-
-  const onDelete = useCallback(() => {
-    if (deleteEvent && event) {
-      deleteEvent(event);
-    } else {
-      throw new Error('No Delete event function passed in');
-    }
-  }, [event, deleteEvent]);
-
-  const onSubmit = useCallback(
+  const submitHandler = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      create ? onCreate() : onUpdate();
+      e.stopPropagation();
+
+      try {
+        validationHelper(localEvent);
+      } catch (err) {
+        err instanceof Error && openToast(err.message, 'warning');
+        return;
+      }
+
+      onSubmit(localEvent);
+
+      if (resetOnSubmit) {
+        onReset();
+      }
     },
-    [create, onCreate, onUpdate]
+    [onSubmit, validationHelper, localEvent, openToast, onReset, resetOnSubmit]
   );
 
   return (
     <Card variant="elevation" className="event-entry">
-      <form onSubmit={onSubmit} className="event-form">
+      <form onSubmit={submitHandler} onReset={onReset} className="event-form">
         <div className="field long">
           <Assignment color="secondary" className="field-label" />
           <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
@@ -175,19 +132,19 @@ const EventEntry = ({
                   color="primary"
                   size="small"
                   className="save"
-                  onClick={create ? onCreate : onUpdate}
+                  type="submit"
                 >
                   Save
                 </Button>
               </Tooltip>
               <Tooltip title="Reset Changes">
-                <IconButton size="small" onClick={onReset}>
+                <IconButton size="small" type="reset">
                   <Refresh />
                 </IconButton>
               </Tooltip>
             </>
           ) : null}
-          {create ? null : (
+          {onDelete && (
             <Tooltip title="Delete Event">
               <IconButton color="error" size="small" onClick={onDelete}>
                 <DeleteForever />

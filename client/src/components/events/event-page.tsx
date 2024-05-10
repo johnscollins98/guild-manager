@@ -3,8 +3,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
-import { useState } from 'react';
-import { EventCreateDTO, EventDTO } from 'server';
+import { useMemo, useState } from 'react';
+import { EventCreateDTO, EventDTO, daysOfWeek } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
@@ -22,17 +22,6 @@ import EventEntry from './event-entry';
 import './event-page.scss';
 import EventPosterForm from './event-poster-form';
 
-const sorter = new Map<string, number>([
-  ['Monday', 1],
-  ['Tuesday', 2],
-  ['Wednesday', 3],
-  ['Thursday', 4],
-  ['Friday', 5],
-  ['Saturday', 6],
-  ['Sunday', 7],
-  ['Dynamic', 8]
-]);
-
 const EventPage = () => {
   const filterString = useFilterString();
 
@@ -47,6 +36,31 @@ const EventPage = () => {
 
   const { confirm } = useConfirm();
 
+  // sort events
+  const sortedEvents = useMemo(
+    () =>
+      eventsQuery.data
+        ?.filter(
+          event =>
+            event.title.toLowerCase().includes(filterString) ||
+            event.day.toLowerCase().includes(filterString)
+        )
+        .sort((a, b) => {
+          const dateSort = daysOfWeek.indexOf(a.day) - daysOfWeek.indexOf(b.day);
+          if (dateSort !== 0) return dateSort;
+
+          const parseTime = (startTime: string) => {
+            return Date.parse(`1970/01/01 ${startTime}`);
+          };
+
+          const aTime = parseTime(a.startTime);
+          const bTime = parseTime(b.startTime);
+
+          return aTime - bTime;
+        }) ?? [],
+    [eventsQuery.data, filterString]
+  );
+
   if (eventsQuery.error || discordQuery.error || eventRolesQuery.error) {
     return <ErrorMessage>There was an error gathering events data.</ErrorMessage>;
   }
@@ -57,27 +71,6 @@ const EventPage = () => {
   const leaders = discordQuery.data.filter(d =>
     d.roles.some(role => eventRolesQuery.data.includes(role.id))
   );
-
-  // sort events
-  const sortedEvents = eventsQuery.data
-    .filter(
-      event =>
-        event.title.toLowerCase().includes(filterString) ||
-        event.day.toLowerCase().includes(filterString)
-    )
-    .sort((a, b) => {
-      const dateSort = (sorter.get(a.day) || 8) - (sorter.get(b.day) || 8);
-      if (dateSort !== 0) return dateSort;
-
-      const parseTime = (startTime: string) => {
-        return Date.parse(`1970/01/01 ${startTime}`);
-      };
-
-      const aTime = parseTime(a.startTime);
-      const bTime = parseTime(b.startTime);
-
-      return aTime - bTime;
-    });
 
   const deleteEvent = async (eventToDelete: EventDTO) => {
     const res = await confirm(
@@ -102,15 +95,15 @@ const EventPage = () => {
       <div className="event-page">
         {sortedEvents.map(event => (
           <EventEntry
-            event={event}
-            deleteEvent={deleteEvent}
-            updateEvent={updateEvent}
+            initialData={event}
+            onDelete={() => deleteEvent(event)}
+            onSubmit={update => updateEvent(event.id, update)}
             possibleLeaders={leaders}
             key={event.id}
           />
         ))}
         <Divider />
-        <EventEntry create={true} createEvent={createEvent} possibleLeaders={leaders} />
+        <EventEntry onSubmit={createEvent} possibleLeaders={leaders} resetOnSubmit />
       </div>
       <div className="button-container">
         <Button onClick={() => setShowModal(true)} variant="contained" className="discord-button">

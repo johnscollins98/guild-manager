@@ -1,3 +1,4 @@
+export * from './days';
 export * from './event-create-dto';
 export * from './event-dto';
 export * from './event-settings-dto';

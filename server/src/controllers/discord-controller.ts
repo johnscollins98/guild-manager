@@ -22,7 +22,8 @@ import {
   DiscordMessagePost,
   DiscordRole,
   EventSettingsUpsertDTO,
-  MemberLeftDTO
+  MemberLeftDTO,
+  daysOfWeek
 } from '../dtos';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
@@ -151,17 +152,6 @@ export class DiscordController implements IDiscordController {
           throw new BadRequestError('Invalid Message IDs');
       }
     }
-
-    const daysOfWeek = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-      'Dynamic'
-    ] as const;
 
     for (const day of daysOfWeek) {
       const events = await this.eventRepository.getEventsOnADay(day);
