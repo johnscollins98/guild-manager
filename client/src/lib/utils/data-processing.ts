@@ -1,13 +1,12 @@
 import { DateTime } from 'luxon';
-import { FormattedDiscordMember, GW2Member, GW2Rank } from 'server';
+import { FormattedDiscordMember, GW2Member, GW2Rank, WarningDTO } from 'server';
 import MemberRecord from '../interfaces/member-record';
-import Warning from '../interfaces/warning';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],
   discordMembers: FormattedDiscordMember[],
   ranks: GW2Rank[],
-  warnings: Warning[]
+  warnings: WarningDTO[]
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
     .map(gw2Member => {
@@ -89,7 +88,7 @@ export const getExcessDiscordRecords = (
   gw2Members: GW2Member[],
   discordMembers: FormattedDiscordMember[],
   ranks: GW2Rank[],
-  warnings: Warning[]
+  warnings: WarningDTO[]
 ): MemberRecord[] => {
   const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
   return discordMembers

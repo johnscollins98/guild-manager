@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
-import { DiscordRole } from 'server';
-import Warning from './warning';
+import { DiscordRole, WarningDTO } from 'server';
 
 export default interface MemberRecord {
   accountName: string;
@@ -13,7 +12,7 @@ export default interface MemberRecord {
   discordId?: string;
   roles: DiscordRole[];
   avatar?: string;
-  warnings: Warning[];
+  warnings: WarningDTO[];
   issues: {
     missingGW2?: boolean;
     missingDiscord?: boolean;

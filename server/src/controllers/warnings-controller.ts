@@ -13,34 +13,35 @@ import {
   Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { Warning } from '../models/warning.model';
+import { WarningCreateDTO, WarningDTO } from '../models';
 import WarningsRepository from '../services/repositories/warnings-repository';
+import { IWarningsController } from './interfaces';
 
 @JsonController('/api/warnings', { transformResponse: false })
 @Authorized()
 @Service()
-export class WarningsController {
+export class WarningsController implements IWarningsController {
   constructor(private readonly warningRepo: WarningsRepository) {}
 
   @Get('/')
-  getAll(): Promise<Warning[]> {
+  getAll(): Promise<WarningDTO[]> {
     return this.warningRepo.getAll();
   }
 
   @Get('/:id')
   @OnNull(404)
-  get(@Param('id') id: number): Promise<Warning | null> {
+  get(@Param('id') id: number): Promise<WarningDTO | null> {
     return this.warningRepo.getById(id);
   }
 
   @Get('/member/:id')
-  getForMember(@Param('id') id: string): Promise<Warning[]> {
+  getForMember(@Param('id') id: string): Promise<WarningDTO[]> {
     return this.warningRepo.getForMember(id);
   }
 
   @Delete('/:id')
   @OnUndefined(204)
-  async delete(@Param('id') id: number): Promise<undefined> {
+  async delete(@Param('id') id: number): Promise<void> {
     const res = await this.warningRepo.delete(id);
 
     if (!res) {
@@ -49,14 +50,16 @@ export class WarningsController {
   }
 
   @Post('/')
-  create(@Body() warning: Warning, @CurrentUser() user: Express.User): Promise<Warning> {
-    warning.givenBy = user.username;
-    return this.warningRepo.create(warning);
+  create(
+    @Body() warning: WarningCreateDTO,
+    @CurrentUser() user?: Express.User
+  ): Promise<WarningDTO> {
+    return this.warningRepo.create({ ...warning, givenBy: user?.username });
   }
 
   @Put('/:id')
   @OnNull(404)
-  update(@Param('id') id: number, @Body() warning: Warning): Promise<Warning | null> {
+  update(@Param('id') id: number, @Body() warning: WarningCreateDTO): Promise<WarningDTO | null> {
     return this.warningRepo.update(id, warning);
   }
 }

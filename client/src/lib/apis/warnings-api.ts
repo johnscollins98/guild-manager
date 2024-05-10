@@ -1,25 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { IWarningsController, WarningCreateDTO, WarningDTO } from 'server';
 import { useToast } from '../../components/common/toast-context';
-import Warning, { WarningPost } from '../interfaces/warning';
+import { createApi } from './axios-wrapper';
 
-export const useWarnings = () => useQuery<Warning[], AxiosError>({ queryKey: ['warnings'] });
+const api = createApi('/api/warnings');
+
+const warningsApi: IWarningsController = {
+  getAll: () => api(''),
+  get: (id: number) => api(`${id}`),
+  getForMember: (id: string) => api(`member/${id}`),
+  delete: (id: number) => api(`${id}`, { method: 'DELETE' }),
+  create: (data: WarningCreateDTO) => api('', { method: 'POST', data }),
+  update: (id: number, data: WarningCreateDTO) => api(`${id}`, { method: 'PUT', data })
+};
+
+export const useWarnings = () => useQuery({ queryKey: ['warnings'], queryFn: warningsApi.getAll });
 export const useMemberWarnings = (memberId: string) =>
-  useQuery<Warning[], AxiosError>({
+  useQuery({
     queryKey: ['warnings', memberId],
-    queryFn: async () => {
-      const response = await axios.get<Warning[]>(`/api/warnings/${memberId}`);
-      return response.data;
-    }
+    queryFn: () => warningsApi.getForMember(memberId)
   });
 
 export const useAddWarningMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Warning, AxiosError, WarningPost>({
+  return useMutation<WarningDTO, AxiosError, WarningCreateDTO>({
     mutationFn(warning) {
-      return axios.post(`/api/warnings`, warning);
+      return warningsApi.create(warning);
     },
     onSuccess() {
       openToast('Successfully added warning', 'success');
@@ -35,9 +44,9 @@ export const useDeleteWarningMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Warning, AxiosError, number>({
+  return useMutation<void, AxiosError, number>({
     mutationFn(warningId) {
-      return axios.delete(`/api/warnings/${warningId}`);
+      return warningsApi.delete(warningId);
     },
     onSuccess() {
       openToast('Successfully deleted warning', 'success');

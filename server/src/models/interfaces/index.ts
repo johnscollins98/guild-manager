@@ -20,3 +20,5 @@ export * from './gw2-rank';
 export * from './member-left-dto';
 export * from './recruitment-post-create-dto';
 export * from './recruitment-post-dto';
+export * from './warning-create-dto';
+export * from './warning-dto';
