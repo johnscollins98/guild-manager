@@ -12,7 +12,7 @@ export class EventPostSettings {
   channelId?: string;
 
   @Column({ default: false })
-  editMessages?: boolean;
+  editMessages!: boolean;
 
   @Column({ nullable: true })
   Monday?: string;

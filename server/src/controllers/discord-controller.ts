@@ -20,9 +20,9 @@ import {
   DiscordMemberUpdate,
   DiscordMessagePost,
   DiscordRole,
+  EventSettingsUpsertDTO,
   FormattedDiscordMember,
-  MemberLeftDTO,
-  PostEventDto
+  MemberLeftDTO
 } from '../models';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
@@ -131,7 +131,7 @@ export class DiscordController implements IDiscordController {
 
   @OnUndefined(200)
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() settings: PostEventDto): Promise<void> {
+  async postEventUpdates(@Body() settings: EventSettingsUpsertDTO): Promise<void> {
     await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
       channelId: settings.channelId,
       editMessages: settings.editMessages,
@@ -161,7 +161,7 @@ export class DiscordController implements IDiscordController {
       'Saturday',
       'Sunday',
       'Dynamic'
-    ];
+    ] as const;
 
     for (const day of daysOfWeek) {
       const events = await this.eventRepository.getEventsOnADay(day);

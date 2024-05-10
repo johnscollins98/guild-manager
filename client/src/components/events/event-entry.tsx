@@ -14,12 +14,11 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles/createTheme';
 import React, { useCallback, useState } from 'react';
-import { FormattedDiscordMember } from 'server';
-import Event from '../../lib/interfaces/event';
+import { EventCreateDTO, EventDTO, FormattedDiscordMember } from 'server';
 import { useToast } from '../common/toast-context';
 import './event-entry.scss';
 
-const emptyEvent: Event = {
+const emptyEvent: EventCreateDTO = {
   title: '',
   day: 'Monday',
   startTime: '',
@@ -40,11 +39,11 @@ const daysOfWeek = [
 
 interface Props {
   create?: boolean;
-  event?: Event;
+  event?: EventDTO;
   possibleLeaders: FormattedDiscordMember[];
-  deleteEvent?: (e: Event) => Promise<void>;
-  updateEvent?: (e: Event) => Promise<void>;
-  createEvent?: (e: Event) => Promise<void>;
+  deleteEvent?: (e: EventDTO) => Promise<void>;
+  updateEvent?: (id: number, e: EventCreateDTO) => Promise<void>;
+  createEvent?: (e: EventCreateDTO) => Promise<void>;
 }
 
 const EventEntry = ({
@@ -55,11 +54,11 @@ const EventEntry = ({
   updateEvent,
   createEvent
 }: Props) => {
-  const [localEvent, setLocalEvent] = useState(event ? event : emptyEvent);
+  const [localEvent, setLocalEvent] = useState<EventCreateDTO>(event ? event : emptyEvent);
   const [modified, setModified] = useState(false);
   const openToast = useToast();
 
-  const validationHelper = useCallback((event: Event) => {
+  const validationHelper = useCallback((event: EventCreateDTO) => {
     if (!event.title) throw new Error('A title must be provided');
     if (!event.leaderId) throw new Error('A leader must be selected');
     if (!daysOfWeek.includes(event.day))
@@ -91,9 +90,13 @@ const EventEntry = ({
       throw new Error('No update event function passed in');
     }
 
-    await updateEvent(localEvent);
+    if (!event) {
+      throw new Error('No event to update'); // TODO: this is messy and could use a refactor
+    }
+
+    if (localEvent) await updateEvent(event.id, localEvent);
     setModified(false);
-  }, [updateEvent, validationHelper, localEvent, setModified, openToast]);
+  }, [updateEvent, validationHelper, localEvent, setModified, openToast, event]);
 
   const onCreate = useCallback(async () => {
     try {
@@ -113,12 +116,12 @@ const EventEntry = ({
   }, [createEvent, validationHelper, localEvent, setModified, setLocalEvent, openToast]);
 
   const onDelete = useCallback(() => {
-    if (deleteEvent) {
-      deleteEvent(localEvent);
+    if (deleteEvent && event) {
+      deleteEvent(event);
     } else {
       throw new Error('No Delete event function passed in');
     }
-  }, [localEvent, deleteEvent]);
+  }, [event, deleteEvent]);
 
   const onSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -198,9 +201,9 @@ const EventEntry = ({
 };
 
 interface EditFieldProps {
-  event: Event;
+  event: EventCreateDTO;
   onEdit: (key: string, value: string) => void;
-  fieldKey: keyof Event;
+  fieldKey: keyof EventCreateDTO;
   children?: React.ReactNode;
   select?: boolean;
   type?: string;

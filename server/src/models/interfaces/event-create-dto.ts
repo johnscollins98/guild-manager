@@ -1,8 +1,7 @@
-export default interface Event {
+export interface EventCreateDTO {
   title: string;
   day: string;
   startTime: string;
   duration: string;
   leaderId: string;
-  id?: number;
 }

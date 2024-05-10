@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { DiscordRole, FormattedDiscordMember, IDiscordController, PostEventDto } from 'server';
+import {
+  DiscordRole,
+  EventSettingsUpsertDTO,
+  FormattedDiscordMember,
+  IDiscordController
+} from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
 import { createApi } from './axios-wrapper';
@@ -219,7 +224,7 @@ export const usePostEvents = () => {
   const openToast = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<void, AxiosError, PostEventDto>({
+  return useMutation<void, AxiosError, EventSettingsUpsertDTO>({
     mutationFn(settings) {
       return discordApi.postEventUpdates(settings);
     },

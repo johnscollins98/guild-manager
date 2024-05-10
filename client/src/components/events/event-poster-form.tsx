@@ -31,17 +31,17 @@ const EventPosterForm = ({ onClose }: Props) => {
 
   useEffect(() => {
     if (data) {
-      setPostChannel(data.channelId || '');
-      setEditMessages(data.editMessages || false);
+      setPostChannel(data.channelId ?? '');
+      setEditMessages(data.editMessages);
       setExistingMessageIds({
-        Monday: data.Monday || '',
-        Tuesday: data.Tuesday || '',
-        Wednesday: data.Wednesday || '',
-        Thursday: data.Thursday || '',
-        Friday: data.Friday || '',
-        Saturday: data.Saturday || '',
-        Sunday: data.Sunday || '',
-        Dynamic: data.Dynamic || ''
+        Monday: data.existingMessageIds.Monday ?? '',
+        Tuesday: data.existingMessageIds.Tuesday ?? '',
+        Wednesday: data.existingMessageIds.Wednesday ?? '',
+        Thursday: data.existingMessageIds.Thursday ?? '',
+        Friday: data.existingMessageIds.Friday ?? '',
+        Saturday: data.existingMessageIds.Saturday ?? '',
+        Sunday: data.existingMessageIds.Sunday ?? '',
+        Dynamic: data.existingMessageIds.Dynamic ?? ''
       });
     }
   }, [data]);
@@ -50,11 +50,13 @@ const EventPosterForm = ({ onClose }: Props) => {
     async (e: React.FormEvent) => {
       e.preventDefault();
       setPosting(true);
+
       await postEventsMutation.mutateAsync({
         channelId: postChannel,
         editMessages,
         existingMessageIds
       });
+
       onClose();
       setPosting(false);
     },

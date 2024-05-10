@@ -3,9 +3,9 @@ import {
   DiscordMemberUpdate,
   DiscordMessagePost,
   DiscordRole,
+  EventSettingsUpsertDTO,
   FormattedDiscordMember,
-  MemberLeftDTO,
-  PostEventDto
+  MemberLeftDTO
 } from '../../models';
 
 export interface IDiscordController {
@@ -18,5 +18,5 @@ export interface IDiscordController {
   updateMember(memberId: string, updates: DiscordMemberUpdate): Promise<void>;
   deleteMember(memberId: string): Promise<void>;
   sendMessageToMember(memberId: string, messageData: DiscordMessagePost): Promise<void>;
-  postEventUpdates(settings: PostEventDto): Promise<void>;
+  postEventUpdates(settings: EventSettingsUpsertDTO): Promise<void>;
 }
