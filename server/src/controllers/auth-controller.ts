@@ -14,10 +14,11 @@ import { Service } from 'typedi';
 import { config } from '../config';
 import { AuthInfo } from '../models';
 import { AuthService } from '../services/auth/auth-service';
+import { IAuthController } from './interfaces/auth-interface';
 
 @Service()
 @JsonController('/auth')
-export class AuthController {
+export class AuthController implements IAuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('/')
@@ -44,19 +45,19 @@ export class AuthController {
 
   @Get('/authorization')
   @Header('Cache-control', 'no-store')
-  getAuthorization(@CurrentUser() user: Express.User): Promise<AuthInfo> {
+  getAuthorization(@CurrentUser() user?: Express.User): Promise<AuthInfo> {
     return this.authService.getUserAuthInfo(user);
   }
 
   @Get('/admin_roles')
   @Authorized()
-  getAdminRoles(): string[] {
-    return config.adminRoles;
+  getAdminRoles(): Promise<string[]> {
+    return Promise.resolve(config.adminRoles);
   }
 
   @Get('/event_roles')
   @Authorized()
-  getEventRoles(): string[] {
-    return config.eventRoles.concat(config.adminRoles);
+  getEventRoles(): Promise<string[]> {
+    return Promise.resolve(config.eventRoles.concat(config.adminRoles));
   }
 }

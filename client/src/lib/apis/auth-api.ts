@@ -1,30 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import AuthInfo from '../interfaces/auth-info';
+import { AxiosError } from 'axios';
+import { IAuthController } from 'server';
+import { createApi } from './axios-wrapper';
+
+const api = createApi('auth');
+
+const authApi: IAuthController = {
+  getAuthorization: () => api('authorization'),
+  getAdminRoles: () => api('admin_roles'),
+  getEventRoles: () => api('event_roles')
+};
 
 export const useAuth = () =>
-  useQuery<AuthInfo, AxiosError>({
+  useQuery({
     queryKey: ['auth/authorization'],
-    queryFn: async () => {
-      const response = await axios.get('/auth/authorization');
-      return response.data;
-    }
+    queryFn: authApi.getAuthorization
   });
 
 export const useAdminRoles = () =>
   useQuery<string[], AxiosError>({
     queryKey: ['auth/admin_roles'],
-    queryFn: async () => {
-      const response = await axios.get('/auth/admin_roles');
-      return response.data;
-    }
+    queryFn: authApi.getAdminRoles
   });
 
 export const useEventRoles = () =>
   useQuery<string[], AxiosError>({
     queryKey: ['auth/event_roles'],
-    queryFn: async () => {
-      const response = await axios.get('/auth/event_roles');
-      return response.data;
-    }
+    queryFn: authApi.getEventRoles
   });
