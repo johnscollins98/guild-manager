@@ -1,16 +1,16 @@
 import {
   DiscordLog,
+  DiscordMemberDTO,
   DiscordMemberUpdate,
   DiscordMessagePost,
   DiscordRole,
   EventSettingsUpsertDTO,
-  FormattedDiscordMember,
   MemberLeftDTO
 } from '../../dtos';
 
 export interface IDiscordController {
   getRoles(): Promise<DiscordRole[]>;
-  getMembers(): Promise<FormattedDiscordMember[]>;
+  getMembers(): Promise<DiscordMemberDTO[]>;
   getLogs(): Promise<DiscordLog>;
   getLeavers(): Promise<MemberLeftDTO[]>;
   addRoleToMember(memberId: string, roleId: string): Promise<void>;

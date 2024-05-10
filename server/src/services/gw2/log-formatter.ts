@@ -1,9 +1,9 @@
 import { Service } from 'typedi';
-import { FormattedLogEntry, GW2LogEntry } from '../../dtos';
+import { GW2LogEntry, GW2LogEntryDTO } from '../../dtos';
 
 @Service()
 export class GW2LogFormatter {
-  formatLogEntries(entries: GW2LogEntry[]): FormattedLogEntry[] {
+  formatLogEntries(entries: GW2LogEntry[]): GW2LogEntryDTO[] {
     const filtered = entries.filter(o =>
       ['joined', 'invited', 'kick', 'rank_change'].includes(o.type)
     );
@@ -11,7 +11,7 @@ export class GW2LogFormatter {
     return formattedLogs;
   }
 
-  formatLogEntry(entry: GW2LogEntry): FormattedLogEntry {
+  formatLogEntry(entry: GW2LogEntry): GW2LogEntryDTO {
     const type = entry.type;
 
     const date = entry.time.split('T')[0]?.replace(/-/g, '/') ?? '-';

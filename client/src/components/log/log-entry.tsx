@@ -2,11 +2,11 @@ import AccessTime from '@mui/icons-material/AccessTime';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
-import { FormattedLogEntry } from 'server';
+import { GW2LogEntryDTO } from 'server';
 import './log-entry.scss';
 
 interface Props {
-  entryData: FormattedLogEntry;
+  entryData: GW2LogEntryDTO;
 }
 
 const LogEntry = ({ entryData }: Props) => {

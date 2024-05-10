@@ -1,11 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import {
-  DiscordRole,
-  EventSettingsUpsertDTO,
-  FormattedDiscordMember,
-  IDiscordController
-} from 'server';
+import { DiscordMemberDTO, DiscordRole, EventSettingsUpsertDTO, IDiscordController } from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
 import { createApi } from './axios-wrapper';
@@ -46,18 +41,16 @@ export const useAddDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO, FormattedDiscordMember[]>({
+  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMemberDTO[]>({
     mutationFn({ memberId, role }) {
       return discordApi.addRoleToMember(memberId, role.id);
     },
     async onMutate({ memberId, role }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
-        'discord/members'
-      ]);
+      const previousMembers = queryClient.getQueryData<DiscordMemberDTO[]>(['discord/members']);
 
-      queryClient.setQueryData<FormattedDiscordMember[]>(
+      queryClient.setQueryData<DiscordMemberDTO[]>(
         ['discord/members'],
         old =>
           old?.map(member => {
@@ -83,18 +76,16 @@ export const useRemoveDiscordRole = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<void, AxiosError, ChangeRoleDTO, FormattedDiscordMember[]>({
+  return useMutation<void, AxiosError, ChangeRoleDTO, DiscordMemberDTO[]>({
     mutationFn({ memberId, role }) {
       return discordApi.removeRoleFromMember(memberId, role.id);
     },
     async onMutate({ role, memberId }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
-        'discord/members'
-      ]);
+      const previousMembers = queryClient.getQueryData<DiscordMemberDTO[]>(['discord/members']);
 
-      queryClient.setQueryData<FormattedDiscordMember[]>(
+      queryClient.setQueryData<DiscordMemberDTO[]>(
         ['discord/members'],
         old =>
           old?.map(member => {
@@ -150,7 +141,7 @@ export const useKickDiscordMembers = () => {
   const openToast = useToast();
   const sendMessage = useSendMessage();
 
-  return useMutation<void, AxiosError, KickMemberDTO, FormattedDiscordMember[]>({
+  return useMutation<void, AxiosError, KickMemberDTO, DiscordMemberDTO[]>({
     async mutationFn({ reinvite, reason, memberIds }) {
       const promises = memberIds.map(async memberId => {
         if (reinvite) {
@@ -177,11 +168,9 @@ export const useKickDiscordMembers = () => {
     async onMutate({ memberIds }) {
       await queryClient.cancelQueries({ queryKey: ['discord/members'] });
 
-      const previousMembers = queryClient.getQueryData<FormattedDiscordMember[]>([
-        'discord/members'
-      ]);
+      const previousMembers = queryClient.getQueryData<DiscordMemberDTO[]>(['discord/members']);
 
-      queryClient.setQueryData<FormattedDiscordMember[]>(
+      queryClient.setQueryData<DiscordMemberDTO[]>(
         ['discord/members'],
         old => old?.filter(m => !(m.id && memberIds.includes(m.id))) ?? []
       );

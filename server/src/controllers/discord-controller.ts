@@ -17,11 +17,11 @@ import { config } from '../config';
 import {
   DiscordLog,
   DiscordMember,
+  DiscordMemberDTO,
   DiscordMemberUpdate,
   DiscordMessagePost,
   DiscordRole,
   EventSettingsUpsertDTO,
-  FormattedDiscordMember,
   MemberLeftDTO
 } from '../dtos';
 import { DiscordApiFactory } from '../services/discord/api-factory';
@@ -68,7 +68,7 @@ export class DiscordController implements IDiscordController {
 
   @Get('/members')
   @Header('Cache-control', `public, max-age=0`)
-  async getMembers(): Promise<FormattedDiscordMember[]> {
+  async getMembers(): Promise<DiscordMemberDTO[]> {
     const results: [DiscordMember[], DiscordRole[]] = await Promise.all([
       this.discordGuildApi.getMembers(),
       this.discordGuildApi.getRoles()

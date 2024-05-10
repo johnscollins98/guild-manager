@@ -1,6 +1,6 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { FormattedLogEntry, GW2Member, GW2Rank } from '../dtos';
+import { GW2LogEntryDTO, GW2Member, GW2Rank } from '../dtos';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
@@ -20,7 +20,7 @@ export class GW2Controller implements IGW2Controller {
   }
 
   @Get('/log')
-  async getLog(): Promise<FormattedLogEntry[]> {
+  async getLog(): Promise<GW2LogEntryDTO[]> {
     const unformattedLog = await this.gw2GuildApi.getLog();
     return this.logFormatter.formatLogEntries(unformattedLog);
   }

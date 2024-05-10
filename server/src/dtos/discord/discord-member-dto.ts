@@ -1,6 +1,6 @@
 import { DiscordRole } from './discord-role';
 
-export interface FormattedDiscordMember {
+export interface DiscordMemberDTO {
   name?: string;
   nickname?: string;
   roles: DiscordRole[];

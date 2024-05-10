@@ -14,7 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { Theme } from '@mui/material/styles/createTheme';
 import React, { useCallback, useState } from 'react';
-import { EventCreateDTO, EventDTO, FormattedDiscordMember } from 'server';
+import { DiscordMemberDTO, EventCreateDTO, EventDTO } from 'server';
 import { useToast } from '../common/toast-context';
 import './event-entry.scss';
 
@@ -40,7 +40,7 @@ const daysOfWeek = [
 interface Props {
   create?: boolean;
   event?: EventDTO;
-  possibleLeaders: FormattedDiscordMember[];
+  possibleLeaders: DiscordMemberDTO[];
   deleteEvent?: (e: EventDTO) => Promise<void>;
   updateEvent?: (id: number, e: EventCreateDTO) => Promise<void>;
   createEvent?: (e: EventCreateDTO) => Promise<void>;

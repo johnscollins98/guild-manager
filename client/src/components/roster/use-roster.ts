@@ -1,4 +1,4 @@
-import { FormattedDiscordMember, GW2Member, GW2Rank, WarningDTO } from 'server';
+import { DiscordMemberDTO, GW2Member, GW2Rank, WarningDTO } from 'server';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
@@ -44,7 +44,7 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
 
 const getRoster = (
   gw2Members?: GW2Member[],
-  discordMembers?: FormattedDiscordMember[],
+  discordMembers?: DiscordMemberDTO[],
   guildRanks?: GW2Rank[],
   warnings?: WarningDTO[]
 ) => {
