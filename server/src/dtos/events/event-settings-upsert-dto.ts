@@ -1,13 +1,6 @@
-interface ExistingMessageIds {
-  Monday: string;
-  Tuesday: string;
-  Wednesday: string;
-  Thursday: string;
-  Friday: string;
-  Saturday: string;
-  Sunday: string;
-  Dynamic: string;
-}
+import { DayOfWeek } from './days';
+
+export type ExistingMessageIds = Record<DayOfWeek, string>;
 
 export type EventSettingsUpsertDTO = {
   channelId: string;

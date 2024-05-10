@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DayOfWeek } from '../dtos';
 
 @Entity()
 export class Event {
@@ -9,7 +10,7 @@ export class Event {
   title!: string;
 
   @Column()
-  day!: string;
+  day!: DayOfWeek;
 
   @Column()
   startTime!: string;

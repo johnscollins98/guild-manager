@@ -1,21 +1,8 @@
 import markdownTable from 'markdown-table';
 import { Service } from 'typedi';
+import { DayOfWeek, daysOfWeek } from '../../dtos';
 import { Event } from '../../models/event.model';
 import { EventRepository } from '../repositories/event-repository';
-
-const daysOfWeek = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday',
-  'Dynamic'
-] as const;
-
-type DaysOfWeek = typeof daysOfWeek;
-type DayOfWeek = DaysOfWeek[number];
 
 @Service()
 export class EventTableGenerator {
@@ -24,7 +11,7 @@ export class EventTableGenerator {
   async generateEventsTableMd() {
     const events = await this.eventRepo.getAll();
 
-    const eventsByDay = this.getEventsByDay(events, daysOfWeek);
+    const eventsByDay = this.getEventsByDay(events);
     const maxNumEvents = Object.values(eventsByDay).reduce(
       (max, events) => Math.max(max, events.length),
       0
@@ -62,10 +49,9 @@ export class EventTableGenerator {
     );
   }
 
-  private getEventsByDay(events: Event[], days: DaysOfWeek): Record<DayOfWeek, Event[]> {
-    return Object.fromEntries(days.map(day => [day, events.filter(e => e.day === day)])) as Record<
-      DayOfWeek,
-      Event[]
-    >;
+  private getEventsByDay(events: Event[]): Record<DayOfWeek, Event[]> {
+    return Object.fromEntries(
+      daysOfWeek.map(day => [day, events.filter(e => e.day === day)])
+    ) as Record<DayOfWeek, Event[]>;
   }
 }

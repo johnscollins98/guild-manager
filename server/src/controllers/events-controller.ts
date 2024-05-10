@@ -13,7 +13,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../dtos';
+import { DayOfWeek, EventCreateDTO, EventDTO, EventSettingsDTO } from '../dtos';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
 import { IEventsController } from './interfaces';
@@ -60,7 +60,7 @@ export class EventsController implements IEventsController {
   }
 
   @Get('/day/:day')
-  getEventsOnADay(@Param('day') day: string): Promise<EventDTO[]> {
+  getEventsOnADay(@Param('day') day: DayOfWeek): Promise<EventDTO[]> {
     return this.eventRepo.getEventsOnADay(day);
   }
 
