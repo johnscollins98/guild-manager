@@ -1,9 +1,12 @@
 import { Button, TextField } from '@mui/material';
 import { Box } from '@mui/system';
-import axios from 'axios';
 import copy from 'copy-to-clipboard';
 import { FC, FormEventHandler, useCallback, useEffect, useState } from 'react';
-import { useRecruitmentPost, useRecruitmentPostMutation } from '../../lib/apis/recruitment-api';
+import {
+  recruitmentApi,
+  useRecruitmentPost,
+  useRecruitmentPostMutation
+} from '../../lib/apis/recruitment-api';
 import LoaderPage from '../common/loader-page';
 import { useToast } from '../common/toast-context';
 
@@ -30,17 +33,14 @@ const RecruitmentPage: FC = () => {
   );
 
   const handleCopyClick = async (isHtml: boolean) => {
-    const response = await axios.get('/api/recruitment-post/generate', {
-      params: {
-        html: isHtml ? true : false
-      }
-    });
+    const post = await recruitmentApi
+      .getGeneratedPost(isHtml)
+      .catch(() => toast('Failed to generate message', 'error'));
 
-    const post = response.data;
-
-    copy(post);
-
-    toast('Copied message to clipboard', 'success');
+    if (post) {
+      copy(post);
+      toast('Copied message to clipboard', 'success');
+    }
   };
 
   if (isLoading) {

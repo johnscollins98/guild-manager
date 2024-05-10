@@ -11,14 +11,15 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { RecruitmentPost } from '../models/recruitment-post.model';
+import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../models';
 import { PostGeneratorFactory } from '../services/recruitment/post-generator-factory';
 import { RecruitmentPostRepository } from '../services/repositories/recruitment-post-repository';
+import { IRecruitmentPostController } from './interfaces';
 
 @JsonController('/api/recruitment-post', { transformResponse: false })
 @Authorized()
 @Service()
-export class RecruitmentPostController {
+export class RecruitmentPostController implements IRecruitmentPostController {
   constructor(
     private readonly recruitmentRepo: RecruitmentPostRepository,
     private readonly postGeneratorFactory: PostGeneratorFactory
@@ -26,7 +27,7 @@ export class RecruitmentPostController {
 
   @Get('/')
   @OnNull(404)
-  get(): Promise<RecruitmentPost | null> {
+  get(): Promise<RecruitmentPostDTO | null> {
     return this.recruitmentRepo.getOne();
   }
 
@@ -40,7 +41,7 @@ export class RecruitmentPostController {
   }
 
   @Put('/')
-  async upsert(@Body() body: RecruitmentPost): Promise<RecruitmentPost> {
+  async upsert(@Body() body: RecruitmentPostCreateDTO): Promise<RecruitmentPostDTO> {
     const post = await this.recruitmentRepo.getOne();
 
     if (post) {
@@ -55,7 +56,7 @@ export class RecruitmentPostController {
 
   @Delete('/')
   @OnUndefined(204)
-  async delete(): Promise<undefined> {
+  async delete(): Promise<void> {
     const post = await this.recruitmentRepo.getOne();
 
     if (!post) {

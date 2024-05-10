@@ -18,3 +18,5 @@ export * from './gw2-log-entry';
 export * from './gw2-member';
 export * from './gw2-rank';
 export * from './member-left-dto';
+export * from './recruitment-post-create-dto';
+export * from './recruitment-post-dto';
