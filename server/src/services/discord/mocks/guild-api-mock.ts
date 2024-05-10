@@ -2,7 +2,7 @@
 
 import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
-import { DiscordLog, DiscordMember, DiscordMemberUpdate, DiscordRole } from '../../../models';
+import { DiscordLog, DiscordMember, DiscordMemberUpdate, DiscordRole } from '../../../dtos';
 import { IDiscordGuildApi } from '../guild-api';
 
 const members: DiscordMember[] = [

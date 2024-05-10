@@ -6,7 +6,7 @@ import {
   EventSettingsUpsertDTO,
   FormattedDiscordMember,
   MemberLeftDTO
-} from '../../models';
+} from '../../dtos';
 
 export interface IDiscordController {
   getRoles(): Promise<DiscordRole[]>;

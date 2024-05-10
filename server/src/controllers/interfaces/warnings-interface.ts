@@ -1,4 +1,4 @@
-import { WarningCreateDTO, WarningDTO } from '../../models';
+import { WarningCreateDTO, WarningDTO } from '../../dtos';
 
 export interface IWarningsController {
   getAll(): Promise<WarningDTO[]>;

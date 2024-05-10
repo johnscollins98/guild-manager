@@ -1,7 +1,7 @@
 import cache from 'memory-cache';
 import { Service } from 'typedi';
 import { config } from '../../config';
-import { AuthInfo, DiscordMember } from '../../models';
+import { AuthInfo, DiscordMember } from '../../dtos';
 import { DiscordApi } from '../discord/discord-api';
 import { SymmetricEncryption } from './encryption-service';
 

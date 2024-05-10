@@ -1,2 +1,2 @@
-export * from './controllers';
-export * from './models';
+export * from './controllers/interfaces';
+export * from './dtos';

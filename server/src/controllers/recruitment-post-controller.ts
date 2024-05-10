@@ -11,7 +11,7 @@ import {
   QueryParam
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../models';
+import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../dtos';
 import { PostGeneratorFactory } from '../services/recruitment/post-generator-factory';
 import { RecruitmentPostRepository } from '../services/repositories/recruitment-post-repository';
 import { IRecruitmentPostController } from './interfaces';

@@ -13,7 +13,7 @@ import {
   Put
 } from 'routing-controllers';
 import { Service } from 'typedi';
-import { WarningCreateDTO, WarningDTO } from '../models';
+import { WarningCreateDTO, WarningDTO } from '../dtos';
 import WarningsRepository from '../services/repositories/warnings-repository';
 import { IWarningsController } from './interfaces';
 

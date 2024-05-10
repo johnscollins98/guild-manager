@@ -1,4 +1,4 @@
-import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../../models';
+import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../../dtos';
 
 export interface IRecruitmentPostController {
   get(): Promise<RecruitmentPostDTO | null>;

@@ -1,4 +1,4 @@
-import { FormattedLogEntry, GW2Member, GW2Rank } from '../../models';
+import { FormattedLogEntry, GW2Member, GW2Rank } from '../../dtos';
 
 export interface IGW2Controller {
   getLog(): Promise<FormattedLogEntry[]>;

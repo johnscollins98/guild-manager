@@ -13,7 +13,7 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../models';
+import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../dtos';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
 import { IEventsController } from './interfaces';

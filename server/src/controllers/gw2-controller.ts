@@ -1,6 +1,6 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { FormattedLogEntry, GW2Member, GW2Rank } from '../models';
+import { FormattedLogEntry, GW2Member, GW2Rank } from '../dtos';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';

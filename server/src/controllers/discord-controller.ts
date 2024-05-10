@@ -23,7 +23,7 @@ import {
   EventSettingsUpsertDTO,
   FormattedDiscordMember,
   MemberLeftDTO
-} from '../models';
+} from '../dtos';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
 import { EventEmbedCreator } from '../services/discord/event-embed-creator';

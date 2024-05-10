@@ -1,4 +1,4 @@
-import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../../models';
+import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../../dtos';
 
 export interface IEventsController {
   getGuildSettings(): Promise<EventSettingsDTO>;

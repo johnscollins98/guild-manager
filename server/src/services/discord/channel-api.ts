@@ -5,7 +5,7 @@ import {
   DiscordMessage,
   DiscordMessageDetails,
   DiscordMessagePost
-} from '../../models';
+} from '../../dtos';
 import { DiscordApi } from './discord-api';
 
 export interface IDiscordChannelApi {

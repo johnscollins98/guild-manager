@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { DiscordMember, DiscordRole, FormattedDiscordMember } from '../../models';
+import { DiscordMember, DiscordRole, FormattedDiscordMember } from '../../dtos';
 import { GW2ApiFactory } from '../gw2/api-factory';
 import { IGW2GuildApi } from '../gw2/guild-api';
 

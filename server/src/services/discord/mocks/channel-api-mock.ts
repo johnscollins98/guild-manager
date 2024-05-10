@@ -7,7 +7,7 @@ import {
   DiscordMessage,
   DiscordMessageDetails,
   DiscordMessagePost
-} from '../../../models';
+} from '../../../dtos';
 import { IDiscordChannelApi } from '../channel-api';
 
 @Service()

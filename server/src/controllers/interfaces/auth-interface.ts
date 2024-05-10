@@ -1,4 +1,4 @@
-import { AuthInfo } from '../../models';
+import { AuthInfo } from '../../dtos';
 
 export interface IAuthController {
   getAuthorization(): Promise<AuthInfo>;
