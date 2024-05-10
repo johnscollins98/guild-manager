@@ -1,16 +1,15 @@
 import { Authorized, Get, Header, JsonController } from 'routing-controllers';
 import { Service } from 'typedi';
-import { FormattedLogEntry } from '../models/interfaces/formatted-log-entry';
-import GW2Member from '../models/interfaces/gw2-member';
-import GW2Rank from '../models/interfaces/gw2-rank';
+import { GW2LogEntryDTO, GW2Member, GW2Rank } from '../dtos';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
+import { IGW2Controller } from './interfaces/gw2-interface';
 
 @JsonController('/api/gw2')
 @Authorized()
 @Service()
-export class GW2Controller {
+export class GW2Controller implements IGW2Controller {
   private readonly gw2GuildApi: IGW2GuildApi;
 
   constructor(
@@ -21,7 +20,7 @@ export class GW2Controller {
   }
 
   @Get('/log')
-  async getLog(): Promise<FormattedLogEntry[]> {
+  async getLog(): Promise<GW2LogEntryDTO[]> {
     const unformattedLog = await this.gw2GuildApi.getLog();
     return this.logFormatter.formatLogEntries(unformattedLog);
   }

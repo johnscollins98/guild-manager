@@ -1,8 +1,6 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
-import { DiscordLog } from '../../models/interfaces/discord-log';
-import DiscordMember, { DiscordMemberUpdate } from '../../models/interfaces/discord-member';
-import DiscordRole from '../../models/interfaces/discord-role';
+import { DiscordLog, DiscordMember, DiscordMemberUpdate, DiscordRole } from '../../dtos';
 import { DiscordApi } from './discord-api';
 
 export interface IDiscordGuildApi {

@@ -1,7 +1,5 @@
 import { Service } from 'typedi';
-import GW2LogEntry from '../../../models/interfaces/gw2-log-entry';
-import GW2Member from '../../../models/interfaces/gw2-member';
-import GW2Rank from '../../../models/interfaces/gw2-rank';
+import { GW2LogEntry, GW2Member, GW2Rank } from '../../../dtos';
 import { IGW2GuildApi } from '../guild-api';
 
 const members: GW2Member[] = [

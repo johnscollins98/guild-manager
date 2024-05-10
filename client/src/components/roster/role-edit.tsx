@@ -8,12 +8,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
+import { DiscordRole } from 'server';
 import {
   useAddDiscordRole,
   useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
-import DiscordRole from '../../lib/interfaces/discord-role';
 import MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {

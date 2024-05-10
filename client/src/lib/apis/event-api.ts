@@ -1,20 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { EventCreateDTO, EventDTO, IEventsController } from 'server';
 import { useToast } from '../../components/common/toast-context';
-import Event from '../interfaces/event';
-import { EventSettings } from '../interfaces/event-settings';
+import { createApi } from './axios-wrapper';
 
-export const useEvents = () => useQuery<Event[], AxiosError>({ queryKey: ['events'] });
+const api = createApi('/api/events');
+
+const eventsApi: IEventsController = {
+  getGuildSettings: () => api('settings'),
+  getAll: () => api(''),
+  get: id => api(`${id}`),
+  getEventsOnADay: day => api(`day/${day}`),
+  delete: id => api(`${id}`, { method: 'DELETE' }),
+  create: data => api('', { method: 'POST', data }),
+  update: (id, data) => api(`${id}`, { method: 'PUT', data })
+};
+
+export const useEvents = () => useQuery({ queryKey: ['events'], queryFn: eventsApi.getAll });
 export const useEventSettings = () =>
-  useQuery<EventSettings, AxiosError>({ queryKey: ['events/settings'] });
+  useQuery({ queryKey: ['events/settings'], queryFn: eventsApi.getGuildSettings });
 
 export const useCreateEventMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Event, AxiosError, Event>({
+  return useMutation<EventDTO, AxiosError, EventCreateDTO>({
     mutationFn(event) {
-      return axios.post('/api/events', event);
+      return eventsApi.create(event);
     },
     onSuccess() {
       openToast('Created event.', 'success');
@@ -32,7 +44,7 @@ export const useDeleteEventMutation = () => {
 
   return useMutation<void, AxiosError, number>({
     mutationFn(id) {
-      return axios.delete(`/api/events/${id}`);
+      return eventsApi.delete(id);
     },
     onSuccess() {
       openToast('Deleted event.', 'success');
@@ -48,9 +60,9 @@ export const useUpdateEventMutation = () => {
   const queryClient = useQueryClient();
   const openToast = useToast();
 
-  return useMutation<Event, AxiosError, { id: number; event: Event }>({
+  return useMutation<EventDTO | null, AxiosError, { id: number; event: EventCreateDTO }>({
     mutationFn({ id, event }) {
-      return axios.put(`/api/events/${id}`, event);
+      return eventsApi.update(id, event);
     },
     onSuccess() {
       openToast('Updated event.', 'success');

@@ -1,9 +1,11 @@
 import { Service } from 'typedi';
-import { DiscordChannel } from '../../models/interfaces/discord-channel';
-import DiscordEmbed from '../../models/interfaces/discord-embed';
-import DiscordMessage from '../../models/interfaces/discord-message';
-import { DiscordMessageDetails } from '../../models/interfaces/discord-message-details';
-import { DiscordMessagePost } from '../../models/interfaces/discord-message-post';
+import {
+  DiscordChannel,
+  DiscordEmbed,
+  DiscordMessage,
+  DiscordMessageDetails,
+  DiscordMessagePost
+} from '../../dtos';
 import { DiscordApi } from './discord-api';
 
 export interface IDiscordChannelApi {

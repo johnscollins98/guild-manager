@@ -1,15 +1,12 @@
 import { DateTime } from 'luxon';
-import DiscordMember from '../interfaces/discord-member';
-import GW2Member from '../interfaces/gw2-member';
-import GW2Rank from '../interfaces/gw2-rank';
+import { DiscordMemberDTO, GW2Member, GW2Rank, WarningDTO } from 'server';
 import MemberRecord from '../interfaces/member-record';
-import Warning from '../interfaces/warning';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],
-  discordMembers: DiscordMember[],
+  discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
-  warnings: Warning[]
+  warnings: WarningDTO[]
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
     .map(gw2Member => {
@@ -31,7 +28,7 @@ export const generateGW2RosterRecords = (
       // check for exact match
       const discordMember = discordMembers.find(m => {
         const discordName = m.name
-          .toLowerCase()
+          ?.toLowerCase()
           .replace(
             /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
             ''
@@ -40,7 +37,7 @@ export const generateGW2RosterRecords = (
 
         return (
           discordName === testName ||
-          discordName.includes(`(${testName})`) ||
+          discordName?.includes(`(${testName})`) ||
           discordName === memberId.toLowerCase()
         );
       });
@@ -53,7 +50,9 @@ export const generateGW2RosterRecords = (
 
       const missingDiscord = rank !== 'Alt' && !discordName;
       const unmatchingRoles =
-        rank !== 'Alt' && !!discordName && rank.toLowerCase() !== roles[0]?.name.toLowerCase();
+        rank !== 'Alt' &&
+        !!discordName &&
+        roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase());
       const invited = rank.toLowerCase() === 'invited';
 
       return {
@@ -89,9 +88,9 @@ export const generateGW2RosterRecords = (
 
 export const getExcessDiscordRecords = (
   gw2Members: GW2Member[],
-  discordMembers: DiscordMember[],
+  discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
-  warnings: Warning[]
+  warnings: WarningDTO[]
 ): MemberRecord[] => {
   const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
   return discordMembers
@@ -106,7 +105,7 @@ export const getExcessDiscordRecords = (
       const over24h = missingGW2 && DateTime.now().diff(joinDate).toMillis() > twentyFourHours;
 
       return {
-        accountName: discordMember.name,
+        accountName: discordMember.name ?? 'Unknown',
         nickname: discordMember.nickname,
         joinDate,
         discordName: discordMember.name,

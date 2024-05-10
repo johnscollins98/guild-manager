@@ -1,11 +1,8 @@
+import { DiscordMemberDTO, GW2Member, GW2Rank, WarningDTO } from 'server';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
-import DiscordMember from '../../lib/interfaces/discord-member';
-import GW2Member from '../../lib/interfaces/gw2-member';
-import GW2Rank from '../../lib/interfaces/gw2-rank';
 import MemberRecord from '../../lib/interfaces/member-record';
-import Warning from '../../lib/interfaces/warning';
 import {
   compareRank,
   generateGW2RosterRecords,
@@ -47,9 +44,9 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
 
 const getRoster = (
   gw2Members?: GW2Member[],
-  discordMembers?: DiscordMember[],
+  discordMembers?: DiscordMemberDTO[],
   guildRanks?: GW2Rank[],
-  warnings?: Warning[]
+  warnings?: WarningDTO[]
 ) => {
   if (!gw2Members || !discordMembers || !guildRanks || !warnings) return undefined;
 

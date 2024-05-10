@@ -4,6 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
+import { EventCreateDTO, EventDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
@@ -13,7 +14,6 @@ import {
   useEvents,
   useUpdateEventMutation
 } from '../../lib/apis/event-api';
-import Event from '../../lib/interfaces/event';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import useConfirm from '../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../common/error-message';
@@ -79,25 +79,21 @@ const EventPage = () => {
       return aTime - bTime;
     });
 
-  const deleteEvent = async (eventToDelete: Event) => {
+  const deleteEvent = async (eventToDelete: EventDTO) => {
     const res = await confirm(
       `Are you sure you want to delete '${eventToDelete.title}'?`,
       'Delete Event'
     );
     if (!res) return;
 
-    if (eventToDelete.id) {
-      await deleteEventMutation.mutateAsync(eventToDelete.id);
-    }
+    await deleteEventMutation.mutateAsync(eventToDelete.id);
   };
 
-  const updateEvent = async (eventToUpdate: Event) => {
-    if (eventToUpdate.id) {
-      await updateEventMutation.mutateAsync({ id: eventToUpdate.id, event: eventToUpdate });
-    }
+  const updateEvent = async (id: number, event: EventCreateDTO) => {
+    await updateEventMutation.mutateAsync({ id, event });
   };
 
-  const createEvent = async (eventToCreate: Event) => {
+  const createEvent = async (eventToCreate: EventCreateDTO) => {
     await createEventMutation.mutateAsync(eventToCreate);
   };
 

@@ -9,9 +9,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
+import { WarningDTO } from 'server';
 import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import MemberRecord from '../../../lib/interfaces/member-record';
-import Warning from '../../../lib/interfaces/warning';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
 import './warnings-viewer.scss';
 
@@ -26,7 +26,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   const deleteWarningMutation = useDeleteWarningMutation();
 
   const handleDeleteWarning = useCallback(
-    async (warning: Warning) => {
+    async (warning: WarningDTO) => {
       const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
       if (res) {
         await deleteWarningMutation.mutateAsync(warning.id);

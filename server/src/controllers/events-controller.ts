@@ -13,15 +13,15 @@ import {
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { EventPostSettings } from '../models/event-post-settings.model';
-import { Event } from '../models/event.model';
+import { EventCreateDTO, EventDTO, EventSettingsDTO } from '../dtos';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
+import { IEventsController } from './interfaces';
 
 @JsonController('/api/events', { transformResponse: false })
 @Authorized()
 @Service()
-export class EventsController {
+export class EventsController implements IEventsController {
   constructor(
     private readonly eventRepo: EventRepository,
     private readonly eventPostSettingsRepo: EventPostSettingsRepository // TODO: Temporary
@@ -29,30 +29,44 @@ export class EventsController {
 
   // TODO: To be moved -- here for backwards compatability
   @Get('/settings')
-  getGuildSettings(): Promise<EventPostSettings> {
+  async getGuildSettings(): Promise<EventSettingsDTO> {
     // TODO: Config DI would be ideal
-    return this.eventPostSettingsRepo.findOrCreateByGuildId(config.discordGuildId);
+    const model = await this.eventPostSettingsRepo.findOrCreateByGuildId(config.discordGuildId);
+    return {
+      channelId: model.channelId,
+      editMessages: model.editMessages,
+      existingMessageIds: {
+        Monday: model.Monday,
+        Tuesday: model.Tuesday,
+        Wednesday: model.Wednesday,
+        Thursday: model.Thursday,
+        Friday: model.Friday,
+        Saturday: model.Saturday,
+        Sunday: model.Sunday,
+        Dynamic: model.Dynamic
+      }
+    };
   }
 
   @Get('/')
-  getAll(): Promise<Event[]> {
+  getAll(): Promise<EventDTO[]> {
     return this.eventRepo.getAll();
   }
 
   @Get('/:id')
   @OnNull(404)
-  get(@Param('id') id: number): Promise<Event | null> {
+  get(@Param('id') id: number): Promise<EventDTO | null> {
     return this.eventRepo.getById(id);
   }
 
   @Get('/day/:day')
-  getEventsOnADay(@Param('day') day: string): Promise<Event[]> {
+  getEventsOnADay(@Param('day') day: string): Promise<EventDTO[]> {
     return this.eventRepo.getEventsOnADay(day);
   }
 
   @Delete('/:id')
   @OnUndefined(204)
-  async delete(@Param('id') id: number): Promise<undefined> {
+  async delete(@Param('id') id: number): Promise<void> {
     const res = await this.eventRepo.delete(id);
 
     if (!res) {
@@ -61,13 +75,13 @@ export class EventsController {
   }
 
   @Post('/')
-  create(@Body() event: Event): Promise<Event> {
+  create(@Body() event: EventCreateDTO): Promise<EventDTO> {
     return this.eventRepo.create(event);
   }
 
   @Put('/:id')
   @OnNull(404)
-  update(@Param('id') id: number, @Body() event: Event): Promise<Event | null> {
+  update(@Param('id') id: number, @Body() event: EventCreateDTO): Promise<EventDTO | null> {
     return this.eventRepo.update(id, event);
   }
 }

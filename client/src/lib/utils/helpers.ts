@@ -1,4 +1,4 @@
-import DiscordRole from '../interfaces/discord-role';
+import { DiscordRole } from 'server';
 
 export const getColorFromRole = (
   rank: string | undefined,

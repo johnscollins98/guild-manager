@@ -1,12 +1,19 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import GW2LogEntry from '../interfaces/gw2-log-entry';
-import GW2Member from '../interfaces/gw2-member';
-import GW2Rank from '../interfaces/gw2-rank';
+import { IGW2Controller } from 'server';
+import { createApi } from './axios-wrapper';
 
-export const useGW2Members = () => useQuery<GW2Member[], AxiosError>({ queryKey: ['gw2/members'] });
-export const useGW2Log = () => useQuery<GW2LogEntry[], AxiosError>({ queryKey: ['gw2/log'] });
-export const useGW2Ranks = () => useQuery<GW2Rank[], AxiosError>({ queryKey: ['gw2/ranks'] });
+const api = createApi('/api/gw2');
+
+const gw2Api: IGW2Controller = {
+  getLog: () => api('log'),
+  getMembers: () => api('members'),
+  getRanks: () => api('ranks')
+};
+
+export const useGW2Members = () =>
+  useQuery({ queryKey: ['gw2/members'], queryFn: gw2Api.getMembers });
+export const useGW2Log = () => useQuery({ queryKey: ['gw2/log'], queryFn: gw2Api.getLog });
+export const useGW2Ranks = () => useQuery({ queryKey: ['gw2/ranks'], queryFn: gw2Api.getRanks });
 
 export const usePrefetchGW2Log = (isAuthenticated: boolean) => {
   const queryClient = useQueryClient();

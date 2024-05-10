@@ -1,7 +1,5 @@
 import { Service } from 'typedi';
-import DiscordMember from '../../models/interfaces/discord-member';
-import DiscordRole from '../../models/interfaces/discord-role';
-import FormattedDiscordMember from '../../models/interfaces/formatted-discord-member';
+import { DiscordMember, DiscordMemberDTO, DiscordRole } from '../../dtos';
 import { GW2ApiFactory } from '../gw2/api-factory';
 import { IGW2GuildApi } from '../gw2/guild-api';
 
@@ -12,10 +10,7 @@ export class DiscordMemberFormatter {
     this.gw2GuildApi = gw2ApiFactory.guildApi();
   }
 
-  async formatMembers(
-    members: DiscordMember[],
-    roles: DiscordRole[]
-  ): Promise<FormattedDiscordMember[]> {
+  async formatMembers(members: DiscordMember[], roles: DiscordRole[]): Promise<DiscordMemberDTO[]> {
     const validRoles = await this.getValidRoles();
     return members.map(member => this.formatMember(member, roles, validRoles));
   }
@@ -24,7 +19,7 @@ export class DiscordMemberFormatter {
     member: DiscordMember,
     roles: DiscordRole[],
     validRoles: string[]
-  ): FormattedDiscordMember {
+  ): DiscordMemberDTO {
     return {
       name: member.nick ?? member.user?.global_name ?? member.user?.username,
       nickname: member.nick,
