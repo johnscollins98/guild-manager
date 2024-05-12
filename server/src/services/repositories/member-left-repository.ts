@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
+import { dataSource } from '../../dataSource';
 import { MemberLeft } from '../../models/member-left.model';
-import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 
 @Service()

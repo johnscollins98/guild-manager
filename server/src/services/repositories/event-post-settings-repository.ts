@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 import { DeepPartial } from 'typeorm';
+import { dataSource } from '../../dataSource';
 import { EventPostSettings } from '../../models/event-post-settings.model';
-import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 
 @Service()

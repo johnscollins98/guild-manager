@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
+import { dataSource } from '../../dataSource';
 import { RecruitmentPost } from '../../models/recruitment-post.model';
-import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 
 @Service()
