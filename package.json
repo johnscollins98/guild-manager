@@ -13,7 +13,8 @@
     "dev-client": "bun run --cwd client start",
     "dev": "concurrently \"bun run dev-server\" \"bun run dev-client\"",
     "lint": "bun run --cwd client lint && bun run --cwd server lint",
-    "prettier": "prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'"
+    "prettier": "prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
+    "db:migration:run": "bun run --cwd server db:migration:run"
   },
   "workspaces": [
     "client",
