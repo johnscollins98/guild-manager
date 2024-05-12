@@ -1,0 +1,13 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "nixpacksPlan": {
+      "phases": {
+        "release": {
+          "dependsOn": ["build"],
+          "cmds": ["bun run db:migration:run"]
+        }
+      }
+    }
+  }
+}

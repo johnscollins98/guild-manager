@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
+import { dataSource } from '../../dataSource';
 import { DayOfWeek } from '../../dtos';
 import { Event } from '../../models/event.model';
-import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 
 @Service()

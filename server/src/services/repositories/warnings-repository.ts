@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
+import { dataSource } from '../../dataSource';
 import { Warning } from '../../models/warning.model';
-import { dataSource } from '../../server';
 import { BaseRepository } from './base-repository';
 @Service()
 class WarningsRepository extends BaseRepository<Warning> {

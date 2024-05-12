@@ -6,9 +6,9 @@ import passport from 'passport';
 import path from 'path';
 import 'reflect-metadata';
 import { Action, useContainer as rc_useContainer, useExpressServer } from 'routing-controllers';
-import { DataSource } from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 import { config } from './config';
+import { dataSource } from './dataSource';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
 import { MemberLeftRepository } from './services/repositories/member-left-repository';
@@ -65,14 +65,6 @@ useExpressServer(app, {
 app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
 app.use('*', (_, res) => {
   if (!res.headersSent) res.redirect('/');
-});
-
-export const dataSource = new DataSource({
-  type: 'postgres',
-  url: config.databaseUrl,
-  synchronize: true,
-  logging: true,
-  entities: [path.join(__dirname, '**', '*.model.{ts,js}')]
 });
 
 export const Manager = dataSource.manager;
