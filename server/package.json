@@ -9,7 +9,10 @@
     "env-check": "ts-node ./src/check-env.ts",
     "regen-types": "npx gen-env-types .env",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "db:migration:generate": "bun typeorm migration:generate -d ./src/dataSource.ts",
+    "db:migration:run": "bun typeorm migration:run -d ./src/dataSource.ts"
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
