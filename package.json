@@ -6,6 +6,7 @@
   "author": "John Collins <johnscollins98@gmail.com>",
   "private": true,
   "license": "MIT",
+  "packageManager": "bun@1.1.8",
   "scripts": {
     "build": "bun --filter '*' build",
     "start": "bun run --cwd server start",
