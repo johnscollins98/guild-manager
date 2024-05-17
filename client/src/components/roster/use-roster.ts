@@ -1,8 +1,8 @@
-import { DiscordMemberDTO, GW2Member, GW2Rank, WarningDTO } from 'server';
+import { type DiscordMemberDTO, type GW2Member, type GW2Rank, type WarningDTO } from 'server';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 import {
   compareRank,
   generateGW2RosterRecords,

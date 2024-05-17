@@ -1,5 +1,6 @@
 import { Alert, AlertTitle } from '@mui/material';
-import React, { PropsWithChildren } from 'react';
+import type React from 'react';
+import { type PropsWithChildren } from 'react';
 
 export const ErrorMessage: React.FC<PropsWithChildren> = ({ children }) => (
   <Alert severity="error">

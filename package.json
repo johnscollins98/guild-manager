@@ -6,13 +6,14 @@
   "author": "John Collins <johnscollins98@gmail.com>",
   "private": true,
   "license": "MIT",
+  "packageManager": "bun@1.1.8",
   "scripts": {
-    "build": "bun run --cwd ./server build && bun run --cwd ./client build",
+    "build": "bun --filter '*' build",
     "start": "bun run --cwd server start",
     "dev-server": "bun run --cwd server dev",
     "dev-client": "bun run --cwd client start",
     "dev": "concurrently \"bun run dev-server\" \"bun run dev-client\"",
-    "lint": "bun run --cwd client lint && bun run --cwd server lint",
+    "lint": "bun --filter '*' lint",
     "prettier": "prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
     "db:migration:run": "bun run --cwd server db:migration:run"
   },
@@ -26,7 +27,6 @@
     "concurrently": "^8.2.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4"
   },

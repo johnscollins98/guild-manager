@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { DiscordMemberDTO, GW2Member, GW2Rank, WarningDTO } from 'server';
-import MemberRecord from '../interfaces/member-record';
+import { type DiscordMemberDTO, type GW2Member, type GW2Rank, type WarningDTO } from 'server';
+import type MemberRecord from '../interfaces/member-record';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2Member[],

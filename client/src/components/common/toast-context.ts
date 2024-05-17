@@ -1,4 +1,4 @@
-import { AlertColor } from '@mui/material';
+import { type AlertColor } from '@mui/material';
 import React, { useContext } from 'react';
 
 export type ToastContextType = (msg: string, status?: AlertColor) => void;

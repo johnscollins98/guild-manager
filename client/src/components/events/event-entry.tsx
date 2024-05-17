@@ -12,9 +12,10 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
-import { Theme } from '@mui/material/styles/createTheme';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DiscordMemberDTO, EventCreateDTO, daysOfWeek } from 'server';
+import { type Theme } from '@mui/material/styles/createTheme';
+import type React from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
 import { useToast } from '../common/toast-context';
 import './event-entry.scss';
 

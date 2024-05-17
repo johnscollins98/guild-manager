@@ -1,6 +1,6 @@
 import MenuItem from '@mui/material/MenuItem';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { SvgIconTypeMap } from '@mui/material/SvgIcon';
+import { type OverridableComponent } from '@mui/material/OverridableComponent';
+import { type SvgIconTypeMap } from '@mui/material/SvgIcon';
 import './guild-member-menu-item.scss';
 
 interface Props {

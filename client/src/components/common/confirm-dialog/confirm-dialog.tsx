@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
-import { FormEventHandler, useEffect, useRef } from 'react';
+import { useEffect, useRef, type FormEventHandler } from 'react';
 
 import './confirm-dialog.scss';
 import useConfirm from './use-confirm';

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { IGW2Controller } from 'server';
+import { type IGW2Controller } from 'server';
 import { createApi } from './axios-wrapper';
 
 const api = createApi('/api/gw2');

@@ -9,9 +9,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import { WarningDTO } from 'server';
+import { type WarningDTO } from 'server';
 import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
-import MemberRecord from '../../../lib/interfaces/member-record';
+import type MemberRecord from '../../../lib/interfaces/member-record';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
 import './warnings-viewer.scss';
 

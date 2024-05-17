@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { EventCreateDTO, EventDTO, IEventsController } from 'server';
+import { type AxiosError } from 'axios';
+import { type EventCreateDTO, type EventDTO, type IEventsController } from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { createApi } from './axios-wrapper';
 

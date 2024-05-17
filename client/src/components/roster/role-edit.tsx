@@ -8,13 +8,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import { DiscordRole } from 'server';
+import { type DiscordRole } from 'server';
 import {
   useAddDiscordRole,
   useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {
   selectedRecord: MemberRecord | undefined;

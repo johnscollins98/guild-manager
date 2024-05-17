@@ -1,5 +1,5 @@
 import React from 'react';
-import { initialState, ModalAction, ModalState } from './confirm-dialog-reducer';
+import { initialState, type ModalAction, type ModalState } from './confirm-dialog-reducer';
 
 const ConfirmContext = React.createContext<{
   confirmModalState: ModalState;

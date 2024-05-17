@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 
 export const createApi = (baseUrl: string) => {
   return async <TRes>(url: string, config?: AxiosRequestConfig): Promise<TRes> => {

@@ -5,7 +5,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import { DiscordLogDisplay } from '../../lib/interfaces/discord-log-string-generator';
+import { type DiscordLogDisplay } from '../../lib/interfaces/discord-log-string-generator';
 import './discord-log-entry.scss';
 
 interface Props {

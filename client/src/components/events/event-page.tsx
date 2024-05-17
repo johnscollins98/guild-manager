@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import { useMemo, useState } from 'react';
-import { EventCreateDTO, EventDTO, daysOfWeek } from 'server';
+import { daysOfWeek, type EventCreateDTO, type EventDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
 import { useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';

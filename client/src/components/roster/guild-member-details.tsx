@@ -3,7 +3,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import DiscordSvg from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 import './guild-member-details.scss';
 
 interface Props {

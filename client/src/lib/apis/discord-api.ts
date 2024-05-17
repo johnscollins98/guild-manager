@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { DiscordMemberDTO, DiscordRole, EventSettingsUpsertDTO, IDiscordController } from 'server';
+import { type AxiosError } from 'axios';
+import {
+  type DiscordMemberDTO,
+  type DiscordRole,
+  type EventSettingsUpsertDTO,
+  type IDiscordController
+} from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { config } from '../config';
 import { createApi } from './axios-wrapper';

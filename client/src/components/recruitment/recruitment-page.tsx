@@ -1,7 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import copy from 'copy-to-clipboard';
-import { FC, FormEventHandler, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type FC, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
   useRecruitmentPost,

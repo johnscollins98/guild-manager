@@ -1,5 +1,5 @@
-import { DiscordActionType, DiscordLog } from 'server';
-import { DiscordLogDisplayGenerator } from '../interfaces/discord-log-string-generator';
+import { DiscordActionType, type DiscordLog } from 'server';
+import { type DiscordLogDisplayGenerator } from '../interfaces/discord-log-string-generator';
 import { MemberKicked } from './discord-log-string-generators/member-kicked';
 import { MemberRoleUpdate } from './discord-log-string-generators/member-role-update';
 import { MemberUpdate } from './discord-log-string-generators/member-update';

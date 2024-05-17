@@ -1,7 +1,7 @@
-import { DiscordLogUser } from 'server';
+import { type DiscordLogUser } from 'server';
 import {
-  DiscordLogDisplay,
-  DiscordLogDisplayGenerator
+  type DiscordLogDisplay,
+  type DiscordLogDisplayGenerator
 } from '../../interfaces/discord-log-string-generator';
 
 export class MemberKicked implements DiscordLogDisplayGenerator {

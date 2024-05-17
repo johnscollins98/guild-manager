@@ -5,9 +5,9 @@ import Search from '@mui/icons-material/Search';
 import Warning from '@mui/icons-material/Warning';
 import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
-import { PopoverPosition } from '@mui/material/Popover';
+import { type PopoverPosition } from '@mui/material/Popover';
 import { useCallback } from 'react';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 import GuildMemberDetails from './guild-member-details';
 import GuildMemberMenuItem from './guild-member-menu-item';
 

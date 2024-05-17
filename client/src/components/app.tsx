@@ -6,8 +6,8 @@ import Log from './log/log';
 import LoginPage from './login-page';
 import Roster from './roster/roster';
 
-import { CssBaseline, PaletteMode } from '@mui/material';
-import Alert, { AlertColor } from '@mui/material/Alert';
+import { CssBaseline, type PaletteMode } from '@mui/material';
+import Alert, { type AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import { createTheme } from '@mui/material/styles';

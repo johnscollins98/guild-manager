@@ -1,7 +1,7 @@
-import { DiscordLogChange, DiscordLogUser } from 'server';
+import { type DiscordLogChange, type DiscordLogUser } from 'server';
 import {
-  DiscordLogDisplay,
-  DiscordLogDisplayGenerator
+  type DiscordLogDisplay,
+  type DiscordLogDisplayGenerator
 } from '../../interfaces/discord-log-string-generator';
 
 export class MemberRoleUpdate implements DiscordLogDisplayGenerator {

@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { IRecruitmentPostController, RecruitmentPostCreateDTO, RecruitmentPostDTO } from 'server';
+import { type AxiosError } from 'axios';
+import {
+  type IRecruitmentPostController,
+  type RecruitmentPostCreateDTO,
+  type RecruitmentPostDTO
+} from 'server';
 import { useToast } from '../../components/common/toast-context';
 import { createApi } from './axios-wrapper';
 
