@@ -11,6 +11,15 @@
     "plugin:react-hooks/recommended",
     "prettier"
   ],
+  "rules": {
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "inline-type-imports"
+      }
+    ]
+  },
   "settings": {
     "react": {
       "version": "detect"

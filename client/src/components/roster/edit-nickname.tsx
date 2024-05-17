@@ -6,9 +6,9 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material';
-import { FormEvent, useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useUpdateDiscordMember } from '../../lib/apis/discord-api';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 
 export interface EditNicknameProps {
   isOpen: boolean;

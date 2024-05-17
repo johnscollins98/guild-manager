@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { FunctionComponent, useCallback, useState } from 'react';
+import { useCallback, useState, type FunctionComponent } from 'react';
 import { useKickDiscordMembers } from '../../lib/apis/discord-api';
 import './kick-modal.scss';
 

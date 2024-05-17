@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
 import { useAuth } from '../../lib/apis/auth-api';
-import MemberRecord from '../../lib/interfaces/member-record';
+import type MemberRecord from '../../lib/interfaces/member-record';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import { ErrorMessage } from '../common/error-message';
 import LoaderPage from '../common/loader-page';

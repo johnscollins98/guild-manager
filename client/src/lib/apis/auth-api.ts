@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { IAuthController } from 'server';
+import { type AxiosError } from 'axios';
+import { type IAuthController } from 'server';
 import { createApi } from './axios-wrapper';
 
 const api = createApi('auth');

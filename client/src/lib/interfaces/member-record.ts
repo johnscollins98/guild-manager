@@ -1,5 +1,5 @@
-import { DateTime } from 'luxon';
-import { DiscordRole, WarningDTO } from 'server';
+import { type DateTime } from 'luxon';
+import { type DiscordRole, type WarningDTO } from 'server';
 
 export default interface MemberRecord {
   accountName: string;

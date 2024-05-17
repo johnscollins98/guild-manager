@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useDiscordLeavers, useDiscordLog } from '../../lib/apis/discord-api';
 import {
-  DiscordLogDisplay,
-  DiscordLogDisplayGenerator
+  type DiscordLogDisplay,
+  type DiscordLogDisplayGenerator
 } from '../../lib/interfaces/discord-log-string-generator';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
 import { snowflakeToDate } from '../../lib/utils/helpers';
