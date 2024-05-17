@@ -5,6 +5,7 @@ import axios from 'axios';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      staleTime: 10000,
       async queryFn({ queryKey: [url] }) {
         if (typeof url === 'string') {
           const { data } = await axios.get(`/api/${url}`);
