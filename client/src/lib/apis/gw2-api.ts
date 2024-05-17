@@ -19,6 +19,6 @@ export const usePrefetchGW2Log = (isAuthenticated: boolean) => {
   const queryClient = useQueryClient();
 
   if (isAuthenticated) {
-    queryClient.prefetchQuery({ queryKey: ['gw2/log'] });
+    queryClient.prefetchQuery({ queryKey: ['gw2/log'], queryFn: gw2Api.getLog });
   }
 };
