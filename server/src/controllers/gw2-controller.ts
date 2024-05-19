@@ -43,14 +43,14 @@ export class GW2Controller implements IGW2Controller {
   @Header('Cache-control', `public, max-age=0`)
   async getMembers(): Promise<GW2MemberResponseDTO[]> {
     const members = await this.gw2GuildApi.getMembers();
+    const memberAssociations = await this.associationRepo.find();
 
-    const membersWithId = await Promise.all(
-      members.map(async m => {
-        const association = await this.associationRepo.findOneBy({ gw2AccountName: m.name });
-
-        return { ...m, discordId: association?.discordAccountId ?? null };
-      })
-    );
+    const membersWithId = members.map(m => {
+      const association = memberAssociations.find(
+        association => association.gw2AccountName === m.name
+      );
+      return { ...m, discordId: association?.discordAccountId ?? null };
+    });
 
     return membersWithId;
   }
