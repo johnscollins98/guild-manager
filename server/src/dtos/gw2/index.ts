@@ -1,3 +1,4 @@
+export * from './association-dto';
 export * from './gw2-log-entry';
 export * from './gw2-log-entry-dto';
 export * from './gw2-member';

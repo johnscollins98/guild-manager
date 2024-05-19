@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
-import { type DiscordMemberDTO, type GW2Member, type GW2Rank, type WarningDTO } from 'server';
+import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
+import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
 import type MemberRecord from '../interfaces/member-record';
 
 export const generateGW2RosterRecords = (
-  gw2Members: GW2Member[],
+  gw2Members: GW2MemberResponseDTO[],
   discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
   warnings: WarningDTO[]
@@ -18,15 +19,14 @@ export const generateGW2RosterRecords = (
       const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
       const warningsForThisMember = warnings.filter(warning => warning.givenTo === memberId);
 
-      // special case for unique account name
-      const exceptions: { [key: string]: string } = {
-        Zerumii: 'Zerumi'
-      };
-      const exception = exceptions[accountName];
-      const testName = exception ? exception.toLowerCase() : accountName.toLowerCase();
+      const testName = accountName.toLowerCase();
 
       // check for exact match
       const discordMember = discordMembers.find(m => {
+        if (gw2Member.discordId && m.id === gw2Member.discordId) {
+          return true;
+        }
+
         const discordName = m.name
           ?.toLowerCase()
           .replace(
@@ -48,11 +48,9 @@ export const generateGW2RosterRecords = (
       const roles = discordMember?.roles || [];
       const avatar = discordMember?.avatar;
 
-      const missingDiscord = rank !== 'Alt' && !discordName;
+      const missingDiscord = !discordName;
       const unmatchingRoles =
-        rank !== 'Alt' &&
-        !!discordName &&
-        roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase());
+        !!discordName && roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase());
       const invited = rank.toLowerCase() === 'invited';
 
       return {
@@ -87,7 +85,7 @@ export const generateGW2RosterRecords = (
 };
 
 export const getExcessDiscordRecords = (
-  gw2Members: GW2Member[],
+  gw2Members: GW2MemberResponseDTO[],
   discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
   warnings: WarningDTO[]

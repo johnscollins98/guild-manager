@@ -19,6 +19,7 @@ import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
+import { AssociateMember } from './associate-member';
 import { EditNickName } from './edit-nickname';
 import './guild-member-card.scss';
 import GuildMemberMenu from './guild-member-menu';
@@ -80,6 +81,11 @@ const GuildMemberCard = ({
   const [editOpen, setEditOpen] = useState(false);
   const onEditNickname = () => {
     setEditOpen(true);
+  };
+
+  const [associateOpen, setAssociateOpen] = useState(false);
+  const onAssociate = () => {
+    setAssociateOpen(true);
   };
 
   const { data: adminRoles } = useAdminRoles();
@@ -205,6 +211,7 @@ const GuildMemberCard = ({
           closeMenu={closeMenu}
           onKick={onKick}
           onEdit={onEdit}
+          onAssociateMember={onAssociate}
           onChangeNickname={onEditNickname}
           setWarningOpen={setWarningOpen}
           setWarningViewerOpen={setWarningViewerOpen}
@@ -218,6 +225,11 @@ const GuildMemberCard = ({
       <WarningsViewer
         isOpen={warningViewerOpen}
         onClose={() => setWarningViewerOpen(false)}
+        member={member}
+      />
+      <AssociateMember
+        isOpen={associateOpen}
+        onClose={() => setAssociateOpen(false)}
         member={member}
       />
       <EditNickName isOpen={editOpen} onClose={() => setEditOpen(false)} member={member} />

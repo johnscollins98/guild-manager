@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import List from '@mui/icons-material/List';
+import Person from '@mui/icons-material/Person';
 import Search from '@mui/icons-material/Search';
 import Warning from '@mui/icons-material/Warning';
 import Divider from '@mui/material/Divider';
@@ -19,6 +20,7 @@ interface Props {
   closeMenu: () => void;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
+  onAssociateMember: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
   setWarningOpen: (isOpen: boolean) => void;
   setWarningViewerOpen: (isOpen: boolean) => void;
@@ -32,6 +34,7 @@ const GuildMemberMenu = ({
   closeMenu,
   onKick,
   onEdit,
+  onAssociateMember,
   onChangeNickname,
   setWarningOpen,
   setWarningViewerOpen
@@ -80,6 +83,12 @@ const GuildMemberMenu = ({
         label="Edit Nickname"
         disabled={!isAdmin || memberIsAdmin || !member.discordId}
         action={() => menuAction(onChangeNickname)}
+      />
+      <GuildMemberMenuItem
+        Icon={Person}
+        label="Associate"
+        disabled={!isAdmin || !member.memberId}
+        action={() => menuAction(() => onAssociateMember(member))}
       />
       <Divider />
       <GuildMemberMenuItem
