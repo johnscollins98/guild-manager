@@ -1,4 +1,5 @@
-import { type DiscordMemberDTO, type GW2Member, type GW2Rank, type WarningDTO } from 'server';
+import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
+import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
@@ -43,7 +44,7 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
 };
 
 const getRoster = (
-  gw2Members?: GW2Member[],
+  gw2Members?: GW2MemberResponseDTO[],
   discordMembers?: DiscordMemberDTO[],
   guildRanks?: GW2Rank[],
   warnings?: WarningDTO[]
