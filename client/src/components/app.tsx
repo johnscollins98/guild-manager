@@ -4,6 +4,7 @@ import './app.scss';
 import EventPage from './events/event-page';
 import Log from './log/log';
 import LoginPage from './login-page';
+import NotFound from './not-found';
 import Roster from './roster/roster';
 
 import { CssBaseline, type PaletteMode } from '@mui/material';
@@ -97,6 +98,7 @@ const App = () => {
                         <Route path="/discord-log" Component={DiscordLog} />
                         <Route path="/events" Component={EventPage} />
                         <Route path="/recruitment" Component={RecruitmentPage} />
+                        <Route path="*" Component={NotFound} />
                       </Routes>
                     </div>
                   </BrowserRouter>

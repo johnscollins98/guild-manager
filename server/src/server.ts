@@ -46,7 +46,6 @@ app.use(passport.session());
 useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*-controller.*')],
-  defaultErrorHandler: false,
   authorizationChecker: async (action: Action) => {
     if (process.env.NODE_ENV === 'development' && config.skipAuth) {
       return true;
@@ -63,8 +62,10 @@ useExpressServer(app, {
 });
 
 app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
-app.use('*', (_, res) => {
-  if (!res.headersSent) res.redirect('/');
+app.get('*', (_req, res) => {
+  if (!res.headersSent) {
+    res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'dist', 'index.html'));
+  }
 });
 
 export const Manager = dataSource.manager;
