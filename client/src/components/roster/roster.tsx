@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import { FixedSizeList as List } from 'react-window';
+import { AutoSizer, List } from 'react-virtualized';
 import { useAuth } from '../../lib/apis/auth-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { useFilterString } from '../../lib/utils/use-filter-string';
@@ -31,10 +30,17 @@ const Roster = () => {
   const [kickModalShow, setKickModalShow] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | undefined>(undefined);
 
-  const openEdit = (member: MemberRecord) => {
+  const openEdit = useCallback((member: MemberRecord) => {
     setSelectedRecordId(member.discordId);
     setModalShow(true);
-  };
+  }, []);
+
+  const onKick = useCallback((member: MemberRecord) => {
+    if (member.discordId) {
+      setSelection([member.discordId]);
+      setKickModalShow(true);
+    }
+  }, []);
 
   if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
@@ -56,22 +62,21 @@ const Roster = () => {
       <div style={{ flex: 1 }}>
         <AutoSizer>
           {({ height, width }) => (
-            <List height={height} width={width} itemCount={rosterForDisplay.length} itemSize={76}>
-              {({ index, style }) => {
+            <List
+              height={height}
+              width={width}
+              rowCount={rosterForDisplay.length}
+              rowHeight={76}
+              rowRenderer={({ index, style }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const member = rosterForDisplay[index]!;
                 return (
-                  <div style={style}>
+                  <div style={style} key={member.memberId ?? member.discordId}>
                     <GuildMemberCard
                       key={member.memberId ?? member.discordId}
                       member={member}
                       discordRoles={discordRoles}
-                      onKick={record => {
-                        if (record.discordId) {
-                          setSelection([record.discordId]);
-                          setKickModalShow(true);
-                        }
-                      }}
+                      onKick={onKick}
                       onEdit={openEdit}
                       isAdmin={authInfo?.isAdmin ?? false}
                       selection={selection}
@@ -81,7 +86,7 @@ const Roster = () => {
                   </div>
                 );
               }}
-            </List>
+            />
           )}
         </AutoSizer>
       </div>

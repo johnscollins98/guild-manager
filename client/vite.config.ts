@@ -4,10 +4,18 @@ import checker from 'vite-plugin-checker';
 import eslint from 'vite-plugin-eslint';
 import svgrPlugin from 'vite-plugin-svgr';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import { reactVirtualized } from './src/lib/utils/react-virtualized-fix.ts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), viteTsconfigPaths(), svgrPlugin(), eslint(), checker({ typescript: true })],
+  plugins: [
+    react(),
+    viteTsconfigPaths(),
+    svgrPlugin(),
+    eslint(),
+    checker({ typescript: true }),
+    reactVirtualized()
+  ],
   server: {
     open: true,
     port: 3001,

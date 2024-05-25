@@ -202,21 +202,19 @@ const GuildMemberCard = ({
           </div>
         </CardContent>
       </Card>
-      {menuAnchor ? (
-        <GuildMemberMenu
-          member={member}
-          menuAnchor={menuAnchor}
-          isAdmin={isAdmin}
-          memberIsAdmin={memberIsAdmin}
-          closeMenu={closeMenu}
-          onKick={onKick}
-          onEdit={onEdit}
-          onAssociateMember={onAssociate}
-          onChangeNickname={onEditNickname}
-          setWarningOpen={setWarningOpen}
-          setWarningViewerOpen={setWarningViewerOpen}
-        />
-      ) : null}
+      <GuildMemberMenu
+        member={member}
+        menuAnchor={menuAnchor}
+        isAdmin={isAdmin}
+        memberIsAdmin={memberIsAdmin}
+        closeMenu={closeMenu}
+        onKick={onKick}
+        onEdit={onEdit}
+        onAssociateMember={onAssociate}
+        onChangeNickname={onEditNickname}
+        setWarningOpen={setWarningOpen}
+        setWarningViewerOpen={setWarningViewerOpen}
+      />
       <WarningForm
         isOpen={warningOpen}
         onClose={() => setWarningOpen(false)}
