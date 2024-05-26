@@ -2,7 +2,7 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
-import { Checkbox } from '@mui/material';
+import { Checkbox, useTheme } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -49,6 +49,8 @@ const GuildMemberCard = ({
 }: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
+
+  const theme = useTheme();
 
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [warningOpen, setWarningOpen] = useState(false);
@@ -178,19 +180,25 @@ const GuildMemberCard = ({
               {member.discordName ? (
                 <Tooltip title={member.discordName}>
                   <span>
-                    <DiscordLogo width="24" height="24" />
+                    <DiscordLogo width="24" height="24" color={theme.palette.action.active} />
                   </span>
                 </Tooltip>
               ) : null}
               {member.rankImage && member.rank ? (
                 <Tooltip title={member.rank}>
-                  <img
-                    alt={member.rank}
-                    src={member.rankImage}
-                    width="24"
-                    height="24"
-                    className="rank-image"
-                  />
+                  <span>
+                    <img
+                      alt={member.rank}
+                      src={member.rankImage}
+                      style={{
+                        filter: `drop-shadow(0px 100px 0 ${theme.palette.action.active})`,
+                        transform: 'translateY(-100px)'
+                      }}
+                      width="24"
+                      height="24"
+                      className="rank-image"
+                    />
+                  </span>
                 </Tooltip>
               ) : null}
               {member.warnings.length ? (
