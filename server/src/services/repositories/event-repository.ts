@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import { FindOptionsWhere } from 'typeorm';
 import { dataSource } from '../../dataSource';
 import { DayOfWeek } from '../../dtos';
 import { Event } from '../../models/event.model';
@@ -10,7 +11,7 @@ export class EventRepository extends BaseRepository<Event> {
     super(dataSource.getRepository(Event));
   }
 
-  async getEventsOnADay(day: DayOfWeek): Promise<Event[]> {
-    return await this.repo.findBy({ day });
+  async getEventsOnADay(day: DayOfWeek, options?: FindOptionsWhere<Event>): Promise<Event[]> {
+    return await this.repo.findBy({ day, ...options });
   }
 }

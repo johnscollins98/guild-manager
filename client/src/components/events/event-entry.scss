@@ -2,6 +2,10 @@
   margin: 8px;
   padding: 8px;
 
+  &.ignored {
+    opacity: 0.6;
+  }
+
   .event-form {
     display: flex;
     flex-flow: row wrap;
@@ -17,6 +21,11 @@
       &.long {
         flex: 2;
         min-width: 300px;
+      }
+
+      &.short {
+        flex: 0;
+        min-width: fit-content;
       }
 
       &.buttons {

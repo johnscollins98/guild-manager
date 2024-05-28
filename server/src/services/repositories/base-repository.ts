@@ -1,5 +1,11 @@
 import { Service } from 'typedi';
-import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  Repository
+} from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 interface IMayHaveId {
@@ -10,12 +16,12 @@ interface IMayHaveId {
 export abstract class BaseRepository<T extends IMayHaveId> {
   constructor(protected readonly repo: Repository<T>) {}
 
-  async getAll(): Promise<T[]> {
-    return await this.repo.find();
+  async getAll(where?: FindManyOptions<T>): Promise<T[]> {
+    return await this.repo.find(where);
   }
 
-  async getOne(): Promise<T | null> {
-    return await this.repo.findOne({ where: {} });
+  async getOne(where: FindOneOptions<T> = { where: {} }): Promise<T | null> {
+    return await this.repo.findOne(where);
   }
 
   async getById(id: number): Promise<T | null> {

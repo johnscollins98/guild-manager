@@ -20,4 +20,7 @@ export class Event {
 
   @Column()
   leaderId!: string;
+
+  @Column({ default: false })
+  ignore!: boolean;
 }
