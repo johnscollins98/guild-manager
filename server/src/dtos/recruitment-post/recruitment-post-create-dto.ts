@@ -1,4 +1,4 @@
-export interface RecruitmentPostDTO {
-  id: number;
+export interface RecruitmentPostCreateDTO {
   content: string;
+  title: string;
 }

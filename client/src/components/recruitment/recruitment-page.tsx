@@ -14,11 +14,13 @@ const RecruitmentPage: FC = () => {
   const { data, isSuccess, isLoading } = useRecruitmentPost();
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
+  const [title, setTitle] = useState('');
   const toast = useToast();
 
   useEffect(() => {
     if (isSuccess && data) {
       setMessage(data.content);
+      setTitle(data.title);
     }
   }, [isSuccess, data]);
 
@@ -27,9 +29,9 @@ const RecruitmentPage: FC = () => {
       e.preventDefault();
       e.stopPropagation();
 
-      recruitmentPostMutation.mutate({ content: message });
+      recruitmentPostMutation.mutate({ title: title, content: message });
     },
-    [message, recruitmentPostMutation]
+    [message, recruitmentPostMutation, title]
   );
 
   const handleCopyClick = async (isHtml: boolean) => {
@@ -62,9 +64,18 @@ const RecruitmentPage: FC = () => {
           </Button>
         </Box>
       </Box>
-      <div style={{ overflow: 'auto' }}>
+      <TextField
+        value={title}
+        required
+        onChange={e => setTitle(e.target.value)}
+        fullWidth
+        name="Title"
+        label="Title"
+      />
+      <div style={{ overflow: 'auto', paddingTop: '16px' }}>
         <TextField
           multiline
+          label="Content"
           value={message}
           onChange={e => setMessage(e.target.value)}
           fullWidth
