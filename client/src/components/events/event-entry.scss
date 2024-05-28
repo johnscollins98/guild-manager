@@ -23,6 +23,11 @@
         min-width: 300px;
       }
 
+      &.short {
+        flex: 0;
+        min-width: fit-content;
+      }
+
       &.buttons {
         flex-grow: 0;
         min-width: auto;

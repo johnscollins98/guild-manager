@@ -132,7 +132,7 @@ const EventEntry = ({
             ))}
           </EditField>
         </div>
-        <div className="field">
+        <div className="field short">
           <FormControlLabel
             label="Ignored"
             control={
