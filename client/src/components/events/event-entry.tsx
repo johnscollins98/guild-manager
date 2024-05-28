@@ -100,53 +100,65 @@ const EventEntry = ({
       className={`event-entry ${changeOpacityWhenIgnored && localEvent.ignore ? 'ignored' : ''}`}
     >
       <form onSubmit={submitHandler} onReset={onReset} className="event-form">
-        <div className="field long">
-          <Assignment color="secondary" className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
-        </div>
-        <div className="field">
-          <CalendarToday color="secondary" className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select required>
-            {daysOfWeek.map(day => (
-              <MenuItem value={day} key={day}>
-                {day}
-              </MenuItem>
-            ))}
-          </EditField>
-        </div>
-        <div className="field">
-          <WatchLater color="secondary" className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="startTime" type="time" />
-        </div>
-        <div className="field">
-          <HourglassFull color="secondary" className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
-        </div>
-        <div className="field long">
-          <Person color="secondary" className="field-label" />
-          <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" required select>
-            {possibleLeaders.map(leader => (
-              <MenuItem value={leader.id} key={leader.id}>
-                {leader.name}
-              </MenuItem>
-            ))}
-          </EditField>
-        </div>
+        <Tooltip placement="top" title="Event name">
+          <div className="field long">
+            <Assignment color="secondary" className="field-label" />
+            <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
+          </div>
+        </Tooltip>
+        <Tooltip placement="top" title="Event day">
+          <div className="field">
+            <CalendarToday color="secondary" className="field-label" />
+            <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select required>
+              {daysOfWeek.map(day => (
+                <MenuItem value={day} key={day}>
+                  {day}
+                </MenuItem>
+              ))}
+            </EditField>
+          </div>
+        </Tooltip>
+        <Tooltip placement="top" title="Start time">
+          <div className="field">
+            <WatchLater color="secondary" className="field-label" />
+            <EditField event={localEvent} onEdit={onEdit} fieldKey="startTime" type="time" />
+          </div>
+        </Tooltip>
+        <Tooltip placement="top" title="Event duration">
+          <div className="field">
+            <HourglassFull color="secondary" className="field-label" />
+            <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
+          </div>
+        </Tooltip>
+        <Tooltip placement="top" title="Event leader">
+          <div className="field long">
+            <Person color="secondary" className="field-label" />
+            <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" required select>
+              {possibleLeaders.map(leader => (
+                <MenuItem value={leader.id} key={leader.id}>
+                  {leader.name}
+                </MenuItem>
+              ))}
+            </EditField>
+          </div>
+        </Tooltip>
         <div className="field short">
-          <FormControlLabel
-            label="Ignored"
-            control={
-              <Checkbox
-                checked={localEvent.ignore}
-                onChange={e => setLocalEvent({ ...localEvent, ignore: e.target.checked })}
-              />
-            }
-          />
+          <Tooltip placement="top" title="Ignore in recruiment/discord posts">
+            <FormControlLabel
+              label="Ignored"
+              control={
+                <Checkbox
+                  checked={localEvent.ignore}
+                  onChange={e => setLocalEvent({ ...localEvent, ignore: e.target.checked })}
+                />
+              }
+            />
+          </Tooltip>
         </div>
         <div className="field buttons">
           {modified ? (
             <>
-              <Tooltip title="Apply Changes">
+              <Tooltip placement="top" title="Apply Changes">
                 <Button
                   variant="contained"
                   color="primary"
@@ -157,7 +169,7 @@ const EventEntry = ({
                   Save
                 </Button>
               </Tooltip>
-              <Tooltip title="Reset Changes">
+              <Tooltip placement="top" title="Reset Changes">
                 <IconButton size="small" type="reset">
                   <Refresh />
                 </IconButton>
@@ -165,7 +177,7 @@ const EventEntry = ({
             </>
           ) : null}
           {onDelete && (
-            <Tooltip title="Delete Event">
+            <Tooltip placement="top" title="Delete Event">
               <IconButton color="error" size="small" onClick={onDelete}>
                 <DeleteForever />
               </IconButton>
