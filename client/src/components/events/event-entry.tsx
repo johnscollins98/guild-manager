@@ -7,6 +7,8 @@ import Refresh from '@mui/icons-material/Refresh';
 import WatchLater from '@mui/icons-material/WatchLater';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
@@ -24,7 +26,8 @@ const emptyEvent: EventCreateDTO = {
   day: 'Monday',
   startTime: '',
   duration: '',
-  leaderId: ''
+  leaderId: '',
+  ignore: false
 };
 
 interface Props {
@@ -33,6 +36,7 @@ interface Props {
   onDelete?: () => Promise<void>;
   onSubmit: (e: EventCreateDTO) => Promise<void>;
   resetOnSubmit?: boolean;
+  changeOpacityWhenIgnored?: boolean;
 }
 
 const EventEntry = ({
@@ -40,7 +44,8 @@ const EventEntry = ({
   possibleLeaders,
   onSubmit,
   onDelete,
-  resetOnSubmit
+  resetOnSubmit,
+  changeOpacityWhenIgnored = false
 }: Props) => {
   const [localEvent, setLocalEvent] = useState(initialData);
   const modified = useMemo(() => localEvent !== initialData, [localEvent, initialData]);
@@ -90,7 +95,10 @@ const EventEntry = ({
   );
 
   return (
-    <Card variant="elevation" className="event-entry">
+    <Card
+      variant="elevation"
+      className={`event-entry ${changeOpacityWhenIgnored && localEvent.ignore ? 'ignored' : ''}`}
+    >
       <form onSubmit={submitHandler} onReset={onReset} className="event-form">
         <div className="field long">
           <Assignment color="secondary" className="field-label" />
@@ -123,6 +131,17 @@ const EventEntry = ({
               </MenuItem>
             ))}
           </EditField>
+        </div>
+        <div className="field">
+          <FormControlLabel
+            label="Ignored"
+            control={
+              <Checkbox
+                checked={localEvent.ignore}
+                onChange={e => setLocalEvent({ ...localEvent, ignore: e.target.checked })}
+              />
+            }
+          />
         </div>
         <div className="field buttons">
           {modified ? (

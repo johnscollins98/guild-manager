@@ -9,7 +9,7 @@ export class EventTableGenerator {
   constructor(private readonly eventRepo: EventRepository) {}
 
   async generateEventsTableMd() {
-    const events = await this.eventRepo.getAll();
+    const events = await this.eventRepo.getAll({ where: { ignore: false } });
 
     const eventsByDay = this.getEventsByDay(events);
     const maxNumEvents = Object.values(eventsByDay).reduce(

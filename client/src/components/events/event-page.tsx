@@ -99,6 +99,7 @@ const EventPage = () => {
             onDelete={() => deleteEvent(event)}
             onSubmit={update => updateEvent(event.id, update)}
             possibleLeaders={leaders}
+            changeOpacityWhenIgnored
             key={event.id}
           />
         ))}

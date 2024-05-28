@@ -154,7 +154,7 @@ export class DiscordController implements IDiscordController {
     }
 
     for (const day of daysOfWeek) {
-      const events = await this.eventRepository.getEventsOnADay(day);
+      const events = await this.eventRepository.getEventsOnADay(day, { ignore: false });
 
       const parseTime = (str: string) => {
         return Date.parse(`1970/01/01 ${str}`);
