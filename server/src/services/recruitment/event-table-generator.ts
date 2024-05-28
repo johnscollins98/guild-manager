@@ -4,6 +4,10 @@ import { DayOfWeek, daysOfWeek } from '../../dtos';
 import { Event } from '../../models/event.model';
 import { EventRepository } from '../repositories/event-repository';
 
+const daysOfWeekExcludingDynamic = daysOfWeek.filter(
+  (day: DayOfWeek): day is Exclude<DayOfWeek, 'Dynamic'> => day !== 'Dynamic'
+);
+
 @Service()
 export class EventTableGenerator {
   constructor(private readonly eventRepo: EventRepository) {}
@@ -17,11 +21,11 @@ export class EventTableGenerator {
       0
     );
 
-    const tableArray: string[][] = [[...daysOfWeek]];
+    const tableArray: string[][] = [[...daysOfWeekExcludingDynamic]];
     for (let i = 0; i < maxNumEvents; i++) {
-      tableArray.push(daysOfWeek.map(d => eventsByDay[d][i]?.title || '-'));
+      tableArray.push(daysOfWeekExcludingDynamic.map(d => eventsByDay[d][i]?.title || '-'));
       tableArray.push(
-        daysOfWeek.map(d => {
+        daysOfWeekExcludingDynamic.map(d => {
           const event = eventsByDay[d][i];
           return event ? this.generateStartTimeLink(event) : '-';
         })
@@ -51,7 +55,7 @@ export class EventTableGenerator {
 
   private getEventsByDay(events: Event[]): Record<DayOfWeek, Event[]> {
     return Object.fromEntries(
-      daysOfWeek.map(day => [day, events.filter(e => e.day === day)])
+      daysOfWeekExcludingDynamic.map(day => [day, events.filter(e => e.day === day)])
     ) as Record<DayOfWeek, Event[]>;
   }
 }
