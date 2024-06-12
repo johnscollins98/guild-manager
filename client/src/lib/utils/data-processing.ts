@@ -50,7 +50,9 @@ export const generateGW2RosterRecords = (
 
       const missingDiscord = !discordName;
       const unmatchingRoles =
-        !!discordName && roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase());
+        !!discordName &&
+        (roles.length === 0 || roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase()));
+
       const invited = rank.toLowerCase() === 'invited';
 
       return {

@@ -119,11 +119,12 @@ const Control = ({ theme, toggleTheme }: Props) => {
           </IconButton>
           <img src={SOStatic} height={40} width={40} alt="logo" />
         </Box>
-        <List sx={{ width: '200px' }}>
+        <List sx={{ width: '200px' }} className="nav-list">
           {LINKS.map(l => (
             <ListItemButton
               key={l.link}
               component={NavLink}
+              className="nav-link"
               to={`${l.link}?${searchParams}`}
               onClick={() => setDrawerOpen(false)}
             >
