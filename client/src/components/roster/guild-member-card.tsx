@@ -177,6 +177,11 @@ const GuildMemberCard = ({
                   <Timer className="error" />
                 </Tooltip>
               ) : null}
+              {member.issues.overAWeek ? (
+                <Tooltip title="Been in server over a week">
+                  <Timer className="error" />
+                </Tooltip>
+              ) : null}
               {member.discordName ? (
                 <Tooltip title={member.discordName}>
                   <span>

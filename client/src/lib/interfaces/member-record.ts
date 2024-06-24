@@ -18,6 +18,7 @@ export default interface MemberRecord {
     missingDiscord?: boolean;
     unmatchingRoles?: boolean;
     over24h?: boolean;
+    overAWeek?: boolean;
     invited?: boolean;
   };
 }
