@@ -55,6 +55,10 @@ export const generateGW2RosterRecords = (
 
       const invited = rank.toLowerCase() === 'invited';
 
+      const twentyFourHours = 1000 * 60 * 60 * 24;
+      const oneWeek = twentyFourHours * 7;
+      const overAWeek = invited && DateTime.now().diff(joinDate).toMillis() > oneWeek;
+
       return {
         accountName,
         memberId,
@@ -70,7 +74,8 @@ export const generateGW2RosterRecords = (
         issues: {
           missingDiscord,
           unmatchingRoles,
-          invited
+          invited,
+          overAWeek
         }
       };
     })
