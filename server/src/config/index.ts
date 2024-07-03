@@ -24,7 +24,10 @@ export const config = {
   adminRoles: process.env.ADMIN_ROLES?.split(',') ?? [],
   eventRoles: process.env.EVENT_ROLES?.split(',') ?? [],
   sessionSecret: process.env.SESSION_SECRET,
-  frontEndBaseUrl: process.env.FRONT_END_BASE_URL || '',
+  frontEndBaseUrl:
+    process.env.NODE_ENV === 'production'
+      ? ''
+      : process.env.FRONT_END_BASE_URL ?? 'http://localhost:3001',
   accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY,
   skipAuth: process.env.SKIP_AUTH === 'true'
 } as const;
