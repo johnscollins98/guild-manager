@@ -2,7 +2,7 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
-import { Checkbox, useTheme } from '@mui/material';
+import { CardActionArea, Checkbox, useTheme } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -115,105 +115,107 @@ const GuildMemberCard = ({
         style={{ borderLeftColor: color }}
         onClick={kickMode ? () => onClickKickMode() : openMenu}
       >
-        <CardContent>
-          <div className="top-row">
-            <div className="name">
-              {kickMode && member.discordId && !memberIsAdmin ? (
-                <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
-              ) : (
-                <Avatar
-                  className="avatar"
-                  alt={member.memberId || member.discordName}
-                  src={member.avatar}
-                >
-                  {member.memberId
-                    ? member.memberId[0]
-                    : member.discordName
-                      ? member.discordName[0]
-                      : null}
-                </Avatar>
-              )}
-              <span className="details">
-                <Typography className="name">{member.memberId || member.discordName}</Typography>
-                {member.joinDate ? (
-                  <span className="date">
-                    <CalendarToday />
-                    <Typography>{getDateString(member.joinDate)}</Typography>
-                  </span>
+        <CardActionArea>
+          <CardContent>
+            <div className="top-row">
+              <div className="name">
+                {kickMode && member.discordId && !memberIsAdmin ? (
+                  <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
+                ) : (
+                  <Avatar
+                    className="avatar"
+                    alt={member.memberId || member.discordName}
+                    src={member.avatar}
+                  >
+                    {member.memberId
+                      ? member.memberId[0]
+                      : member.discordName
+                        ? member.discordName[0]
+                        : null}
+                  </Avatar>
+                )}
+                <span className="details">
+                  <Typography className="name">{member.memberId || member.discordName}</Typography>
+                  {member.joinDate ? (
+                    <span className="date">
+                      <CalendarToday />
+                      <Typography>{getDateString(member.joinDate)}</Typography>
+                    </span>
+                  ) : null}
+                </span>
+              </div>
+              <div className="icons-container">
+                {member.issues.unmatchingRoles ? (
+                  <Tooltip
+                    title={`Unmatching Roles (${member.rank} / ${
+                      member.roles[0]?.name || 'No Role'
+                    })`}
+                  >
+                    <SyncProblem className="error" />
+                  </Tooltip>
                 ) : null}
-              </span>
+                {member.issues.invited ? (
+                  <Tooltip title={`Unaccepted invitation`}>
+                    <MailIcon className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.issues.missingGW2 ? (
+                  <Tooltip title="GW2 Account Not Found">
+                    <span>
+                      <Gw2Logo width="24" height="24" className="error" />
+                    </span>
+                  </Tooltip>
+                ) : null}
+                {member.issues.missingDiscord ? (
+                  <Tooltip title="Discord Account Not Found">
+                    <span>
+                      <DiscordLogo width="24" height="24" className="error" />
+                    </span>
+                  </Tooltip>
+                ) : null}
+                {member.issues.over24h ? (
+                  <Tooltip title="Been in server over 24h">
+                    <Timer className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.issues.overAWeek ? (
+                  <Tooltip title="Been in server over a week">
+                    <Timer className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.discordName ? (
+                  <Tooltip title={member.discordName}>
+                    <span>
+                      <DiscordLogo width="24" height="24" color={theme.palette.action.active} />
+                    </span>
+                  </Tooltip>
+                ) : null}
+                {member.rankImage && member.rank ? (
+                  <Tooltip title={member.rank}>
+                    <span>
+                      <img
+                        alt={member.rank}
+                        src={member.rankImage}
+                        style={{
+                          filter: `drop-shadow(0px 100px 0 ${theme.palette.action.active})`,
+                          transform: 'translateY(-100px)'
+                        }}
+                        width="24"
+                        height="24"
+                        className="rank-image"
+                      />
+                    </span>
+                  </Tooltip>
+                ) : null}
+                {member.warnings.length ? (
+                  <Tooltip title="Number of warnings">
+                    <Avatar className="number warnings">{member.warnings.length}</Avatar>
+                  </Tooltip>
+                ) : null}
+              </div>
             </div>
-            <div className="icons-container">
-              {member.issues.unmatchingRoles ? (
-                <Tooltip
-                  title={`Unmatching Roles (${member.rank} / ${
-                    member.roles[0]?.name || 'No Role'
-                  })`}
-                >
-                  <SyncProblem className="error" />
-                </Tooltip>
-              ) : null}
-              {member.issues.invited ? (
-                <Tooltip title={`Unaccepted invitation`}>
-                  <MailIcon className="error" />
-                </Tooltip>
-              ) : null}
-              {member.issues.missingGW2 ? (
-                <Tooltip title="GW2 Account Not Found">
-                  <span>
-                    <Gw2Logo width="24" height="24" className="error" />
-                  </span>
-                </Tooltip>
-              ) : null}
-              {member.issues.missingDiscord ? (
-                <Tooltip title="Discord Account Not Found">
-                  <span>
-                    <DiscordLogo width="24" height="24" className="error" />
-                  </span>
-                </Tooltip>
-              ) : null}
-              {member.issues.over24h ? (
-                <Tooltip title="Been in server over 24h">
-                  <Timer className="error" />
-                </Tooltip>
-              ) : null}
-              {member.issues.overAWeek ? (
-                <Tooltip title="Been in server over a week">
-                  <Timer className="error" />
-                </Tooltip>
-              ) : null}
-              {member.discordName ? (
-                <Tooltip title={member.discordName}>
-                  <span>
-                    <DiscordLogo width="24" height="24" color={theme.palette.action.active} />
-                  </span>
-                </Tooltip>
-              ) : null}
-              {member.rankImage && member.rank ? (
-                <Tooltip title={member.rank}>
-                  <span>
-                    <img
-                      alt={member.rank}
-                      src={member.rankImage}
-                      style={{
-                        filter: `drop-shadow(0px 100px 0 ${theme.palette.action.active})`,
-                        transform: 'translateY(-100px)'
-                      }}
-                      width="24"
-                      height="24"
-                      className="rank-image"
-                    />
-                  </span>
-                </Tooltip>
-              ) : null}
-              {member.warnings.length ? (
-                <Tooltip title="Number of warnings">
-                  <Avatar className="number warnings">{member.warnings.length}</Avatar>
-                </Tooltip>
-              ) : null}
-            </div>
-          </div>
-        </CardContent>
+          </CardContent>
+        </CardActionArea>
       </Card>
       <GuildMemberMenu
         member={member}
