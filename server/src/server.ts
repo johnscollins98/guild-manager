@@ -1,5 +1,5 @@
 import PgConnection from 'connect-pg-simple';
-import { Client, GatewayIntentBits, Partials } from 'discord.js';
+import { AuditLogEvent, Client, GatewayIntentBits, Partials } from 'discord.js';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -89,6 +89,21 @@ client.on('ready', () => console.log('Bot listening'));
 
 client.on('guildMemberRemove', async m => {
   const memberLeftRepo = Container.get(MemberLeftRepository);
+
+  const guild = await client.guilds.fetch(config.discordGuildId);
+  const logs = await guild.fetchAuditLogs();
+
+  const logsHaveAKickForMember = logs.entries.some(log => {
+    const isKick = log.action === AuditLogEvent.MemberKick;
+    const isMember = log.targetId === m.user.id;
+    return isKick && isMember;
+  });
+
+  if (logsHaveAKickForMember) {
+    console.log(`${m.displayName} appears to have been kicked, not storing`);
+    return;
+  }
+
   console.log(`Logging ${m.displayName} left`);
   memberLeftRepo.create({
     displayName: m.displayName,
