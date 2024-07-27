@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { useTheme } from './common/theme/theme-context';
-import './control.scss';
+import './nav-bar.scss';
 
 interface FormElements extends HTMLFormControlsCollection {
   filter: HTMLInputElement;
@@ -34,7 +34,7 @@ const LINKS = [
   { label: 'Recruitment', link: '/recruitment' }
 ];
 
-const Control = () => {
+const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const filterString = searchParams.get('filterString');
@@ -133,4 +133,4 @@ const Control = () => {
   );
 };
 
-export default Control;
+export default NavBar;
