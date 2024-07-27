@@ -22,23 +22,18 @@ body,
   overflow: hidden;
   height: 100%;
   max-height: 100%;
+  display: flex;
+  flex-direction: column;
 
-  .content {
+  div.outlet {
+    padding-top: 12px;
+    padding-right: max(env(safe-area-inset-right), 12px);
+    padding-bottom: max(env(safe-area-inset-bottom), 12px);
+    padding-left: max(env(safe-area-inset-left), 12px);
+    overflow: hidden;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-
-    div.outlet {
-      padding-top: 12px;
-      padding-right: max(env(safe-area-inset-right), 12px);
-      padding-bottom: max(env(safe-area-inset-bottom), 12px);
-      padding-left: max(env(safe-area-inset-left), 12px);
-      overflow: hidden;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
   }
 }
 
