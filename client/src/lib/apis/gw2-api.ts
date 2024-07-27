@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import { type AssociationDTO, type IGW2Controller } from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
-import { useToast } from '../../components/common/toast-context';
+import { useToast } from '../../components/common/toast/toast-context';
 import { createApi } from './axios-wrapper';
 
 const api = createApi('/api/gw2');

@@ -8,7 +8,7 @@ import {
   useRecruitmentPostMutation
 } from '../../lib/apis/recruitment-api';
 import LoaderPage from '../common/loader-page';
-import { useToast } from '../common/toast-context';
+import { useToast } from '../common/toast/toast-context';
 
 const RecruitmentPage: FC = () => {
   const { data, isSuccess, isLoading } = useRecruitmentPost();

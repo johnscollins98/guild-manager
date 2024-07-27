@@ -8,9 +8,7 @@ import NotFound from './not-found';
 import Roster from './roster/roster';
 
 import { CssBaseline, type PaletteMode } from '@mui/material';
-import Alert, { type AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
 import { createTheme } from '@mui/material/styles';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -19,16 +17,12 @@ import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import { ConfirmContextProvider } from './common/confirm-dialog/confirm-context-provider';
 import ConfirmDialog from './common/confirm-dialog/confirm-dialog';
-import { ToastContext } from './common/toast-context';
+import { ToastProvider } from './common/toast/toast-provider';
 import Control from './control';
 import DiscordLog from './discord-log/discord-log';
 import RecruitmentPage from './recruitment/recruitment-page';
 
 const App = () => {
-  const [showToast, setShowToast] = useState(false);
-  const [toastStatus, setToastStatus] = useState<AlertColor>('info');
-  const [toastMessage, setToastMessage] = useState('');
-
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [theme, setTheme] = useState<PaletteMode>(prefersDarkMode ? 'dark' : 'light');
   useEffect(() => {
@@ -57,20 +51,6 @@ const App = () => {
     [theme]
   );
 
-  const openToast = useCallback(
-    (message: string, status: AlertColor = 'info') => {
-      setToastStatus(status);
-      setToastMessage(message);
-      setShowToast(true);
-    },
-    [setToastMessage, setShowToast, setToastStatus]
-  );
-
-  const closeToast = useCallback(() => {
-    setToastMessage('');
-    setShowToast(false);
-  }, [setToastMessage, setShowToast]);
-
   const { data: authInfo } = useAuth();
 
   usePrefetchGW2Log(!!authInfo && !!authInfo.loggedIn);
@@ -79,16 +59,11 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <ConfirmContextProvider>
-        <Box className="paper-container">
-          <Snackbar open={showToast} autoHideDuration={3000} onClose={() => closeToast()}>
-            <Alert onClose={() => closeToast()} severity={toastStatus}>
-              {toastMessage}
-            </Alert>
-          </Snackbar>
-          <ToastContext.Provider value={openToast}>
+        <ToastProvider>
+          <Box className="paper-container">
             <div className="content">
               {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
-                <>
+                <div>
                   <BrowserRouter>
                     <Control theme={theme} toggleTheme={toggleTheme} />
                     <div className="outlet">
@@ -102,14 +77,14 @@ const App = () => {
                       </Routes>
                     </div>
                   </BrowserRouter>
-                </>
+                </div>
               ) : (
                 <LoginPage />
               )}
             </div>
-          </ToastContext.Provider>
-        </Box>
-        <ConfirmDialog />
+          </Box>
+          <ConfirmDialog />
+        </ToastProvider>
       </ConfirmContextProvider>
     </ThemeProvider>
   );
