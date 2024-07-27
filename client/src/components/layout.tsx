@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import Control from './control';
+import NavBar from './nav-bar';
 
 const Layout = () => {
   return (
     <>
-      <Control />
+      <NavBar />
       <div className="outlet">
         <Outlet />
       </div>

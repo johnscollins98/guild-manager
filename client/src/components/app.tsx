@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import { Box } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
