@@ -2,7 +2,6 @@ import Brightness3 from '@mui/icons-material/Brightness3';
 import Brightness6 from '@mui/icons-material/Brightness6';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { type PaletteMode } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -16,12 +15,8 @@ import type React from 'react';
 import { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
+import { useTheme } from './common/theme/theme-context';
 import './control.scss';
-
-interface Props {
-  theme: PaletteMode;
-  toggleTheme: () => void;
-}
 
 interface FormElements extends HTMLFormControlsCollection {
   filter: HTMLInputElement;
@@ -39,7 +34,8 @@ const LINKS = [
   { label: 'Recruitment', link: '/recruitment' }
 ];
 
-const Control = ({ theme, toggleTheme }: Props) => {
+const Control = () => {
+  const { theme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const filterString = searchParams.get('filterString');
 
