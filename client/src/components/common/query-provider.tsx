@@ -1,7 +1,6 @@
-import App from './app';
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
+import { type PropsWithChildren } from 'react';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -17,12 +16,8 @@ const queryClient = new QueryClient({
   }
 });
 
-const QueryProvider = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  );
+const QueryProvider = ({ children }: PropsWithChildren) => {
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 };
 
 export default QueryProvider;

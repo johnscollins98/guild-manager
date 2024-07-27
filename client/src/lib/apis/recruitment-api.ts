@@ -5,7 +5,7 @@ import {
   type RecruitmentPostCreateDTO,
   type RecruitmentPostDTO
 } from 'server';
-import { useToast } from '../../components/common/toast-context';
+import { useToast } from '../../components/common/toast/toast-context';
 import { createApi } from './axios-wrapper';
 
 const api = createApi('/api/recruitment-post');

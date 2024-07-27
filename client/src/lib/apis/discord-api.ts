@@ -6,7 +6,7 @@ import {
   type EventSettingsUpsertDTO,
   type IDiscordController
 } from 'server';
-import { useToast } from '../../components/common/toast-context';
+import { useToast } from '../../components/common/toast/toast-context';
 import { config } from '../config';
 import { createApi } from './axios-wrapper';
 

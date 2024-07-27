@@ -18,7 +18,7 @@ import { type Theme } from '@mui/material/styles/createTheme';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
-import { useToast } from '../common/toast-context';
+import { useToast } from '../common/toast/toast-context';
 import './event-entry.scss';
 
 const emptyEvent: EventCreateDTO = {
