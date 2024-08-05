@@ -132,26 +132,30 @@ export class DiscordController implements IDiscordController {
 
   @OnUndefined(200)
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() settings: EventSettingsUpsertDTO): Promise<void> {
-    await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
-      channelId: settings.channelId,
-      editMessages: settings.editMessages,
-      ...settings.existingMessageIds
-    });
-    if (!(await this.discordChannelApi.getChannel(settings.channelId))) {
+  async postEventUpdates(@Body() newSettings?: EventSettingsUpsertDTO): Promise<void> {
+    if (newSettings) {
+      await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
+        channelId: newSettings.channelId,
+        editMessages: newSettings.editMessages,
+        ...newSettings.existingMessageIds
+      });
+    }
+
+    const settings = await this.eventSettingsRepository.findOrCreateByGuildId(
+      config.discordGuildId
+    );
+
+    const channelId = settings.channelId;
+
+    if (!channelId) {
+      throw new BadRequestError('No channel id');
+    }
+
+    if (!(await this.discordChannelApi.getChannel(channelId))) {
       throw new NotFoundError('Channel not found');
     }
 
-    if (settings.editMessages) {
-      if (!settings.existingMessageIds) throw new BadRequestError('Missing "existingMessageIds"');
-
-      const channelMessages = await this.discordChannelApi.getChannelMessages(settings.channelId);
-      const values: string[] = Object.values(settings.existingMessageIds);
-      for (const id of values) {
-        if (!channelMessages.find(m => m.id === id))
-          throw new BadRequestError('Invalid Message IDs');
-      }
-    }
+    const channelMessages = await this.discordChannelApi.getChannelMessages(channelId);
 
     for (const day of daysOfWeek) {
       const events = await this.eventRepository.getEventsOnADay(day, { ignore: false });
@@ -168,13 +172,17 @@ export class DiscordController implements IDiscordController {
       });
 
       const embed = this.discordEventEmbedCreator.createEmbed(day, sorted);
-      if (settings.editMessages && settings.existingMessageIds) {
-        const messageId = settings.existingMessageIds[day];
+      if (settings.editMessages) {
+        const messageId = settings[day];
         if (!messageId) throw 'Invalid Message IDs';
 
-        await this.discordChannelApi.editEmbed(settings.channelId, messageId, embed);
+        if (!channelMessages.find(m => m.id === messageId)) {
+          throw new BadRequestError('Invalid Message IDs');
+        }
+
+        await this.discordChannelApi.editEmbed(channelId, messageId, embed);
       } else {
-        await this.discordChannelApi.addEmbed(settings.channelId, embed);
+        await this.discordChannelApi.addEmbed(channelId, embed);
       }
 
       await new Promise(r => setTimeout(r, 1000));

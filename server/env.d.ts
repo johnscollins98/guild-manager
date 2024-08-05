@@ -16,5 +16,6 @@ declare namespace NodeJS {
     FRONT_END_BASE_URL: string;
     NODE_ENV: string;
     SKIP_AUTH: string;
+    EVENT_UPDATE_INTERVAL_HOURS?: string;
   }
 }

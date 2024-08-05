@@ -11,6 +11,8 @@ const loadEnv = () => {
 
 loadEnv();
 
+const eventUpdateIntervalHours = parseFloat(process.env.EVENT_UPDATE_INTERVAL_HOURS ?? '');
+
 export const config = {
   botToken: process.env.BOT_TOKEN,
   discordGuildId: process.env.DISCORD_GUILD_ID,
@@ -29,5 +31,6 @@ export const config = {
       ? ''
       : process.env.FRONT_END_BASE_URL ?? 'http://localhost:3001',
   accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY,
-  skipAuth: process.env.SKIP_AUTH === 'true'
+  skipAuth: process.env.SKIP_AUTH === 'true',
+  eventUpdateIntervalHours: Number.isNaN(eventUpdateIntervalHours) ? 6 : eventUpdateIntervalHours
 } as const;

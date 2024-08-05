@@ -47,6 +47,7 @@ export class DiscordChannelApi implements IDiscordChannelApi {
     // check there is a change before posting
     const areEmbedsTheSame = this.areEmbedsTheSame(embed, currentMessage.embeds[0]);
     if (!areEmbedsTheSame) {
+      console.log(`Updating embed in channel ${channelId}, message ${messageId}`);
       await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, {
         embeds: [embed]
       });

@@ -11,6 +11,7 @@ import { config } from './config';
 import { dataSource } from './dataSource';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
+import { EventUpdater } from './services/discord/event-updater';
 import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
@@ -76,6 +77,10 @@ dataSource.initialize().then(() => {
   if (!(process.env.NODE_ENV === 'development' && config.skipAuth)) {
     Container.get(DiscordStrategySetup);
   }
+
+  console.log(`Setup event updater to run every ${config.eventUpdateIntervalHours} hours.`);
+  Container.get(EventUpdater).updateEventsEvery(1000 * 60 * 60 * config.eventUpdateIntervalHours);
+
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });
 
