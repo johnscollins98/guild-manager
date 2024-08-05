@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import ConfirmDialog from './confirm-dialog';
 import ConfirmContext from './confirm-dialog-context';
 import { initialState, reducer } from './confirm-dialog-reducer';
 
@@ -12,6 +13,7 @@ export const ConfirmContextProvider = ({ children }: Props) => {
   return (
     <ConfirmContext.Provider value={{ confirmModalState, dispatch }}>
       {children}
+      <ConfirmDialog />
     </ConfirmContext.Provider>
   );
 };
