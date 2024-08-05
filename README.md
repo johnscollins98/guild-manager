@@ -23,6 +23,7 @@ To run this you do need to set up the following env variables:
 | EVENT_ROLES                     | (Optional if skipping auth) Comma Seperated List of Event Leaders (all Admins will also be included so no need to repeat) |
 | **_SKIP_AUTH_**                 | (Optional) Enable to skip auth during dev (required if using mock services)                                               |
 | FRONT_END_BASE_URL              | (Optional) Frontend URL for backend to point to (useful with React dev server)                                            |
+| EVENT_UPDATE_INTERVAL_HOURS     | (Optional) Interval for updating event posts, defaults to 6 hours                                                         |
 | VITE_APP_BACKEND_BASE_URL       | (Optional) Backend URL for React to point to (useful with React dev server)                                               |
 | VITE_DISCORD_REINVITE_LINK      | (Optional) Invite link to send to kicked users                                                                            |
 
