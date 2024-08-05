@@ -17,7 +17,11 @@ export class EventUpdater {
       );
       if (eventSettings.editMessages) {
         console.log('Updating event posts');
-        await this.discordController.postEventUpdates();
+        try {
+          await this.discordController.postEventUpdates();
+        } catch (err) {
+          console.error('An error occurred while updating events', err);
+        }
       } else {
         console.log('Skipping event post update');
       }
