@@ -22,17 +22,29 @@ export class AuthController implements IAuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('/')
-  @UseBefore(passport.authenticate('discord'))
+  @UseBefore((req: Request, res: Response, next: () => void) => {
+    const { returnTo } = req.query;
+    const authenticator = passport.authenticate('discord', {
+      state: getReturnToUri(returnTo)
+    });
+    authenticator(req, res, next);
+  })
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   authenticate() {}
 
   @Get('/redirect')
-  @UseBefore(
-    passport.authenticate('discord', {
-      failureRedirect: `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`,
-      successRedirect: `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`
-    })
-  )
+  @UseBefore((req: Request, res: Response, next: () => void) => {
+    const { state } = req.query;
+    const redirectUri =
+      getReturnToUri(state) ??
+      `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`;
+
+    const authenticator = passport.authenticate('discord', {
+      failureRedirect: redirectUri,
+      successRedirect: redirectUri
+    });
+    authenticator(req, res, next);
+  })
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   redirect() {}
 
@@ -61,3 +73,7 @@ export class AuthController implements IAuthController {
     return Promise.resolve(config.eventRoles.concat(config.adminRoles));
   }
 }
+
+const getReturnToUri = (queryParam: Request['query'][string]) => {
+  return typeof queryParam === 'string' ? encodeURI(queryParam) : undefined;
+};
