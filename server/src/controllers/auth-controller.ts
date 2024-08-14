@@ -6,8 +6,8 @@ import {
   Get,
   Header,
   JsonController,
+  Redirect,
   Req,
-  Res,
   UseBefore
 } from 'routing-controllers';
 import { Service } from 'typedi';
@@ -49,10 +49,9 @@ export class AuthController implements IAuthController {
   redirect() {}
 
   @Get('/logout')
-  logout(@Req() req: Request, @Res() res: Response): void {
-    req.logout(() => {
-      res.redirect('/');
-    });
+  @Redirect(process.env.NODE_ENV === 'production' ? '/' : `${config.frontEndBaseUrl}/`)
+  logout(@Req() req: Request): void {
+    req.logout(() => {});
   }
 
   @Get('/authorization')

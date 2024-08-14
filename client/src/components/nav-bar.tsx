@@ -1,5 +1,6 @@
 import Brightness3 from '@mui/icons-material/Brightness3';
 import Brightness6 from '@mui/icons-material/Brightness6';
+import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import AppBar from '@mui/material/AppBar';
@@ -15,6 +16,8 @@ import type React from 'react';
 import { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
+import { config } from '../lib/config';
+import useConfirm from './common/confirm-dialog/use-confirm';
 import { useTheme } from './common/theme/theme-context';
 import './nav-bar.scss';
 
@@ -38,6 +41,8 @@ const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const filterString = searchParams.get('filterString');
+
+  const { confirm } = useConfirm();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -97,6 +102,18 @@ const NavBar = () => {
           <Tooltip title="Change Theme">
             <IconButton onClick={() => toggleTheme()}>
               {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Sign Out">
+            <IconButton
+              onClick={async () => {
+                const res = await confirm('Are you sure you want to sign out?', 'Sign Out');
+                if (res) {
+                  window.location.href = `${config.backEndBaseUrl}/auth/logout`;
+                }
+              }}
+            >
+              <Logout />
             </IconButton>
           </Tooltip>
         </Box>
