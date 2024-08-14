@@ -16,7 +16,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { type Theme } from '@mui/material/styles/createTheme';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
 import { daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
 import { useToast } from '../common/toast/toast-context';
 import './event-entry.scss';
@@ -63,7 +63,7 @@ const EventEntry = ({
   }, []);
 
   const onEdit = useCallback(
-    (field: string, value: string) => {
+    (field: keyof EventCreateDTO, value: string) => {
       setLocalEvent({ ...localEvent, [field]: value });
     },
     [localEvent, setLocalEvent]
@@ -94,6 +94,45 @@ const EventEntry = ({
     [onSubmit, validationHelper, localEvent, openToast, onReset, resetOnSubmit]
   );
 
+  const timezoneString = useMemo(() => {
+    return `${new Date().toLocaleDateString(undefined, { day: '2-digit', timeZoneName: 'short' }).substring(4)}, ${new Date().toLocaleDateString(undefined, { day: '2-digit', timeZoneName: 'shortOffset' }).substring(4)}`;
+  }, []);
+
+  const localStartTime = useMemo(() => {
+    const [hours, minutes] = localEvent.startTime.split(':');
+
+    if (hours && minutes) {
+      const date = new Date();
+      date.setUTCHours(parseInt(hours));
+      date.setUTCMinutes(parseInt(minutes));
+
+      return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    }
+
+    return localEvent.startTime;
+  }, [localEvent]);
+
+  const setUtcStartTimeWithLocalTime = useCallback(
+    (value: string) => {
+      const [hours, minutes] = value.split(':');
+      if (hours && minutes) {
+        const date = new Date();
+        date.setHours(parseInt(hours));
+        date.setMinutes(parseInt(minutes));
+
+        onEdit(
+          'startTime',
+          date.toLocaleTimeString(undefined, {
+            timeZone: 'UTC',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        );
+      }
+    },
+    [onEdit]
+  );
+
   return (
     <Card
       variant="elevation"
@@ -103,13 +142,13 @@ const EventEntry = ({
         <Tooltip placement="top" title="Event name">
           <div className="field long">
             <Assignment color="secondary" className="field-label" />
-            <EditField event={localEvent} onEdit={onEdit} fieldKey="title" required />
+            <EditField onEdit={v => onEdit('title', v)} value={localEvent.title} required />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event day">
           <div className="field">
             <CalendarToday color="secondary" className="field-label" />
-            <EditField event={localEvent} onEdit={onEdit} fieldKey="day" select required>
+            <EditField onEdit={v => onEdit('day', v)} value={localEvent.day} select required>
               {daysOfWeek.map(day => (
                 <MenuItem value={day} key={day}>
                   {day}
@@ -118,22 +157,27 @@ const EventEntry = ({
             </EditField>
           </div>
         </Tooltip>
-        <Tooltip placement="top" title="Start time">
+        <Tooltip placement="top" title={`Start time (${timezoneString})`}>
           <div className="field">
             <WatchLater color="secondary" className="field-label" />
-            <EditField event={localEvent} onEdit={onEdit} fieldKey="startTime" type="time" />
+            <EditField onEdit={setUtcStartTimeWithLocalTime} value={localStartTime} type="time" />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event duration">
           <div className="field">
             <HourglassFull color="secondary" className="field-label" />
-            <EditField event={localEvent} onEdit={onEdit} fieldKey="duration" />
+            <EditField onEdit={v => onEdit('duration', v)} value={localEvent.duration} />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event leader">
           <div className="field long">
             <Person color="secondary" className="field-label" />
-            <EditField event={localEvent} onEdit={onEdit} fieldKey="leaderId" required select>
+            <EditField
+              onEdit={v => onEdit('leaderId', v)}
+              value={localEvent.leaderId}
+              select
+              required
+            >
               {possibleLeaders.map(leader => (
                 <MenuItem value={leader.id} key={leader.id}>
                   {leader.name}
@@ -189,34 +233,24 @@ const EventEntry = ({
   );
 };
 
-interface EditFieldProps {
-  event: EventCreateDTO;
-  onEdit: (key: string, value: string) => void;
-  fieldKey: keyof EventCreateDTO;
-  children?: React.ReactNode;
-  select?: boolean;
-  type?: string;
-  required?: boolean;
+interface EditFieldProps extends ComponentProps<typeof TextField> {
+  onEdit: (value: string) => void;
 }
 
-const EditField = ({ event, onEdit, fieldKey, children, required, ...props }: EditFieldProps) => {
+const EditField = ({ onEdit, ...props }: EditFieldProps) => {
   const theme = useTheme<Theme>();
   return (
     <TextField
       variant="outlined"
       size="small"
       className="entry-input"
-      value={event[fieldKey]}
       onChange={e => {
-        onEdit(fieldKey, e.target.value);
+        onEdit(e.target.value);
       }}
       style={{ colorScheme: theme.palette.mode }}
       fullWidth
-      required={required}
       {...props}
-    >
-      {children}
-    </TextField>
+    />
   );
 };
 
