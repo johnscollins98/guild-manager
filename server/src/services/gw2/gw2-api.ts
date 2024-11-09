@@ -13,8 +13,8 @@ export class GW2Api {
 
   async get<T>(endpoint: string): Promise<T> {
     const response = await axios.get(endpoint, {
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`
+      params: {
+        access_token: this.apiKey
       },
       baseURL: this.baseUrl
     });
