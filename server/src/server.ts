@@ -7,6 +7,7 @@ import path from 'path';
 import 'reflect-metadata';
 import { Action, useContainer as rc_useContainer, useExpressServer } from 'routing-controllers';
 import { Container } from 'typeorm-typedi-extensions';
+import { init as initAxiosLogger } from './axios-logger';
 import { config } from './config';
 import { dataSource } from './dataSource';
 import { AuthService } from './services/auth/auth-service';
@@ -15,6 +16,8 @@ import { EventUpdater } from './services/discord/event-updater';
 import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
+
+initAxiosLogger();
 
 const app = express();
 app.use(express.json());
