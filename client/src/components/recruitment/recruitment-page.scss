@@ -1,0 +1,19 @@
+div.input-wrapper {
+  position: relative;
+
+  .buttons {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    transform: translateY(50%);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &.centered {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+}
