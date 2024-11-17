@@ -102,6 +102,7 @@ const RecruitmentPage: FC = () => {
           fullWidth
           name="Title"
           label="Title"
+          InputProps={{ sx: { paddingRight: '45px' } }}
         />
       </div>
       <div style={{ overflow: 'auto', paddingTop: '16px' }} className="input-wrapper">
@@ -123,7 +124,9 @@ const RecruitmentPage: FC = () => {
           value={message}
           onChange={e => setMessage(e.target.value)}
           fullWidth
-          InputProps={{ sx: { fontFamily: 'Consolas, Menlo, Ubuntu, Roboto, monospace' } }}
+          InputProps={{
+            sx: { fontFamily: 'Consolas, Menlo, Ubuntu, Roboto, monospace', paddingRight: '95px' }
+          }}
           name="message"
         />
       </div>
