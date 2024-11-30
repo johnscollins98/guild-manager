@@ -5,13 +5,13 @@ import {
   SlashCommandBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
-import { daysOfWeek } from '../../dtos';
-import { EventEmbedCreator } from '../../services/discord/event-embed-creator';
-import { EventRepository } from '../../services/repositories/event-repository';
-import { Command } from '../command-factory';
+import { daysOfWeek } from '../../../dtos';
+import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
+import { EventRepository } from '../../../services/repositories/event-repository';
+import { Command } from '../../command-factory';
 
 @Service()
-export class EventsListCommand implements Command {
+export default class EventsListCommand implements Command {
   public readonly name: string;
   constructor(
     private readonly eventRepo: EventRepository,

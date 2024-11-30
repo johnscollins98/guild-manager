@@ -7,14 +7,14 @@ import {
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
-import { daysOfWeek } from '../../dtos';
-import { DiscordApiFactory } from '../../services/discord/api-factory';
-import { IDiscordGuildApi } from '../../services/discord/guild-api';
-import { EventRepository } from '../../services/repositories/event-repository';
-import { Command } from '../command-factory';
+import { daysOfWeek } from '../../../dtos';
+import { DiscordApiFactory } from '../../../services/discord/api-factory';
+import { IDiscordGuildApi } from '../../../services/discord/guild-api';
+import { EventRepository } from '../../../services/repositories/event-repository';
+import { Command } from '../../command-factory';
 
 @Service()
-export class EventsDeleteCommand implements Command {
+export default class EventsDeleteCommand implements Command {
   public readonly name: string;
 
   private readonly discordGuildApi: IDiscordGuildApi;
