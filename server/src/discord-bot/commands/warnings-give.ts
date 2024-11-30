@@ -40,13 +40,8 @@ export class WarningsGiveCommand implements Command {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const memberId = interaction.options.getString('gw2-account-id');
-    const reason = interaction.options.getString('reason');
-
-    if (!memberId || !reason) {
-      interaction.editReply('Something went wrong');
-      return;
-    }
+    const memberId = interaction.options.getString('gw2-account-id', true);
+    const reason = interaction.options.getString('reason', true);
 
     const members = await this.gw2GuildApi.getMembers();
     const matchingMember = members.find(m => m.name === memberId);
