@@ -13,7 +13,7 @@ export class CommandFactory {
   private readonly commandMap: Record<string, Command> = {};
 
   async getCommands(): Promise<ApplicationCommandDataResolvable[]> {
-    const files = await glob('commands/**/*.ts', {
+    const files = await glob('commands/**/*.{ts,js}', {
       ignore: 'node_modules/**',
       dotRelative: true,
       cwd: __dirname
