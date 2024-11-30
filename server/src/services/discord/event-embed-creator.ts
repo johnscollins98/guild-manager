@@ -17,7 +17,7 @@ const dayOfWeekToIndex: Record<DayOfWeek, number> = {
 export class EventEmbedCreator {
   createEmbed(day: string, events: Event[]): DiscordEmbed {
     return {
-      color: '3447003',
+      color: 3447003,
       title: `${day} Events`,
       fields: events.map((event, i) => {
         return {

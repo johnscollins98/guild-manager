@@ -68,7 +68,7 @@ export class DiscordChannelApi implements IDiscordChannelApi {
   private areEmbedsTheSame(newEmbed: DiscordEmbed, existingEmbed?: DiscordEmbed): boolean {
     if (!existingEmbed) return false;
     if (newEmbed.title !== existingEmbed.title) return false;
-    if (parseInt(newEmbed.color) !== parseInt(existingEmbed.color)) return false;
+    if (newEmbed.color !== existingEmbed.color) return false;
 
     const embedAFields = newEmbed.fields || [];
     const embedBFields = existingEmbed.fields || [];
