@@ -2,10 +2,10 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   SlashCommandBuilder,
-  SlashCommandStringOption
+  SlashCommandStringOption,
+  SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import { GW2GuildApi } from '../../services/gw2/guild-api';
 import WarningsRepository from '../../services/repositories/warnings-repository';
 import { Command } from '../command-factory';
 
@@ -13,10 +13,7 @@ import { Command } from '../command-factory';
 export class WarningsGiveCommand implements Command {
   public readonly name: string;
 
-  constructor(
-    private readonly warningsRepo: WarningsRepository,
-    private readonly gw2GuildApi: GW2GuildApi
-  ) {
+  constructor(private readonly warningsRepo: WarningsRepository) {
     this.name = 'warnings-give';
   }
 
@@ -24,10 +21,10 @@ export class WarningsGiveCommand implements Command {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription('Give warning to user')
-      .addStringOption(
-        new SlashCommandStringOption()
-          .setName('gw2-account-id')
-          .setDescription('GW2 account name')
+      .addUserOption(
+        new SlashCommandUserOption()
+          .setName('user')
+          .setDescription('Warning recipient')
           .setRequired(true)
       )
       .addStringOption(
@@ -40,23 +37,15 @@ export class WarningsGiveCommand implements Command {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const memberId = interaction.options.getString('gw2-account-id', true);
+    const user = interaction.options.getUser('user', true);
     const reason = interaction.options.getString('reason', true);
 
-    const members = await this.gw2GuildApi.getMembers();
-    const matchingMember = members.find(m => m.name === memberId);
-
-    if (!matchingMember) {
-      interaction.editReply(`Member **${memberId}** does not exist.`);
-      return;
-    }
-
     await this.warningsRepo.create({
-      givenTo: memberId,
+      givenTo: user.id,
       reason: reason,
-      givenBy: interaction.user.username
+      givenBy: interaction.user.id
     });
 
-    interaction.editReply(`Logged a warning for **${memberId}** with reason: **${reason}**`);
+    interaction.editReply(`Logged a warning for <@${user.id}> with reason: **${reason}**`);
   }
 }

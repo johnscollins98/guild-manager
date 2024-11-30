@@ -54,7 +54,7 @@ export class WarningsController implements IWarningsController {
     @Body() warning: WarningCreateDTO,
     @CurrentUser() user?: Express.User
   ): Promise<WarningDTO> {
-    return this.warningRepo.create({ ...warning, givenBy: user?.username });
+    return this.warningRepo.create({ ...warning, givenBy: user?.id });
   }
 
   @Put('/:id')

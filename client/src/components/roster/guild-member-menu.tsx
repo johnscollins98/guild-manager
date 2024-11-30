@@ -93,14 +93,14 @@ const GuildMemberMenu = ({
       <Divider />
       <GuildMemberMenuItem
         Icon={Warning}
-        disabled={!isAdmin || !member.memberId}
+        disabled={!isAdmin || !member.discordId}
         className="warning"
         action={() => menuAction(() => setWarningOpen(true))}
         label="Give Warning"
       />
       <GuildMemberMenuItem
         Icon={Search}
-        disabled={!member.memberId || member.warnings.length < 1}
+        disabled={!member.discordId || member.warnings.length < 1}
         action={() => menuAction(() => setWarningViewerOpen(true))}
         label="View Warnings"
       />

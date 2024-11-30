@@ -72,10 +72,10 @@ const GuildMemberCard = ({
 
   const warningSubmitHandler = useCallback(
     async (reason: string) => {
-      if (!member.memberId) {
+      if (!member.discordId) {
         throw new Error('Member does not exist');
       }
-      await addWarningMutation.mutateAsync({ givenTo: member.memberId, reason });
+      await addWarningMutation.mutateAsync({ givenTo: member.discordId, reason });
     },
     [addWarningMutation, member]
   );

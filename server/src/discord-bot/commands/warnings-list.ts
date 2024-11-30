@@ -2,7 +2,7 @@ import {
   ChatInputCommandInteraction,
   PermissionFlagsBits,
   SlashCommandBuilder,
-  SlashCommandStringOption
+  SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
 import WarningsRepository from '../../services/repositories/warnings-repository';
@@ -20,24 +20,24 @@ export class WarningsListCommand implements Command {
       .setName(this.name)
       .setDescription('List all warnings')
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-      .addStringOption(
-        new SlashCommandStringOption()
-          .setName('gw2-account-name')
-          .setDescription('Filter warnings by GW2 account name')
+      .addUserOption(
+        new SlashCommandUserOption()
+          .setName('given-to-user')
+          .setDescription('Filter by user given to')
       );
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const memberId = interaction.options.getString('gw2-account-name');
+    const memberId = interaction.options.getUser('given-to-user');
 
-    const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(memberId);
+    const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(memberId?.id);
 
     interaction.editReply({
       content:
         warnings
           .map(
             w =>
-              `* "${w.reason}"\n\tGiven to **${w.givenTo}** by **${w.givenBy}** on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d>`
+              `* "${w.reason}"\n\tGiven to <@${w.givenTo}> by <@${w.givenBy}> on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d>`
           )
           .join('\n') || 'There are no warnings.'
     });
