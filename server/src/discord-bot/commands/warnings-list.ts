@@ -19,12 +19,12 @@ export class WarningsListCommand implements Command {
   async getConfig() {
     return new SlashCommandBuilder()
       .setName(this.name)
-      .setDescription('See warnings')
+      .setDescription('List all warnings')
       .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .addStringOption(
         new SlashCommandStringOption()
           .setName('gw2-account-name')
-          .setDescription('Filter warnings by account name (including numbers)')
+          .setDescription('Filter warnings by GW2 account name')
       );
   }
 

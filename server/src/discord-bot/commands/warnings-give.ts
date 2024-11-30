@@ -27,7 +27,7 @@ export class WarningsGiveCommand implements Command {
       .addStringOption(
         new SlashCommandStringOption()
           .setName('gw2-account-id')
-          .setDescription('GW2 Account Id')
+          .setDescription('GW2 account name')
           .setRequired(true)
       )
       .addStringOption(
