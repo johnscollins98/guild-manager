@@ -8,13 +8,13 @@ import {
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
-import { DiscordApiFactory } from '../../../services/discord/api-factory';
-import { IDiscordGuildApi } from '../../../services/discord/guild-api';
-import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import { DiscordApiFactory } from '../../services/discord/api-factory';
+import { IDiscordGuildApi } from '../../services/discord/guild-api';
+import WarningsRepository from '../../services/repositories/warnings-repository';
+import { Command } from '../command-factory';
 
 @Service()
-export default class WarningsDeleteCommand implements Command {
+export class WarningsDeleteCommand implements Command {
   public readonly name: string;
 
   private readonly discordGuildApi: IDiscordGuildApi;
