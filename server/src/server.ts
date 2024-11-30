@@ -1,5 +1,4 @@
 import PgConnection from 'connect-pg-simple';
-import { AuditLogEvent, Client, GatewayIntentBits, Partials } from 'discord.js';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -10,10 +9,10 @@ import { Container } from 'typeorm-typedi-extensions';
 import { init as initAxiosLogger } from './axios-logger';
 import { config } from './config';
 import { dataSource } from './dataSource';
+import { DiscordBot } from './discord-bot/discord-bot';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
 import { EventUpdater } from './services/discord/event-updater';
-import { MemberLeftRepository } from './services/repositories/member-left-repository';
 
 rc_useContainer(Container);
 
@@ -84,43 +83,8 @@ dataSource.initialize().then(() => {
   console.log(`Setup event updater to run every ${config.eventUpdateIntervalHours} hours.`);
   Container.get(EventUpdater).updateEventsEvery(1000 * 60 * 60 * config.eventUpdateIntervalHours);
 
+  const discordBot = Container.get(DiscordBot);
+  discordBot.init();
+
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });
-
-// Bot listening to member leaving to save to DB
-const client = new Client({
-  intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
-  partials: [Partials.GuildMember]
-});
-
-client.on('ready', () => console.log('Bot listening'));
-
-client.on('guildMemberRemove', async m => {
-  const memberLeftRepo = Container.get(MemberLeftRepository);
-
-  const guild = await client.guilds.fetch(config.discordGuildId);
-  const logs = await guild.fetchAuditLogs();
-
-  const logsHaveAKickForMember = logs.entries.some(log => {
-    const isKick = log.action === AuditLogEvent.MemberKick;
-    const isMember = log.targetId === m.user.id;
-    return isKick && isMember;
-  });
-
-  if (logsHaveAKickForMember) {
-    console.log(`${m.displayName} appears to have been kicked, not storing`);
-    return;
-  }
-
-  console.log(`Logging ${m.displayName} left`);
-  memberLeftRepo.create({
-    displayName: m.displayName,
-    nickname: m.nickname ?? undefined,
-    username: m.user.username,
-    userDisplayName: m.user.displayName,
-    globalName: m.user.globalName ?? undefined,
-    time: new Date()
-  });
-});
-
-client.login(config.botToken);
