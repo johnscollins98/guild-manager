@@ -12,16 +12,16 @@ import {
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import { config } from '../../config';
-import { DayOfWeek, daysOfWeek } from '../../dtos';
-import { DiscordApiFactory } from '../../services/discord/api-factory';
-import { EventEmbedCreator } from '../../services/discord/event-embed-creator';
-import { IDiscordGuildApi } from '../../services/discord/guild-api';
-import { EventRepository } from '../../services/repositories/event-repository';
-import { Command } from '../command-factory';
+import { config } from '../../../config';
+import { DayOfWeek, daysOfWeek } from '../../../dtos';
+import { DiscordApiFactory } from '../../../services/discord/api-factory';
+import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
+import { IDiscordGuildApi } from '../../../services/discord/guild-api';
+import { EventRepository } from '../../../services/repositories/event-repository';
+import { Command } from '../../command-factory';
 
 @Service()
-export class EventsCreateCommand implements Command {
+export default class EventsCreateCommand implements Command {
   public readonly name: string;
   private readonly discordGuildApi: IDiscordGuildApi;
   constructor(
