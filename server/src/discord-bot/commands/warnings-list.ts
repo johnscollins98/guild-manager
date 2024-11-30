@@ -5,11 +5,11 @@ import {
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import WarningsRepository from '../../services/repositories/warnings-repository';
+import { Command } from '../command-factory';
 
 @Service()
-export default class WarningsListCommand implements Command {
+export class WarningsListCommand implements Command {
   public readonly name: string;
   constructor(private readonly warningsRepo: WarningsRepository) {
     this.name = 'warnings-list';

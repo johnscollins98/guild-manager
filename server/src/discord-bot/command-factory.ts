@@ -1,6 +1,11 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction } from 'discord.js';
-import { glob } from 'glob';
-import Container, { Service } from 'typedi';
+import { Service } from 'typedi';
+import { EventsCreateCommand } from './commands/events-create';
+import { EventsDeleteCommand } from './commands/events-delete';
+import { EventsListCommand } from './commands/events-list';
+import { WarningsDeleteCommand } from './commands/warnings-delete';
+import { WarningsGiveCommand } from './commands/warnings-give';
+import { WarningsListCommand } from './commands/warnings-list';
 
 export interface Command {
   name: string;
@@ -10,21 +15,28 @@ export interface Command {
 
 @Service()
 export class CommandFactory {
-  private readonly commandMap: Record<string, Command> = {};
+  private readonly commandMap: Record<string, Command>;
 
-  async getCommands(): Promise<ApplicationCommandDataResolvable[]> {
-    const files = await glob('commands/**/*.ts', {
-      ignore: 'node_modules/**',
-      dotRelative: true,
-      cwd: __dirname
-    });
+  constructor(
+    warningsListCommand: WarningsListCommand,
+    warningsGiveCommand: WarningsGiveCommand,
+    warningsDeleteCommand: WarningsDeleteCommand,
+    eventsListCommand: EventsListCommand,
+    eventsCreateCommand: EventsCreateCommand,
+    eventsDeleteCommand: EventsDeleteCommand
+  ) {
+    // Todo - is there a more "automated" way to achieve this?
+    this.commandMap = [
+      warningsListCommand,
+      warningsGiveCommand,
+      warningsDeleteCommand,
+      eventsListCommand,
+      eventsCreateCommand,
+      eventsDeleteCommand
+    ].reduce((map, command) => ({ ...map, [command.name]: command }), {});
+  }
 
-    for (const file of files) {
-      const Command = await import(file);
-      const command = Container.get(Command.default) as Command;
-      this.commandMap[command.name] = command;
-    }
-
+  async getCommandConfigs(): Promise<ApplicationCommandDataResolvable[]> {
     const promises = Object.values(this.commandMap).map(command => command.getConfig());
     return await Promise.all(promises);
   }

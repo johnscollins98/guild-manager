@@ -44,7 +44,7 @@ export class DiscordBot {
 
     await guild.commands.set([]);
 
-    const commands = await this.commandFactory.getCommands();
+    const commands = await this.commandFactory.getCommandConfigs();
     await guild.commands.set(commands);
   }
 
