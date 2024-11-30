@@ -5,7 +5,6 @@ import {
   SlashCommandStringOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import { ILike } from 'typeorm';
 import WarningsRepository from '../../services/repositories/warnings-repository';
 import { Command } from '../command-factory';
 
@@ -29,11 +28,9 @@ export class WarningsListCommand implements Command {
   }
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const memberId = interaction.options.getString('gw2-account-name') ?? undefined;
+    const memberId = interaction.options.getString('gw2-account-name');
 
-    const warnings = await this.warningsRepo.getAll({
-      where: { givenTo: memberId && ILike(`%${memberId}%`) }
-    });
+    const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(memberId);
 
     interaction.editReply({
       content:

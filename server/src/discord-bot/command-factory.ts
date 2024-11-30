@@ -1,5 +1,6 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction } from 'discord.js';
 import { Service } from 'typedi';
+import { WarningsDeleteCommand } from './commands/warnings-delete';
 import { WarningsGiveCommand } from './commands/warnings-give';
 import { WarningsListCommand } from './commands/warnings-list';
 
@@ -11,14 +12,18 @@ export interface Command {
 
 @Service()
 export class CommandFactory {
-  private commandMap: Record<string, Command>;
+  private readonly commandMap: Record<string, Command>;
 
-  constructor(warningsListCommand: WarningsListCommand, warningsGiveCommand: WarningsGiveCommand) {
+  constructor(
+    warningsListCommand: WarningsListCommand,
+    warningsGiveCommand: WarningsGiveCommand,
+    warningsDeleteCommand: WarningsDeleteCommand
+  ) {
     // Todo - is there a more "automated" way to achieve this?
-    this.commandMap = {
-      [warningsListCommand.name]: warningsListCommand,
-      [warningsGiveCommand.name]: warningsGiveCommand
-    };
+    this.commandMap = [warningsListCommand, warningsGiveCommand, warningsDeleteCommand].reduce(
+      (map, command) => ({ ...map, [command.name]: command }),
+      {}
+    );
   }
 
   async getCommandConfigs(): Promise<ApplicationCommandDataResolvable[]> {
