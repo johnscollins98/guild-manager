@@ -31,7 +31,19 @@ export class EventsListCommand implements Command {
     const embeds = await Promise.all(
       daysOfWeek.map(async d => {
         const events = await this.eventRepo.getEventsOnADay(d, { ignore: false });
-        const embedData = this.embedCreator.createEmbed(d, events);
+
+        const parseTime = (str: string) => {
+          return Date.parse(`1970/01/01 ${str}`);
+        };
+
+        const sorted = events.sort((a, b) => {
+          const aTime = parseTime(a.startTime);
+          const bTime = parseTime(b.startTime);
+
+          return aTime - bTime;
+        });
+
+        const embedData = this.embedCreator.createEmbed(d, sorted);
         const embedBuilder = new EmbedBuilder(embedData);
         return embedBuilder;
       })
