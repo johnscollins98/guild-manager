@@ -30,7 +30,7 @@ export class EventsListCommand implements Command {
   async execute(interaction: ChatInputCommandInteraction) {
     const embeds = await Promise.all(
       daysOfWeek.map(async d => {
-        const events = await this.eventRepo.getEventsOnADay(d);
+        const events = await this.eventRepo.getEventsOnADay(d, { ignore: false });
         const embedData = this.embedCreator.createEmbed(d, events);
         const embedBuilder = new EmbedBuilder(embedData);
         return embedBuilder;
