@@ -1,6 +1,7 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction } from 'discord.js';
 import { Service } from 'typedi';
 import { EventsCreateCommand } from './commands/events-create';
+import { EventsDeleteCommand } from './commands/events-delete';
 import { EventsListCommand } from './commands/events-list';
 import { WarningsDeleteCommand } from './commands/warnings-delete';
 import { WarningsGiveCommand } from './commands/warnings-give';
@@ -21,7 +22,8 @@ export class CommandFactory {
     warningsGiveCommand: WarningsGiveCommand,
     warningsDeleteCommand: WarningsDeleteCommand,
     eventsListCommand: EventsListCommand,
-    eventsCreateCommand: EventsCreateCommand
+    eventsCreateCommand: EventsCreateCommand,
+    eventsDeleteCommand: EventsDeleteCommand
   ) {
     // Todo - is there a more "automated" way to achieve this?
     this.commandMap = [
@@ -29,7 +31,8 @@ export class CommandFactory {
       warningsGiveCommand,
       warningsDeleteCommand,
       eventsListCommand,
-      eventsCreateCommand
+      eventsCreateCommand,
+      eventsDeleteCommand
     ].reduce((map, command) => ({ ...map, [command.name]: command }), {});
   }
 
