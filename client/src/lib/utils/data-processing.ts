@@ -17,7 +17,6 @@ export const generateGW2RosterRecords = (
       const rank = gw2Member.rank;
       const rankImage = ranks.find(r => r.id === rank)?.icon;
       const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
-      const warningsForThisMember = warnings.filter(warning => warning.givenTo === memberId);
 
       const testName = accountName.toLowerCase();
 
@@ -47,6 +46,9 @@ export const generateGW2RosterRecords = (
       const discordId = discordMember?.id;
       const roles = discordMember?.roles || [];
       const avatar = discordMember?.avatar;
+      const warningsForThisMember = discordId
+        ? warnings.filter(warning => warning.givenTo === discordId)
+        : [];
 
       const missingDiscord = !discordName;
       const unmatchingRoles =
@@ -117,7 +119,7 @@ export const getExcessDiscordRecords = (
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         avatar: discordMember.avatar,
-        warnings: [],
+        warnings: warnings.filter(w => w.givenTo === discordMember.id),
         issues: {
           missingGW2,
           over24h

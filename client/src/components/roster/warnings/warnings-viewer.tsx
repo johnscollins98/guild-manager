@@ -10,9 +10,12 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
 import { type WarningDTO } from 'server';
+import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
+import { ErrorMessage } from '../../common/error-message';
+import LoaderPage from '../../common/loader-page';
 import './warnings-viewer.scss';
 
 interface Props {
@@ -24,6 +27,7 @@ interface Props {
 const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   const { confirm } = useConfirm();
   const deleteWarningMutation = useDeleteWarningMutation();
+  const { data: discordMembers, isLoading, isError } = useDiscordMembers();
 
   const handleDeleteWarning = useCallback(
     async (warning: WarningDTO) => {
@@ -35,6 +39,20 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     },
     [deleteWarningMutation, onClose, confirm]
   );
+
+  const getNameForDiscordId = useCallback(
+    (givenToId: string) => {
+      if (!discordMembers) return 'Unknown User';
+
+      const discordMember = discordMembers.find(dm => dm.id === givenToId);
+      return discordMember?.nickname ?? discordMember?.name ?? 'Unknown User';
+    },
+    [discordMembers]
+  );
+
+  if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
+
+  if (isLoading || !discordMembers) return <LoaderPage />;
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
@@ -54,7 +72,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
               </span>
               <span className="given-by field">
                 <Person className="icon" />
-                <Typography>{warning.givenBy}</Typography>
+                <Typography>{getNameForDiscordId(warning.givenBy)}</Typography>
               </span>
               <span className="reason field">
                 <Assignment className="icon" />
