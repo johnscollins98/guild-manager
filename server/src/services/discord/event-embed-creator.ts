@@ -15,9 +15,9 @@ const dayOfWeekToIndex: Record<DayOfWeek, number> = {
 
 @Service()
 export class EventEmbedCreator {
-  createEmbed(day: string, events: Event[]): DiscordEmbed {
+  createEmbed(day: string, events: Omit<Event, 'id'>[]): DiscordEmbed {
     return {
-      color: '3447003',
+      color: 3447003,
       title: `${day} Events`,
       fields: events.map((event, i) => {
         return {
@@ -30,7 +30,7 @@ export class EventEmbedCreator {
     };
   }
 
-  private generateTimestamp(event: Event): string {
+  private generateTimestamp(event: Omit<Event, 'id'>): string {
     const dayIndex = dayOfWeekToIndex[event.day];
 
     const today = new Date();
