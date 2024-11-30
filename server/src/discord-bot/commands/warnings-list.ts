@@ -35,15 +35,14 @@ export class WarningsListCommand implements Command {
       where: { givenTo: memberId && ILike(`%${memberId}%`) }
     });
 
-    interaction.reply({
+    interaction.editReply({
       content:
         warnings
           .map(
             w =>
               `* "${w.reason}"\n\tGiven to **${w.givenTo}** by **${w.givenBy}** on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d>`
           )
-          .join('\n') || 'There are no warnings.',
-      ephemeral: true
+          .join('\n') || 'There are no warnings.'
     });
   }
 }

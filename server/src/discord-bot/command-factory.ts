@@ -32,11 +32,12 @@ export class CommandFactory {
       return;
     }
 
+    await interaction.deferReply({ ephemeral: true });
     try {
       await command.execute(interaction);
     } catch (err) {
       console.error(err);
-      interaction.reply({ content: 'Something went wrong. Please try again.', ephemeral: true });
+      interaction.editReply('Something went wrong. Please try again.');
     }
   }
 }
