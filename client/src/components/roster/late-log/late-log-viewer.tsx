@@ -1,7 +1,8 @@
-import Assignment from '@mui/icons-material/Assignment';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import Close from '@mui/icons-material/Close';
+import NotificationsActive from '@mui/icons-material/NotificationsActive';
 import Person from '@mui/icons-material/Person';
+import { capitalize } from '@mui/material';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,9 +10,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import { type WarningDTO } from 'server';
+import { type LateLogDto } from 'server';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
-import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
+import { useDeleteLateLogMutation } from '../../../lib/apis/late-log-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../../common/error-message';
@@ -24,20 +25,20 @@ interface Props {
   member: MemberRecord;
 }
 
-const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
+const LateLogViewer = ({ isOpen, onClose, member }: Props) => {
   const { confirm } = useConfirm();
-  const deleteWarningMutation = useDeleteWarningMutation();
+  const deleteLateLogMutation = useDeleteLateLogMutation();
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
 
-  const handleDeleteWarning = useCallback(
-    async (warning: WarningDTO) => {
-      const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
+  const handleDeleteEntry = useCallback(
+    async (lateLog: LateLogDto) => {
+      const res = await confirm('Are you sure you want to delete this entry?', 'Delete Log Entry');
       if (res) {
-        await deleteWarningMutation.mutateAsync(warning.id);
+        await deleteLateLogMutation.mutateAsync(lateLog.id);
       }
       onClose();
     },
-    [deleteWarningMutation, onClose, confirm]
+    [deleteLateLogMutation, onClose, confirm]
   );
 
   const getNameForDiscordId = useCallback(
@@ -56,31 +57,31 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
-      <DialogTitle>Warnings for {member.memberId}</DialogTitle>
+      <DialogTitle>Late Log entries for {member.memberId}</DialogTitle>
       <DialogContent className="log-entry-viewer">
-        {member.warnings.map(warning => (
+        {member.lateLog.map(entry => (
           <Card
             variant="outlined"
             className="log-entry-card"
-            key={warning.id}
+            key={entry.id}
             sx={{ backgroundColor: 'inherit' }}
           >
             <div className="data">
               <span className="date field">
                 <CalendarToday className="icon" />
-                <Typography>{new Date(warning.timestamp).toDateString()}</Typography>
+                <Typography>{new Date(entry.timestamp).toDateString()}</Typography>
               </span>
               <span className="given-by field">
                 <Person className="icon" />
-                <Typography>{getNameForDiscordId(warning.givenBy)}</Typography>
+                <Typography>{getNameForDiscordId(entry.givenBy)}</Typography>
               </span>
-              <span className="reason field">
-                <Assignment className="icon" />
-                <Typography>{warning.reason}</Typography>
+              <span className="noitification field">
+                <NotificationsActive className="icon" />
+                <Typography>{capitalize(entry.notification)}</Typography>
               </span>
             </div>
             <div className="actions">
-              <IconButton onClick={() => handleDeleteWarning(warning)}>
+              <IconButton onClick={() => handleDeleteEntry(entry)}>
                 <Close />
               </IconButton>
             </div>
@@ -91,4 +92,4 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   );
 };
 
-export default WarningsViewer;
+export default LateLogViewer;

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
+import { type DiscordMemberDTO, type GW2Rank, type LateLogDto, type WarningDTO } from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
 import type MemberRecord from '../interfaces/member-record';
 
@@ -7,7 +7,8 @@ export const generateGW2RosterRecords = (
   gw2Members: GW2MemberResponseDTO[],
   discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
-  warnings: WarningDTO[]
+  warnings: WarningDTO[],
+  lateLog: LateLogDto[]
 ): MemberRecord[] => {
   const records: MemberRecord[] = gw2Members
     .map(gw2Member => {
@@ -49,6 +50,7 @@ export const generateGW2RosterRecords = (
       const warningsForThisMember = discordId
         ? warnings.filter(warning => warning.givenTo === discordId)
         : [];
+      const lateLogEntries = discordId ? lateLog.filter(entry => entry.givenTo === discordId) : [];
 
       const missingDiscord = !discordName;
       const unmatchingRoles =
@@ -68,6 +70,7 @@ export const generateGW2RosterRecords = (
         rankImage,
         joinDate,
         warnings: warningsForThisMember,
+        lateLog: lateLogEntries,
         discordName,
         nickname,
         discordId,
@@ -97,9 +100,10 @@ export const getExcessDiscordRecords = (
   gw2Members: GW2MemberResponseDTO[],
   discordMembers: DiscordMemberDTO[],
   ranks: GW2Rank[],
-  warnings: WarningDTO[]
+  warnings: WarningDTO[],
+  lateLog: LateLogDto[]
 ): MemberRecord[] => {
-  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
+  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings, lateLog);
   return discordMembers
     .filter(discordMember => {
       return !records.some(record => record.discordName === discordMember.name);
@@ -120,6 +124,7 @@ export const getExcessDiscordRecords = (
         roles: discordMember.roles || [],
         avatar: discordMember.avatar,
         warnings: warnings.filter(w => w.givenTo === discordMember.id),
+        lateLog: lateLog.filter(e => e.givenTo === discordMember.id),
         issues: {
           missingGW2,
           over24h

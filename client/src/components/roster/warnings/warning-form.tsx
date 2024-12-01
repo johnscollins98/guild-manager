@@ -35,9 +35,10 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
           <TextField
             value={warningReason}
             onChange={e => setWarningReason(e.target.value)}
-            variant="standard"
+            variant="outlined"
             label="Reason"
             size="small"
+            fullWidth
             required
           />
           <Button variant="contained" color="primary" size="large" type="submit">
