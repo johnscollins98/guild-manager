@@ -178,6 +178,10 @@ const RosterControl = ({
           {sortBy === 'warnings' ? <Check className="selected" /> : null}
           Warnings
         </MenuItem>
+        <MenuItem className="control-menu-item" onClick={() => sortHandler('late-log')}>
+          {sortBy === 'late-log' ? <Check className="selected" /> : null}
+          Late Log Entries
+        </MenuItem>
       </Menu>
       <Menu
         open={filterOpen}
@@ -208,6 +212,10 @@ const RosterControl = ({
         <MenuItem className="control-menu-item" onClick={() => filterHandler('warnings')}>
           {filterBy === 'warnings' ? <Check className="selected" /> : null}
           Any warnings
+        </MenuItem>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('late-log')}>
+          {filterBy === 'late-log' ? <Check className="selected" /> : null}
+          Any late log entries
         </MenuItem>
       </Menu>
     </>

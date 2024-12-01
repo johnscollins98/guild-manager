@@ -1,5 +1,5 @@
 import { type DateTime } from 'luxon';
-import { type DiscordRole, type WarningDTO } from 'server';
+import { type DiscordRole, type LateLogDto, type WarningDTO } from 'server';
 
 export default interface MemberRecord {
   accountName: string;
@@ -13,6 +13,7 @@ export default interface MemberRecord {
   roles: DiscordRole[];
   avatar?: string;
   warnings: WarningDTO[];
+  lateLog: LateLogDto[];
   issues: {
     missingGW2?: boolean;
     missingDiscord?: boolean;
