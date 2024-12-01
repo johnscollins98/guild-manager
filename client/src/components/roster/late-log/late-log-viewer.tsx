@@ -2,6 +2,7 @@ import CalendarToday from '@mui/icons-material/CalendarToday';
 import Close from '@mui/icons-material/Close';
 import NotificationsActive from '@mui/icons-material/NotificationsActive';
 import Person from '@mui/icons-material/Person';
+import { capitalize } from '@mui/material';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -16,7 +17,7 @@ import type MemberRecord from '../../../lib/interfaces/member-record';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
-import './late-log-viewer.scss';
+import '../log-entry-viewer.scss';
 
 interface Props {
   isOpen: boolean;
@@ -57,11 +58,11 @@ const LateLogViewer = ({ isOpen, onClose, member }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
       <DialogTitle>Late Log entries for {member.memberId}</DialogTitle>
-      <DialogContent className="late-log-content">
+      <DialogContent className="log-entry-viewer">
         {member.lateLog.map(entry => (
           <Card
             variant="outlined"
-            className="late-log-card"
+            className="log-entry-card"
             key={entry.id}
             sx={{ backgroundColor: 'inherit' }}
           >
@@ -74,9 +75,9 @@ const LateLogViewer = ({ isOpen, onClose, member }: Props) => {
                 <Person className="icon" />
                 <Typography>{getNameForDiscordId(entry.givenBy)}</Typography>
               </span>
-              <span className="reason field">
+              <span className="noitification field">
                 <NotificationsActive className="icon" />
-                <Typography>{entry.notification}</Typography>
+                <Typography>{capitalize(entry.notification)}</Typography>
               </span>
             </div>
             <div className="actions">

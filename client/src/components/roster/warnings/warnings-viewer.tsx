@@ -16,7 +16,7 @@ import type MemberRecord from '../../../lib/interfaces/member-record';
 import useConfirm from '../../common/confirm-dialog/use-confirm';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
-import './warnings-viewer.scss';
+import '../log-entry-viewer.scss';
 
 interface Props {
   isOpen: boolean;
@@ -57,11 +57,11 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
-      <DialogContent className="warning-content">
+      <DialogContent className="log-entry-viewer">
         {member.warnings.map(warning => (
           <Card
             variant="outlined"
-            className="warning-card"
+            className="log-entry-card"
             key={warning.id}
             sx={{ backgroundColor: 'inherit' }}
           >

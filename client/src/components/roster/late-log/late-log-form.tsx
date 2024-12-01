@@ -5,7 +5,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import type React from 'react';
 import { useCallback, useState } from 'react';
 
-import { MenuItem, Select } from '@mui/material';
+import { capitalize, MenuItem, TextField } from '@mui/material';
 import { type LateLogNotification, notifications } from 'server';
 import './late-log-form.scss';
 
@@ -33,20 +33,22 @@ const LateLogForm = ({ isOpen, onClose, onSubmit }: Props) => {
       <DialogTitle>Add Late Log Entry</DialogTitle>
       <DialogContent>
         <form onSubmit={submitHandler} className="late-log-form">
-          <Select
+          <TextField
             value={notification}
             onChange={v => setNotification(v.target.value as LateLogNotification)}
-            variant="standard"
-            label="Reason"
+            variant="outlined"
+            fullWidth
+            select
+            label="Notification Given"
             size="small"
             required
           >
             {Object.values(notifications).map(n => (
               <MenuItem value={n} key={n}>
-                {n}
+                {capitalize(n)}
               </MenuItem>
             ))}
-          </Select>
+          </TextField>
           <Button variant="contained" color="primary" size="large" type="submit">
             Submit
           </Button>
