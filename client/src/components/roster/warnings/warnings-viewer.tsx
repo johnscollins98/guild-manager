@@ -13,7 +13,7 @@ import { type WarningDTO } from 'server';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
-import useConfirm from '../../common/confirm-dialog/use-confirm';
+import { useConfirm } from '../../common/confirm-dialog';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
 import '../log-entry-viewer.scss';
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
-  const { confirm } = useConfirm();
+  const confirm = useConfirm();
   const deleteWarningMutation = useDeleteWarningMutation();
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
 

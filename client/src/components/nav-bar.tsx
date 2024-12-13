@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { config } from '../lib/config';
-import useConfirm from './common/confirm-dialog/use-confirm';
+import { useConfirm } from './common/confirm-dialog';
 import { useTheme } from './common/theme/theme-context';
 import './nav-bar.scss';
 
@@ -42,7 +42,7 @@ const NavBar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const filterString = searchParams.get('filterString');
 
-  const { confirm } = useConfirm();
+  const confirm = useConfirm();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 

@@ -15,7 +15,7 @@ import {
   useUpdateEventMutation
 } from '../../lib/apis/event-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import useConfirm from '../common/confirm-dialog/use-confirm';
+import { useConfirm } from '../common/confirm-dialog';
 import { ErrorMessage } from '../common/error-message';
 import LoaderPage from '../common/loader-page';
 import EventEntry from './event-entry';
@@ -34,7 +34,7 @@ const EventPage = () => {
 
   const [showModal, setShowModal] = useState(false);
 
-  const { confirm } = useConfirm();
+  const confirm = useConfirm();
 
   // sort events
   const sortedEvents = useMemo(

@@ -1,19 +1,20 @@
-import { useReducer } from 'react';
+import React, { use, type PropsWithChildren } from 'react';
 import ConfirmDialog from './confirm-dialog';
-import ConfirmContext from './confirm-dialog-context';
-import { initialState, reducer } from './confirm-dialog-reducer';
+import { useConfirmState } from './use-confirm-state';
 
-interface Props {
-  children: React.ReactNode;
-}
+export const ConfirmContext = React.createContext<
+  (message?: string, title?: string) => Promise<boolean>
+>(() => Promise.reject('Uninitialized Context'));
 
-export const ConfirmContextProvider = ({ children }: Props) => {
-  const [confirmModalState, dispatch] = useReducer(reducer, initialState);
+export const useConfirm = () => use(ConfirmContext);
+
+export const ConfirmContextProvider = ({ children }: PropsWithChildren) => {
+  const { confirm, ...dialogState } = useConfirmState();
 
   return (
-    <ConfirmContext.Provider value={{ confirmModalState, dispatch }}>
+    <ConfirmContext.Provider value={confirm}>
       {children}
-      <ConfirmDialog />
+      <ConfirmDialog {...dialogState} />
     </ConfirmContext.Provider>
   );
 };
