@@ -14,7 +14,7 @@ import { type LateLogDto } from 'server';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import { useDeleteLateLogMutation } from '../../../lib/apis/late-log-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
-import useConfirm from '../../common/confirm-dialog/use-confirm';
+import { useConfirm } from '../../common/confirm-dialog';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
 import '../log-entry-viewer.scss';
@@ -26,7 +26,7 @@ interface Props {
 }
 
 const LateLogViewer = ({ isOpen, onClose, member }: Props) => {
-  const { confirm } = useConfirm();
+  const confirm = useConfirm();
   const deleteLateLogMutation = useDeleteLateLogMutation();
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
 

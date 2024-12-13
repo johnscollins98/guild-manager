@@ -6,17 +6,24 @@ import Typography from '@mui/material/Typography';
 import { useEffect, useRef, type FormEventHandler } from 'react';
 
 import './confirm-dialog.scss';
-import useConfirm from './use-confirm';
 
-const ConfirmDialog = () => {
-  const { onConfirm, onCancel, confirmModalState } = useConfirm();
+export interface Props {
+  onResponse: (v: boolean) => void;
+  title: string;
+  message: string;
+  open: boolean;
+}
+
+const ConfirmDialog = ({ onResponse, title, message, open }: Props) => {
+  const onConfirm = () => onResponse(true);
+  const onCancel = () => onResponse(false);
 
   const submitRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (submitRef && submitRef.current) {
       submitRef.current.focus();
     }
-  }, [submitRef, confirmModalState]);
+  }, [submitRef]);
 
   const handleSubmit: FormEventHandler = e => {
     e.preventDefault();
@@ -26,12 +33,12 @@ const ConfirmDialog = () => {
   };
 
   return (
-    <Dialog open={confirmModalState.show} onClose={onCancel} className="confirm-modal">
-      <DialogTitle>{confirmModalState.title}</DialogTitle>
+    <Dialog open={open} onClose={onCancel} className="confirm-modal">
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent className="confirm-modal-content">
         <form onSubmit={handleSubmit} onReset={onCancel}>
           <div className="confirm-modal-message">
-            <Typography>{confirmModalState.message}</Typography>
+            <Typography>{message}</Typography>
           </div>
           <div className="confirm-modal-actions">
             <Button type="reset">Cancel</Button>
