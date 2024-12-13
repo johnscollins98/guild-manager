@@ -6,13 +6,13 @@
   "author": "John Collins <johnscollins98@gmail.com>",
   "private": true,
   "license": "MIT",
-  "packageManager": "bun@1.1.8",
+  "packageManager": "bun@1.1.38",
   "scripts": {
     "build": "bun --filter '*' build",
     "start": "bun run --cwd server start",
     "dev-server": "bun run --cwd server dev",
     "dev-client": "bun run --cwd client start",
-    "dev": "concurrently \"bun run dev-server\" \"bun run dev-client\"",
+    "dev": "concurrently --names=client,server --prefix-colors=auto 'bun run dev-client' 'bun run dev-server'",
     "lint": "bun --filter '*' lint",
     "prettier": "prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
     "db:migration:run": "bun run --cwd server db:migration:run"
@@ -22,14 +22,14 @@
     "server"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
     "axios-logger": "^2.8.1",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.1.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
-    "prettier": "^3.3.2",
-    "prettier-plugin-organize-imports": "^3.2.4"
+    "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "^4.1.0"
   },
   "resolutions": {
     "strip-ansi": "6.0.0"

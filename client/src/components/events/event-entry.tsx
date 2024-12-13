@@ -81,7 +81,11 @@ const EventEntry = ({
       try {
         validationHelper(localEvent);
       } catch (err) {
-        err instanceof Error && openToast(err.message, 'warning');
+        if (err instanceof Error) {
+          openToast(err.message, 'warning');
+        } else {
+          openToast('An unknown error occurred', 'error');
+        }
         return;
       }
 
