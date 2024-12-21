@@ -30,10 +30,7 @@ export const generateGW2RosterRecords = (
         const discordName = m.name
           ?.normalize('NFKC')
           .toLowerCase()
-          .replace(
-            /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
-            ''
-          ) // strip any emojis
+          .replace(/(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g, '') // strip any emojis
           .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
 
         return (
