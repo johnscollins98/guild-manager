@@ -31,7 +31,7 @@ export const generateGW2RosterRecords = (
           ?.normalize('NFKC')
           .toLowerCase()
           .replace(
-            /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+            /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
             ''
           ) // strip any emojis
           .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
