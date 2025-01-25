@@ -22,9 +22,7 @@ const RecruitmentPage: FC = () => {
   const toast = useToast();
 
   const isModified = useMemo(() => {
-    if (!data) return false;
-
-    return title !== data.title || message !== data.content;
+    return title !== (data?.title ?? '') || message !== (data?.content ?? '');
   }, [data, title, message]);
 
   useEffect(() => {
