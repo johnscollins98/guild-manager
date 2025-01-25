@@ -86,5 +86,12 @@ dataSource.initialize().then(() => {
   const discordBot = Container.get(DiscordBot);
   discordBot.init();
 
+  if (process.env.NODE_ENV === 'development') {
+    process.on('SIGINT', async () => {
+      await discordBot.tidyup();
+      process.exit();
+    });
+  }
+
   app.listen(config.port, () => console.info(`Listening on port ${config.port}`));
 });
