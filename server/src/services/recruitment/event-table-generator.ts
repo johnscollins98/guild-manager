@@ -55,7 +55,17 @@ export class EventTableGenerator {
 
   private getEventsByDay(events: Event[]): Record<DayOfWeek, Event[]> {
     return Object.fromEntries(
-      daysOfWeekExcludingDynamic.map(day => [day, events.filter(e => e.day === day)])
+      daysOfWeekExcludingDynamic.map(day => [
+        day,
+        events
+          .filter(e => e.day === day)
+          .sort((a, b) => {
+            const dateB = parseInt(b.startTime.split(':')[0] ?? '0');
+            const dateA = parseInt(a.startTime.split(':')[0] ?? '0');
+
+            return dateA - dateB;
+          })
+      ])
     ) as Record<DayOfWeek, Event[]>;
   }
 }
