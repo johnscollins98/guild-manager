@@ -30,6 +30,15 @@ export class DiscordBot {
     await this.client.login(config.botToken);
   }
 
+  async tidyup() {
+    const guild = this.client.guilds.resolve(config.discordGuildId);
+    if (guild) {
+      console.log('Deleting commands.');
+      await guild.commands.set([]);
+      console.log('Done deleting commands.');
+    }
+  }
+
   private async setupCommands() {
     this.client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isChatInputCommand()) return;
