@@ -110,7 +110,7 @@ export const getExcessDiscordRecords = (
       return !records.some(record => record.discordName === discordMember.name);
     })
     .map(discordMember => {
-      const missingGW2 = !discordMember.roles.find(r => r.name === 'Guest' || r.name === 'Bots');
+      const missingGW2 = !discordMember.roles.find(r => r.name === 'Bots');
       const joinDate = DateTime.fromISO(discordMember.joined, { zone: 'utc' });
 
       const twentyFourHours = 1000 * 60 * 60 * 24;
