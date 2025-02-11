@@ -46,7 +46,10 @@ export const generateGW2RosterRecords = (
       const discordName = discordMember?.name;
       const nickname = discordMember?.nickname;
       const discordId = discordMember?.id;
-      const roles = discordMember?.roles || [];
+
+      // this is probably already sorted this way but just incase
+      const roles = discordMember?.roles?.sort((a, b) => b.position - a.position) || [];
+
       const avatar = discordMember?.avatar;
       const warningsForThisMember = discordId
         ? warnings.filter(warning => warning.givenTo === discordId)
@@ -54,9 +57,7 @@ export const generateGW2RosterRecords = (
       const lateLogEntries = discordId ? lateLog.filter(entry => entry.givenTo === discordId) : [];
 
       const missingDiscord = !discordName;
-      const unmatchingRoles =
-        !!discordName &&
-        (roles.length === 0 || roles?.some(r => r.name.toLowerCase() !== rank.toLowerCase()));
+      const unmatchingRoles = !!discordName && roles[0]?.name?.toLowerCase() !== rank.toLowerCase();
 
       const invited = rank.toLowerCase() === 'invited';
 
