@@ -11,11 +11,10 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type React from 'react';
 import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
-import { type DiscordRole, type LateLogNotification } from 'server';
+import { type DiscordRole, type WarningType } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
-import { useAddLateLogMutation } from '../../lib/apis/late-log-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
@@ -24,8 +23,6 @@ import { AssociateMember } from './associate-member';
 import { EditNickName } from './edit-nickname';
 import './guild-member-card.scss';
 import GuildMemberMenu from './guild-member-menu';
-import LateLogForm from './late-log/late-log-form';
-import LateLogViewer from './late-log/late-log-viewer';
 import WarningForm from './warnings/warning-form';
 import WarningsViewer from './warnings/warnings-viewer';
 
@@ -59,12 +56,7 @@ const GuildMemberCard = ({
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
-  const [lateLogOpen, setLateLogOpen] = useState(false);
-  const [lateLogViewerOpen, setLateLogViewerOpen] = useState(false);
-
   const addWarningMutation = useAddWarningMutation();
-
-  const addLateLogMutation = useAddLateLogMutation();
 
   const openMenu = useCallback(
     (e: React.MouseEvent) => {
@@ -79,23 +71,17 @@ const GuildMemberCard = ({
   }, [setMenuAnchor]);
 
   const warningSubmitHandler = useCallback(
-    async (reason: string) => {
+    async (reason: string, warningType: WarningType) => {
       if (!member.discordId) {
         throw new Error('Member does not exist');
       }
-      await addWarningMutation.mutateAsync({ givenTo: member.discordId, reason });
+      await addWarningMutation.mutateAsync({
+        givenTo: member.discordId,
+        reason,
+        type: warningType
+      });
     },
     [addWarningMutation, member]
-  );
-
-  const lateLogSubmitHandler = useCallback(
-    async (notification: LateLogNotification) => {
-      if (!member.discordId) {
-        throw new Error('Member does not exist');
-      }
-      await addLateLogMutation.mutateAsync({ givenTo: member.discordId, notification });
-    },
-    [addLateLogMutation, member]
   );
 
   const [editOpen, setEditOpen] = useState(false);
@@ -230,11 +216,6 @@ const GuildMemberCard = ({
                     <Avatar className="number warnings">{member.warnings.length}</Avatar>
                   </Tooltip>
                 ) : null}
-                {member.lateLog.length ? (
-                  <Tooltip title="Number of late log entries">
-                    <Avatar className="number late-log">{member.lateLog.length}</Avatar>
-                  </Tooltip>
-                ) : null}
               </div>
             </div>
           </CardContent>
@@ -252,8 +233,6 @@ const GuildMemberCard = ({
         onChangeNickname={onEditNickname}
         setWarningOpen={setWarningOpen}
         setWarningViewerOpen={setWarningViewerOpen}
-        setLateLog={setLateLogOpen}
-        setLateLogViewerOpen={setLateLogViewerOpen}
       />
       <WarningForm
         isOpen={warningOpen}
@@ -263,16 +242,6 @@ const GuildMemberCard = ({
       <WarningsViewer
         isOpen={warningViewerOpen}
         onClose={() => setWarningViewerOpen(false)}
-        member={member}
-      />
-      <LateLogForm
-        isOpen={lateLogOpen}
-        onClose={() => setLateLogOpen(false)}
-        onSubmit={lateLogSubmitHandler}
-      />
-      <LateLogViewer
-        isOpen={lateLogViewerOpen}
-        onClose={() => setLateLogViewerOpen(false)}
         member={member}
       />
       <AssociateMember

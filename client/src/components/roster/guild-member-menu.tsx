@@ -24,8 +24,6 @@ interface Props {
   onChangeNickname: (member: MemberRecord) => void;
   setWarningOpen: (isOpen: boolean) => void;
   setWarningViewerOpen: (isOpen: boolean) => void;
-  setLateLog: (isOpen: boolean) => void;
-  setLateLogViewerOpen: (isOpen: boolean) => void;
 }
 
 const GuildMemberMenu = ({
@@ -39,9 +37,7 @@ const GuildMemberMenu = ({
   onAssociateMember,
   onChangeNickname,
   setWarningOpen,
-  setWarningViewerOpen,
-  setLateLog,
-  setLateLogViewerOpen
+  setWarningViewerOpen
 }: Props) => {
   const menuAction = useCallback(
     async (func: (member: MemberRecord) => Promise<void> | void) => {
@@ -107,20 +103,6 @@ const GuildMemberMenu = ({
         disabled={!member.discordId || member.warnings.length < 1}
         action={() => menuAction(() => setWarningViewerOpen(true))}
         label="View Warnings"
-      />
-      <Divider />
-      <GuildMemberMenuItem
-        Icon={Warning}
-        disabled={!isAdmin || !member.discordId}
-        className="warning"
-        action={() => menuAction(() => setLateLog(true))}
-        label="Add Late Log"
-      />
-      <GuildMemberMenuItem
-        Icon={Search}
-        disabled={!member.discordId || member.lateLog.length < 1}
-        action={() => menuAction(() => setLateLogViewerOpen(true))}
-        label="View Late Log"
       />
     </Menu>
   );

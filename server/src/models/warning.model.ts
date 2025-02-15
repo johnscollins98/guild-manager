@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { WarningType } from '../dtos';
 
 @Entity()
 export class Warning {
@@ -16,4 +17,8 @@ export class Warning {
 
   @CreateDateColumn()
   timestamp!: Date;
+
+  // Default is only temporary for the transition
+  @Column({ type: 'enum', enum: WarningType })
+  type!: WarningType;
 }

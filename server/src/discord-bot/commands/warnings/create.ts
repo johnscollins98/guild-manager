@@ -6,6 +6,7 @@ import {
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
+import { WarningType, WarningTypeLabels } from '../../../dtos';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -29,6 +30,15 @@ export default class WarningsGiveCommand implements Command {
       )
       .addStringOption(
         new SlashCommandStringOption()
+          .setName('type')
+          .setRequired(true)
+          .setDescription('Type of warning')
+          .setChoices(
+            Object.values(WarningType).map(v => ({ name: WarningTypeLabels[v], value: v }))
+          )
+      )
+      .addStringOption(
+        new SlashCommandStringOption()
           .setName('reason')
           .setDescription('Reason for warning')
           .setRequired(true)
@@ -39,11 +49,13 @@ export default class WarningsGiveCommand implements Command {
   async execute(interaction: ChatInputCommandInteraction) {
     const user = interaction.options.getUser('user', true);
     const reason = interaction.options.getString('reason', true);
+    const type = interaction.options.getString('type', true) as WarningType;
 
     await this.warningsRepo.create({
       givenTo: user.id,
       reason: reason,
-      givenBy: interaction.user.id
+      givenBy: interaction.user.id,
+      type
     });
 
     interaction.editReply(`Logged a warning for <@${user.id}> with reason: **${reason}**`);

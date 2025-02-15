@@ -5,6 +5,7 @@ import {
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
+import { WarningTypeLabels } from '../../../dtos';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -37,7 +38,7 @@ export default class WarningsListCommand implements Command {
         warnings
           .map(
             w =>
-              `* "${w.reason}"\n\tGiven to <@${w.givenTo}> by <@${w.givenBy}> on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d>`
+              `* "${w.reason}"\n\tGiven to <@${w.givenTo}> by <@${w.givenBy}> on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d> (${WarningTypeLabels[w.type]})`
           )
           .join('\n') || 'There are no warnings.'
     });
