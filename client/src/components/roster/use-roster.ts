@@ -1,9 +1,7 @@
 import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
-import { type LateLogDto } from 'server/src/dtos/late-log/late-log-dto';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
 import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
-import { useLateLog } from '../../lib/apis/late-log-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import {
@@ -18,11 +16,10 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
     useDiscordRoles(),
     useGW2Members(),
     useGW2Ranks(),
-    useWarnings(),
-    useLateLog()
+    useWarnings()
   ] as const;
 
-  const [discordMembers, discordRoles, gw2Members, guildRanks, warnings, lateLog] = queries;
+  const [discordMembers, discordRoles, gw2Members, guildRanks, warnings] = queries;
 
   const refetch = () => queries.forEach(q => q.refetch());
 
@@ -30,13 +27,7 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
   const isLoading = queries.some(q => q.isLoading);
   const isError = queries.some(q => q.isError);
 
-  const roster = getRoster(
-    gw2Members.data,
-    discordMembers.data,
-    guildRanks.data,
-    warnings.data,
-    lateLog.data
-  );
+  const roster = getRoster(gw2Members.data, discordMembers.data, guildRanks.data, warnings.data);
 
   const filteredRoster = onFilter(roster, filterBy, filterString);
   const rosterForDisplay = onSort(filteredRoster, sortString, guildRanks.data ?? []);
@@ -56,15 +47,12 @@ const getRoster = (
   gw2Members?: GW2MemberResponseDTO[],
   discordMembers?: DiscordMemberDTO[],
   guildRanks?: GW2Rank[],
-  warnings?: WarningDTO[],
-  lateLog?: LateLogDto[]
+  warnings?: WarningDTO[]
 ) => {
-  if (!gw2Members || !discordMembers || !guildRanks || !warnings || !lateLog) return undefined;
+  if (!gw2Members || !discordMembers || !guildRanks || !warnings) return undefined;
 
-  let roster = generateGW2RosterRecords(gw2Members, discordMembers, guildRanks, warnings, lateLog);
-  roster = roster.concat(
-    getExcessDiscordRecords(gw2Members, discordMembers, guildRanks, warnings, lateLog)
-  );
+  let roster = generateGW2RosterRecords(gw2Members, discordMembers, guildRanks, warnings);
+  roster = roster.concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks, warnings));
 
   return roster;
 };
@@ -91,8 +79,6 @@ const onSort = (toSort: MemberRecord[] | undefined, sortBy = 'default', guildRan
       });
     case 'warnings':
       return toSort.sort((a, b) => b.warnings.length - a.warnings.length);
-    case 'late-log':
-      return toSort.sort((a, b) => b.lateLog.length - a.lateLog.length);
     default:
       return toSort;
   }
@@ -120,8 +106,6 @@ const onFilter = (toFilter: MemberRecord[] | undefined, filterBy = 'none', filte
       });
     case 'warnings':
       return filtered.filter(record => record.warnings.length);
-    case 'late-log':
-      return filtered.filter(record => record.lateLog.length);
     case 'none':
     default:
       return filtered;
