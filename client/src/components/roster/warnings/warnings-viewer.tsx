@@ -28,6 +28,8 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     [discordMembers]
   );
 
+  if (member.warnings.length === 0) onClose();
+
   if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
   if (isLoading || !discordMembers) return <LoaderPage />;
@@ -41,7 +43,6 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
             warning={warning}
             key={warning.id}
             getNameForDiscordId={getNameForDiscordId}
-            onClose={onClose}
           />
         ))}
       </DialogContent>

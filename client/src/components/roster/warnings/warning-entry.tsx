@@ -13,11 +13,10 @@ import WarningForm from './warning-form';
 
 export interface WarningEntryProps {
   warning: WarningDTO;
-  onClose: () => void;
   getNameForDiscordId: (id: string) => string;
 }
 
-export const WarningEntry = ({ warning, onClose, getNameForDiscordId }: WarningEntryProps) => {
+export const WarningEntry = ({ warning, getNameForDiscordId }: WarningEntryProps) => {
   const confirm = useConfirm();
 
   const deleteWarningMutation = useDeleteWarningMutation();
@@ -37,8 +36,7 @@ export const WarningEntry = ({ warning, onClose, getNameForDiscordId }: WarningE
     if (res) {
       await deleteWarningMutation.mutateAsync(warning.id);
     }
-    onClose();
-  }, [warning, deleteWarningMutation, onClose, confirm]);
+  }, [warning, deleteWarningMutation, confirm]);
 
   return (
     <>
