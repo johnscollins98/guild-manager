@@ -1,6 +1,7 @@
 import Assignment from '@mui/icons-material/Assignment';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import Close from '@mui/icons-material/Close';
+import ListIcon from '@mui/icons-material/List';
 import Person from '@mui/icons-material/Person';
 import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
@@ -9,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import { type WarningDTO } from 'server';
+import { WarningTypeLabels, type WarningDTO } from 'server';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
@@ -73,6 +74,10 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
               <span className="given-by field">
                 <Person className="icon" />
                 <Typography>{getNameForDiscordId(warning.givenBy)}</Typography>
+              </span>
+              <span className="field">
+                <ListIcon className="icon" />
+                <Typography>{WarningTypeLabels[warning.type]}</Typography>
               </span>
               <span className="reason field">
                 <Assignment className="icon" />

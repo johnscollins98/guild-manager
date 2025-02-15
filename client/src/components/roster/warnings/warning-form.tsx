@@ -7,7 +7,7 @@ import type React from 'react';
 import { useCallback, useState } from 'react';
 
 import { Box, MenuItem } from '@mui/material';
-import { WarningType } from 'server';
+import { WarningType, WarningTypeLabels } from 'server';
 import './warning-form.scss';
 
 interface Props {
@@ -45,9 +45,11 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
             size="small"
             required
           >
-            <MenuItem value={WarningType.OFFICIAL}>Official</MenuItem>
-            <MenuItem value={WarningType.INFORMAL}>Informal</MenuItem>
-            <MenuItem value={WarningType.EVENT}>Event / Latelog</MenuItem>
+            {Object.values(WarningType).map(v => (
+              <MenuItem key={v} value={v}>
+                {WarningTypeLabels[v]}
+              </MenuItem>
+            ))}
           </TextField>
           <TextField
             value={warningReason}
