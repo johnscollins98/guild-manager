@@ -25,7 +25,7 @@ export class WarningsController implements IWarningsController {
 
   @Get('/')
   getAll(): Promise<WarningDTO[]> {
-    return this.warningRepo.getAll();
+    return this.warningRepo.getAll({ order: { timestamp: 'ASC' } });
   }
 
   @Get('/:id')
@@ -59,7 +59,11 @@ export class WarningsController implements IWarningsController {
 
   @Put('/:id')
   @OnNull(404)
-  update(@Param('id') id: number, @Body() warning: WarningCreateDTO): Promise<WarningDTO | null> {
-    return this.warningRepo.update(id, warning);
+  update(
+    @Param('id') id: number,
+    @Body() warning: WarningCreateDTO,
+    @CurrentUser() user?: Express.User
+  ): Promise<WarningDTO | null> {
+    return this.warningRepo.update(id, { ...warning, lastUpdatedBy: user?.id });
   }
 }

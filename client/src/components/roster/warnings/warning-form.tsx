@@ -4,21 +4,27 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box, MenuItem } from '@mui/material';
-import { WarningType, WarningTypeLabels } from 'server';
+import { type WarningCreateDTO, WarningType, WarningTypeLabels } from 'server';
 import './warning-form.scss';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (reason: string, warningType: WarningType) => Promise<void>;
+  initialData?: WarningCreateDTO;
 }
 
-const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
-  const [warningReason, setWarningReason] = useState('');
-  const [warningType, setWarningType] = useState(WarningType.OFFICIAL);
+const WarningForm = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
+  const [warningReason, setWarningReason] = useState(initialData?.reason ?? '');
+  const [warningType, setWarningType] = useState(initialData?.type ?? WarningType.OFFICIAL);
+
+  useEffect(() => {
+    setWarningReason(initialData?.reason ?? '');
+    setWarningType(initialData?.type ?? WarningType.OFFICIAL);
+  }, [initialData]);
 
   const submitHandler: React.FormEventHandler = useCallback(
     async (e: React.FormEvent) => {

@@ -6,5 +6,7 @@ export interface WarningDTO {
   givenBy: string;
   givenTo: string;
   timestamp: Date;
+  lastUpdatedTimestamp: Date;
+  lastUpdatedBy?: string;
   type: WarningType;
 }
