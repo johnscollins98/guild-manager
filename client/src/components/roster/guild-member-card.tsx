@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type React from 'react';
 import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
-import { type DiscordRole, type LateLogNotification } from 'server';
+import { type DiscordRole, type LateLogNotification, type WarningType } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useAdminRoles } from '../../lib/apis/auth-api';
@@ -79,11 +79,15 @@ const GuildMemberCard = ({
   }, [setMenuAnchor]);
 
   const warningSubmitHandler = useCallback(
-    async (reason: string) => {
+    async (reason: string, warningType: WarningType) => {
       if (!member.discordId) {
         throw new Error('Member does not exist');
       }
-      await addWarningMutation.mutateAsync({ givenTo: member.discordId, reason });
+      await addWarningMutation.mutateAsync({
+        givenTo: member.discordId,
+        reason,
+        type: warningType
+      });
     },
     [addWarningMutation, member]
   );

@@ -1,10 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum WarningType {
-  OFFICIAL = 'official',
-  INFORMAL = 'informal',
-  EVENT = 'event'
-}
+import { WarningType } from '../dtos';
 
 @Entity()
 export class Warning {

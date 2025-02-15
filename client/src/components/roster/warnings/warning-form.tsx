@@ -6,32 +6,49 @@ import TextField from '@mui/material/TextField';
 import type React from 'react';
 import { useCallback, useState } from 'react';
 
+import { Box, MenuItem } from '@mui/material';
+import { WarningType } from 'server';
 import './warning-form.scss';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (reason: string) => Promise<void>;
+  onSubmit: (reason: string, warningType: WarningType) => Promise<void>;
 }
 
 const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
   const [warningReason, setWarningReason] = useState('');
+  const [warningType, setWarningType] = useState(WarningType.OFFICIAL);
 
   const submitHandler: React.FormEventHandler = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      await onSubmit(warningReason);
+      await onSubmit(warningReason, warningType);
       setWarningReason('');
       onClose();
     },
-    [onClose, onSubmit, warningReason]
+    [onClose, onSubmit, warningReason, warningType]
   );
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
       <DialogTitle>Give Warning</DialogTitle>
       <DialogContent>
-        <form onSubmit={submitHandler} className="warning-form">
+        <form onSubmit={submitHandler} onReset={onClose} className="warning-form">
+          <TextField
+            value={warningType}
+            onChange={e => setWarningType(e.target.value as WarningType)}
+            label="Warning"
+            select
+            variant="outlined"
+            fullWidth
+            size="small"
+            required
+          >
+            <MenuItem value={WarningType.OFFICIAL}>Official</MenuItem>
+            <MenuItem value={WarningType.INFORMAL}>Informal</MenuItem>
+            <MenuItem value={WarningType.EVENT}>Event / Latelog</MenuItem>
+          </TextField>
           <TextField
             value={warningReason}
             onChange={e => setWarningReason(e.target.value)}
@@ -39,11 +56,18 @@ const WarningForm = ({ isOpen, onClose, onSubmit }: Props) => {
             label="Reason"
             size="small"
             fullWidth
+            minRows={3}
+            multiline
             required
           />
-          <Button variant="contained" color="primary" size="large" type="submit">
-            Submit
-          </Button>
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            <Button variant="text" type="reset">
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" size="large" type="submit">
+              Submit
+            </Button>
+          </Box>
         </form>
       </DialogContent>
     </Dialog>
