@@ -8,6 +8,7 @@ import {
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
+import { WarningTypeLabels } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
@@ -60,7 +61,9 @@ export default class WarningsDeleteCommand implements Command {
 
       return new StringSelectMenuOptionBuilder()
         .setLabel(warning.reason)
-        .setDescription(`Given to ${username} on ${new Date(warning.timestamp).toDateString()}`)
+        .setDescription(
+          `Given to ${username} on ${new Date(warning.timestamp).toDateString()} (${WarningTypeLabels[warning.type]})`
+        )
         .setValue(`${warning.id}`);
     });
 
