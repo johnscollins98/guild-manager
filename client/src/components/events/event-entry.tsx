@@ -15,8 +15,9 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { useTheme } from '@mui/material/styles';
 import { type Theme } from '@mui/material/styles/createTheme';
+import equal from 'fast-deep-equal';
 import type React from 'react';
-import { type ComponentProps, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ComponentProps, useCallback, useMemo, useState } from 'react';
 import { daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
 import { useToast } from '../common/toast/toast-context';
 import './event-entry.scss';
@@ -48,12 +49,8 @@ const EventEntry = ({
   changeOpacityWhenIgnored = false
 }: Props) => {
   const [localEvent, setLocalEvent] = useState(initialData);
-  const modified = useMemo(() => localEvent !== initialData, [localEvent, initialData]);
+  const modified = useMemo(() => !equal(localEvent, initialData), [localEvent, initialData]);
   const openToast = useToast();
-
-  useEffect(() => {
-    setLocalEvent(initialData);
-  }, [initialData]);
 
   const validationHelper = useCallback((event: EventCreateDTO) => {
     if (!event.title) throw new Error('A title must be provided');
