@@ -1,23 +1,13 @@
-import Assignment from '@mui/icons-material/Assignment';
-import CalendarToday from '@mui/icons-material/CalendarToday';
-import Close from '@mui/icons-material/Close';
-import ListIcon from '@mui/icons-material/List';
-import Person from '@mui/icons-material/Person';
-import Card from '@mui/material/Card';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import { useCallback } from 'react';
-import { WarningTypeLabels, type WarningDTO } from 'server';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
-import { useDeleteWarningMutation } from '../../../lib/apis/warnings-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
-import { useConfirm } from '../../common/confirm-dialog';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
 import '../log-entry-viewer.scss';
+import { WarningEntry } from './warning-entry';
 
 interface Props {
   isOpen: boolean;
@@ -26,20 +16,7 @@ interface Props {
 }
 
 const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
-  const confirm = useConfirm();
-  const deleteWarningMutation = useDeleteWarningMutation();
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
-
-  const handleDeleteWarning = useCallback(
-    async (warning: WarningDTO) => {
-      const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
-      if (res) {
-        await deleteWarningMutation.mutateAsync(warning.id);
-      }
-      onClose();
-    },
-    [deleteWarningMutation, onClose, confirm]
-  );
 
   const getNameForDiscordId = useCallback(
     (givenToId: string) => {
@@ -60,36 +37,12 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
       <DialogContent className="log-entry-viewer">
         {member.warnings.map(warning => (
-          <Card
-            variant="outlined"
-            className="log-entry-card"
+          <WarningEntry
+            warning={warning}
             key={warning.id}
-            sx={{ backgroundColor: 'inherit' }}
-          >
-            <div className="data">
-              <span className="date field">
-                <CalendarToday className="icon" />
-                <Typography>{new Date(warning.timestamp).toDateString()}</Typography>
-              </span>
-              <span className="given-by field">
-                <Person className="icon" />
-                <Typography>{getNameForDiscordId(warning.givenBy)}</Typography>
-              </span>
-              <span className="field">
-                <ListIcon className="icon" />
-                <Typography>{WarningTypeLabels[warning.type]}</Typography>
-              </span>
-              <span className="reason field">
-                <Assignment className="icon" />
-                <Typography>{warning.reason}</Typography>
-              </span>
-            </div>
-            <div className="actions">
-              <IconButton onClick={() => handleDeleteWarning(warning)}>
-                <Close />
-              </IconButton>
-            </div>
-          </Card>
+            getNameForDiscordId={getNameForDiscordId}
+            onClose={onClose}
+          />
         ))}
       </DialogContent>
     </Dialog>

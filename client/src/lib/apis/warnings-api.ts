@@ -57,3 +57,22 @@ export const useDeleteWarningMutation = () => {
     }
   });
 };
+
+export const useUpdateWarningMutation = () => {
+  const queryClient = useQueryClient();
+  const openToast = useToast();
+
+  return useMutation<WarningDTO | null, AxiosError, WarningCreateDTO & { id: number }>({
+    mutationFn(warning) {
+      const { id, ...update } = warning;
+      return warningsApi.update(id, update);
+    },
+    onSuccess() {
+      openToast('Successfully updated warning', 'success');
+      queryClient.invalidateQueries({ queryKey: ['warnings'] });
+    },
+    onError() {
+      openToast('Failed to update warning', 'error');
+    }
+  });
+};
