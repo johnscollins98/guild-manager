@@ -99,7 +99,10 @@ export default class EventsCreateCommand implements Command {
     const title = interaction.options.getString('title', true);
 
     const member = await this.discordGuildApi.getMemberById(leader.id);
-    if (![...config.eventRoles, ...config.adminRoles].some(r => member.roles.includes(r))) {
+    if (
+      !member ||
+      ![...config.eventRoles, ...config.adminRoles].some(r => member.roles.includes(r))
+    ) {
       interaction.editReply(`<@${leader.id}> is not a valid event leader.`);
     }
 
