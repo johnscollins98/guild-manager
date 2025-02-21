@@ -5,7 +5,6 @@ declare global {
     export interface User {
       id: string;
       username: string;
-      accessToken: string;
       expires: Date;
     }
   }

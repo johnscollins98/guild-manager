@@ -3,13 +3,12 @@ import PassportDiscord, { Profile } from 'passport-discord';
 import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
-import { SymmetricEncryption } from '../encryption-service';
 
 const DiscordStrategy = PassportDiscord.Strategy;
 
 @Service()
 export class DiscordStrategySetup {
-  constructor(symmetricEncryption: SymmetricEncryption) {
+  constructor() {
     passport.serializeUser((user, done) => {
       done(null, user);
     });
@@ -37,7 +36,7 @@ export class DiscordStrategySetup {
           scope: ['identify', 'guilds.members.read']
         },
         async (
-          accessToken: string,
+          _accessToken: string,
           _refreshToken: string,
           params: { expires_in: number },
           profile: Profile,
@@ -47,7 +46,6 @@ export class DiscordStrategySetup {
             const user: Express.User = {
               id: profile.id,
               username: profile.username,
-              accessToken: symmetricEncryption.encrypt(accessToken),
               expires: new Date(Date.now() + params.expires_in * 1000)
             };
 

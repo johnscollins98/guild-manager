@@ -23,13 +23,10 @@ app.use(express.json());
 
 const DBStore = PgConnection(session);
 
-const store =
-  process.env.NODE_ENV === 'production'
-    ? new DBStore({
-        conString: config.databaseUrl,
-        createTableIfMissing: true
-      })
-    : undefined;
+const store = new DBStore({
+  conString: config.databaseUrl,
+  createTableIfMissing: true
+});
 
 app.use(
   session({

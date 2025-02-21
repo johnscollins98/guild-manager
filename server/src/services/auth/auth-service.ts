@@ -1,9 +1,7 @@
-import cache from 'memory-cache';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import { config } from '../../config';
-import { AuthInfo, DiscordMember } from '../../dtos';
-import { DiscordApi } from '../discord/discord-api';
-import { SymmetricEncryption } from './encryption-service';
+import { AuthInfo } from '../../dtos';
+import { DiscordGuildApi } from '../discord/guild-api';
 
 const notLoggedIn = {
   loggedIn: false,
@@ -19,7 +17,7 @@ const skipAuth = {
 
 @Service()
 export class AuthService {
-  constructor(private readonly symmetricEncryption: SymmetricEncryption) {}
+  constructor() {}
 
   async getUserAuthInfo(user?: Express.User): Promise<AuthInfo> {
     if (process.env.NODE_ENV === 'development' && config.skipAuth) {
@@ -33,16 +31,9 @@ export class AuthService {
     let isAdmin = false;
 
     try {
-      let guildMemberPromise: Promise<DiscordMember> | null = cache.get('auth-guild-member');
-      if (!guildMemberPromise) {
-        const discordApi = new DiscordApi(this.symmetricEncryption.decrypt(user.accessToken), true);
-        guildMemberPromise = discordApi.get<DiscordMember>(
-          `users/@me/guilds/${config.discordGuildId}/member`
-        );
-        cache.put('auth-guild-member', guildMemberPromise, 60000);
-      }
-      const guildMember = await guildMemberPromise;
-      isAdmin = guildMember.roles.some(r => config.adminRoles.includes(r));
+      const guildApi = Container.get(DiscordGuildApi);
+      const guildMember = await guildApi.getMemberById(user.id);
+      isAdmin = !!guildMember && guildMember.roles.some(r => config.adminRoles.includes(r));
     } catch (err) {
       console.error(err);
     }
