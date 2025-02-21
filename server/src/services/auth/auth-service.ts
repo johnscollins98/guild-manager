@@ -1,6 +1,7 @@
+import cache from 'memory-cache';
 import Container, { Service } from 'typedi';
 import { config } from '../../config';
-import { AuthInfo } from '../../dtos';
+import { AuthInfo, DiscordMember } from '../../dtos';
 import { DiscordGuildApi } from '../discord/guild-api';
 
 const notLoggedIn = {
@@ -32,8 +33,14 @@ export class AuthService {
 
     try {
       const guildApi = Container.get(DiscordGuildApi);
-      const guildMember = await guildApi.getMemberById(user.id);
-      isAdmin = !!guildMember && guildMember.roles.some(r => config.adminRoles.includes(r));
+
+      const cacheKey = `discord-member/${config.discordGuildId}/${user.id}`;
+      let member: DiscordMember | undefined = cache.get(cacheKey);
+      if (!member) {
+        member = await guildApi.getMemberById(user.id);
+        if (member) cache.put(cacheKey, member, 5000);
+      }
+      isAdmin = !!member && member.roles.some(r => config.adminRoles.includes(r));
     } catch (err) {
       console.error(err);
     }
