@@ -28,7 +28,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     [discordMembers]
   );
 
-  if (member.warnings.length === 0) onClose();
+  if (member.warnings.length === 0 && isOpen) onClose();
 
   if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
