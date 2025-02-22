@@ -4,7 +4,6 @@ import {
   Authorized,
   CurrentUser,
   Get,
-  Header,
   JsonController,
   Redirect,
   Req,
@@ -55,21 +54,14 @@ export class AuthController implements IAuthController {
   }
 
   @Get('/authorization')
-  @Header('Cache-control', 'no-store')
   getAuthorization(@CurrentUser() user?: Express.User): Promise<AuthInfo> {
-    return this.authService.getUserAuthInfo(user);
-  }
-
-  @Get('/admin_roles')
-  @Authorized()
-  getAdminRoles(): Promise<string[]> {
-    return Promise.resolve(config.adminRoles);
+    return this.authService.getUserAuthInfo(user?.id);
   }
 
   @Get('/event_roles')
   @Authorized()
   getEventRoles(): Promise<string[]> {
-    return Promise.resolve(config.eventRoles.concat(config.adminRoles));
+    return Promise.resolve(config.eventRoles);
   }
 }
 

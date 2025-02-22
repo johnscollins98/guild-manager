@@ -10,11 +10,10 @@ import { type PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type React from 'react';
-import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
-import { type DiscordRole, type WarningType } from 'server';
+import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
+import { type AuthInfo, type DiscordRole, type WarningType } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
-import { useAdminRoles } from '../../lib/apis/auth-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
@@ -29,7 +28,8 @@ import WarningsViewer from './warnings/warnings-viewer';
 interface Props {
   member: MemberRecord;
   discordRoles: DiscordRole[];
-  isAdmin: boolean;
+  botRoles: DiscordRole[];
+  authInfo: AuthInfo;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
   selection: string[];
@@ -42,7 +42,8 @@ const GuildMemberCard = ({
   discordRoles,
   onKick,
   onEdit,
-  isAdmin,
+  authInfo,
+  botRoles,
   selection,
   setSelection,
   kickMode
@@ -94,14 +95,25 @@ const GuildMemberCard = ({
     setAssociateOpen(true);
   };
 
-  const { data: adminRoles } = useAdminRoles();
-  const memberIsAdmin = member.roles.some(role => adminRoles?.includes(role.id) ?? false);
+  const userRoles = useMemo(() => {
+    return authInfo.roles.map(id => discordRoles.find(r => r.id === id)).filter(r => !!r);
+  }, [authInfo.roles, discordRoles]);
+
+  const memberIsHigherRole = useMemo(
+    () =>
+      member.roles.some(
+        r =>
+          userRoles.every(ur => r.position >= ur.position) ||
+          botRoles.every(br => r.position >= br.position)
+      ),
+    [member.roles, userRoles, botRoles]
+  );
 
   const selected = !!member.discordId && selection.includes(member.discordId);
   const onClickKickMode = () => {
     const id = member.discordId;
     if (!id) return;
-    if (memberIsAdmin) return;
+    if (memberIsHigherRole) return;
 
     if (selected) {
       setSelection(old => old.filter(m => m !== id));
@@ -123,7 +135,7 @@ const GuildMemberCard = ({
           <CardContent>
             <div className="top-row">
               <div className="name">
-                {kickMode && member.discordId && !memberIsAdmin ? (
+                {kickMode && member.discordId && !memberIsHigherRole ? (
                   <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
                 ) : (
                   <Avatar
@@ -224,8 +236,8 @@ const GuildMemberCard = ({
       <GuildMemberMenu
         member={member}
         menuAnchor={menuAnchor}
-        isAdmin={isAdmin}
-        memberIsAdmin={memberIsAdmin}
+        permissions={authInfo.permissions}
+        memberIsHigherRole={memberIsHigherRole}
         closeMenu={closeMenu}
         onKick={onKick}
         onEdit={onEdit}

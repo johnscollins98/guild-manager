@@ -23,7 +23,11 @@ export const config = {
   discordClientId: process.env.DISCORD_CLIENT_ID,
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
-  adminRoles: process.env.ADMIN_ROLES?.split(',') ?? [],
+  accessRoles: process.env.AUTH_ACCESS?.split(',') ?? [],
+  manageEventsRoles: process.env.AUTH_MANAGE_EVENTS?.split(',') ?? [],
+  manageMembersRoles: process.env.AUTH_MANAGE_MEMBERS?.split(',') ?? [],
+  manageWarningsRoles: process.env.AUTH_MANAGE_WARNINGS?.split(',') ?? [],
+  manageRecruitmentRoles: process.env.AUTH_MANAGE_RECRUITMENT?.split(',') ?? [],
   eventRoles: process.env.EVENT_ROLES?.split(',') ?? [],
   sessionSecret: process.env.SESSION_SECRET,
   frontEndBaseUrl:

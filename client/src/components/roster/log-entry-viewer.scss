@@ -17,6 +17,7 @@ div.log-entry-viewer {
         display: flex;
         flex-wrap: wrap;
         gap: 8px 32px;
+        margin-right: 40px;
 
         .field {
           display: flex;
@@ -26,7 +27,6 @@ div.log-entry-viewer {
       }
 
       .actions {
-        margin-left: 40px;
         display: flex;
         flex: 0;
       }

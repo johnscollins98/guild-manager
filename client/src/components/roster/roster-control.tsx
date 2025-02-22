@@ -13,6 +13,7 @@ import type React from 'react';
 import { useCallback, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { useAuth } from '../../lib/apis/auth-api';
 import './roster-control.scss';
 
 interface Props {
@@ -40,6 +41,8 @@ const RosterControl = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy');
   const filterBy = searchParams.get('filterBy');
+
+  const { data: authData } = useAuth();
 
   const [anchorElement, setAnchorElement] = useState<(EventTarget & Element) | null>(null);
   const [sortOpen, setSortOpen] = useState(false);
@@ -113,7 +116,11 @@ const RosterControl = ({
           {!kickMode && (
             <Tooltip title={'Mass kick (up to 5 members)'}>
               <span>
-                <IconButton size="small" onClick={() => setKickMode(true)}>
+                <IconButton
+                  disabled={!authData?.permissions.MEMBERS}
+                  size="small"
+                  onClick={() => setKickMode(true)}
+                >
                   <DeleteForever />
                 </IconButton>
               </span>

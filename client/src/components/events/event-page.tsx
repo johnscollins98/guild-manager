@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import { useMemo, useState } from 'react';
 import { daysOfWeek, type EventCreateDTO, type EventDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
-import { useEventRoles } from '../../lib/apis/auth-api';
+import { useAuth, useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import {
   useCreateEventMutation,
@@ -25,6 +25,7 @@ import EventPosterForm from './event-poster-form';
 const EventPage = () => {
   const filterString = useFilterString();
 
+  const authQuery = useAuth();
   const eventsQuery = useEvents();
   const eventRolesQuery = useEventRoles();
   const discordQuery = useDiscordMembers();
@@ -61,11 +62,12 @@ const EventPage = () => {
     [eventsQuery.data, filterString]
   );
 
-  if (eventsQuery.error || discordQuery.error || eventRolesQuery.error) {
+  if (eventsQuery.error || discordQuery.error || eventRolesQuery.error || authQuery.error) {
     return <ErrorMessage>There was an error gathering events data.</ErrorMessage>;
   }
 
-  if (!eventRolesQuery.data || !eventsQuery.data || !discordQuery.data) return <LoaderPage />;
+  if (!eventRolesQuery.data || !eventsQuery.data || !discordQuery.data || !authQuery.data)
+    return <LoaderPage />;
 
   // get possible leaders
   const leaders = discordQuery.data.filter(d =>
@@ -96,6 +98,7 @@ const EventPage = () => {
         {sortedEvents.map(event => (
           <EventEntry
             initialData={event}
+            authData={authQuery.data}
             onDelete={() => deleteEvent(event)}
             onSubmit={update => updateEvent(event.id, update)}
             possibleLeaders={leaders}
@@ -104,10 +107,20 @@ const EventPage = () => {
           />
         ))}
         <Divider />
-        <EventEntry onSubmit={createEvent} possibleLeaders={leaders} resetOnSubmit />
+        <EventEntry
+          onSubmit={createEvent}
+          authData={authQuery.data}
+          possibleLeaders={leaders}
+          resetOnSubmit
+        />
       </div>
       <div className="button-container">
-        <Button onClick={() => setShowModal(true)} variant="contained" className="discord-button">
+        <Button
+          onClick={() => setShowModal(true)}
+          variant="contained"
+          className="discord-button"
+          disabled={!authQuery.data.permissions.EVENTS}
+        >
           <DiscordSvg width={24} />
           Post to Discord
         </Button>

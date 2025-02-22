@@ -1,10 +1,12 @@
+export interface DiscordUser {
+  id: string;
+  username: string;
+  avatar?: string;
+  global_name?: string;
+}
+
 export interface DiscordMember {
-  user?: {
-    id: string;
-    username: string;
-    avatar?: string;
-    global_name?: string;
-  };
+  user?: DiscordUser;
   roles: string[];
   nick?: string;
   joined_at: string;

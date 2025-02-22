@@ -2,6 +2,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useCallback } from 'react';
+import { useAuth } from '../../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
 import { ErrorMessage } from '../../common/error-message';
@@ -17,6 +18,7 @@ interface Props {
 
 const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
+  const { data: authData, isLoading: authLoading, isError: authError } = useAuth();
 
   const getNameForDiscordId = useCallback(
     (givenToId: string) => {
@@ -28,11 +30,12 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     [discordMembers]
   );
 
-  if (member.warnings.length === 0) onClose();
+  if (member.warnings.length === 0 && isOpen) onClose();
 
-  if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
+  if (isError || authError)
+    return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
-  if (isLoading || !discordMembers) return <LoaderPage />;
+  if (isLoading || !discordMembers || authLoading || !authData) return <LoaderPage />;
 
   return (
     <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
@@ -41,6 +44,7 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
         {member.warnings.map(warning => (
           <WarningEntry
             warning={warning}
+            authData={authData}
             key={warning.id}
             getNameForDiscordId={getNameForDiscordId}
           />

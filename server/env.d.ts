@@ -9,7 +9,11 @@ declare namespace NodeJS {
     DISCORD_CLIENT_ID: string;
     DISCORD_CLIENT_SECRET: string;
     DISCORD_AUTH_REDIRECT: string;
-    ADMIN_ROLES: string;
+    AUTH_ACCESS: string;
+    AUTH_MANAGE_EVENTS: string;
+    AUTH_MANAGE_WARNINGS: string;
+    AUTH_MANAGE_MEMBERS: string;
+    AUTH_MANAGE_RECRUITMENT: string;
     EVENT_ROLES: string;
     SESSION_SECRET: string;
     ACCESS_TOKEN_ENCRYPTION_KEY: string;

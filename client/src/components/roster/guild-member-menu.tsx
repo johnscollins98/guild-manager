@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import { type PopoverPosition } from '@mui/material/Popover';
 import { useCallback } from 'react';
+import { type PermissionsDTO } from 'server';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import GuildMemberDetails from './guild-member-details';
 import GuildMemberMenuItem from './guild-member-menu-item';
@@ -15,8 +16,8 @@ import GuildMemberMenuItem from './guild-member-menu-item';
 interface Props {
   member: MemberRecord;
   menuAnchor: PopoverPosition | undefined;
-  isAdmin: boolean;
-  memberIsAdmin: boolean;
+  permissions: PermissionsDTO;
+  memberIsHigherRole: boolean;
   closeMenu: () => void;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
@@ -29,8 +30,8 @@ interface Props {
 const GuildMemberMenu = ({
   member,
   menuAnchor,
-  isAdmin,
-  memberIsAdmin,
+  permissions,
+  memberIsHigherRole,
   closeMenu,
   onKick,
   onEdit,
@@ -68,32 +69,32 @@ const GuildMemberMenu = ({
       <GuildMemberMenuItem
         Icon={Close}
         label="Kick"
-        disabled={!isAdmin || memberIsAdmin || !member.discordId}
+        disabled={!permissions.MEMBERS || memberIsHigherRole || !member.discordId}
         className="error"
         action={() => menuAction(onKick)}
       />
       <GuildMemberMenuItem
         Icon={List}
         label="Edit Roles"
-        disabled={!isAdmin || memberIsAdmin || !member.discordId}
+        disabled={!permissions.MEMBERS || memberIsHigherRole || !member.discordId}
         action={() => menuAction(onEdit)}
       />
       <GuildMemberMenuItem
         Icon={Edit}
         label="Edit Nickname"
-        disabled={!isAdmin || memberIsAdmin || !member.discordId}
+        disabled={!permissions.MEMBERS || memberIsHigherRole || !member.discordId}
         action={() => menuAction(onChangeNickname)}
       />
       <GuildMemberMenuItem
         Icon={Person}
         label="Associate"
-        disabled={!isAdmin || !member.memberId}
+        disabled={!permissions.MEMBERS || !member.memberId}
         action={() => menuAction(() => onAssociateMember(member))}
       />
       <Divider />
       <GuildMemberMenuItem
         Icon={Warning}
-        disabled={!isAdmin || !member.discordId}
+        disabled={!permissions.WARNINGS || !member.discordId}
         className="warning"
         action={() => menuAction(() => setWarningOpen(true))}
         label="Give Warning"

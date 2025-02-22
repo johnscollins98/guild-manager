@@ -12,10 +12,12 @@ import {
 import LoaderPage from '../common/loader-page';
 import { useToast } from '../common/toast/toast-context';
 
+import { useAuth } from '../../lib/apis/auth-api';
 import './recruitment-page.scss';
 
 const RecruitmentPage: FC = () => {
   const { data, isSuccess, isLoading } = useRecruitmentPost();
+  const { data: authData, isLoading: authLoading } = useAuth();
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
@@ -64,7 +66,7 @@ const RecruitmentPage: FC = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || authLoading || !authData) {
     return <LoaderPage />;
   }
 
@@ -76,14 +78,16 @@ const RecruitmentPage: FC = () => {
     >
       <Box justifyContent="space-between" alignItems="center" display="flex">
         <h2>Recruitment Post</h2>
-        <Box display="flex" alignItems="center" gap="8px">
-          <Button variant="text" type="reset" disabled={!isModified}>
-            Reset
-          </Button>
-          <Button variant="contained" color="primary" type="submit" disabled={!isModified}>
-            Save Changes
-          </Button>
-        </Box>
+        {authData.permissions.RECRUITMENT && (
+          <Box display="flex" alignItems="center" gap="8px">
+            <Button variant="text" type="reset" disabled={!isModified}>
+              Reset
+            </Button>
+            <Button variant="contained" color="primary" type="submit" disabled={!isModified}>
+              Save Changes
+            </Button>
+          </Box>
+        )}
       </Box>
       <div className="input-wrapper">
         <div className="buttons centered">
@@ -95,6 +99,7 @@ const RecruitmentPage: FC = () => {
         </div>
         <TextField
           value={title}
+          disabled={!authData.permissions.RECRUITMENT}
           required
           onChange={e => setTitle(e.target.value)}
           fullWidth
@@ -120,6 +125,7 @@ const RecruitmentPage: FC = () => {
           multiline
           label="Content"
           value={message}
+          disabled={!authData.permissions.RECRUITMENT}
           onChange={e => setMessage(e.target.value)}
           fullWidth
           InputProps={{

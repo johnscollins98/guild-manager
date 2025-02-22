@@ -18,7 +18,7 @@ import { type Theme } from '@mui/material/styles/createTheme';
 import equal from 'fast-deep-equal';
 import type React from 'react';
 import { type ComponentProps, useCallback, useMemo, useState } from 'react';
-import { daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
+import { type AuthInfo, daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
 import { useToast } from '../common/toast/toast-context';
 import './event-entry.scss';
 
@@ -36,6 +36,7 @@ interface Props {
   possibleLeaders: DiscordMemberDTO[];
   onDelete?: () => Promise<void>;
   onSubmit: (e: EventCreateDTO) => Promise<void>;
+  authData: AuthInfo;
   resetOnSubmit?: boolean;
   changeOpacityWhenIgnored?: boolean;
 }
@@ -43,6 +44,7 @@ interface Props {
 const EventEntry = ({
   initialData = emptyEvent,
   possibleLeaders,
+  authData,
   onSubmit,
   onDelete,
   resetOnSubmit,
@@ -51,6 +53,8 @@ const EventEntry = ({
   const [localEvent, setLocalEvent] = useState(initialData);
   const modified = useMemo(() => !equal(localEvent, initialData), [localEvent, initialData]);
   const openToast = useToast();
+
+  const hasEditPermission = authData.permissions.EVENTS;
 
   const validationHelper = useCallback((event: EventCreateDTO) => {
     if (!event.title) throw new Error('A title must be provided');
@@ -143,13 +147,24 @@ const EventEntry = ({
         <Tooltip placement="top" title="Event name">
           <div className="field long">
             <Assignment color="secondary" className="field-label" />
-            <EditField onEdit={v => onEdit('title', v)} value={localEvent.title} required />
+            <EditField
+              disabled={!hasEditPermission}
+              onEdit={v => onEdit('title', v)}
+              value={localEvent.title}
+              required
+            />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event day">
           <div className="field">
             <CalendarToday color="secondary" className="field-label" />
-            <EditField onEdit={v => onEdit('day', v)} value={localEvent.day} select required>
+            <EditField
+              disabled={!hasEditPermission}
+              onEdit={v => onEdit('day', v)}
+              value={localEvent.day}
+              select
+              required
+            >
               {daysOfWeek.map(day => (
                 <MenuItem value={day} key={day}>
                   {day}
@@ -161,19 +176,29 @@ const EventEntry = ({
         <Tooltip placement="top" title={`Start time (${timezoneString})`}>
           <div className="field">
             <WatchLater color="secondary" className="field-label" />
-            <EditField onEdit={setUtcStartTimeWithLocalTime} value={localStartTime} type="time" />
+            <EditField
+              disabled={!hasEditPermission}
+              onEdit={setUtcStartTimeWithLocalTime}
+              value={localStartTime}
+              type="time"
+            />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event duration">
           <div className="field">
             <HourglassFull color="secondary" className="field-label" />
-            <EditField onEdit={v => onEdit('duration', v)} value={localEvent.duration} />
+            <EditField
+              disabled={!hasEditPermission}
+              onEdit={v => onEdit('duration', v)}
+              value={localEvent.duration}
+            />
           </div>
         </Tooltip>
         <Tooltip placement="top" title="Event leader">
           <div className="field long">
             <Person color="secondary" className="field-label" />
             <EditField
+              disabled={!hasEditPermission}
               onEdit={v => onEdit('leaderId', v)}
               value={localEvent.leaderId}
               select
@@ -193,6 +218,7 @@ const EventEntry = ({
               label="Ignored"
               control={
                 <Checkbox
+                  disabled={!hasEditPermission}
                   checked={localEvent.ignore}
                   onChange={e => setLocalEvent({ ...localEvent, ignore: e.target.checked })}
                 />
@@ -209,6 +235,7 @@ const EventEntry = ({
                   color="primary"
                   size="small"
                   className="save"
+                  disabled={!hasEditPermission}
                   type="submit"
                 >
                   Save
@@ -223,7 +250,12 @@ const EventEntry = ({
           ) : null}
           {onDelete && (
             <Tooltip placement="top" title="Delete Event">
-              <IconButton color="error" size="small" onClick={onDelete}>
+              <IconButton
+                disabled={!hasEditPermission}
+                color="error"
+                size="small"
+                onClick={onDelete}
+              >
                 <DeleteForever />
               </IconButton>
             </Tooltip>

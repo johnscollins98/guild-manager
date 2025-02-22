@@ -1,12 +1,11 @@
 import {
   ChatInputCommandInteraction,
-  PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandStringOption,
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import { WarningType, WarningTypeLabels } from '../../../dtos';
+import { Permission, WarningType, WarningTypeLabels } from '../../../dtos';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -42,8 +41,11 @@ export default class WarningsGiveCommand implements Command {
           .setName('reason')
           .setDescription('Reason for warning')
           .setRequired(true)
-      )
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+      );
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return ['WARNINGS'];
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

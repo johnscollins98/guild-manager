@@ -15,11 +15,11 @@ import Roster from './roster/roster';
 const App = () => {
   const { data: authInfo } = useAuth();
 
-  usePrefetchGW2Log(!!authInfo && !!authInfo.loggedIn);
+  usePrefetchGW2Log(!!authInfo && !!authInfo.permissions.ACCESS);
 
   return (
     <Box className="paper-container">
-      {authInfo && authInfo.loggedIn && authInfo.isAdmin ? (
+      {authInfo && authInfo.loggedIn && authInfo.permissions.ACCESS ? (
         <BrowserRouter>
           <Routes>
             <Route path="/" Component={Layout}>
