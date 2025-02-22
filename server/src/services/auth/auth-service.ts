@@ -83,7 +83,7 @@ export class AuthService {
   getPermissions(userRoles: string[]): PermissionsDTO {
     return {
       ACCESS: this.hasRequiredRoles(config.accessRoles, userRoles),
-      EVENTS: this.hasRequiredRoles(config.eventRoles, userRoles),
+      EVENTS: this.hasRequiredRoles(config.manageEventsRoles, userRoles),
       MEMBERS: this.hasRequiredRoles(config.manageMembersRoles, userRoles),
       RECRUITMENT: this.hasRequiredRoles(config.manageRecruitmentRoles, userRoles),
       WARNINGS: this.hasRequiredRoles(config.manageWarningsRoles, userRoles)
