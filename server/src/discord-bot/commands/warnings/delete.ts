@@ -62,7 +62,7 @@ export default class WarningsDeleteCommand implements Command {
         'Unknown User';
 
       return new StringSelectMenuOptionBuilder()
-        .setLabel(warning.reason)
+        .setLabel(warning.reason.substring(0, 50))
         .setDescription(
           `Given to ${username} on ${new Date(warning.timestamp).toDateString()} (${WarningTypeLabels[warning.type]})`
         )
