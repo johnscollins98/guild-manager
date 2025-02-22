@@ -7,7 +7,6 @@ const api = createApi('auth');
 
 const authApi: IAuthController = {
   getAuthorization: () => api('authorization'),
-  getAdminRoles: () => api('admin_roles'),
   getEventRoles: () => api('event_roles')
 };
 
@@ -15,12 +14,6 @@ export const useAuth = () =>
   useQuery({
     queryKey: ['auth/authorization'],
     queryFn: authApi.getAuthorization
-  });
-
-export const useAdminRoles = () =>
-  useQuery<string[], AxiosError>({
-    queryKey: ['auth/admin_roles'],
-    queryFn: authApi.getAdminRoles
   });
 
 export const useEventRoles = () =>

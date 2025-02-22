@@ -41,6 +41,7 @@ export class WarningsController implements IWarningsController {
 
   @Delete('/:id')
   @OnUndefined(204)
+  @Authorized('WARNINGS')
   async delete(@Param('id') id: number): Promise<void> {
     const res = await this.warningRepo.delete(id);
 
@@ -50,6 +51,7 @@ export class WarningsController implements IWarningsController {
   }
 
   @Post('/')
+  @Authorized('WARNINGS')
   create(
     @Body() warning: WarningCreateDTO,
     @CurrentUser() user?: Express.User
@@ -58,6 +60,7 @@ export class WarningsController implements IWarningsController {
   }
 
   @Put('/:id')
+  @Authorized('WARNINGS')
   @OnNull(404)
   update(
     @Param('id') id: number,

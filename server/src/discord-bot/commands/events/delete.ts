@@ -1,13 +1,12 @@
 import {
   ActionRowBuilder,
   ChatInputCommandInteraction,
-  PermissionFlagsBits,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
-import { daysOfWeek } from '../../../dtos';
+import { daysOfWeek, Permission } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { EventRepository } from '../../../services/repositories/event-repository';
@@ -28,10 +27,11 @@ export default class EventsDeleteCommand implements Command {
   }
 
   async getConfig() {
-    return new SlashCommandBuilder()
-      .setName(this.name)
-      .setDescription('Delete an event')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+    return new SlashCommandBuilder().setName(this.name).setDescription('Delete an event');
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return ['EVENTS'];
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

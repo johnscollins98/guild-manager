@@ -17,6 +17,7 @@ const discordApi: IDiscordController = {
   getMembers: () => api('members'),
   getLogs: () => api('log'),
   getLeavers: () => api('leavers'),
+  getBotRoles: () => api('bot-roles'),
   addRoleToMember: (memberId, roleId) =>
     api(`members/${memberId}/roles/${roleId}`, { method: 'PUT' }),
   removeRoleFromMember: (memberId, roleId) =>
@@ -36,6 +37,8 @@ export const useDiscordLog = () =>
   useQuery({ queryKey: ['discord/log'], queryFn: discordApi.getLogs });
 export const useDiscordLeavers = () =>
   useQuery({ queryKey: ['discord/leavers'], queryFn: discordApi.getLeavers });
+export const useDiscordBotRoles = () =>
+  useQuery({ queryKey: ['discord/bot-roles'], queryFn: discordApi.getBotRoles });
 
 export interface ChangeRoleDTO {
   memberId: string;

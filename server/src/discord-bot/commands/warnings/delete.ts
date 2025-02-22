@@ -1,14 +1,13 @@
 import {
   ActionRowBuilder,
   ChatInputCommandInteraction,
-  PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandUserOption,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
-import { WarningTypeLabels } from '../../../dtos';
+import { Permission, WarningTypeLabels } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
@@ -32,12 +31,15 @@ export default class WarningsDeleteCommand implements Command {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription('Delete a warning')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .addUserOption(
         new SlashCommandUserOption()
           .setName('given-to-user')
           .setDescription('Optionally filter options by user given to')
       );
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return ['WARNINGS'];
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

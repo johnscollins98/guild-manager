@@ -65,6 +65,7 @@ export class EventsController implements IEventsController {
   }
 
   @Delete('/:id')
+  @Authorized('EVENTS')
   @OnUndefined(204)
   async delete(@Param('id') id: number): Promise<void> {
     const res = await this.eventRepo.delete(id);
@@ -75,11 +76,13 @@ export class EventsController implements IEventsController {
   }
 
   @Post('/')
+  @Authorized('EVENTS')
   create(@Body() event: EventCreateDTO): Promise<EventDTO> {
     return this.eventRepo.create(event);
   }
 
   @Put('/:id')
+  @Authorized('EVENTS')
   @OnNull(404)
   update(@Param('id') id: number, @Body() event: EventCreateDTO): Promise<EventDTO | null> {
     return this.eventRepo.update(id, event);

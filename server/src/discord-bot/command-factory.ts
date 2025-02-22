@@ -1,16 +1,21 @@
 import { ApplicationCommandDataResolvable, ChatInputCommandInteraction } from 'discord.js';
 import { glob } from 'glob';
 import Container, { Service } from 'typedi';
+import { Permission } from '../dtos';
+import { AuthService } from '../services/auth/auth-service';
 
 export interface Command {
   name: string;
   getConfig(): Promise<ApplicationCommandDataResolvable>;
   execute(interaction: ChatInputCommandInteraction): Promise<void>;
+  getRequiredPermissions(): Permission[];
 }
 
 @Service()
 export class CommandFactory {
   private readonly commandMap: Record<string, Command> = {};
+
+  constructor(private readonly authService: AuthService) {}
 
   async getCommands(): Promise<ApplicationCommandDataResolvable[]> {
     const files = await glob('commands/**/*.{ts,js}', {
@@ -38,6 +43,20 @@ export class CommandFactory {
     }
 
     await interaction.deferReply({ ephemeral: true });
+
+    const permissions = command.getRequiredPermissions();
+    const authenticated = await this.authService.checkPermissionsWithId(
+      interaction.user.id,
+      permissions
+    );
+
+    if (!authenticated) {
+      interaction.editReply({
+        content: `You do not have permission to run this command.`
+      });
+      return;
+    }
+
     try {
       await command.execute(interaction);
     } catch (err) {

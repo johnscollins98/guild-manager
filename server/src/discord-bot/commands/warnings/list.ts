@@ -1,11 +1,10 @@
 import {
   ChatInputCommandInteraction,
-  PermissionFlagsBits,
   SlashCommandBuilder,
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
-import { WarningTypeLabels } from '../../../dtos';
+import { Permission, WarningTypeLabels } from '../../../dtos';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -20,12 +19,15 @@ export default class WarningsListCommand implements Command {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription('List all warnings')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .addUserOption(
         new SlashCommandUserOption()
           .setName('given-to-user')
           .setDescription('Filter by user given to')
       );
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return [];
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

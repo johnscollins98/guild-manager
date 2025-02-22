@@ -41,6 +41,7 @@ export class RecruitmentPostController implements IRecruitmentPostController {
   }
 
   @Put('/')
+  @Authorized('RECRUITMENT')
   async upsert(@Body() body: RecruitmentPostCreateDTO): Promise<RecruitmentPostDTO> {
     const post = await this.recruitmentRepo.getOne();
 
@@ -56,6 +57,7 @@ export class RecruitmentPostController implements IRecruitmentPostController {
 
   @Delete('/')
   @OnUndefined(204)
+  @Authorized('RECRUITMENT')
   async delete(): Promise<void> {
     const post = await this.recruitmentRepo.getOne();
 

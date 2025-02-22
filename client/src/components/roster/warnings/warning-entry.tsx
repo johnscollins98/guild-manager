@@ -6,17 +6,18 @@ import List from '@mui/icons-material/List';
 import Person from '@mui/icons-material/Person';
 import { Card, IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
-import { type WarningDTO, type WarningType, WarningTypeLabels } from 'server';
+import { type AuthInfo, type WarningDTO, type WarningType, WarningTypeLabels } from 'server';
 import { useDeleteWarningMutation, useUpdateWarningMutation } from '../../../lib/apis/warnings-api';
 import { useConfirm } from '../../common/confirm-dialog';
 import WarningForm from './warning-form';
 
 export interface WarningEntryProps {
   warning: WarningDTO;
+  authData: AuthInfo;
   getNameForDiscordId: (id: string) => string;
 }
 
-export const WarningEntry = ({ warning, getNameForDiscordId }: WarningEntryProps) => {
+export const WarningEntry = ({ warning, getNameForDiscordId, authData }: WarningEntryProps) => {
   const confirm = useConfirm();
 
   const deleteWarningMutation = useDeleteWarningMutation();
@@ -60,14 +61,16 @@ export const WarningEntry = ({ warning, getNameForDiscordId }: WarningEntryProps
               <Typography>{warning.reason}</Typography>
             </span>
           </div>
-          <div className="actions">
-            <IconButton onClick={() => setShowUpdate(true)} disabled={isPending}>
-              <Edit color="primary" />
-            </IconButton>
-            <IconButton onClick={() => handleDeleteWarning()}>
-              <Close color="error" />
-            </IconButton>
-          </div>
+          {authData.permissions.WARNINGS && (
+            <div className="actions">
+              <IconButton onClick={() => setShowUpdate(true)} disabled={isPending}>
+                <Edit color="primary" />
+              </IconButton>
+              <IconButton onClick={() => handleDeleteWarning()}>
+                <Close color="error" />
+              </IconButton>
+            </div>
+          )}
         </div>
         {warning.lastUpdatedBy && (
           <div>

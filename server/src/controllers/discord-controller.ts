@@ -30,6 +30,7 @@ import { IDiscordChannelApi } from '../services/discord/channel-api';
 import { EventEmbedCreator } from '../services/discord/event-embed-creator';
 import { IDiscordGuildApi } from '../services/discord/guild-api';
 import { DiscordMemberFormatter } from '../services/discord/member-formatter';
+import { IDiscordUserApi } from '../services/discord/user-api';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
@@ -41,6 +42,7 @@ import { IDiscordController } from './interfaces/discord-interface';
 export class DiscordController implements IDiscordController {
   private readonly discordGuildApi: IDiscordGuildApi;
   private readonly discordChannelApi: IDiscordChannelApi;
+  private readonly discordUserApi: IDiscordUserApi;
   constructor(
     discordApiFactory: DiscordApiFactory,
     private readonly discordMemberFormatter: DiscordMemberFormatter,
@@ -51,6 +53,7 @@ export class DiscordController implements IDiscordController {
   ) {
     this.discordChannelApi = discordApiFactory.channelApi();
     this.discordGuildApi = discordApiFactory.guildApi();
+    this.discordUserApi = discordApiFactory.userApi();
   }
 
   @Get('/roles')
@@ -87,7 +90,25 @@ export class DiscordController implements IDiscordController {
     return await this.memberLeftRepository.getAll();
   }
 
+  @Get('/bot-roles')
+  async getBotRoles(): Promise<DiscordRole[]> {
+    const user = await this.discordUserApi.getCurrentUser();
+    const id = user.id;
+
+    const [roles, member] = await Promise.all([
+      this.discordGuildApi.getRoles(),
+      this.discordGuildApi.getMemberById(id)
+    ]);
+
+    return this.discordMemberFormatter.getRoleInfo(
+      roles,
+      member?.roles ?? [],
+      roles.map(r => r.name)
+    );
+  }
+
   @OnUndefined(204)
+  @Authorized('MEMBERS')
   @Put('/members/:memberId/roles/:roleId')
   async addRoleToMember(
     @Param('memberId') memberId: string,
@@ -97,6 +118,7 @@ export class DiscordController implements IDiscordController {
   }
 
   @OnUndefined(204)
+  @Authorized('MEMBERS')
   @Delete('/members/:memberId/roles/:roleId')
   async removeRoleFromMember(
     @Param('memberId') memberId: string,
@@ -106,6 +128,7 @@ export class DiscordController implements IDiscordController {
   }
 
   @OnUndefined(204)
+  @Authorized('MEMBERS')
   @Put('/members/:memberId')
   async updateMember(
     @Param('memberId') memberId: string,
@@ -115,12 +138,14 @@ export class DiscordController implements IDiscordController {
   }
 
   @OnUndefined(204)
+  @Authorized('MEMBERS')
   @Delete('/members/:memberId')
   async deleteMember(@Param('memberId') memberId: string): Promise<undefined> {
     await this.discordGuildApi.kickMember(memberId);
   }
 
   @OnUndefined(200)
+  @Authorized('MEMBERS')
   @Post('/members/:memberId/messages')
   async sendMessageToMember(
     @Param('memberId') memberId: string,
@@ -131,6 +156,7 @@ export class DiscordController implements IDiscordController {
   }
 
   @OnUndefined(200)
+  @Authorized('EVENTS')
   @Post('/eventUpdate')
   async postEventUpdates(@Body() newSettings?: EventSettingsUpsertDTO): Promise<void> {
     if (newSettings) {

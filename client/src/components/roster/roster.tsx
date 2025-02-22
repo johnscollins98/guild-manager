@@ -11,6 +11,7 @@ import KickModal from './kick-modal';
 import RoleEdit from './role-edit';
 import RosterControl from './roster-control';
 
+import { useDiscordBotRoles } from '../../lib/apis/discord-api';
 import { useRoster } from './use-roster';
 
 const Roster = () => {
@@ -20,6 +21,8 @@ const Roster = () => {
   const filterBy = searchParams.get('filterBy') ?? '';
   const { isLoading, isFetching, refetch, isError, discordRoles, rosterForDisplay, roster } =
     useRoster(sortBy, filterString, filterBy);
+
+  const { data: botRoles, isLoading: botRolesLoading } = useDiscordBotRoles();
 
   const [kickMode, setKickMode] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
@@ -44,7 +47,16 @@ const Roster = () => {
 
   if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
-  if (isLoading || !roster || !rosterForDisplay || !discordRoles) return <LoaderPage />;
+  if (
+    isLoading ||
+    !roster ||
+    !rosterForDisplay ||
+    !discordRoles ||
+    !authInfo ||
+    botRolesLoading ||
+    !botRoles
+  )
+    return <LoaderPage />;
 
   const selectedRecord = roster.find(r => r.discordId === selectedRecordId);
 
@@ -76,9 +88,10 @@ const Roster = () => {
                       key={member.memberId ?? member.discordId}
                       member={member}
                       discordRoles={discordRoles}
+                      botRoles={botRoles}
                       onKick={onKick}
                       onEdit={openEdit}
-                      isAdmin={authInfo?.isAdmin ?? false}
+                      authInfo={authInfo}
                       selection={selection}
                       setSelection={setSelection}
                       kickMode={kickMode}

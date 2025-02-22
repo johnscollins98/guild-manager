@@ -44,7 +44,7 @@ const LoginPage = () => {
             <DiscordLogo height="24" width="24" className="discord-logo" />
             Log In
           </Button>
-          {authInfo.loggedIn && !authInfo.isAdmin ? (
+          {authInfo.loggedIn && !authInfo.permissions.ACCESS ? (
             <Alert className="warning" severity="warning">
               <AlertTitle>Forbidden</AlertTitle>
               You do not have permission to access this site.

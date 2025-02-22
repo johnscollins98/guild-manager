@@ -1,11 +1,6 @@
-import {
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  SlashCommandBuilder
-} from 'discord.js';
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { Service } from 'typedi';
-import { daysOfWeek } from '../../../dtos';
+import { daysOfWeek, Permission } from '../../../dtos';
 import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-factory';
@@ -21,10 +16,11 @@ export default class EventsListCommand implements Command {
   }
 
   async getConfig() {
-    return new SlashCommandBuilder()
-      .setName(this.name)
-      .setDescription('List all events')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+    return new SlashCommandBuilder().setName(this.name).setDescription('List all events');
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return [];
   }
 
   async execute(interaction: ChatInputCommandInteraction) {

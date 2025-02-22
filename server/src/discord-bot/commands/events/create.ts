@@ -4,7 +4,6 @@ import {
   ButtonStyle,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  PermissionFlagsBits,
   SlashCommandBooleanOption,
   SlashCommandBuilder,
   SlashCommandNumberOption,
@@ -13,7 +12,7 @@ import {
 } from 'discord.js';
 import { Service } from 'typedi';
 import { config } from '../../../config';
-import { DayOfWeek, daysOfWeek } from '../../../dtos';
+import { DayOfWeek, daysOfWeek, Permission } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
@@ -37,7 +36,6 @@ export default class EventsCreateCommand implements Command {
     return new SlashCommandBuilder()
       .setName(this.name)
       .setDescription('Create an event')
-      .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
       .addStringOption(
         new SlashCommandStringOption()
           .setRequired(true)
@@ -99,10 +97,7 @@ export default class EventsCreateCommand implements Command {
     const title = interaction.options.getString('title', true);
 
     const member = await this.discordGuildApi.getMemberById(leader.id);
-    if (
-      !member ||
-      ![...config.eventRoles, ...config.adminRoles].some(r => member.roles.includes(r))
-    ) {
+    if (!member || ![...config.eventRoles].some(r => member.roles.includes(r))) {
       interaction.editReply(`<@${leader.id}> is not a valid event leader.`);
     }
 
@@ -158,5 +153,9 @@ export default class EventsCreateCommand implements Command {
     }
 
     await this.eventRepo.getAll();
+  }
+
+  getRequiredPermissions(): Permission[] {
+    return ['EVENTS'];
   }
 }
