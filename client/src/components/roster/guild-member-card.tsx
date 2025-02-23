@@ -1,5 +1,6 @@
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
+import PersonIcon from '@mui/icons-material/Person';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
 import { CardActionArea, Checkbox, useTheme } from '@mui/material';
@@ -197,6 +198,11 @@ const GuildMemberCard = ({
                 {member.issues.overAWeek ? (
                   <Tooltip title="Been in server over a week">
                     <Timer className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.manualMatch ? (
+                  <Tooltip title="This member has been matched manually">
+                    <PersonIcon />
                   </Tooltip>
                 ) : null}
                 {member.discordName ? (
