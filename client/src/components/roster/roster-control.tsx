@@ -216,6 +216,10 @@ const RosterControl = ({
           {filterBy === 'warnings' ? <Check className="selected" /> : null}
           Any warnings
         </MenuItem>
+        <MenuItem className="control-menu-item" onClick={() => filterHandler('manual-match')}>
+          {filterBy === 'manual-match' ? <Check className="selected" /> : null}
+          Manually associated
+        </MenuItem>
       </Menu>
     </>
   );
