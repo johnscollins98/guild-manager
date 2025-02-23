@@ -6,4 +6,5 @@ export interface IGW2Controller {
   getMembers(): Promise<GW2MemberResponseDTO[]>;
   getRanks(): Promise<GW2Rank[]>;
   associateToDiscordAccount(associationDto: AssociationDTO): Promise<void>;
+  removeAssociation(id: string): Promise<void>;
 }

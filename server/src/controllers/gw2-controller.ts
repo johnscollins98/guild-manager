@@ -1,10 +1,13 @@
 import {
   Authorized,
   Body,
+  Delete,
   Get,
   Header,
   JsonController,
+  NotFoundError,
   OnUndefined,
+  Param,
   Post
 } from 'routing-controllers';
 import { Service } from 'typedi';
@@ -61,8 +64,19 @@ export class GW2Controller implements IGW2Controller {
   }
 
   @Post('/association')
+  @Authorized('MEMBERS')
   @OnUndefined(204)
   async associateToDiscordAccount(@Body() associationDto: AssociationDTO): Promise<void> {
     await this.associationRepo.save(associationDto);
+  }
+
+  @Delete('/association/:id')
+  @Authorized('MEMBERS')
+  @OnUndefined(204)
+  async removeAssociation(@Param('id') id: string): Promise<void> {
+    const res = await this.associationRepo.delete({ gw2AccountName: id });
+    if (!res.affected) {
+      throw new NotFoundError();
+    }
   }
 }

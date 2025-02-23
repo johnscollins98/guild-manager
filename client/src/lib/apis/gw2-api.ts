@@ -11,6 +11,7 @@ const gw2Api: IGW2Controller = {
   getLog: () => api('log'),
   getMembers: () => api('members'),
   getRanks: () => api('ranks'),
+  removeAssociation: id => api(`association/${id}`, { method: 'DELETE' }),
   associateToDiscordAccount: (associationDto: AssociationDTO) => {
     return api('association', {
       method: 'POST',
@@ -49,6 +50,35 @@ export const useAssociateToDiscordAccountMutation = () => {
     },
     onError(_err, _var, previous) {
       openToast('Failed to associate member', 'error');
+      queryClient.setQueryData(['gw2/members'], previous);
+    },
+    onSettled() {
+      queryClient.invalidateQueries({ queryKey: ['gw2/members'] });
+    }
+  });
+};
+
+export const useRemoveAssociation = () => {
+  const queryClient = useQueryClient();
+  const openToast = useToast();
+
+  return useMutation<void, AxiosError, string, GW2MemberResponseDTO[]>({
+    mutationFn: gw2Api.removeAssociation,
+    onMutate: async id => {
+      await queryClient.cancelQueries({ queryKey: ['gw2/members'] });
+
+      const previousMembers = queryClient.getQueryData<GW2MemberResponseDTO[]>(['gw2/members']);
+
+      queryClient.setQueryData<GW2MemberResponseDTO[]>(['gw2/members'], old =>
+        old?.map(member => {
+          if (member.name !== id) return member;
+          return { ...member, discordId: null };
+        })
+      );
+      return previousMembers;
+    },
+    onError(_err, _var, previous) {
+      openToast('Failed to remove association', 'error');
       queryClient.setQueryData(['gw2/members'], previous);
     },
     onSettled() {
