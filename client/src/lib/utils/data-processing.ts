@@ -22,24 +22,21 @@ export const generateGW2RosterRecords = (
 
       // check for exact match
       const discordMember = discordMembers.find(m => {
-        if (gw2Member.discordId && m.id === gw2Member.discordId) {
-          return true;
+        if (gw2Member.discordId) {
+          return gw2Member.discordId === m.id;
         }
 
         const discordName = m.name
           ?.normalize('NFKC')
-          .toLowerCase()
           .replace(
             /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
             ''
-          ) // strip any emojis
-          .trim(); // trim any leading/trailing whitespace (should only be present if they have an emoji at the start)
+          );
 
-        return (
-          discordName === testName ||
-          discordName?.includes(`(${testName})`) ||
-          discordName === memberId.toLowerCase()
-        );
+        // Name or Name.1234 but cannot be directly next to another alphabetical character
+        const regex = new RegExp(`(?:^|[^a-z])(${testName})|(${memberId})(?:$|[^a-z])`, 'ig');
+
+        return discordName?.match(regex);
       });
 
       const discordName = discordMember?.name;
