@@ -1,4 +1,13 @@
-import { Autocomplete, Button, Dialog, DialogContent, DialogTitle, TextField } from '@mui/material';
+import {
+  Alert,
+  Autocomplete,
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField
+} from '@mui/material';
 import { useCallback, useState, type FormEvent } from 'react';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import { useAssociateToDiscordAccountMutation } from '../../lib/apis/gw2-api';
@@ -48,6 +57,14 @@ export const AssociateMember = ({ member, isOpen, onClose }: AssociateMemberProp
       <DialogContent>
         {data && (
           <form onSubmit={submitHandler} onReset={onClose} className="associate-form">
+            <Alert severity="warning">
+              <Box display="flex" flexDirection="column" gap="8px">
+                <div>
+                  <b>Manual association should only be done where necessary or for alt accounts.</b>
+                </div>
+                <div>Please use nickname assocation where possible.</div>
+              </Box>
+            </Alert>
             <Autocomplete
               value={discordAccountId}
               onChange={(_e, v) => v && setDiscordId(v)}
