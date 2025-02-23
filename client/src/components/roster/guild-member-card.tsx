@@ -1,5 +1,6 @@
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
+import PersonIcon from '@mui/icons-material/Person';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
 import { CardActionArea, Checkbox, useTheme } from '@mui/material';
@@ -14,10 +15,12 @@ import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } fr
 import { type AuthInfo, type DiscordRole, type WarningType } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
+import { useRemoveAssociation } from '../../lib/apis/gw2-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
+import { useConfirm } from '../common/confirm-dialog';
 import { AssociateMember } from './associate-member';
 import { EditNickName } from './edit-nickname';
 import './guild-member-card.scss';
@@ -53,11 +56,14 @@ const GuildMemberCard = ({
 
   const theme = useTheme();
 
+  const confirm = useConfirm();
+
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
   const [warningOpen, setWarningOpen] = useState(false);
   const [warningViewerOpen, setWarningViewerOpen] = useState(false);
 
   const addWarningMutation = useAddWarningMutation();
+  const removeAssociationMutation = useRemoveAssociation();
 
   const openMenu = useCallback(
     (e: React.MouseEvent) => {
@@ -84,6 +90,14 @@ const GuildMemberCard = ({
     },
     [addWarningMutation, member]
   );
+
+  const associationRemoveHandler = useCallback(async () => {
+    if (!member.memberId) return;
+    const res = await confirm('Are you sure you want to remove this association?');
+    if (res) {
+      removeAssociationMutation.mutate(member.memberId);
+    }
+  }, [member.memberId, removeAssociationMutation, confirm]);
 
   const [editOpen, setEditOpen] = useState(false);
   const onEditNickname = () => {
@@ -199,6 +213,11 @@ const GuildMemberCard = ({
                     <Timer className="error" />
                   </Tooltip>
                 ) : null}
+                {member.manualMatch ? (
+                  <Tooltip title="This member has been matched manually">
+                    <PersonIcon />
+                  </Tooltip>
+                ) : null}
                 {member.discordName ? (
                   <Tooltip title={member.discordName}>
                     <span>
@@ -242,6 +261,7 @@ const GuildMemberCard = ({
         onKick={onKick}
         onEdit={onEdit}
         onAssociateMember={onAssociate}
+        removeAssociation={associationRemoveHandler}
         onChangeNickname={onEditNickname}
         setWarningOpen={setWarningOpen}
         setWarningViewerOpen={setWarningViewerOpen}

@@ -70,6 +70,7 @@ export const generateGW2RosterRecords = (
         rankImage,
         joinDate,
         warnings: warningsForThisMember,
+        manualMatch: !!gw2Member.discordId,
         discordName,
         nickname,
         discordId,
@@ -120,6 +121,7 @@ export const getExcessDiscordRecords = (
         discordName: discordMember.name,
         discordId: discordMember.id,
         roles: discordMember.roles || [],
+        manualMatch: false,
         avatar: discordMember.avatar,
         warnings: warnings.filter(w => w.givenTo === discordMember.id),
         issues: {

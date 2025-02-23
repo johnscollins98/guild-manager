@@ -9,6 +9,7 @@ export default interface MemberRecord {
   joinDate: DateTime;
   nickname?: string;
   discordName?: string;
+  manualMatch: boolean;
   discordId?: string;
   roles: DiscordRole[];
   avatar?: string;

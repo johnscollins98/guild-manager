@@ -106,6 +106,8 @@ const onFilter = (toFilter: MemberRecord[] | undefined, filterBy = 'none', filte
       });
     case 'warnings':
       return filtered.filter(record => record.warnings.length);
+    case 'manual-match':
+      return filtered.filter(record => record.manualMatch);
     case 'none':
     default:
       return filtered;

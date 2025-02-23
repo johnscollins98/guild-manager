@@ -22,6 +22,7 @@ interface Props {
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
   onAssociateMember: (member: MemberRecord) => void;
+  removeAssociation: () => void;
   onChangeNickname: (member: MemberRecord) => void;
   setWarningOpen: (isOpen: boolean) => void;
   setWarningViewerOpen: (isOpen: boolean) => void;
@@ -36,6 +37,7 @@ const GuildMemberMenu = ({
   onKick,
   onEdit,
   onAssociateMember,
+  removeAssociation,
   onChangeNickname,
   setWarningOpen,
   setWarningViewerOpen
@@ -85,11 +87,19 @@ const GuildMemberMenu = ({
         disabled={!permissions.MEMBERS || memberIsHigherRole || !member.discordId}
         action={() => menuAction(onChangeNickname)}
       />
+      <Divider />
       <GuildMemberMenuItem
         Icon={Person}
         label="Associate"
         disabled={!permissions.MEMBERS || !member.memberId}
         action={() => menuAction(() => onAssociateMember(member))}
+      />
+      <GuildMemberMenuItem
+        Icon={Close}
+        label="Remove Association"
+        className="error"
+        disabled={!permissions.MEMBERS || !member.manualMatch}
+        action={() => menuAction(() => removeAssociation())}
       />
       <Divider />
       <GuildMemberMenuItem
