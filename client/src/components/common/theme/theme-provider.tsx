@@ -25,7 +25,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
         },
         cssVariables: true,
         typography: {
-          fontFamily: ['"Lato"', 'sans-serif'].join(',')
+          fontFamily: ['"lato"', 'sans-serif'].join(',')
         },
         components: {
           MuiDialogContent: {
