@@ -92,10 +92,20 @@
           width: 24px;
           font-size: 16px;
           text-align: center;
-          color: black;
 
-          &.warnings {
-            background-color: #ffea00;
+          &.official {
+            background-color: var(--mui-palette-error-main);
+            color: var(--mui-palette-error-contrastText);
+          }
+
+          &.informal {
+            background-color: var(--mui-palette-warning-main);
+            color: var(--mui-palette-warning-contrastText);
+          }
+
+          &.event {
+            background-color: var(--mui-palette-secondary-main);
+            color: var(--mui-palette-secondary-contrastText);
           }
         }
       }
