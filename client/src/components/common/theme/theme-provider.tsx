@@ -23,6 +23,7 @@ export const ThemeProvider = ({ children }: PropsWithChildren) => {
         palette: {
           mode: theme
         },
+        cssVariables: true,
         typography: {
           fontFamily: ['"Lato"', 'sans-serif'].join(',')
         },

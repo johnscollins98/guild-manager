@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import type React from 'react';
 import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
-import { type AuthInfo, type DiscordRole, type WarningType } from 'server';
+import { WarningType, type AuthInfo, type DiscordRole, type WarningDTO } from 'server';
 import DiscordLogo from '../../assets/images/discord.svg?react';
 import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useRemoveAssociation } from '../../lib/apis/gw2-api';
@@ -108,6 +108,18 @@ const GuildMemberCard = ({
   const onAssociate = () => {
     setAssociateOpen(true);
   };
+
+  const warningsByType: Record<WarningType, WarningDTO[]> = useMemo(() => {
+    const byType: Record<WarningType, WarningDTO[]> = {
+      event: [],
+      informal: [],
+      official: []
+    };
+
+    member.warnings.forEach(w => byType[w.type].push(w));
+
+    return byType;
+  }, [member.warnings]);
 
   const userRoles = useMemo(() => {
     return authInfo.roles.map(id => discordRoles.find(r => r.id === id)).filter(r => !!r);
@@ -242,11 +254,13 @@ const GuildMemberCard = ({
                     </span>
                   </Tooltip>
                 ) : null}
-                {member.warnings.length ? (
-                  <Tooltip title="Number of warnings">
-                    <Avatar className="number warnings">{member.warnings.length}</Avatar>
-                  </Tooltip>
-                ) : null}
+                {Object.values(WarningType).map(type =>
+                  warningsByType[type].length ? (
+                    <Tooltip title={`Number of ${type} warnings`} key={type}>
+                      <Avatar className={`number ${type}`}>{warningsByType[type].length}</Avatar>
+                    </Tooltip>
+                  ) : null
+                )}
               </div>
             </div>
           </CardContent>
