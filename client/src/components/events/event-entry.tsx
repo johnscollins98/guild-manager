@@ -1,110 +1,22 @@
-import Assignment from '@mui/icons-material/Assignment';
-import CalendarToday from '@mui/icons-material/CalendarToday';
-import DeleteForever from '@mui/icons-material/DeleteForever';
-import HourglassFull from '@mui/icons-material/HourglassFull';
-import Person from '@mui/icons-material/Person';
-import Refresh from '@mui/icons-material/Refresh';
-import WatchLater from '@mui/icons-material/WatchLater';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
+import { Avatar, Box, CardActionArea, type PopoverPosition, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
-import { type Theme } from '@mui/material/styles/createTheme';
-import equal from 'fast-deep-equal';
-import type React from 'react';
-import { type ComponentProps, useCallback, useMemo, useState } from 'react';
-import { type AuthInfo, daysOfWeek, type DiscordMemberDTO, type EventCreateDTO } from 'server';
-import { useToast } from '../common/toast/toast-context';
-import './event-entry.scss';
-
-const emptyEvent: EventCreateDTO = {
-  title: '',
-  day: 'Monday',
-  startTime: '',
-  duration: '',
-  leaderId: '',
-  ignore: false
-};
+import { use, useMemo, useState } from 'react';
+import { type EventDTO } from 'server';
+import { EventLeadersContext } from './event-leaders-context';
+import { EventMenu } from './event-menu';
 
 interface Props {
-  initialData?: EventCreateDTO;
-  possibleLeaders: DiscordMemberDTO[];
-  onDelete?: () => Promise<void>;
-  onSubmit: (e: EventCreateDTO) => Promise<void>;
-  authData: AuthInfo;
-  resetOnSubmit?: boolean;
-  changeOpacityWhenIgnored?: boolean;
+  event: EventDTO;
+  hasEditPermission: boolean;
 }
 
-const EventEntry = ({
-  initialData = emptyEvent,
-  possibleLeaders,
-  authData,
-  onSubmit,
-  onDelete,
-  resetOnSubmit,
-  changeOpacityWhenIgnored = false
-}: Props) => {
-  const [localEvent, setLocalEvent] = useState(initialData);
-  const modified = useMemo(() => !equal(localEvent, initialData), [localEvent, initialData]);
-  const openToast = useToast();
+const EventEntry = ({ event, hasEditPermission }: Props) => {
+  const [menuAnchor, setMenuAnchor] = useState<undefined | PopoverPosition>(undefined);
 
-  const hasEditPermission = authData.permissions.EVENTS;
-
-  const validationHelper = useCallback((event: EventCreateDTO) => {
-    if (!event.title) throw new Error('A title must be provided');
-    if (!event.leaderId) throw new Error('A leader must be selected');
-    if (!daysOfWeek.includes(event.day))
-      throw new Error("Day field must be a capitalised day of the week. e.g. 'Monday'");
-  }, []);
-
-  const onEdit = useCallback(
-    (field: keyof EventCreateDTO, value: string) => {
-      setLocalEvent({ ...localEvent, [field]: value });
-    },
-    [localEvent, setLocalEvent]
-  );
-
-  const onReset = useCallback(() => {
-    setLocalEvent(initialData);
-  }, [setLocalEvent, initialData]);
-
-  const submitHandler = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      try {
-        validationHelper(localEvent);
-      } catch (err) {
-        if (err instanceof Error) {
-          openToast(err.message, 'warning');
-        } else {
-          openToast('An unknown error occurred', 'error');
-        }
-        return;
-      }
-
-      onSubmit(localEvent);
-
-      if (resetOnSubmit) {
-        onReset();
-      }
-    },
-    [onSubmit, validationHelper, localEvent, openToast, onReset, resetOnSubmit]
-  );
-
-  const timezoneString = useMemo(() => {
-    return `${new Date().toLocaleDateString(undefined, { day: '2-digit', timeZoneName: 'short' }).substring(4)}, ${new Date().toLocaleDateString(undefined, { day: '2-digit', timeZoneName: 'shortOffset' }).substring(4)}`;
-  }, []);
+  const possibleLeaders = use(EventLeadersContext);
 
   const localStartTime = useMemo(() => {
-    const [hours, minutes] = localEvent.startTime.split(':');
+    const [hours, minutes] = event.startTime.split(':');
 
     if (hours && minutes) {
       const date = new Date();
@@ -114,176 +26,49 @@ const EventEntry = ({
       return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
     }
 
-    return localEvent.startTime;
-  }, [localEvent]);
+    return event.startTime;
+  }, [event]);
 
-  const setUtcStartTimeWithLocalTime = useCallback(
-    (value: string) => {
-      const [hours, minutes] = value.split(':');
-      if (hours && minutes) {
-        const date = new Date();
-        date.setHours(parseInt(hours));
-        date.setMinutes(parseInt(minutes));
-
-        onEdit(
-          'startTime',
-          date.toLocaleTimeString(undefined, {
-            timeZone: 'UTC',
-            hour: '2-digit',
-            minute: '2-digit'
-          })
-        );
-      }
-    },
-    [onEdit]
-  );
+  const leader = useMemo(() => {
+    return possibleLeaders.find(l => event.leaderId === l.id);
+  }, [possibleLeaders, event.leaderId]);
 
   return (
-    <Card
-      variant="elevation"
-      className={`event-entry ${changeOpacityWhenIgnored && localEvent.ignore ? 'ignored' : ''}`}
-    >
-      <form onSubmit={submitHandler} onReset={onReset} className="event-form">
-        <Tooltip placement="top" title="Event name">
-          <div className="field long">
-            <Assignment color="secondary" className="field-label" />
-            <EditField
-              disabled={!hasEditPermission}
-              onEdit={v => onEdit('title', v)}
-              value={localEvent.title}
-              required
-            />
-          </div>
-        </Tooltip>
-        <Tooltip placement="top" title="Event day">
-          <div className="field">
-            <CalendarToday color="secondary" className="field-label" />
-            <EditField
-              disabled={!hasEditPermission}
-              onEdit={v => onEdit('day', v)}
-              value={localEvent.day}
-              select
-              required
-            >
-              {daysOfWeek.map(day => (
-                <MenuItem value={day} key={day}>
-                  {day}
-                </MenuItem>
-              ))}
-            </EditField>
-          </div>
-        </Tooltip>
-        <Tooltip placement="top" title={`Start time (${timezoneString})`}>
-          <div className="field">
-            <WatchLater color="secondary" className="field-label" />
-            <EditField
-              disabled={!hasEditPermission}
-              onEdit={setUtcStartTimeWithLocalTime}
-              value={localStartTime}
-              type="time"
-            />
-          </div>
-        </Tooltip>
-        <Tooltip placement="top" title="Event duration">
-          <div className="field">
-            <HourglassFull color="secondary" className="field-label" />
-            <EditField
-              disabled={!hasEditPermission}
-              onEdit={v => onEdit('duration', v)}
-              value={localEvent.duration}
-            />
-          </div>
-        </Tooltip>
-        <Tooltip placement="top" title="Event leader">
-          <div className="field long">
-            <Person color="secondary" className="field-label" />
-            <EditField
-              disabled={!hasEditPermission}
-              onEdit={v => onEdit('leaderId', v)}
-              value={localEvent.leaderId}
-              select
-              required
-            >
-              {possibleLeaders.map(leader => (
-                <MenuItem value={leader.id} key={leader.id}>
-                  {leader.name}
-                </MenuItem>
-              ))}
-            </EditField>
-          </div>
-        </Tooltip>
-        <div className="field short">
-          <Tooltip placement="top" title="Ignore in recruiment/discord posts">
-            <FormControlLabel
-              label="Ignored"
-              control={
-                <Checkbox
-                  disabled={!hasEditPermission}
-                  checked={localEvent.ignore}
-                  onChange={e => setLocalEvent({ ...localEvent, ignore: e.target.checked })}
-                />
-              }
-            />
-          </Tooltip>
-        </div>
-        <div className="field buttons">
-          {modified ? (
-            <>
-              <Tooltip placement="top" title="Apply Changes">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className="save"
-                  disabled={!hasEditPermission}
-                  type="submit"
-                >
-                  Save
-                </Button>
-              </Tooltip>
-              <Tooltip placement="top" title="Reset Changes">
-                <IconButton size="small" type="reset">
-                  <Refresh />
-                </IconButton>
-              </Tooltip>
-            </>
-          ) : null}
-          {onDelete && (
-            <Tooltip placement="top" title="Delete Event">
-              <IconButton
-                disabled={!hasEditPermission}
-                color="error"
-                size="small"
-                onClick={onDelete}
-              >
-                <DeleteForever />
-              </IconButton>
+    <>
+      <CardActionArea
+        sx={{ borderRadius: '4px' }}
+        disabled={!hasEditPermission}
+        onClick={e => setMenuAnchor({ top: e.clientY, left: e.clientX })}
+      >
+        <Box
+          sx={t => ({
+            opacity: event.ignore ? '0.6' : '1',
+            borderBottom: `1px solid ${t.palette.divider}`
+          })}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          padding="8px 16px"
+          gap={2}
+        >
+          <Box display="flex" flexDirection="column">
+            <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{event.title}</Typography>
+            <Typography variant="caption">
+              {event.day} {localStartTime && `at ${localStartTime}`}{' '}
+              {event.duration && `for ${event.duration}`}
+            </Typography>
+          </Box>
+          <Box display="flex" gap={1} alignItems="center">
+            <Tooltip title={leader?.name}>
+              <Avatar alt={leader?.id} src={leader?.avatar} sx={{ width: '32px', height: '32px' }}>
+                {leader?.name}
+              </Avatar>
             </Tooltip>
-          )}
-        </div>
-      </form>
-    </Card>
-  );
-};
-
-interface EditFieldProps extends ComponentProps<typeof TextField> {
-  onEdit: (value: string) => void;
-}
-
-const EditField = ({ onEdit, ...props }: EditFieldProps) => {
-  const theme = useTheme<Theme>();
-  return (
-    <TextField
-      variant="outlined"
-      size="small"
-      className="entry-input"
-      onChange={e => {
-        onEdit(e.target.value);
-      }}
-      style={{ colorScheme: theme.palette.mode }}
-      fullWidth
-      {...props}
-    />
+          </Box>
+        </Box>
+      </CardActionArea>
+      <EventMenu event={event} anchorEl={menuAnchor} setAnchorEl={setMenuAnchor} />
+    </>
   );
 };
 

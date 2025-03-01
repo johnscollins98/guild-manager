@@ -16,7 +16,21 @@ export interface EditNicknameProps {
   member: MemberRecord;
 }
 
-export const EditNickName = ({ isOpen, onClose, member }: EditNicknameProps) => {
+export const EditNickNameDialog = ({ isOpen, onClose, member }: EditNicknameProps) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle>Edit Nickname</DialogTitle>
+      <EditNicknameForm member={member} onClose={onClose} />
+    </Dialog>
+  );
+};
+
+interface EditNicknameFormProps {
+  member: MemberRecord;
+  onClose: () => void;
+}
+
+const EditNicknameForm = ({ member, onClose }: EditNicknameFormProps) => {
   const changeMemberMutation = useUpdateDiscordMember();
   const [nickname, setNickname] = useState(member.discordName ?? '');
 
@@ -34,24 +48,21 @@ export const EditNickName = ({ isOpen, onClose, member }: EditNicknameProps) => 
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>Edit Nickname</DialogTitle>
-      <form onSubmit={submitHandler} onReset={onClose}>
-        <DialogContent>
-          <TextField
-            label="Nickname"
-            value={nickname}
-            fullWidth
-            onChange={e => setNickname(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button type="reset">Cancel</Button>
-          <Button color="primary" variant="contained" type="submit">
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+    <form onSubmit={submitHandler} onReset={onClose}>
+      <DialogContent>
+        <TextField
+          label="Nickname"
+          value={nickname}
+          fullWidth
+          onChange={e => setNickname(e.target.value)}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button type="reset">Cancel</Button>
+        <Button color="primary" variant="contained" type="submit">
+          Submit
+        </Button>
+      </DialogActions>
+    </form>
   );
 };

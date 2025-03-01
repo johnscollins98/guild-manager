@@ -1,16 +1,22 @@
 .log-entry {
   display: flex;
+  gap: 20px;
+  padding: 12px;
+  margin-right: 8px;
   align-items: center;
-  margin: 4px;
   flex-wrap: wrap;
+  border-top: 1px solid var(--mui-palette-divider);
+
+  &:first-child {
+    border-top: none;
+  }
 
   div {
     display: flex;
     align-items: center;
-    margin: 12px;
 
     .MuiSvgIcon-root {
-      margin-right: 4px;
+      margin-right: 8px;
     }
   }
 }

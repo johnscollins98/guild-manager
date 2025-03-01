@@ -1,23 +1,25 @@
-import Assignment from '@mui/icons-material/Assignment';
-import CalendarToday from '@mui/icons-material/CalendarToday';
 import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
-import List from '@mui/icons-material/List';
-import Person from '@mui/icons-material/Person';
-import { Card, IconButton, Typography } from '@mui/material';
-import { useCallback, useState } from 'react';
-import { type AuthInfo, type WarningDTO, type WarningType, WarningTypeLabels } from 'server';
+import { Avatar, Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
+import {
+  type AuthInfo,
+  type DiscordMemberDTO,
+  type WarningDTO,
+  type WarningType,
+  WarningTypeLabels
+} from 'server';
 import { useDeleteWarningMutation, useUpdateWarningMutation } from '../../../lib/apis/warnings-api';
 import { useConfirm } from '../../common/confirm-dialog';
-import WarningForm from './warning-form';
+import WarningFormDialog from './warning-form';
 
 export interface WarningEntryProps {
   warning: WarningDTO;
   authData: AuthInfo;
-  getNameForDiscordId: (id: string) => string;
+  getDiscordMemberById: (id?: string) => DiscordMemberDTO | undefined;
 }
 
-export const WarningEntry = ({ warning, getNameForDiscordId, authData }: WarningEntryProps) => {
+export const WarningEntry = ({ warning, getDiscordMemberById, authData }: WarningEntryProps) => {
   const confirm = useConfirm();
 
   const deleteWarningMutation = useDeleteWarningMutation();
@@ -39,49 +41,74 @@ export const WarningEntry = ({ warning, getNameForDiscordId, authData }: Warning
     }
   }, [warning, deleteWarningMutation, confirm]);
 
+  const givenByUser = useMemo(
+    () => getDiscordMemberById(warning.givenBy),
+    [warning.givenBy, getDiscordMemberById]
+  );
+  const givenByName = useMemo(() => getNameForDiscordMember(givenByUser), [givenByUser]);
+  const updatedByUser = useMemo(
+    () => getDiscordMemberById(warning.lastUpdatedBy),
+    [warning.lastUpdatedBy, getDiscordMemberById]
+  );
+  const updatedByName = useMemo(() => getNameForDiscordMember(updatedByUser), [updatedByUser]);
+
   return (
     <>
-      <Card variant="elevation" className="log-entry-card">
-        <div className="top-row">
-          <div className="data">
-            <span className="date field">
-              <CalendarToday className="icon" color="secondary" />
-              <Typography>{new Date(warning.timestamp).toDateString()}</Typography>
-            </span>
-            <span className="given-by field">
-              <Person className="icon" color="secondary" />
-              <Typography>{getNameForDiscordId(warning.givenBy)}</Typography>
-            </span>
-            <span className="field">
-              <List className="icon" color="secondary" />
-              <Typography>{WarningTypeLabels[warning.type]}</Typography>
-            </span>
-            <span className="reason field">
-              <Assignment className="icon" color="secondary" />
-              <Typography>{warning.reason}</Typography>
-            </span>
-          </div>
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap="8px"
+        paddingY="16px"
+        sx={t => ({ borderTop: `1px solid ${t.palette.divider}` })}
+      >
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
+          <Box display="flex" gap="8px" alignItems="center">
+            <Tooltip title={`Given by ${givenByName}`}>
+              <Avatar
+                src={givenByUser?.avatar}
+                alt={givenByName}
+                sx={{ height: '32px', width: '32px' }}
+              >
+                {givenByName}
+              </Avatar>
+            </Tooltip>
+            <Box display="flex" flexDirection="column">
+              <Typography variant="caption">
+                {new Date(warning.timestamp).toLocaleDateString(undefined, { dateStyle: 'short' })}
+              </Typography>
+              <Typography variant="caption" sx={{ fontWeight: 'bold' }}>
+                {WarningTypeLabels[warning.type]}
+              </Typography>
+            </Box>
+          </Box>
           {authData.permissions.WARNINGS && (
-            <div className="actions">
+            <Box display="flex" gap="2px" alignItems="center">
               <IconButton onClick={() => setShowUpdate(true)} disabled={isPending}>
                 <Edit color="primary" />
               </IconButton>
               <IconButton onClick={() => handleDeleteWarning()}>
                 <Close color="error" />
               </IconButton>
-            </div>
+            </Box>
           )}
-        </div>
+        </Box>
+        <span className="reason field">
+          <Typography>{warning.reason}</Typography>
+        </span>
         {warning.lastUpdatedBy && (
           <div>
             <Typography variant="caption">
-              Updated by <i>{getNameForDiscordId(warning.lastUpdatedBy)}</i> on{' '}
-              <i>{new Date(warning.lastUpdatedTimestamp).toDateString()}</i>
+              Updated by <i>{updatedByName}</i> on{' '}
+              <i>
+                {new Date(warning.lastUpdatedTimestamp).toLocaleDateString(undefined, {
+                  dateStyle: 'short'
+                })}
+              </i>
             </Typography>
           </div>
         )}
-      </Card>
-      <WarningForm
+      </Box>
+      <WarningFormDialog
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}
         onSubmit={handleUpdateWarning}
@@ -89,4 +116,8 @@ export const WarningEntry = ({ warning, getNameForDiscordId, authData }: Warning
       />
     </>
   );
+};
+
+const getNameForDiscordMember = (discordMember?: DiscordMemberDTO) => {
+  return discordMember?.nickname ?? discordMember?.name ?? 'Unknown User';
 };

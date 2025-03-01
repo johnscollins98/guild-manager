@@ -17,7 +17,24 @@ interface Props {
   initialData?: WarningCreateDTO;
 }
 
-const WarningForm = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
+const WarningFormDialog = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
+      <DialogTitle>Give Warning</DialogTitle>
+      <DialogContent>
+        <WarningForm onSubmit={onSubmit} initialData={initialData} onClose={onClose} />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface WarningFormProps {
+  onSubmit: Props['onSubmit'];
+  initialData: Props['initialData'];
+  onClose: Props['onClose'];
+}
+
+const WarningForm = ({ onSubmit, initialData, onClose }: WarningFormProps) => {
   const [warningReason, setWarningReason] = useState(initialData?.reason ?? '');
   const [warningType, setWarningType] = useState(initialData?.type ?? WarningType.OFFICIAL);
 
@@ -35,51 +52,45 @@ const WarningForm = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
     },
     [onClose, onSubmit, warningReason, warningType]
   );
-
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
-      <DialogTitle>Give Warning</DialogTitle>
-      <DialogContent>
-        <form onSubmit={submitHandler} onReset={onClose} className="warning-form">
-          <TextField
-            value={warningType}
-            onChange={e => setWarningType(e.target.value as WarningType)}
-            label="Warning"
-            select
-            variant="outlined"
-            fullWidth
-            size="small"
-            required
-          >
-            {Object.values(WarningType).map(v => (
-              <MenuItem key={v} value={v}>
-                {WarningTypeLabels[v]}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            value={warningReason}
-            onChange={e => setWarningReason(e.target.value)}
-            variant="outlined"
-            label="Reason"
-            size="small"
-            fullWidth
-            minRows={3}
-            multiline
-            required
-          />
-          <Box display="flex" justifyContent="flex-end" gap={2}>
-            <Button variant="text" type="reset">
-              Cancel
-            </Button>
-            <Button variant="contained" color="primary" size="large" type="submit">
-              Submit
-            </Button>
-          </Box>
-        </form>
-      </DialogContent>
-    </Dialog>
+    <form onSubmit={submitHandler} onReset={onClose} className="warning-form">
+      <TextField
+        value={warningType}
+        onChange={e => setWarningType(e.target.value as WarningType)}
+        label="Warning"
+        select
+        variant="outlined"
+        fullWidth
+        size="small"
+        required
+      >
+        {Object.values(WarningType).map(v => (
+          <MenuItem key={v} value={v}>
+            {WarningTypeLabels[v]}
+          </MenuItem>
+        ))}
+      </TextField>
+      <TextField
+        value={warningReason}
+        onChange={e => setWarningReason(e.target.value)}
+        variant="outlined"
+        label="Reason"
+        size="small"
+        fullWidth
+        minRows={3}
+        multiline
+        required
+      />
+      <Box display="flex" justifyContent="flex-end" gap={2}>
+        <Button variant="text" type="reset">
+          Cancel
+        </Button>
+        <Button variant="contained" color="primary" type="submit">
+          Submit
+        </Button>
+      </Box>
+    </form>
   );
 };
 
-export default WarningForm;
+export default WarningFormDialog;

@@ -62,7 +62,6 @@ const GuildMemberMenu = ({
         vertical: 'top',
         horizontal: 'left'
       }}
-      keepMounted
       open={Boolean(menuAnchor)}
       onClose={closeMenu}
     >

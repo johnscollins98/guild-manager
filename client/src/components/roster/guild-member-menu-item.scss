@@ -10,9 +10,9 @@
 }
 
 .error {
-  color: #ff0033;
+  color: var(--mui-palette-error-main);
 }
 
 .warning {
-  color: #cdbc00;
+  color: var(--mui-palette-warning-main);
 }

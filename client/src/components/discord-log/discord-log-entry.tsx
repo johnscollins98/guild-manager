@@ -15,7 +15,7 @@ interface Props {
 
 const DiscordLogEntry = ({ displayEntry, date }: Props) => {
   return (
-    <Accordion elevation={0}>
+    <Accordion className="discord-log-entry">
       <AccordionSummary
         expandIcon={displayEntry.details?.length ? <ExpandMore /> : null}
         className="discord-log-summary"

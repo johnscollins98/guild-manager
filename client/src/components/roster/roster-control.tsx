@@ -7,7 +7,6 @@ import Refresh from '@mui/icons-material/Refresh';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import type React from 'react';
 import { useCallback, useState } from 'react';
@@ -99,7 +98,7 @@ const RosterControl = ({
 
   return (
     <>
-      <Paper variant="outlined" className="roster-bar">
+      <div className="roster-bar">
         <span className="left">
           <Tooltip title="Filter Members">
             <IconButton size="small" onClick={onFilterOpen}>
@@ -158,7 +157,7 @@ const RosterControl = ({
             </span>
           </Tooltip>
         </span>
-      </Paper>
+      </div>
       <Menu
         open={sortOpen}
         anchorEl={anchorElement}
@@ -169,20 +168,32 @@ const RosterControl = ({
           horizontal: 'right'
         }}
       >
-        <MenuItem className="control-menu-item" onClick={() => sortHandler('rank')}>
-          {sortBy === 'rank' ? <Check className="selected" /> : null}
+        <MenuItem
+          selected={sortBy === 'rank'}
+          className="control-menu-item"
+          onClick={() => sortHandler('rank')}
+        >
           Rank
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => sortHandler('name')}>
-          {sortBy === 'name' ? <Check className="selected" /> : null}
+        <MenuItem
+          selected={sortBy === 'name'}
+          className="control-menu-item"
+          onClick={() => sortHandler('name')}
+        >
           Name
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => sortHandler('date')}>
-          {sortBy === 'date' ? <Check className="selected" /> : null}
+        <MenuItem
+          selected={sortBy === 'date'}
+          className="control-menu-item"
+          onClick={() => sortHandler('date')}
+        >
           Join Date
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => sortHandler('warnings')}>
-          {sortBy === 'warnings' ? <Check className="selected" /> : null}
+        <MenuItem
+          selected={sortBy === 'warnings'}
+          className="control-menu-item"
+          onClick={() => sortHandler('warnings')}
+        >
           Warnings
         </MenuItem>
       </Menu>
@@ -196,28 +207,46 @@ const RosterControl = ({
           horizontal: 'right'
         }}
       >
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('none')}>
-          {filterBy === 'none' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('none')}
+          selected={filterBy === 'none'}
+        >
           No filters
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('has-gw2')}>
-          {filterBy === 'has-gw2' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('has-gw2')}
+          selected={filterBy === 'has-gw2'}
+        >
           Has GW2 Account
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('excess-discord')}>
-          {filterBy === 'excess-discord' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('excess-discord')}
+          selected={filterBy === 'excess-discord'}
+        >
           Excess Discord
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('issues')}>
-          {filterBy === 'issues' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('issues')}
+          selected={filterBy === 'issues'}
+        >
           Any issues
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('warnings')}>
-          {filterBy === 'warnings' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('warnings')}
+          selected={filterBy === 'warnings'}
+        >
           Any warnings
         </MenuItem>
-        <MenuItem className="control-menu-item" onClick={() => filterHandler('manual-match')}>
-          {filterBy === 'manual-match' ? <Check className="selected" /> : null}
+        <MenuItem
+          className="control-menu-item"
+          onClick={() => filterHandler('manual-match')}
+          selected={filterBy === 'manual-match'}
+        >
           Manually associated
         </MenuItem>
       </Menu>

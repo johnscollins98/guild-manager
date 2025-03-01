@@ -21,12 +21,12 @@ import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
 import { useConfirm } from '../common/confirm-dialog';
-import { AssociateMember } from './associate-member';
-import { EditNickName } from './edit-nickname';
+import { AssociateMemberDialog } from './associate-member';
+import { EditNickNameDialog } from './edit-nickname';
 import './guild-member-card.scss';
 import GuildMemberMenu from './guild-member-menu';
-import WarningForm from './warnings/warning-form';
-import WarningsViewer from './warnings/warnings-viewer';
+import WarningFormDialog from './warnings/warning-form';
+import WarningsViewerDialog from './warnings/warnings-viewer';
 
 interface Props {
   member: MemberRecord;
@@ -135,8 +135,12 @@ const GuildMemberCard = ({
     [member.roles, userRoles, botRoles]
   );
 
-  const selected = !!member.discordId && selection.includes(member.discordId);
-  const onClickKickMode = () => {
+  const selected = useMemo(
+    () => !!member.discordId && selection.includes(member.discordId),
+    [member.discordId, selection]
+  );
+
+  const onClickKickMode = useCallback(() => {
     const id = member.discordId;
     if (!id) return;
     if (memberIsHigherRole) return;
@@ -147,7 +151,7 @@ const GuildMemberCard = ({
       if (selection.length >= 5) return;
       setSelection(old => [...old, id]);
     }
-  };
+  }, [member.discordId, memberIsHigherRole, selected, selection.length, setSelection]);
 
   return (
     <>
@@ -177,7 +181,9 @@ const GuildMemberCard = ({
                   </Avatar>
                 )}
                 <span className="details">
-                  <Typography className="name">{member.memberId || member.discordName}</Typography>
+                  <Typography className="name" sx={{ color }}>
+                    {member.memberId || member.discordName}
+                  </Typography>
                   {member.joinDate ? (
                     <span className="date">
                       <CalendarToday />
@@ -280,22 +286,22 @@ const GuildMemberCard = ({
         setWarningOpen={setWarningOpen}
         setWarningViewerOpen={setWarningViewerOpen}
       />
-      <WarningForm
+      <WarningFormDialog
         isOpen={warningOpen}
         onClose={() => setWarningOpen(false)}
         onSubmit={warningSubmitHandler}
       />
-      <WarningsViewer
+      <WarningsViewerDialog
         isOpen={warningViewerOpen}
         onClose={() => setWarningViewerOpen(false)}
         member={member}
       />
-      <AssociateMember
+      <AssociateMemberDialog
         isOpen={associateOpen}
         onClose={() => setAssociateOpen(false)}
         member={member}
       />
-      <EditNickName isOpen={editOpen} onClose={() => setEditOpen(false)} member={member} />
+      <EditNickNameDialog isOpen={editOpen} onClose={() => setEditOpen(false)} member={member} />
     </>
   );
 };
