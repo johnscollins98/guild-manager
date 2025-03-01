@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -8,7 +9,6 @@ import type MemberRecord from '../../../lib/interfaces/member-record';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
 import { WarningEntry } from './warning-entry';
-import './warning-viewer.scss';
 
 interface Props {
   isOpen: boolean;
@@ -22,9 +22,9 @@ const WarningsViewerDialog = ({ isOpen, onClose, member }: Props) => {
   }, [onClose, member.warnings, isOpen]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
-      <DialogContent className="log-entry-viewer">
+      <DialogContent>
         <WarningViewerContent member={member} />
       </DialogContent>
     </Dialog>
@@ -40,11 +40,10 @@ const WarningViewerContent = ({ member }: WarningViewerContentProps) => {
   const { data: authData, isLoading: authLoading, isError: authError } = useAuth();
 
   const getNameForDiscordId = useCallback(
-    (givenToId: string) => {
-      if (!discordMembers) return 'Unknown User';
-
+    (givenToId?: string) => {
+      if (!discordMembers || !givenToId) return undefined;
       const discordMember = discordMembers.find(dm => dm.id === givenToId);
-      return discordMember?.nickname ?? discordMember?.name ?? 'Unknown User';
+      return discordMember;
     },
     [discordMembers]
   );
@@ -55,16 +54,16 @@ const WarningViewerContent = ({ member }: WarningViewerContentProps) => {
   if (isLoading || !discordMembers || authLoading || !authData) return <LoaderPage />;
 
   return (
-    <>
+    <Box display="flex" flexDirection="column">
       {member.warnings.map(warning => (
         <WarningEntry
           warning={warning}
           authData={authData}
           key={warning.id}
-          getNameForDiscordId={getNameForDiscordId}
+          getDiscordMemberById={getNameForDiscordId}
         />
       ))}
-    </>
+    </Box>
   );
 };
 
