@@ -23,10 +23,11 @@ export class DiscordBot {
       console.log('Bot listening');
       await this.setupEventListeners();
       console.log('Setup event listeners');
-      await this.setupCommands();
-      console.log('Setup commands');
     });
+    await this.login();
+  }
 
+  async login() {
     await this.client.login(config.botToken);
   }
 
@@ -39,14 +40,7 @@ export class DiscordBot {
     }
   }
 
-  private async setupCommands() {
-    this.client.on(Events.InteractionCreate, async interaction => {
-      if (!interaction.isChatInputCommand()) return;
-      if (!interaction.command) return;
-
-      this.commandFactory.executeCommandByName(interaction.command.name, interaction);
-    });
-
+  async setupCommands() {
     const guild = this.client.guilds.resolve(config.discordGuildId);
 
     if (!guild) throw new Error('Guild not available');
@@ -58,6 +52,13 @@ export class DiscordBot {
   }
 
   private async setupEventListeners() {
+    this.client.on(Events.InteractionCreate, async interaction => {
+      if (!interaction.isChatInputCommand()) return;
+      if (!interaction.command) return;
+
+      this.commandFactory.executeCommandByName(interaction.command.name, interaction);
+    });
+
     // Will refactor if we add more event listeners
     this.client.on('guildMemberRemove', async m => {
       const guild = await this.client.guilds.fetch(config.discordGuildId);
