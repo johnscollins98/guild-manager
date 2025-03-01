@@ -41,7 +41,10 @@ const EventEntry = ({ event, hasEditPermission }: Props) => {
         onClick={e => setMenuAnchor({ top: e.clientY, left: e.clientX })}
       >
         <Box
-          sx={{ opacity: event.ignore ? '0.6' : '1' }}
+          sx={t => ({
+            opacity: event.ignore ? '0.6' : '1',
+            borderBottom: `1px solid ${t.palette.divider}`
+          })}
           display="flex"
           justifyContent="space-between"
           alignItems="center"
