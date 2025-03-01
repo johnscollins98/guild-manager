@@ -9,7 +9,7 @@ import { useCallback, useState } from 'react';
 import { type AuthInfo, type WarningDTO, type WarningType, WarningTypeLabels } from 'server';
 import { useDeleteWarningMutation, useUpdateWarningMutation } from '../../../lib/apis/warnings-api';
 import { useConfirm } from '../../common/confirm-dialog';
-import WarningForm from './warning-form';
+import WarningFormDialog from './warning-form';
 
 export interface WarningEntryProps {
   warning: WarningDTO;
@@ -81,7 +81,7 @@ export const WarningEntry = ({ warning, getNameForDiscordId, authData }: Warning
           </div>
         )}
       </div>
-      <WarningForm
+      <WarningFormDialog
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}
         onSubmit={handleUpdateWarning}

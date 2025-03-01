@@ -14,13 +14,28 @@ import { useAssociateToDiscordAccountMutation } from '../../lib/apis/gw2-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import './associate-member.scss';
 
-export interface AssociateMemberProps {
+export interface AssociateMemberDialogProps {
   member: MemberRecord;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const AssociateMember = ({ member, isOpen, onClose }: AssociateMemberProps) => {
+export const AssociateMemberDialog = ({ member, isOpen, onClose }: AssociateMemberDialogProps) => {
+  return (
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
+      <DialogTitle>Associate {member.memberId}</DialogTitle>
+      <DialogContent>
+        <AssociateMemberForm member={member} onClose={onClose} />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface AssociateMemberFormProps {
+  member: MemberRecord;
+  onClose: () => void;
+}
+const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
   const { data, isLoading, isError } = useDiscordMembers();
 
   const { mutate: associateMember } = useAssociateToDiscordAccountMutation();
@@ -47,43 +62,39 @@ export const AssociateMember = ({ member, isOpen, onClose }: AssociateMemberProp
     [associateMember, discordAccountId, member.memberId, onClose]
   );
 
-  if (isLoading || !member.memberId) {
+  if (isError) {
+    return <>There was an error gathering discord data.</>;
+  }
+
+  if (isLoading || !member.memberId || !data) {
     return null;
   }
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Associate {member.memberId}</DialogTitle>
-      <DialogContent>
-        {data && (
-          <form onSubmit={submitHandler} onReset={onClose} className="associate-form">
-            <Alert severity="warning">
-              <Box display="flex" flexDirection="column" gap="8px">
-                <div>
-                  <b>Manual association should only be done where necessary or for alt accounts.</b>
-                </div>
-                <div>Please use nickname assocation where possible.</div>
-              </Box>
-            </Alert>
-            <Autocomplete
-              value={discordAccountId}
-              onChange={(_e, v) => v && setDiscordId(v)}
-              options={data
-                .filter(member => member.id !== undefined && member.name !== undefined)
-                .map(member => ({ label: member.nickname ?? member.name!, value: member.id! }))}
-              renderInput={p => <TextField label="Select Discord Member" required {...p} />}
-              fullWidth
-            />
-            <div className="actions">
-              <Button type="reset">Cancel</Button>
-              <Button variant="contained" type="submit" disabled={!discordAccountId}>
-                Submit
-              </Button>
-            </div>
-          </form>
-        )}
-        {isError && <>There was an error gathering discord data.</>}
-      </DialogContent>
-    </Dialog>
+    <form onSubmit={submitHandler} onReset={onClose} className="associate-form">
+      <Alert severity="warning">
+        <Box display="flex" flexDirection="column" gap="8px">
+          <div>
+            <b>Manual association should only be done where necessary or for alt accounts.</b>
+          </div>
+          <div>Please use nickname assocation where possible.</div>
+        </Box>
+      </Alert>
+      <Autocomplete
+        value={discordAccountId}
+        onChange={(_e, v) => v && setDiscordId(v)}
+        options={data
+          .filter(member => member.id !== undefined && member.name !== undefined)
+          .map(member => ({ label: member.nickname ?? member.name!, value: member.id! }))}
+        renderInput={p => <TextField label="Select Discord Member" required {...p} />}
+        fullWidth
+      />
+      <div className="actions">
+        <Button type="reset">Cancel</Button>
+        <Button variant="contained" type="submit" disabled={!discordAccountId}>
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 };

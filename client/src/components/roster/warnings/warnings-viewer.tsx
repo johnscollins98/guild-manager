@@ -1,7 +1,7 @@
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useAuth } from '../../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
@@ -16,7 +16,26 @@ interface Props {
   member: MemberRecord;
 }
 
-const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
+const WarningsViewerDialog = ({ isOpen, onClose, member }: Props) => {
+  useEffect(() => {
+    if (member.warnings.length === 0 && isOpen) onClose();
+  }, [onClose, member.warnings, isOpen]);
+
+  return (
+    <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
+      <DialogTitle>Warnings for {member.memberId}</DialogTitle>
+      <DialogContent className="log-entry-viewer">
+        <WarningViewerContent member={member} />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface WarningViewerContentProps {
+  member: MemberRecord;
+}
+
+const WarningViewerContent = ({ member }: WarningViewerContentProps) => {
   const { data: discordMembers, isLoading, isError } = useDiscordMembers();
   const { data: authData, isLoading: authLoading, isError: authError } = useAuth();
 
@@ -30,28 +49,23 @@ const WarningsViewer = ({ isOpen, onClose, member }: Props) => {
     [discordMembers]
   );
 
-  if (member.warnings.length === 0 && isOpen) onClose();
-
   if (isError || authError)
     return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
 
   if (isLoading || !discordMembers || authLoading || !authData) return <LoaderPage />;
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth={false}>
-      <DialogTitle>Warnings for {member.memberId}</DialogTitle>
-      <DialogContent className="log-entry-viewer">
-        {member.warnings.map(warning => (
-          <WarningEntry
-            warning={warning}
-            authData={authData}
-            key={warning.id}
-            getNameForDiscordId={getNameForDiscordId}
-          />
-        ))}
-      </DialogContent>
-    </Dialog>
+    <>
+      {member.warnings.map(warning => (
+        <WarningEntry
+          warning={warning}
+          authData={authData}
+          key={warning.id}
+          getNameForDiscordId={getNameForDiscordId}
+        />
+      ))}
+    </>
   );
 };
 
-export default WarningsViewer;
+export default WarningsViewerDialog;

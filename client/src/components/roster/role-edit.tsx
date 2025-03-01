@@ -49,31 +49,33 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
     setSelectedRecord(undefined);
   };
 
-  if (!selectedRecord) return null;
   return (
     <Dialog open={modalShow} onClose={closeEdit} className="role-edit-modal">
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
-        {roles?.map(role => (
-          <MenuItem
-            className="role-menu-item"
-            dense
-            key={role.id}
-            onClick={() => roleChangeHandler(role)}
-          >
-            <FormGroup row key={role.id}>
-              <FormControlLabel
-                control={
-                  <StyledCheckbox
-                    color={getColorFromRole(role.name, roles) || ''}
-                    checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
-                  />
-                }
-                label={role.name}
-              />
-            </FormGroup>
-          </MenuItem>
-        ))}
+        {modalShow &&
+          selectedRecord &&
+          roles &&
+          roles.map(role => (
+            <MenuItem
+              className="role-menu-item"
+              dense
+              key={role.id}
+              onClick={() => roleChangeHandler(role)}
+            >
+              <FormGroup row key={role.id}>
+                <FormControlLabel
+                  control={
+                    <StyledCheckbox
+                      color={getColorFromRole(role.name, roles) || ''}
+                      checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
+                    />
+                  }
+                  label={role.name}
+                />
+              </FormGroup>
+            </MenuItem>
+          ))}
       </DialogContent>
     </Dialog>
   );
