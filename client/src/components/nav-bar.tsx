@@ -36,7 +36,11 @@ const LINKS = [
   { label: 'Recruitment', link: '/recruitment' }
 ];
 
-const NavBar = () => {
+interface Props {
+  maxWidth?: string;
+}
+
+const NavBar = ({ maxWidth }: Props) => {
   const { mode, setMode } = useColorScheme();
   const [modeMenuAnchor, setModeMenuAnchor] = useState<null | HTMLElement>(null);
 
@@ -84,7 +88,15 @@ const NavBar = () => {
       color="transparent"
       sx={theme => ({ borderBottom: `1px solid ${theme.palette.divider}` })}
     >
-      <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
+      <Box
+        maxWidth={maxWidth}
+        width="100%"
+        margin="auto"
+        justifyContent="space-between"
+        alignItems="center"
+        padding={1}
+        display="flex"
+      >
         <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
