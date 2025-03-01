@@ -1,25 +1,20 @@
-import { Divider } from '@mui/material';
+import { Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useMemo, useState } from 'react';
-import { daysOfWeek, type EventCreateDTO, type EventDTO } from 'server';
+import { daysOfWeek, type EventCreateDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
 import { useAuth, useEventRoles } from '../../lib/apis/auth-api';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
-import {
-  useCreateEventMutation,
-  useDeleteEventMutation,
-  useEvents,
-  useUpdateEventMutation
-} from '../../lib/apis/event-api';
+import { useCreateEventMutation, useEvents } from '../../lib/apis/event-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import { useConfirm } from '../common/confirm-dialog';
 import { ErrorMessage } from '../common/error-message';
 import LoaderPage from '../common/loader-page';
 import EventEntry from './event-entry';
-import './event-page.scss';
+import { EventFormDialog } from './event-form';
+import { EventLeadersContext } from './event-leaders-context';
 import EventPosterForm from './event-poster-form';
 
 const EventPage = () => {
@@ -29,13 +24,10 @@ const EventPage = () => {
   const eventsQuery = useEvents();
   const eventRolesQuery = useEventRoles();
   const discordQuery = useDiscordMembers();
-  const deleteEventMutation = useDeleteEventMutation();
-  const updateEventMutation = useUpdateEventMutation();
   const createEventMutation = useCreateEventMutation();
 
-  const [showModal, setShowModal] = useState(false);
-
-  const confirm = useConfirm();
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // sort events
   const sortedEvents = useMemo(
@@ -74,51 +66,27 @@ const EventPage = () => {
     d.roles.some(role => eventRolesQuery.data.includes(role.id))
   );
 
-  const deleteEvent = async (eventToDelete: EventDTO) => {
-    const res = await confirm(
-      `Are you sure you want to delete '${eventToDelete.title}'?`,
-      'Delete Event'
-    );
-    if (!res) return;
-
-    await deleteEventMutation.mutateAsync(eventToDelete.id);
-  };
-
-  const updateEvent = async (id: number, event: EventCreateDTO) => {
-    await updateEventMutation.mutateAsync({ id, event });
-  };
-
   const createEvent = async (eventToCreate: EventCreateDTO) => {
     await createEventMutation.mutateAsync(eventToCreate);
   };
 
   return (
-    <>
-      <div className="event-page">
+    <EventLeadersContext.Provider value={leaders}>
+      <Box display="flex" flexDirection="column" overflow="auto">
         {sortedEvents.map(event => (
           <EventEntry
-            initialData={event}
-            authData={authQuery.data}
-            onDelete={() => deleteEvent(event)}
-            onSubmit={update => updateEvent(event.id, update)}
-            possibleLeaders={leaders}
-            changeOpacityWhenIgnored
+            event={event}
+            hasEditPermission={authQuery.data.permissions.EVENTS}
             key={event.id}
           />
         ))}
-        <Divider sx={{ '::before': { borderWidth: '4px' }, '::after': { borderWidth: '4px' } }}>
-          Create a new event
-        </Divider>
-        <EventEntry
-          onSubmit={createEvent}
-          authData={authQuery.data}
-          possibleLeaders={leaders}
-          resetOnSubmit
-        />
-      </div>
-      <div className="button-container">
+      </Box>
+      <Box display="flex" justifyContent="flex-end" gap="8px" marginTop="16px">
+        <Button variant="contained" color="secondary" onClick={() => setShowCreateModal(true)}>
+          Create new event
+        </Button>
         <Button
-          onClick={() => setShowModal(true)}
+          onClick={() => setShowPostModal(true)}
           variant="contained"
           className="discord-button"
           startIcon={<DiscordSvg width={22} />}
@@ -126,14 +94,19 @@ const EventPage = () => {
         >
           Post to Discord
         </Button>
-      </div>
-      <Dialog open={showModal} onClose={() => setShowModal(false)} fullWidth={true} maxWidth="sm">
+      </Box>
+      <EventFormDialog
+        onSubmit={createEvent}
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+      />
+      <Dialog open={showPostModal} onClose={() => setShowPostModal(false)} fullWidth maxWidth="sm">
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
-          <EventPosterForm onClose={() => setShowModal(false)} />
+          <EventPosterForm onClose={() => setShowPostModal(false)} />
         </DialogContent>
       </Dialog>
-    </>
+    </EventLeadersContext.Provider>
   );
 };
 
