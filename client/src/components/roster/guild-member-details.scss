@@ -1,6 +1,6 @@
 div.member-header {
   display: flex;
-  padding: 0px 8px 8px 8px;
+  padding: 0px 10px 8px 10px;
   align-items: center;
 
   .avatar {
@@ -25,7 +25,7 @@ div.detail {
 
 div.member-detail-container {
   display: flex;
-  padding: 8px;
+  padding: 4px 10px;
 
   div.name {
     font-size: medium;

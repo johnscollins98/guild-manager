@@ -57,6 +57,7 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
         {roles?.map(role => (
           <MenuItem
             className="role-menu-item"
+            dense
             key={role.id}
             onClick={() => roleChangeHandler(role)}
           >
@@ -86,5 +87,5 @@ interface StyleProps {
 }
 
 const StyledCheckbox = ({ color, ...props }: StyleProps) => (
-  <Checkbox sx={{ color: color, '&.Mui-checked': { color: color } }} {...props} />
+  <Checkbox sx={{ color: color, '&.Mui-checked': { color: color } }} size="small" {...props} />
 );

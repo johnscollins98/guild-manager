@@ -7,8 +7,8 @@ import { useDiscordMembers } from '../../../lib/apis/discord-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
 import { ErrorMessage } from '../../common/error-message';
 import LoaderPage from '../../common/loader-page';
-import '../log-entry-viewer.scss';
 import { WarningEntry } from './warning-entry';
+import './warning-viewer.scss';
 
 interface Props {
   isOpen: boolean;

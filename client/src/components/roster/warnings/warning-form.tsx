@@ -72,7 +72,7 @@ const WarningForm = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
             <Button variant="text" type="reset">
               Cancel
             </Button>
-            <Button variant="contained" color="primary" size="large" type="submit">
+            <Button variant="contained" color="primary" type="submit">
               Submit
             </Button>
           </Box>

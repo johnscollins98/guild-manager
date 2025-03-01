@@ -1,24 +1,21 @@
 .member-card {
   &.MuiPaper-outlined {
-    border-left: 4px solid;
-    transition: border-left 0.1s;
+    border: none;
+    transition: border-left 0.2s;
 
     &:hover {
-      .MuiCardContent-root {
-        background-color: rgba(0, 0, 0, 0.1);
-      }
       border-left: 8px solid;
       cursor: pointer;
 
       &.kick-mode {
-        border-left: 4px solid;
+        border-left: 0px;
       }
     }
   }
 
   .MuiCardContent-root {
     width: 100%;
-    padding: 12px;
+    padding: 8px 12px;
 
     &:last-child {
       padding-bottom: 12px;
@@ -37,7 +34,8 @@
         align-items: center;
         overflow: hidden;
 
-        .avatar {
+        .avatar,
+        .MuiCheckbox-root {
           margin-right: 8px;
           height: 32px;
           width: 32px;

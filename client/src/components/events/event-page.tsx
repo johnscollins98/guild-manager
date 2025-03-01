@@ -1,8 +1,8 @@
+import { Divider } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
 import { useMemo, useState } from 'react';
 import { daysOfWeek, type EventCreateDTO, type EventDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
@@ -106,7 +106,9 @@ const EventPage = () => {
             key={event.id}
           />
         ))}
-        <Divider />
+        <Divider sx={{ '::before': { borderWidth: '4px' }, '::after': { borderWidth: '4px' } }}>
+          Create a new event
+        </Divider>
         <EventEntry
           onSubmit={createEvent}
           authData={authQuery.data}
@@ -119,9 +121,9 @@ const EventPage = () => {
           onClick={() => setShowModal(true)}
           variant="contained"
           className="discord-button"
+          startIcon={<DiscordSvg width={22} />}
           disabled={!authQuery.data.permissions.EVENTS}
         >
-          <DiscordSvg width={24} />
           Post to Discord
         </Button>
       </div>

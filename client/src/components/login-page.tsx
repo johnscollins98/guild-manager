@@ -40,8 +40,9 @@ const LoginPage = () => {
           <Button
             href={`${config.backEndBaseUrl}/auth?returnTo=${encodeURI(window.location.href)}`}
             variant="contained"
+            color="primary"
+            startIcon={<DiscordLogo height="22" />}
           >
-            <DiscordLogo height="24" width="24" className="discord-logo" />
             Log In
           </Button>
           {authInfo.loggedIn && !authInfo.permissions.ACCESS ? (

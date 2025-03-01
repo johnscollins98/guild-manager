@@ -1,6 +1,10 @@
 .event-entry {
-  margin: 8px;
-  padding: 8px;
+  border-top: 1px solid var(--mui-palette-divider);
+  &:first-child,
+  &:last-child {
+    border-top: none;
+  }
+  padding: 16px 0px;
 
   &.ignored {
     opacity: 0.6;

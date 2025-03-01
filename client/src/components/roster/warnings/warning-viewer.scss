@@ -1,14 +1,15 @@
 div.log-entry-viewer {
-  padding-bottom: 24px;
+  // padding-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  // gap: 8px;
 
   .log-entry-card {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 4px 4px 4px 12px;
+    padding: 8px;
+    border-top: 1px solid var(--mui-palette-divider);
 
     .top-row {
       display: flex;
@@ -28,6 +29,7 @@ div.log-entry-viewer {
 
       .actions {
         display: flex;
+        align-items: center;
         flex: 0;
       }
     }

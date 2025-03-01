@@ -13,8 +13,6 @@ import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material/styles';
-import { type Theme } from '@mui/material/styles/createTheme';
 import equal from 'fast-deep-equal';
 import type React from 'react';
 import { type ComponentProps, useCallback, useMemo, useState } from 'react';
@@ -271,7 +269,6 @@ interface EditFieldProps extends ComponentProps<typeof TextField> {
 }
 
 const EditField = ({ onEdit, ...props }: EditFieldProps) => {
-  const theme = useTheme<Theme>();
   return (
     <TextField
       variant="outlined"
@@ -280,7 +277,6 @@ const EditField = ({ onEdit, ...props }: EditFieldProps) => {
       onChange={e => {
         onEdit(e.target.value);
       }}
-      style={{ colorScheme: theme.palette.mode }}
       fullWidth
       {...props}
     />

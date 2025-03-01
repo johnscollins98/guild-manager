@@ -1,24 +1,23 @@
 import Brightness3 from '@mui/icons-material/Brightness3';
-import Brightness6 from '@mui/icons-material/Brightness6';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { Menu, MenuItem, useColorScheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
+import { type Mode } from '@mui/system/cssVars/useCurrentColorScheme';
 import type React from 'react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { config } from '../lib/config';
 import { useConfirm } from './common/confirm-dialog';
-import { useTheme } from './common/theme/theme-context';
 import './nav-bar.scss';
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -38,7 +37,17 @@ const LINKS = [
 ];
 
 const NavBar = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { mode, setMode } = useColorScheme();
+  const [modeMenuAnchor, setModeMenuAnchor] = useState<null | HTMLElement>(null);
+
+  const handleModeClick = useCallback(
+    (mode: Mode) => {
+      setMode(mode);
+      setModeMenuAnchor(null);
+    },
+    [setMode, setModeMenuAnchor]
+  );
+
   const [searchParams, setSearchParams] = useSearchParams();
   const filterString = searchParams.get('filterString');
 
@@ -69,7 +78,12 @@ const NavBar = () => {
     : '';
 
   return (
-    <AppBar position="static" className="my-nav" color="default">
+    <AppBar
+      position="static"
+      className="my-nav"
+      color="transparent"
+      sx={theme => ({ borderBottom: `1px solid ${theme.palette.divider}` })}
+    >
       <Box justifyContent="space-between" alignItems="center" padding={1} display="flex">
         <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
           <img src={SOStatic} height={40} width={40} alt="logo" />
@@ -87,7 +101,7 @@ const NavBar = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Box display="flex">
+        <Box display="flex" gap="4px">
           <form onSubmit={filterSubmitHandler}>
             <TextField
               id="filter"
@@ -100,10 +114,25 @@ const NavBar = () => {
             />
           </form>
           <Tooltip title="Change Theme">
-            <IconButton onClick={() => toggleTheme()}>
-              {theme === 'dark' ? <Brightness6 /> : <Brightness3 />}
+            <IconButton onClick={e => setModeMenuAnchor(e.currentTarget)}>
+              <Brightness3 />
             </IconButton>
           </Tooltip>
+          <Menu
+            open={!!modeMenuAnchor}
+            anchorEl={modeMenuAnchor}
+            onClose={() => setModeMenuAnchor(null)}
+          >
+            <MenuItem onClick={() => handleModeClick('system')} selected={mode === 'system'}>
+              System
+            </MenuItem>
+            <MenuItem onClick={() => handleModeClick('dark')} selected={mode === 'dark'}>
+              Dark
+            </MenuItem>
+            <MenuItem onClick={() => handleModeClick('light')} selected={mode === 'light'}>
+              Light
+            </MenuItem>
+          </Menu>
           <Tooltip title="Sign Out">
             <IconButton
               onClick={async () => {
@@ -120,6 +149,7 @@ const NavBar = () => {
       </Box>
       <Drawer
         anchor="left"
+        elevation={0}
         classes={{
           paper: 'my-nav'
         }}
@@ -132,7 +162,7 @@ const NavBar = () => {
           </IconButton>
           <img src={SOStatic} height={40} width={40} alt="logo" />
         </Box>
-        <List sx={{ width: '200px' }} className="nav-list">
+        <Box sx={{ width: '200px' }} className="nav-list">
           {LINKS.map(l => (
             <ListItemButton
               key={l.link}
@@ -144,7 +174,7 @@ const NavBar = () => {
               {l.label}
             </ListItemButton>
           ))}
-        </List>
+        </Box>
       </Drawer>
     </AppBar>
   );

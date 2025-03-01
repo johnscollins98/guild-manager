@@ -4,7 +4,7 @@ import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import List from '@mui/icons-material/List';
 import Person from '@mui/icons-material/Person';
-import { Card, IconButton, Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { type AuthInfo, type WarningDTO, type WarningType, WarningTypeLabels } from 'server';
 import { useDeleteWarningMutation, useUpdateWarningMutation } from '../../../lib/apis/warnings-api';
@@ -41,7 +41,7 @@ export const WarningEntry = ({ warning, getNameForDiscordId, authData }: Warning
 
   return (
     <>
-      <Card variant="elevation" className="log-entry-card">
+      <div className="log-entry-card">
         <div className="top-row">
           <div className="data">
             <span className="date field">
@@ -80,7 +80,7 @@ export const WarningEntry = ({ warning, getNameForDiscordId, authData }: Warning
             </Typography>
           </div>
         )}
-      </Card>
+      </div>
       <WarningForm
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}

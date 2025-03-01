@@ -78,7 +78,7 @@ const Roster = () => {
               height={height}
               width={width}
               rowCount={rosterForDisplay.length}
-              rowHeight={76}
+              rowHeight={62}
               rowRenderer={({ index, style }) => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const member = rosterForDisplay[index]!;

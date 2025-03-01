@@ -177,7 +177,9 @@ const GuildMemberCard = ({
                   </Avatar>
                 )}
                 <span className="details">
-                  <Typography className="name">{member.memberId || member.discordName}</Typography>
+                  <Typography className="name" sx={{ color }}>
+                    {member.memberId || member.discordName}
+                  </Typography>
                   {member.joinDate ? (
                     <span className="date">
                       <CalendarToday />

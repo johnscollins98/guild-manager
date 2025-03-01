@@ -1,6 +1,5 @@
 import AccessTime from '@mui/icons-material/AccessTime';
 import CalendarToday from '@mui/icons-material/CalendarToday';
-import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { type GW2LogEntryDTO } from 'server';
 import './log-entry.scss';
@@ -11,7 +10,7 @@ interface Props {
 
 const LogEntry = ({ entryData }: Props) => {
   return (
-    <Card variant="outlined" className="log-entry">
+    <div className="log-entry">
       <div>
         <CalendarToday />
         <Typography>{entryData.date}</Typography>
@@ -23,7 +22,7 @@ const LogEntry = ({ entryData }: Props) => {
       <div>
         <Typography>{entryData.message}</Typography>
       </div>
-    </Card>
+    </div>
   );
 };
 
