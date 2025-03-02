@@ -52,7 +52,7 @@ const EventEntry = ({ event, hasEditPermission }: Props) => {
           gap={2}
         >
           <Box display="flex" flexDirection="column">
-            <Typography sx={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{event.title}</Typography>
+            <Typography sx={{ fontSize: '1.1rem' }}>{event.title}</Typography>
             <Typography variant="caption">
               {event.day} {localStartTime && `at ${localStartTime}`}{' '}
               {event.duration && `for ${event.duration}`}
