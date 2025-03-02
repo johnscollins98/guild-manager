@@ -34,7 +34,7 @@ export const generateGW2RosterRecords = (
           );
 
         // Name or Name.1234 but cannot be directly next to another alphabetical character
-        const regex = new RegExp(`(?:^|[^a-z])(${testName})|(${memberId})(?:$|[^a-z])`, 'ig');
+        const regex = new RegExp(`(?:^|[^a-z])(${testName})(?:$|[^a-z])`, 'ig');
 
         return discordName?.match(regex);
       });
