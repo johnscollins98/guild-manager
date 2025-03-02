@@ -8,9 +8,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
+import { useCallback } from 'react';
 import { type DiscordRole } from 'server';
 import {
   useAddDiscordRole,
+  useDiscordBotRoles,
   useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
@@ -25,8 +27,16 @@ interface Props {
 
 const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }: Props) => {
   const { data: roles } = useDiscordRoles();
+  const { data: botRoles } = useDiscordBotRoles();
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
+
+  const roleIsAboveBot = useCallback(
+    (r: DiscordRole) => {
+      return botRoles?.every(br => br.position < r.position) ?? false;
+    },
+    [botRoles]
+  );
 
   const roleChangeHandler = async (role: DiscordRole) => {
     if (!selectedRecord || !selectedRecord.discordId) {
@@ -60,6 +70,7 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
             <MenuItem
               className="role-menu-item"
               dense
+              disabled={roleIsAboveBot(role)}
               key={role.id}
               onClick={() => roleChangeHandler(role)}
             >
