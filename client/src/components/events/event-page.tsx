@@ -3,15 +3,15 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { daysOfWeek, type EventCreateDTO } from 'server';
 import DiscordSvg from '../../assets/images/discord.svg?react';
-import { useAuth, useEventRoles } from '../../lib/apis/auth-api';
-import { useDiscordMembers } from '../../lib/apis/discord-api';
-import { useCreateEventMutation, useEvents } from '../../lib/apis/event-api';
+import { authQuery, eventRolesQuery } from '../../lib/apis/auth-api';
+import { discordMembersQuery } from '../../lib/apis/discord-api';
+import { eventQuery, useCreateEventMutation } from '../../lib/apis/event-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../common/loader-page';
+import { QueryBoundary } from '../common/query-boundary';
 import EventEntry from './event-entry';
 import { EventFormDialog } from './event-form';
 import { EventLeadersContext } from './event-leaders-context';
@@ -20,10 +20,10 @@ import EventPosterForm from './event-poster-form';
 const EventPage = () => {
   const filterString = useFilterString();
 
-  const authQuery = useAuth();
-  const eventsQuery = useEvents();
-  const eventRolesQuery = useEventRoles();
-  const discordQuery = useDiscordMembers();
+  const [auth, eventsQuery, eventRoles, discordQuery] = useSuspenseQueries({
+    queries: [authQuery, eventQuery, eventRolesQuery, discordMembersQuery]
+  });
+
   const createEventMutation = useCreateEventMutation();
 
   const [showPostModal, setShowPostModal] = useState(false);
@@ -54,16 +54,9 @@ const EventPage = () => {
     [eventsQuery.data, filterString]
   );
 
-  if (eventsQuery.error || discordQuery.error || eventRolesQuery.error || authQuery.error) {
-    return <ErrorMessage>There was an error gathering events data.</ErrorMessage>;
-  }
-
-  if (!eventRolesQuery.data || !eventsQuery.data || !discordQuery.data || !authQuery.data)
-    return <LoaderPage />;
-
   // get possible leaders
   const leaders = discordQuery.data.filter(d =>
-    d.roles.some(role => eventRolesQuery.data.includes(role.id))
+    d.roles.some(role => eventRoles.data.includes(role.id))
   );
 
   const createEvent = async (eventToCreate: EventCreateDTO) => {
@@ -76,7 +69,7 @@ const EventPage = () => {
         {sortedEvents.map(event => (
           <EventEntry
             event={event}
-            hasEditPermission={authQuery.data.permissions.EVENTS}
+            hasEditPermission={auth.data.permissions.EVENTS}
             key={event.id}
           />
         ))}
@@ -90,7 +83,7 @@ const EventPage = () => {
           variant="contained"
           className="discord-button"
           startIcon={<DiscordSvg width={22} />}
-          disabled={!authQuery.data.permissions.EVENTS}
+          disabled={!auth.data.permissions.EVENTS}
         >
           Post to Discord
         </Button>
@@ -103,7 +96,9 @@ const EventPage = () => {
       <Dialog open={showPostModal} onClose={() => setShowPostModal(false)} fullWidth maxWidth="sm">
         <DialogTitle>Post to Discord</DialogTitle>
         <DialogContent>
-          <EventPosterForm onClose={() => setShowPostModal(false)} />
+          <QueryBoundary>
+            <EventPosterForm onClose={() => setShowPostModal(false)} />
+          </QueryBoundary>
         </DialogContent>
       </Dialog>
     </EventLeadersContext.Provider>

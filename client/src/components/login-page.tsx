@@ -11,48 +11,33 @@ import SOGif from '../assets/images/SO_Logo.gif';
 import SOStatic from '../assets/images/SO_Static.gif';
 import DiscordLogo from '../assets/images/discord.svg?react';
 import { useAuth } from '../lib/apis/auth-api';
-import { ErrorMessage } from './common/error-message';
-import LoaderPage from './common/loader-page';
 
 const LoginPage = () => {
-  const { isError, isLoading, data: authInfo } = useAuth();
+  const { data: authInfo } = useAuth();
   const [logo, setLogo] = useState(SOStatic);
 
-  if (isError) {
-    return <ErrorMessage>There was an error getting authentication data.</ErrorMessage>;
-  }
-
-  if (isLoading || !authInfo) {
-    return <LoaderPage />;
-  }
   return (
     <div className="loader-page">
-      {isLoading ? (
-        <LoaderPage />
-      ) : (
-        <>
-          <img
-            src={logo}
-            alt="logo"
-            onMouseEnter={() => setLogo(SOGif)}
-            onMouseLeave={() => setLogo(SOStatic)}
-          />
-          <Button
-            href={`${config.backEndBaseUrl}/auth?returnTo=${encodeURI(window.location.href)}`}
-            variant="contained"
-            color="primary"
-            startIcon={<DiscordLogo height="22" />}
-          >
-            Log In
-          </Button>
-          {authInfo.loggedIn && !authInfo.permissions.ACCESS ? (
-            <Alert className="warning" severity="warning">
-              <AlertTitle>Forbidden</AlertTitle>
-              You do not have permission to access this site.
-            </Alert>
-          ) : null}
-        </>
-      )}
+      <img
+        src={logo}
+        alt="logo"
+        onMouseEnter={() => setLogo(SOGif)}
+        onMouseLeave={() => setLogo(SOStatic)}
+      />
+      <Button
+        href={`${config.backEndBaseUrl}/auth?returnTo=${encodeURI(window.location.href)}`}
+        variant="contained"
+        color="primary"
+        startIcon={<DiscordLogo height="22" />}
+      >
+        Log In
+      </Button>
+      {authInfo.loggedIn && !authInfo.permissions.ACCESS ? (
+        <Alert className="warning" severity="warning">
+          <AlertTitle>Forbidden</AlertTitle>
+          You do not have permission to access this site.
+        </Alert>
+      ) : null}
     </div>
   );
 };

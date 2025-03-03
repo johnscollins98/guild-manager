@@ -6,33 +6,35 @@ import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useMemo, useState, type FC, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
-  useRecruitmentPost,
+  recruitmentQuery,
   useRecruitmentPostMutation
 } from '../../lib/apis/recruitment-api';
-import LoaderPage from '../common/loader-page';
 import { useToast } from '../common/toast/toast-context';
 
-import { useAuth } from '../../lib/apis/auth-api';
+import { useSuspenseQueries } from '@tanstack/react-query';
+import { authQuery } from '../../lib/apis/auth-api';
 import './recruitment-page.scss';
 
 const RecruitmentPage: FC = () => {
-  const { data, isSuccess, isLoading } = useRecruitmentPost();
-  const { data: authData, isLoading: authLoading } = useAuth();
+  const [recruitmentPost, auth] = useSuspenseQueries({ queries: [recruitmentQuery, authQuery] });
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const toast = useToast();
 
   const isModified = useMemo(() => {
-    return title !== (data?.title ?? '') || message !== (data?.content ?? '');
-  }, [data, title, message]);
+    return (
+      title !== (recruitmentPost.data?.title ?? '') ||
+      message !== (recruitmentPost.data?.content ?? '')
+    );
+  }, [recruitmentPost.data, title, message]);
 
   useEffect(() => {
-    if (isSuccess && data) {
-      setMessage(data.content);
-      setTitle(data.title);
+    if (recruitmentPost.data) {
+      setMessage(recruitmentPost.data.content);
+      setTitle(recruitmentPost.data.title);
     }
-  }, [isSuccess, data]);
+  }, [recruitmentPost.data]);
 
   const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
     e => {
@@ -49,10 +51,10 @@ const RecruitmentPage: FC = () => {
       e.preventDefault();
       e.stopPropagation();
 
-      setMessage(data?.content ?? '');
-      setTitle(data?.title ?? '');
+      setMessage(recruitmentPost.data?.content ?? '');
+      setTitle(recruitmentPost.data?.title ?? '');
     },
-    [data]
+    [recruitmentPost.data]
   );
 
   const handleCopyClick = async (isHtml: boolean) => {
@@ -66,10 +68,6 @@ const RecruitmentPage: FC = () => {
     }
   };
 
-  if (isLoading || authLoading || !authData) {
-    return <LoaderPage />;
-  }
-
   return (
     <form
       onSubmit={submitHandler}
@@ -78,7 +76,7 @@ const RecruitmentPage: FC = () => {
     >
       <Box justifyContent="space-between" alignItems="center" display="flex">
         <h2>Recruitment Post</h2>
-        {authData.permissions.RECRUITMENT && (
+        {auth.data.permissions.RECRUITMENT && (
           <Box display="flex" alignItems="center" gap="8px">
             <Button variant="text" type="reset" disabled={!isModified}>
               Reset
@@ -99,7 +97,7 @@ const RecruitmentPage: FC = () => {
         </div>
         <TextField
           value={title}
-          disabled={!authData.permissions.RECRUITMENT}
+          disabled={!auth.data.permissions.RECRUITMENT}
           required
           onChange={e => setTitle(e.target.value)}
           fullWidth
@@ -125,7 +123,7 @@ const RecruitmentPage: FC = () => {
           multiline
           label="Content"
           value={message}
-          disabled={!authData.permissions.RECRUITMENT}
+          disabled={!auth.data.permissions.RECRUITMENT}
           onChange={e => setMessage(e.target.value)}
           fullWidth
           InputProps={{

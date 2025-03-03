@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import { type IWarningsController, type WarningCreateDTO, type WarningDTO } from 'server';
 import { useToast } from '../../components/common/toast/toast-context';
@@ -15,12 +15,15 @@ const warningsApi: IWarningsController = {
   update: (id: number, data: WarningCreateDTO) => api(`${id}`, { method: 'PUT', data })
 };
 
-export const useWarnings = () => useQuery({ queryKey: ['warnings'], queryFn: warningsApi.getAll });
+export const warningsQuery = { queryKey: ['warnings'], queryFn: warningsApi.getAll };
+export const useWarnings = () => useSuspenseQuery(warningsQuery);
+
+export const memberWarningsQuery = (memberId: string) => ({
+  queryKey: ['warnings', memberId],
+  queryFn: () => warningsApi.getForMember(memberId)
+});
 export const useMemberWarnings = (memberId: string) =>
-  useQuery({
-    queryKey: ['warnings', memberId],
-    queryFn: () => warningsApi.getForMember(memberId)
-  });
+  useSuspenseQuery(memberWarningsQuery(memberId));
 
 export const useAddWarningMutation = () => {
   const queryClient = useQueryClient();
@@ -32,7 +35,7 @@ export const useAddWarningMutation = () => {
     },
     onSuccess() {
       openToast('Successfully added warning', 'success');
-      queryClient.invalidateQueries({ queryKey: ['warnings'] });
+      queryClient.invalidateQueries({ queryKey: warningsQuery.queryKey });
     },
     onError() {
       openToast('Failed to add warning', 'error');
@@ -50,7 +53,7 @@ export const useDeleteWarningMutation = () => {
     },
     onSuccess() {
       openToast('Successfully deleted warning', 'success');
-      queryClient.invalidateQueries({ queryKey: ['warnings'] });
+      queryClient.invalidateQueries({ queryKey: warningsQuery.queryKey });
     },
     onError() {
       openToast('Failed to delete warning', 'error');
@@ -69,7 +72,7 @@ export const useUpdateWarningMutation = () => {
     },
     onSuccess() {
       openToast('Successfully updated warning', 'success');
-      queryClient.invalidateQueries({ queryKey: ['warnings'] });
+      queryClient.invalidateQueries({ queryKey: warningsQuery.queryKey });
     },
     onError() {
       openToast('Failed to update warning', 'error');

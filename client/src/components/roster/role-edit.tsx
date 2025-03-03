@@ -8,12 +8,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { type DiscordRole } from 'server';
 import {
+  discordBotRolesQuery,
+  discordRolesQuery,
   useAddDiscordRole,
-  useDiscordBotRoles,
-  useDiscordRoles,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
@@ -26,14 +27,15 @@ interface Props {
 }
 
 const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }: Props) => {
-  const { data: roles } = useDiscordRoles();
-  const { data: botRoles } = useDiscordBotRoles();
+  const [discordRoles, botRoles] = useSuspenseQueries({
+    queries: [discordRolesQuery, discordBotRolesQuery]
+  });
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
 
   const roleIsAboveBot = useCallback(
     (r: DiscordRole) => {
-      return botRoles?.every(br => br.position < r.position) ?? false;
+      return botRoles.data.every(br => br.position < r.position) ?? false;
     },
     [botRoles]
   );
@@ -65,8 +67,7 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
       <DialogContent className="role-edit-content">
         {modalShow &&
           selectedRecord &&
-          roles &&
-          roles.map(role => (
+          discordRoles.data.map(role => (
             <MenuItem
               className="role-menu-item"
               dense
@@ -78,7 +79,7 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
                 <FormControlLabel
                   control={
                     <StyledCheckbox
-                      color={getColorFromRole(role.name, roles) || ''}
+                      color={getColorFromRole(role.name, discordRoles.data) || ''}
                       checked={selectedRecord.roles.map(r => r.id).includes(role.id)}
                     />
                   }

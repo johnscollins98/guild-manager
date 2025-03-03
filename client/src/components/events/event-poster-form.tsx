@@ -6,7 +6,6 @@ import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { usePostEvents } from '../../lib/apis/discord-api';
 import { useEventSettings } from '../../lib/apis/event-api';
-import { ErrorMessage } from '../common/error-message';
 import LoaderPage from '../common/loader-page';
 
 interface Props {
@@ -27,7 +26,7 @@ const EventPosterForm = ({ onClose }: Props) => {
     Dynamic: ''
   });
   const [posting, setPosting] = useState(false);
-  const { isLoading, error, data } = useEventSettings();
+  const { data } = useEventSettings();
   const postEventsMutation = usePostEvents();
 
   useEffect(() => {
@@ -72,17 +71,13 @@ const EventPosterForm = ({ onClose }: Props) => {
     [existingMessageIds, setExistingMessageIds]
   );
 
-  if (error) {
-    return <ErrorMessage>There was an error getting event post settings.</ErrorMessage>;
-  }
-
-  if (isLoading || posting)
+  if (posting)
     return (
       <div style={{ height: '300px' }}>
         <LoaderPage />
       </div>
     );
-  //
+
   return (
     <form onSubmit={submitHandler}>
       <div>

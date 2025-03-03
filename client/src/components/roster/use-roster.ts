@@ -1,8 +1,13 @@
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
-import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
-import { useGW2Members, useGW2Ranks } from '../../lib/apis/gw2-api';
-import { useWarnings } from '../../lib/apis/warnings-api';
+import {
+  discordBotRolesQuery,
+  discordMembersQuery,
+  discordRolesQuery
+} from '../../lib/apis/discord-api';
+import { gw2MembersQuery, gw2RanksQuery } from '../../lib/apis/gw2-api';
+import { warningsQuery } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import {
   compareRank,
@@ -11,21 +16,22 @@ import {
 } from '../../lib/utils/data-processing';
 
 export const useRoster = (sortString?: string, filterString?: string, filterBy?: string) => {
-  const queries = [
-    useDiscordMembers(),
-    useDiscordRoles(),
-    useGW2Members(),
-    useGW2Ranks(),
-    useWarnings()
-  ] as const;
+  const queries = useSuspenseQueries({
+    queries: [
+      discordMembersQuery,
+      discordRolesQuery,
+      gw2MembersQuery,
+      gw2RanksQuery,
+      warningsQuery,
+      discordBotRolesQuery
+    ]
+  });
 
-  const [discordMembers, discordRoles, gw2Members, guildRanks, warnings] = queries;
+  const [discordMembers, discordRoles, gw2Members, guildRanks, warnings, botRoles] = queries;
 
   const refetch = () => queries.forEach(q => q.refetch());
 
   const isFetching = queries.some(q => q.isFetching);
-  const isLoading = queries.some(q => q.isLoading);
-  const isError = queries.some(q => q.isError);
 
   const roster = getRoster(gw2Members.data, discordMembers.data, guildRanks.data, warnings.data);
 
@@ -34,32 +40,27 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
 
   return {
     isFetching,
-    isLoading,
-    isError,
     refetch,
     roster,
     rosterForDisplay,
+    botRoles: botRoles.data,
     discordRoles: discordRoles.data
   };
 };
 
 const getRoster = (
-  gw2Members?: GW2MemberResponseDTO[],
-  discordMembers?: DiscordMemberDTO[],
-  guildRanks?: GW2Rank[],
-  warnings?: WarningDTO[]
+  gw2Members: GW2MemberResponseDTO[],
+  discordMembers: DiscordMemberDTO[],
+  guildRanks: GW2Rank[],
+  warnings: WarningDTO[]
 ) => {
-  if (!gw2Members || !discordMembers || !guildRanks || !warnings) return undefined;
-
   let roster = generateGW2RosterRecords(gw2Members, discordMembers, guildRanks, warnings);
   roster = roster.concat(getExcessDiscordRecords(gw2Members, discordMembers, guildRanks, warnings));
 
   return roster;
 };
 
-const onSort = (toSort: MemberRecord[] | undefined, sortBy = 'default', guildRanks: GW2Rank[]) => {
-  if (!toSort) return undefined;
-
+const onSort = (toSort: MemberRecord[], sortBy = 'default', guildRanks: GW2Rank[]) => {
   switch (sortBy) {
     case 'name':
       return toSort.sort((a, b) => {
@@ -84,9 +85,7 @@ const onSort = (toSort: MemberRecord[] | undefined, sortBy = 'default', guildRan
   }
 };
 
-const onFilter = (toFilter: MemberRecord[] | undefined, filterBy = 'none', filterString = '') => {
-  if (!toFilter) return undefined;
-
+const onFilter = (toFilter: MemberRecord[], filterBy = 'none', filterString = '') => {
   const filtered = toFilter.filter(
     r =>
       r.accountName.toLowerCase().includes(filterString) ||

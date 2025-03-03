@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import './app.scss';
+import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
 import EventPage from './events/event-page';
 import Layout from './layout';
@@ -33,7 +34,9 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       ) : (
-        <LoginPage />
+        <QueryBoundary>
+          <LoginPage />
+        </QueryBoundary>
       )}
     </Box>
   );

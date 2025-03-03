@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
+import { QueryBoundary } from './common/query-boundary';
 import NavBar from './nav-bar';
 
 const Layout = () => {
@@ -8,7 +9,9 @@ const Layout = () => {
     <>
       <NavBar maxWidth={maxWidth} />
       <Box className="outlet" maxWidth={maxWidth} width="100%" margin="auto">
-        <Outlet />
+        <QueryBoundary>
+          <Outlet />
+        </QueryBoundary>
       </Box>
     </>
   );

@@ -1,5 +1,6 @@
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { useDiscordLeavers, useDiscordLog } from '../../lib/apis/discord-api';
+import { discordLeaversQuery, discordLogQuery } from '../../lib/apis/discord-api';
 import {
   type DiscordLogDisplay,
   type DiscordLogDisplayGenerator
@@ -7,8 +8,6 @@ import {
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
 import { snowflakeToDate } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../common/loader-page';
 import DiscordLogEntry from './discord-log-entry';
 import './discord-log.scss';
 
@@ -19,15 +18,13 @@ interface DiscordLogEntry {
 
 const DiscordLog = () => {
   const filterString = useFilterString();
-  const { isLoading, data, error } = useDiscordLog();
-  const { isLoading: isLeaversLoading, data: leavers, error: leaversError } = useDiscordLeavers();
+  const [discordLog, discordLeavers] = useSuspenseQueries({
+    queries: [discordLogQuery, discordLeaversQuery]
+  });
 
   const logData: DiscordLogEntry[] | undefined = useMemo(() => {
-    if (!data) return undefined;
-    if (!leavers) return undefined;
-
-    const factory = new DiscordLogEntryFactory(data);
-    const auditData = data.audit_log_entries
+    const factory = new DiscordLogEntryFactory(discordLog.data);
+    const auditData = discordLog.data.audit_log_entries
       .filter(entry => !!factory.getDiscordLogStringGenerator(entry.id))
       .map(entry => {
         const date = snowflakeToDate(entry.id);
@@ -40,7 +37,7 @@ const DiscordLog = () => {
         };
       });
 
-    const leaversData = leavers.map(l => ({
+    const leaversData = discordLeavers.data.map(l => ({
       discordDisplay: {
         summary: `${l.displayName} left/kicked.`,
         details: [
@@ -54,21 +51,15 @@ const DiscordLog = () => {
     }));
 
     return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
-  }, [data, leavers]);
+  }, [discordLog.data, discordLeavers.data]);
 
   const filteredLogData = useMemo(() => {
-    if (!logData) return undefined;
     return logData.filter(
       entry =>
         entry.discordDisplay.summary.toLowerCase().includes(filterString) ||
         entry.discordDisplay.details?.some(detail => detail.toLowerCase().includes(filterString))
     );
   }, [logData, filterString]);
-
-  if (error || leaversError)
-    return <ErrorMessage>There was an error gathering log data.</ErrorMessage>;
-
-  if (isLoading || isLeaversLoading || !filteredLogData) return <LoaderPage />;
 
   return (
     <div className="log-container">
