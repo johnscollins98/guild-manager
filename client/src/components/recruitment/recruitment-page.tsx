@@ -3,7 +3,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
 import copy from 'copy-to-clipboard';
-import { useCallback, useEffect, useMemo, useState, type FC, type FormEventHandler } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
   recruitmentQuery,
@@ -15,7 +15,7 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { authQuery } from '../../lib/apis/auth-api';
 import './recruitment-page.scss';
 
-const RecruitmentPage: FC = () => {
+const RecruitmentPage = () => {
   const [recruitmentPost, auth] = useSuspenseQueries({ queries: [recruitmentQuery, authQuery] });
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');

@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { type JSX } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
@@ -24,11 +25,11 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" Component={Layout}>
-              <Route path="/" Component={Roster} />
-              <Route path="/log" Component={Log} />
-              <Route path="/discord-log" Component={DiscordLog} />
-              <Route path="/events" Component={EventPage} />
-              <Route path="/recruitment" Component={RecruitmentPage} />
+              <Route path="/" Component={Page(Roster)} />
+              <Route path="/log" Component={Page(Log)} />
+              <Route path="/discord-log" Component={Page(DiscordLog)} />
+              <Route path="/events" Component={Page(EventPage)} />
+              <Route path="/recruitment" Component={Page(RecruitmentPage)} />
               <Route path="*" Component={NotFound} />
             </Route>
           </Routes>
@@ -40,6 +41,16 @@ const App = () => {
       )}
     </Box>
   );
+};
+
+const Page = (Component: () => JSX.Element) => {
+  return function PageLoader() {
+    return (
+      <QueryBoundary>
+        <Component />
+      </QueryBoundary>
+    );
+  };
 };
 
 export default App;
