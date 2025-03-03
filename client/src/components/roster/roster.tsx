@@ -4,14 +4,11 @@ import { AutoSizer, List } from 'react-virtualized';
 import { useAuth } from '../../lib/apis/auth-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import { ErrorMessage } from '../common/error-message';
-import LoaderPage from '../common/loader-page';
 import GuildMemberCard from './guild-member-card';
 import KickModal from './kick-modal';
 import RoleEdit from './role-edit';
 import RosterControl from './roster-control';
 
-import { useDiscordBotRoles } from '../../lib/apis/discord-api';
 import { useRoster } from './use-roster';
 
 const Roster = () => {
@@ -19,10 +16,11 @@ const Roster = () => {
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy') ?? '';
   const filterBy = searchParams.get('filterBy') ?? '';
-  const { isLoading, isFetching, refetch, isError, discordRoles, rosterForDisplay, roster } =
-    useRoster(sortBy, filterString, filterBy);
-
-  const { data: botRoles, isLoading: botRolesLoading } = useDiscordBotRoles();
+  const { refetch, discordRoles, rosterForDisplay, roster, isFetching, botRoles } = useRoster(
+    sortBy,
+    filterString,
+    filterBy
+  );
 
   const [kickMode, setKickMode] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
@@ -44,19 +42,6 @@ const Roster = () => {
       setKickModalShow(true);
     }
   }, []);
-
-  if (isError) return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
-
-  if (
-    isLoading ||
-    !roster ||
-    !rosterForDisplay ||
-    !discordRoles ||
-    !authInfo ||
-    botRolesLoading ||
-    !botRoles
-  )
-    return <LoaderPage />;
 
   const selectedRecord = roster.find(r => r.discordId === selectedRecordId);
 

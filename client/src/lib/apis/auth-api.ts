@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import { type IAuthController } from 'server';
 import { createApi } from './axios-wrapper';
@@ -10,14 +10,14 @@ const authApi: IAuthController = {
   getEventRoles: () => api('event_roles')
 };
 
-export const useAuth = () =>
-  useQuery({
-    queryKey: ['auth/authorization'],
-    queryFn: authApi.getAuthorization
-  });
+export const authQuery = {
+  queryKey: ['auth/authorization'],
+  queryFn: authApi.getAuthorization
+};
+export const useAuth = () => useSuspenseQuery(authQuery);
 
-export const useEventRoles = () =>
-  useQuery<string[], AxiosError>({
-    queryKey: ['auth/event_roles'],
-    queryFn: authApi.getEventRoles
-  });
+export const eventRolesQuery = {
+  queryKey: ['auth/event_roles'],
+  queryFn: authApi.getEventRoles
+};
+export const useEventRoles = () => useSuspenseQuery<string[], AxiosError>(eventRolesQuery);

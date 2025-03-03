@@ -2,12 +2,12 @@ import { Box } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
-import { useAuth } from '../../../lib/apis/auth-api';
-import { useDiscordMembers } from '../../../lib/apis/discord-api';
+import { authQuery } from '../../../lib/apis/auth-api';
+import { discordMembersQuery } from '../../../lib/apis/discord-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
-import { ErrorMessage } from '../../common/error-message';
-import LoaderPage from '../../common/loader-page';
+import { QueryBoundary } from '../../common/query-boundary';
 import { WarningEntry } from './warning-entry';
 
 interface Props {
@@ -25,7 +25,9 @@ const WarningsViewerDialog = ({ isOpen, onClose, member }: Props) => {
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Warnings for {member.memberId}</DialogTitle>
       <DialogContent>
-        <WarningViewerContent member={member} />
+        <QueryBoundary>
+          <WarningViewerContent member={member} />
+        </QueryBoundary>
       </DialogContent>
     </Dialog>
   );
@@ -36,8 +38,9 @@ interface WarningViewerContentProps {
 }
 
 const WarningViewerContent = ({ member }: WarningViewerContentProps) => {
-  const { data: discordMembers, isLoading, isError } = useDiscordMembers();
-  const { data: authData, isLoading: authLoading, isError: authError } = useAuth();
+  const [{ data: discordMembers }, { data: authData }] = useSuspenseQueries({
+    queries: [discordMembersQuery, authQuery]
+  });
 
   const getNameForDiscordId = useCallback(
     (givenToId?: string) => {
@@ -47,11 +50,6 @@ const WarningViewerContent = ({ member }: WarningViewerContentProps) => {
     },
     [discordMembers]
   );
-
-  if (isError || authError)
-    return <ErrorMessage>There was an error getting roster data.</ErrorMessage>;
-
-  if (isLoading || !discordMembers || authLoading || !authData) return <LoaderPage />;
 
   return (
     <Box display="flex" flexDirection="column">

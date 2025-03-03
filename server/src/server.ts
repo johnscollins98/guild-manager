@@ -62,6 +62,11 @@ useExpressServer(app, {
 });
 
 app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
+app.get('/api/*', (_req, res) => {
+  if (!res.headersSent) {
+    res.sendStatus(404);
+  }
+});
 app.get('*', (_req, res) => {
   if (!res.headersSent) {
     res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'dist', 'index.html'));

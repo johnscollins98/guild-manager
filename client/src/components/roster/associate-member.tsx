@@ -12,6 +12,7 @@ import { useCallback, useState, type FormEvent } from 'react';
 import { useDiscordMembers } from '../../lib/apis/discord-api';
 import { useAssociateToDiscordAccountMutation } from '../../lib/apis/gw2-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
+import { QueryBoundary } from '../common/query-boundary';
 import './associate-member.scss';
 
 export interface AssociateMemberDialogProps {
@@ -25,7 +26,9 @@ export const AssociateMemberDialog = ({ member, isOpen, onClose }: AssociateMemb
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
       <DialogTitle>Associate {member.memberId}</DialogTitle>
       <DialogContent>
-        <AssociateMemberForm member={member} onClose={onClose} />
+        <QueryBoundary>
+          <AssociateMemberForm member={member} onClose={onClose} />
+        </QueryBoundary>
       </DialogContent>
     </Dialog>
   );
@@ -36,7 +39,7 @@ interface AssociateMemberFormProps {
   onClose: () => void;
 }
 const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
-  const { data, isLoading, isError } = useDiscordMembers();
+  const { data } = useDiscordMembers();
 
   const { mutate: associateMember } = useAssociateToDiscordAccountMutation();
 
@@ -62,11 +65,7 @@ const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
     [associateMember, discordAccountId, member.memberId, onClose]
   );
 
-  if (isError) {
-    return <>There was an error gathering discord data.</>;
-  }
-
-  if (isLoading || !member.memberId || !data) {
+  if (!member.memberId) {
     return null;
   }
 
