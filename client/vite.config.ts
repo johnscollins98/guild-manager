@@ -7,13 +7,13 @@ import viteTsconfigPaths from 'vite-tsconfig-paths';
 import { reactVirtualized } from './src/lib/utils/react-virtualized-fix.ts';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(config => ({
   plugins: [
     react(),
     viteTsconfigPaths(),
     svgrPlugin(),
     eslint(),
-    checker({ typescript: true }),
+    ...(config.mode === 'development' ? [checker({ typescript: true })] : []),
     reactVirtualized()
   ],
   server: {
@@ -35,4 +35,4 @@ export default defineConfig({
       }
     }
   }
-});
+}));

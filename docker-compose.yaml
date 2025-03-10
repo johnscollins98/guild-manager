@@ -1,0 +1,62 @@
+services:
+  guild-manager:
+    container_name: app
+    build:
+      context: .
+
+    # Set environment variables based on the .env file
+    env_file:
+      - path: .env
+        required: true
+
+    ports:
+      - 3000:3000
+    networks:
+      - my_network
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+        restart: true
+
+  migrate:
+    container_name: migrate
+    env_file:
+      - path: .env
+        required: true
+    build:
+      context: .
+      dockerfile: migrate.Dockerfile
+    networks:
+      - my_network
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  # Add more containers below (nginx, postgres, etc.)
+  db:
+    image: postgres:17-alpine
+    restart: always
+    env_file:
+      - path: .env
+        required: true
+    ports:
+      - 5132:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  my_network:
+    external: true
+
+volumes:
+  pgdata:
