@@ -31,6 +31,7 @@
     "memory-cache": "^0.2.0",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
+    "cross-env": "^7.0.3",
     "passport-oauth2": "^1.8.0",
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.10.4",
@@ -50,7 +51,6 @@
     "@types/passport-discord": "^0.1.14",
     "@types/passport-oauth2": "^1.4.17",
     "@types/connect-pg-simple": "^7.0.3",
-    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"

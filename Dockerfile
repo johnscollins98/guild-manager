@@ -18,7 +18,7 @@ COPY ./client ./client
 RUN bun run --cwd client build
 
 # Install Production Dependencies
-FROM base AS production_installer
+FROM base AS runner
 
 WORKDIR /app
 
@@ -28,13 +28,12 @@ COPY ./client/package.json ./client/
 
 RUN bun install --production --frozen-lockfile
 
-# Runner only requires node (not bun)
-FROM node:22-alpine AS runner
-
-WORKDIR /app
+COPY ./server/src/dataSource.ts ./server/src/dataSource.ts
+COPY ./server/src/config ./server/src/config
+COPY ./server/src/migrations ./server/src/migrations
+COPY ./server/tsconfig.json ./server/tsconfig.json
 
 COPY --from=builder /app/client/dist ./client/dist
 COPY --from=builder /app/server/build ./server/build
-COPY --from=production_installer /app/node_modules ./node_modules
 
-CMD ["node", "./server/build/server.js"]
+CMD ["bun", "start"]

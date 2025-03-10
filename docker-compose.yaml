@@ -14,21 +14,6 @@ services:
     networks:
       - my_network
     depends_on:
-      migrate:
-        condition: service_completed_successfully
-        restart: true
-
-  migrate:
-    container_name: migrate
-    env_file:
-      - path: .env
-        required: true
-    build:
-      context: .
-      dockerfile: migrate.Dockerfile
-    networks:
-      - my_network
-    depends_on:
       db:
         condition: service_healthy
         restart: true
