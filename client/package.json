@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "cross-env NODE_ENV=production tsc && vite build",
+    "build": "cross-env NODE_ENV=production tsc --noEmit && vite build",
     "start": "cross-env NODE_ENV=development vite",
     "lint": "eslint . --ext .ts --ext .tsx"
   },
