@@ -7,7 +7,7 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array). The sample below assumes your primary file is in the root of your project.
     #
-    image: imbios/bun-node:1.2-22-debian
+    image: imbios/bun-node:1.2-22-alpine-git
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
       - ../..:/workspaces:cached
