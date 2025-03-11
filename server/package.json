@@ -15,17 +15,8 @@
     "db:migration:run": "bun typeorm migration:run -d ./src/dataSource.ts"
   },
   "dependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/express-session": "^1.18.1",
-    "@types/markdown-it": "^14.1.2",
-    "@types/markdown-table": "^2.0.0",
-    "@types/memory-cache": "^0.2.6",
-    "@types/node": "^22.10.2",
-    "@types/passport": "^1.0.17",
-    "@types/passport-discord": "^0.1.14",
-    "@types/passport-oauth2": "^1.4.17",
     "axios": "^1.7.9",
+    "axios-logger": "^2.8.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "connect-pg-simple": "^10.0.0",
@@ -40,18 +31,28 @@
     "memory-cache": "^0.2.0",
     "passport": "^0.7.0",
     "passport-discord": "^0.1.4",
+    "cross-env": "^7.0.3",
     "passport-oauth2": "^1.8.0",
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.10.4",
     "typedi": "^0.10.0",
     "typeorm": "^0.3.20",
-    "typeorm-typedi-extensions": "^0.4.1",
-    "typescript": "^5.7.2"
+    "typeorm-typedi-extensions": "^0.4.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/markdown-it": "^14.1.2",
+    "@types/markdown-table": "^2.0.0",
+    "@types/memory-cache": "^0.2.6",
+    "@types/node": "^22.10.2",
+    "@types/passport": "^1.0.17",
+    "@types/passport-discord": "^0.1.14",
+    "@types/passport-oauth2": "^1.4.17",
     "@types/connect-pg-simple": "^7.0.3",
-    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
   }
 }

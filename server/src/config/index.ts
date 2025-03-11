@@ -34,7 +34,6 @@ export const config = {
     process.env.NODE_ENV === 'production'
       ? ''
       : (process.env.FRONT_END_BASE_URL ?? 'http://localhost:3001'),
-  accessTokenEncryptionKey: process.env.ACCESS_TOKEN_ENCRYPTION_KEY,
   skipAuth: process.env.SKIP_AUTH === 'true',
   eventUpdateIntervalHours: Number.isNaN(eventUpdateIntervalHours) ? 6 : eventUpdateIntervalHours
 } as const;
