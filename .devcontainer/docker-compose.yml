@@ -7,10 +7,12 @@ services:
     # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
     # array). The sample below assumes your primary file is in the root of your project.
     #
-    image: imbios/bun-node:1.2-22-alpine-git
+    image: imbios/bun-node:1.2-22-alpine
     volumes:
       # Update this to wherever you want VS Code to mount the folder of your project
-      - ../..:/workspaces:cached
+      - ..:/guild-manager:cached
+      - guild_manager_node_modules:/guild-manager/node_modules
+      - guild_manager_client_node_modules:/guild-manager/client/node_modules
 
     depends_on:
       db:
@@ -45,3 +47,5 @@ services:
 
 volumes:
   pgdata:
+  guild_manager_node_modules:
+  guild_manager_client_node_modules:
