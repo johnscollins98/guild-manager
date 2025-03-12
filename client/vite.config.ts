@@ -19,7 +19,6 @@ export default defineConfig(config => ({
   server: {
     open: true,
     port: 3001,
-    host: '127.0.01',
     proxy: {
       '/auth': 'http://localhost:3000',
       '/api': 'http://localhost:3000'
