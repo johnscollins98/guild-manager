@@ -1,5 +1,4 @@
 FROM oven/bun:1.2.2-alpine AS bunbase
-FROM node:22.14.0-alpine AS nodebase
 
 # Build App
 FROM bunbase AS builder
@@ -29,7 +28,7 @@ COPY ./client/package.json ./client/
 
 RUN bun install --production --frozen-lockfile
 
-FROM nodebase AS runner
+FROM node:22.14.0-alpine AS runner
 
 WORKDIR /app
 
@@ -45,4 +44,4 @@ COPY --from=builder /app/server/build ./server/build
 
 WORKDIR /app/server
 
-CMD ["sh", "-c", "npm run db:deploy:prod; npm run start;"]
+CMD ["npm", "start"]
