@@ -1,7 +1,8 @@
-FROM imbios/bun-node:1.2-22-alpine AS base
+FROM oven/bun:1.2.2-alpine AS bunbase
+FROM node:22.14.0-alpine AS nodebase
 
 # Build App
-FROM base AS builder
+FROM bunbase AS builder
 
 WORKDIR /app
 
@@ -18,7 +19,7 @@ COPY ./client ./client
 RUN bun run --cwd client build
 
 # Install Production Dependencies
-FROM base AS runner
+FROM bunbase AS installer
 
 WORKDIR /app
 
@@ -28,12 +29,20 @@ COPY ./client/package.json ./client/
 
 RUN bun install --production --frozen-lockfile
 
-COPY ./server/src/dataSource.ts ./server/src/dataSource.ts
-COPY ./server/src/config ./server/src/config
-COPY ./server/src/migrations ./server/src/migrations
-COPY ./server/tsconfig.json ./server/tsconfig.json
+FROM nodebase AS runner
 
+WORKDIR /app
+
+RUN addgroup --system --gid 1002 nodejs
+RUN adduser --system --uid 1002 guildmanager
+USER guildmanager
+
+COPY ./server/package.json ./server/
+
+COPY --from=installer /app/node_modules ./node_modules
 COPY --from=builder /app/client/dist ./client/dist
 COPY --from=builder /app/server/build ./server/build
 
-CMD ["bun", "start"]
+WORKDIR /app/server
+
+CMD ["sh", "-c", "npm run db:deploy:prod; npm run start;"]
