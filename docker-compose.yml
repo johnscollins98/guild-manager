@@ -1,0 +1,44 @@
+services:
+  # Update this to the name of the service you want to work with in your docker-compose.yml file
+  guild-manager:
+    image: guild-manager-runner
+    pull_policy: never
+    env_file:
+      - ./server/.env
+    ports:
+      - 3000:3000
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+
+  db-migrate:
+    image: guild-manager-runner
+    pull_policy: never
+    build: .
+    command: 'npm run db:deploy:prod'
+    env_file:
+      - ./server/.env
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - 5132:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:

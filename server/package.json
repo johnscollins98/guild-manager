@@ -11,8 +11,9 @@
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "lint": "eslint . --ext .ts",
     "typeorm": "typeorm-ts-node-commonjs",
-    "db:migration:generate": "bun typeorm migration:generate -d ./src/dataSource.ts",
-    "db:migration:run": "bun typeorm migration:run -d ./src/dataSource.ts"
+    "db:migrate": "typeorm migration:generate -d ./src/dataSource.ts",
+    "db:deploy": "typeorm migration:run -d ./src/dataSource.ts",
+    "db:deploy:prod": "typeorm migration:run -d ./build/dataSource.js"
   },
   "dependencies": {
     "axios": "^1.7.9",

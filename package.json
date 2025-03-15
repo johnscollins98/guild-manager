@@ -12,13 +12,14 @@
   },
   "scripts": {
     "build": "bun --filter '*' build",
-    "start": "bun db:migration:run && bun run --cwd server start",
+    "start": "bun run --cwd server start",
     "dev-server": "bun run --cwd server dev",
     "dev-client": "bun run --cwd client start",
     "dev": "concurrently --names=client,server --prefix-colors=auto 'bun run dev-client' 'bun run dev-server'",
     "lint": "bun --filter '*' lint",
     "prettier": "prettier '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
-    "db:migration:run": "bun run --cwd server db:migration:run"
+    "db:migrate": "bun run --cwd server db:migrate",
+    "db:deploy": "bun run --cwd server db:deploy:prod"
   },
   "workspaces": [
     "client",
