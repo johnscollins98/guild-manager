@@ -65,16 +65,7 @@ const EventPage = () => {
 
   return (
     <EventLeadersContext.Provider value={leaders}>
-      <Box display="flex" flexDirection="column" overflow="auto">
-        {sortedEvents.map(event => (
-          <EventEntry
-            event={event}
-            hasEditPermission={auth.data.permissions.EVENTS}
-            key={event.id}
-          />
-        ))}
-      </Box>
-      <Box display="flex" justifyContent="flex-end" gap="8px" marginTop="16px">
+      <Box display="flex" justifyContent="flex-end" gap="8px" marginBottom="12px">
         <Button variant="contained" color="secondary" onClick={() => setShowCreateModal(true)}>
           Create new event
         </Button>
@@ -87,6 +78,15 @@ const EventPage = () => {
         >
           Post to Discord
         </Button>
+      </Box>
+      <Box display="flex" overflow="auto" flexWrap="wrap" sx={{ gap: { md: '4px' } }}>
+        {sortedEvents.map(event => (
+          <EventEntry
+            event={event}
+            hasEditPermission={auth.data.permissions.EVENTS}
+            key={event.id}
+          />
+        ))}
       </Box>
       <EventFormDialog
         onSubmit={createEvent}
