@@ -36,14 +36,16 @@ const EventEntry = ({ event, hasEditPermission }: Props) => {
   return (
     <>
       <CardActionArea
-        sx={{ borderRadius: '4px' }}
+        sx={{ flexBasis: { xs: '100%', md: 'calc(50% - 4px)' }, flexGrow: 0, borderRadius: '4px' }}
         disabled={!hasEditPermission}
         onClick={e => setMenuAnchor({ top: e.clientY, left: e.clientX })}
       >
         <Box
           sx={t => ({
             opacity: event.ignore ? '0.6' : '1',
-            borderBottom: `1px solid ${t.palette.divider}`
+            border: { md: `1px solid ${t.palette.divider}` },
+            borderBottom: `1px solid ${t.palette.divider}`,
+            borderRadius: { md: '4px' }
           })}
           display="flex"
           justifyContent="space-between"
