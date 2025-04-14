@@ -1,6 +1,7 @@
-import { AuditLogEvent, Client, Events, GatewayIntentBits, Partials } from 'discord.js';
+import { AuditLogEvent, Client, Events, Partials } from 'discord.js';
 import { Service } from 'typedi';
 import { config } from '../config';
+import { DiscordController } from '../controllers/discord-controller';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
 import { CommandFactory } from './command-factory';
 
@@ -10,10 +11,11 @@ export class DiscordBot {
 
   constructor(
     private readonly memberLeftRepository: MemberLeftRepository,
-    private readonly commandFactory: CommandFactory
+    private readonly commandFactory: CommandFactory,
+    private readonly discordController: DiscordController
   ) {
     this.client = new Client({
-      intents: [GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers],
+      intents: ['GuildPresences', 'GuildMembers', 'Guilds', 'MessageContent', 'GuildMessages'],
       partials: [Partials.GuildMember]
     });
   }
@@ -58,6 +60,36 @@ export class DiscordBot {
   }
 
   private async setupEventListeners() {
+    this.client.on('messageCreate', async e => {
+      if (!config.discordGuildId || e.guildId !== config.discordGuildId) return;
+      if (!config.welcomeChannelId || e.channelId !== config.welcomeChannelId) return;
+      if (e.member?.user.bot) return;
+
+      // only respond if matches <text>.#### format
+      const match = new RegExp(/.*\.\d\d\d\d/gm).exec(e.content);
+      if (!match) return;
+
+      const memberRoles = e.member?.roles;
+      if (!memberRoles) return;
+
+      // get valid roles
+      const validRoles = await this.discordController.getRoles();
+      const validRoleIds = validRoles.map(r => r.id);
+
+      // only respond if they have no "valid" roles (i.e. uninvited etc)
+      if (memberRoles.cache.hasAny(...validRoleIds)) {
+        return;
+      }
+
+      e.reply(
+        `Thanks! ${config.recruitmentRoleId ? `A <@&${config.recruitmentRoleId}>` : 'We'} will get you invited in-game ASAP and keep you updated.`
+      );
+
+      if (config.pendingRoleId) {
+        e.member.roles.add(config.pendingRoleId);
+      }
+    });
+
     // Will refactor if we add more event listeners
     this.client.on('guildMemberRemove', async m => {
       const guild = await this.client.guilds.fetch(config.discordGuildId);
