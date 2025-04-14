@@ -1,6 +1,7 @@
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
 import PersonIcon from '@mui/icons-material/Person';
+import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
 import { CardActionArea, Checkbox, useTheme } from '@mui/material';
@@ -202,9 +203,24 @@ const GuildMemberCard = ({
                     <SyncProblem className="error" />
                   </Tooltip>
                 ) : null}
+                {member.issues.pending ? (
+                  <Tooltip title={`Waiting for invitation`}>
+                    <ScheduleSendIcon className="error" />
+                  </Tooltip>
+                ) : null}
                 {member.issues.invited ? (
                   <Tooltip title={`Unaccepted invitation`}>
                     <MailIcon className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.issues.over24h ? (
+                  <Tooltip title="Been in server over 24h">
+                    <Timer className="error" />
+                  </Tooltip>
+                ) : null}
+                {member.issues.overAWeek ? (
+                  <Tooltip title="Been in server over a week">
+                    <Timer className="error" />
                   </Tooltip>
                 ) : null}
                 {member.issues.missingGW2 ? (
@@ -219,16 +235,6 @@ const GuildMemberCard = ({
                     <span>
                       <DiscordLogo width="24" height="24" className="error" />
                     </span>
-                  </Tooltip>
-                ) : null}
-                {member.issues.over24h ? (
-                  <Tooltip title="Been in server over 24h">
-                    <Timer className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.overAWeek ? (
-                  <Tooltip title="Been in server over a week">
-                    <Timer className="error" />
                   </Tooltip>
                 ) : null}
                 {member.manualMatch ? (

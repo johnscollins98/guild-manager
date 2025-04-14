@@ -108,6 +108,9 @@ export const getExcessDiscordRecords = (
       const missingGW2 = !discordMember.roles.find(r => r.name === 'Bots');
       const joinDate = DateTime.fromISO(discordMember.joined, { zone: 'utc' });
 
+      const topRole = discordMember.roles[0];
+      const pending = topRole && topRole.name === 'Pending';
+
       const twentyFourHours = 1000 * 60 * 60 * 24;
       const over24h = missingGW2 && DateTime.now().diff(joinDate).toMillis() > twentyFourHours;
 
@@ -122,6 +125,7 @@ export const getExcessDiscordRecords = (
         avatar: discordMember.avatar,
         warnings: warnings.filter(w => w.givenTo === discordMember.id),
         issues: {
+          pending,
           missingGW2,
           over24h
         }

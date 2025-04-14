@@ -21,5 +21,6 @@ export default interface MemberRecord {
     over24h?: boolean;
     overAWeek?: boolean;
     invited?: boolean;
+    pending?: boolean;
   };
 }
