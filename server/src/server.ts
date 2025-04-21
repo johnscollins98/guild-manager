@@ -11,6 +11,7 @@ import { config } from './config';
 import { dataSource } from './dataSource';
 import { DiscordBot } from './discord-bot/discord-bot';
 import { Permission } from './dtos';
+import { CustomErrorHandler } from './middleware/error-handler';
 import { AuthService } from './services/auth/auth-service';
 import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
 import { EventUpdater } from './services/discord/event-updater';
@@ -47,6 +48,8 @@ app.use(passport.session());
 useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*-controller.*')],
+  defaultErrorHandler: false,
+  middlewares: [CustomErrorHandler],
   authorizationChecker: async (action: Action, roles: Permission[]) => {
     if (process.env.NODE_ENV === 'development' && config.skipAuth) {
       return true;

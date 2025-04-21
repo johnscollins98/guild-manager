@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { type AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import {
   type DiscordMemberDTO,
   type DiscordRole,
@@ -180,10 +180,16 @@ export const useKickDiscordMembers = () => {
             content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
           }
 
-          await sendMessage.mutateAsync({
-            memberId,
-            content
-          });
+          try {
+            await sendMessage.mutateAsync({
+              memberId,
+              content
+            });
+          } catch (err) {
+            if (!(err instanceof AxiosError) || err.status !== 403) {
+              throw err;
+            }
+          }
         }
 
         return discordApi.deleteMember(memberId);
@@ -231,7 +237,11 @@ export const useSendMessage = () => {
     onSuccess() {
       openToast('Sent message.', 'success');
     },
-    onError() {
+    onError(err) {
+      if (err.status === 403) {
+        openToast('Failed to send message to user as they have blocked messages.', 'warning');
+        return;
+      }
       openToast('Failed to send message', 'error');
     }
   });

@@ -1,10 +1,13 @@
+import { AxiosError } from 'axios';
 import {
   Authorized,
   BadRequestError,
   Body,
   Delete,
+  ForbiddenError,
   Get,
   Header,
+  InternalServerError,
   JsonController,
   NotFoundError,
   OnUndefined,
@@ -151,8 +154,17 @@ export class DiscordController implements IDiscordController {
     @Param('memberId') memberId: string,
     @Body() messageData: DiscordMessagePost
   ): Promise<void> {
-    const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
-    await this.discordChannelApi.sendMessage(dmChannelId, messageData);
+    try {
+      const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
+      await this.discordChannelApi.sendMessage(dmChannelId, messageData);
+    } catch (err) {
+      console.error(err);
+      if (err instanceof AxiosError && err.status === 403) {
+        throw new ForbiddenError(err.message);
+      } else {
+        throw new InternalServerError('An unknown error occurred.');
+      }
+    }
   }
 
   @OnUndefined(200)
