@@ -4,7 +4,6 @@ Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in
 
 ## Requirements
 
-- Bun v1.2
 - Node v22
 - Postgres 17
 
@@ -14,22 +13,22 @@ There is a Docker devcontainer (see `.devcontainer`) that can setup these requir
 
 In the project directory, you can run:
 
-### `bun run start`
+### `npm run start`
 
 Starts the Express server with node.
 
-### `bun run dev-server`
+### `npm run dev-server`
 
 Run express server with nodemon.
 
-### `bun run dev-client`
+### `npm run dev-client`
 
 Run front end in local development server
 
-### `bun run dev`
+### `npm run dev`
 
 Run both back-end and front-end concurrently
 
-### `bun run build`
+### `npm run build`
 
 Builds the front end for production/deployment.
