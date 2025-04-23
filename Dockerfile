@@ -12,10 +12,10 @@ COPY ./server/package.json ./server/package.json
 RUN npm install --frozen-lockfile
 
 COPY ./server ./server
-RUN npm run --cwd server build
+RUN npm run -w server build
 
 COPY ./client ./client
-RUN npm run --cwd client build
+RUN npm run -w client build
 
 # Install Production Dependencies
 FROM base AS runner
