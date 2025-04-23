@@ -37,7 +37,7 @@
     "react-router-dom": "^7.0.2",
     "react-virtualized": "^9.22.5",
     "sass": "^1.83.0",
-    "server": "workspace:*",
+    "server": "*",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
     "vite-plugin-checker": "^0.8.0",
