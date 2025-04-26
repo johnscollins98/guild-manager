@@ -21,11 +21,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-        restart: true
 
   db:
     image: postgres:17-alpine
-    restart: always
     environment:
       - PGUSER=postgres
       - POSTGRES_PASSWORD=postgres
