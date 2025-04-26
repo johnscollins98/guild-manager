@@ -27,7 +27,7 @@ services:
 
   db:
     image: postgres:17-alpine
-    restart: always
+    restart: on-failure
     environment:
       - PGUSER=postgres
       - POSTGRES_PASSWORD=postgres
