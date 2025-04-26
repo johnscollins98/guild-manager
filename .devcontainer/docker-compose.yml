@@ -14,7 +14,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-        restart: true
 
     # Uncomment the next four lines if you will use a ptrace-based debugger like C++, Go, and Rust.
     # cap_add:
@@ -27,7 +26,6 @@ services:
 
   db:
     image: postgres:17-alpine
-    restart: on-failure
     environment:
       - PGUSER=postgres
       - POSTGRES_PASSWORD=postgres
