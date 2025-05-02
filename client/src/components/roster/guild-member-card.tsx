@@ -296,6 +296,7 @@ const GuildMemberCard = ({
         isOpen={warningOpen}
         onClose={() => setWarningOpen(false)}
         onSubmit={warningSubmitHandler}
+        isPending={addWarningMutation.isPending}
       />
       <WarningsViewerDialog
         isOpen={warningViewerOpen}

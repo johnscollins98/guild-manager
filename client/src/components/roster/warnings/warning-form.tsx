@@ -15,14 +15,20 @@ interface Props {
   onClose: () => void;
   onSubmit: (reason: string, warningType: WarningType) => Promise<void>;
   initialData?: WarningCreateDTO;
+  isPending: boolean;
 }
 
-const WarningFormDialog = ({ isOpen, onClose, onSubmit, initialData }: Props) => {
+const WarningFormDialog = ({ isOpen, onClose, onSubmit, initialData, isPending }: Props) => {
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
       <DialogTitle>Give Warning</DialogTitle>
       <DialogContent>
-        <WarningForm onSubmit={onSubmit} initialData={initialData} onClose={onClose} />
+        <WarningForm
+          onSubmit={onSubmit}
+          initialData={initialData}
+          onClose={onClose}
+          isPending={isPending}
+        />
       </DialogContent>
     </Dialog>
   );
@@ -32,9 +38,10 @@ interface WarningFormProps {
   onSubmit: Props['onSubmit'];
   initialData: Props['initialData'];
   onClose: Props['onClose'];
+  isPending: Props['isPending'];
 }
 
-const WarningForm = ({ onSubmit, initialData, onClose }: WarningFormProps) => {
+const WarningForm = ({ onSubmit, initialData, onClose, isPending }: WarningFormProps) => {
   const [warningReason, setWarningReason] = useState(initialData?.reason ?? '');
   const [warningType, setWarningType] = useState(initialData?.type ?? WarningType.OFFICIAL);
 
@@ -82,10 +89,16 @@ const WarningForm = ({ onSubmit, initialData, onClose }: WarningFormProps) => {
         required
       />
       <Box display="flex" justifyContent="flex-end" gap={2}>
-        <Button variant="text" type="reset">
+        <Button variant="text" type="reset" disabled={isPending}>
           Cancel
         </Button>
-        <Button variant="contained" color="primary" type="submit">
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          loading={isPending}
+          disabled={isPending}
+        >
           Submit
         </Button>
       </Box>

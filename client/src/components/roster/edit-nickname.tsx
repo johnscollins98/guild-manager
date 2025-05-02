@@ -34,11 +34,11 @@ const EditNicknameForm = ({ member, onClose }: EditNicknameFormProps) => {
   const changeMemberMutation = useUpdateDiscordMember();
   const [nickname, setNickname] = useState(member.discordName ?? '');
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
     e.preventDefault();
     if (member.discordId) {
-      changeMemberMutation.mutate({
+      await changeMemberMutation.mutateAsync({
         memberId: member.discordId,
         nick: nickname
       });
@@ -58,8 +58,16 @@ const EditNicknameForm = ({ member, onClose }: EditNicknameFormProps) => {
         />
       </DialogContent>
       <DialogActions>
-        <Button type="reset">Cancel</Button>
-        <Button color="primary" variant="contained" type="submit">
+        <Button type="reset" disabled={changeMemberMutation.isPending}>
+          Cancel
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          type="submit"
+          disabled={changeMemberMutation.isPending}
+          loading={changeMemberMutation.isPending}
+        >
           Submit
         </Button>
       </DialogActions>
