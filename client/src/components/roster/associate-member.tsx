@@ -41,7 +41,7 @@ interface AssociateMemberFormProps {
 const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
   const { data } = useDiscordMembers();
 
-  const { mutate: associateMember } = useAssociateToDiscordAccountMutation();
+  const associateMemberMutation = useAssociateToDiscordAccountMutation();
 
   const [discordAccountId, setDiscordId] = useState({
     value: member.discordId ?? '',
@@ -49,12 +49,12 @@ const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
   });
 
   const submitHandler = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
       if (discordAccountId && member.memberId) {
-        associateMember({
+        await associateMemberMutation.mutateAsync({
           discordAccountId: discordAccountId.value,
           gw2AccountName: member.memberId
         });
@@ -62,7 +62,7 @@ const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
 
       onClose();
     },
-    [associateMember, discordAccountId, member.memberId, onClose]
+    [associateMemberMutation, discordAccountId, member.memberId, onClose]
   );
 
   if (!member.memberId) {
@@ -89,8 +89,15 @@ const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
         fullWidth
       />
       <div className="actions">
-        <Button type="reset">Cancel</Button>
-        <Button variant="contained" type="submit" disabled={!discordAccountId}>
+        <Button type="reset" disabled={associateMemberMutation.isPending}>
+          Cancel
+        </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={!discordAccountId || associateMemberMutation.isPending}
+          loading={associateMemberMutation.isPending}
+        >
           Submit
         </Button>
       </div>

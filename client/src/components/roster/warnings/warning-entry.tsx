@@ -22,7 +22,8 @@ export interface WarningEntryProps {
 export const WarningEntry = ({ warning, getDiscordMemberById, authData }: WarningEntryProps) => {
   const confirm = useConfirm();
 
-  const deleteWarningMutation = useDeleteWarningMutation();
+  const { isPending: isDeletePending, mutateAsync: deleteWarningMutation } =
+    useDeleteWarningMutation();
   const { isPending, mutateAsync: updateWarning } = useUpdateWarningMutation();
 
   const [showUpdate, setShowUpdate] = useState(false);
@@ -37,7 +38,7 @@ export const WarningEntry = ({ warning, getDiscordMemberById, authData }: Warnin
   const handleDeleteWarning = useCallback(async () => {
     const res = await confirm('Are you sure you want to delete this warning?', 'Delete Warning');
     if (res) {
-      await deleteWarningMutation.mutateAsync(warning.id);
+      await deleteWarningMutation(warning.id);
     }
   }, [warning, deleteWarningMutation, confirm]);
 
@@ -86,7 +87,7 @@ export const WarningEntry = ({ warning, getDiscordMemberById, authData }: Warnin
               <IconButton onClick={() => setShowUpdate(true)} disabled={isPending}>
                 <Edit color="primary" />
               </IconButton>
-              <IconButton onClick={() => handleDeleteWarning()}>
+              <IconButton onClick={() => handleDeleteWarning()} disabled={isDeletePending}>
                 <Close color="error" />
               </IconButton>
             </Box>
@@ -112,6 +113,7 @@ export const WarningEntry = ({ warning, getDiscordMemberById, authData }: Warnin
         isOpen={showUpdate}
         onClose={() => setShowUpdate(false)}
         onSubmit={handleUpdateWarning}
+        isPending={isPending}
         initialData={showUpdate ? warning : undefined}
       />
     </>
