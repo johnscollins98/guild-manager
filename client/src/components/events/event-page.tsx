@@ -65,19 +65,22 @@ const EventPage = () => {
 
   return (
     <EventLeadersContext.Provider value={leaders}>
-      <Box display="flex" justifyContent="flex-end" gap="8px" marginBottom="12px">
-        <Button variant="contained" color="secondary" onClick={() => setShowCreateModal(true)}>
-          Create new event
-        </Button>
-        <Button
-          onClick={() => setShowPostModal(true)}
-          variant="contained"
-          className="discord-button"
-          startIcon={<DiscordSvg width={22} />}
-          disabled={!auth.data.permissions.EVENTS}
-        >
-          Post to Discord
-        </Button>
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <h2>Events</h2>
+        <Box display="flex" gap="8px" marginBottom="12px">
+          <Button variant="contained" color="secondary" onClick={() => setShowCreateModal(true)}>
+            Create new event
+          </Button>
+          <Button
+            onClick={() => setShowPostModal(true)}
+            variant="contained"
+            className="discord-button"
+            startIcon={<DiscordSvg width={22} />}
+            disabled={!auth.data.permissions.EVENTS}
+          >
+            Post to Discord
+          </Button>
+        </Box>
       </Box>
       <Box display="flex" overflow="auto" flexWrap="wrap" sx={{ gap: { md: '4px' } }}>
         {sortedEvents.map(event => (

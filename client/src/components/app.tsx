@@ -5,13 +5,16 @@ import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import './app.scss';
 import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
+import { EventLoader } from './events/event-loader';
 import EventPage from './events/event-page';
 import Layout from './layout';
 import Log from './log/log';
+import { LogLoader } from './log/log-loader';
 import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
+import { RosterLoader } from './roster/roster-loader';
 
 const App = () => {
   const { data: authInfo } = useAuth();
@@ -24,10 +27,38 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" Component={Layout}>
-              <Route path="/" Component={Roster} />
-              <Route path="/log" Component={Log} />
-              <Route path="/discord-log" Component={DiscordLog} />
-              <Route path="/events" Component={EventPage} />
+              <Route
+                path="/"
+                element={
+                  <QueryBoundary fallback={<RosterLoader />}>
+                    <Roster />
+                  </QueryBoundary>
+                }
+              />
+              <Route
+                path="/log"
+                element={
+                  <QueryBoundary fallback={<LogLoader />}>
+                    <Log />
+                  </QueryBoundary>
+                }
+              />
+              <Route
+                path="/discord-log"
+                element={
+                  <QueryBoundary fallback={<LogLoader />}>
+                    <DiscordLog />
+                  </QueryBoundary>
+                }
+              />
+              <Route
+                path="/events"
+                element={
+                  <QueryBoundary fallback={<EventLoader />}>
+                    <EventPage />
+                  </QueryBoundary>
+                }
+              />
               <Route path="/recruitment" Component={RecruitmentPage} />
               <Route path="*" Component={NotFound} />
             </Route>
