@@ -26,6 +26,8 @@ interface Props {
   setSelection: (v: string[]) => void;
 
   onKick: () => void;
+
+  disabled?: boolean;
 }
 
 const RosterControl = ({
@@ -35,7 +37,8 @@ const RosterControl = ({
   setKickMode,
   selection,
   setSelection,
-  onKick
+  onKick,
+  disabled = false
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy');
@@ -101,12 +104,12 @@ const RosterControl = ({
       <div className="roster-bar">
         <span className="left">
           <Tooltip title="Filter Members">
-            <IconButton size="small" onClick={onFilterOpen}>
+            <IconButton size="small" onClick={onFilterOpen} disabled={disabled}>
               <FilterList />
             </IconButton>
           </Tooltip>
           <Tooltip title="Sort Members">
-            <IconButton size="small" onClick={onSortOpen}>
+            <IconButton size="small" onClick={onSortOpen} disabled={disabled}>
               <ImportExport />
             </IconButton>
           </Tooltip>
@@ -116,7 +119,7 @@ const RosterControl = ({
             <Tooltip title={'Mass kick (up to 5 members)'}>
               <span>
                 <IconButton
-                  disabled={!authData?.permissions.MEMBERS}
+                  disabled={!authData?.permissions.MEMBERS || disabled}
                   size="small"
                   onClick={() => setKickMode(true)}
                 >
@@ -130,14 +133,18 @@ const RosterControl = ({
               <span className="selection-length">{selection.length} selected</span>
               <Tooltip title={'Confirm Mass Kick'}>
                 <span>
-                  <IconButton size="small" onClick={onKick} disabled={selection.length === 0}>
+                  <IconButton
+                    size="small"
+                    onClick={onKick}
+                    disabled={selection.length === 0 || disabled}
+                  >
                     <Check />
                   </IconButton>
                 </span>
               </Tooltip>
               <Tooltip title={'Cancel Mass Kick'}>
                 <span>
-                  <IconButton size="small" onClick={cancelKickMode}>
+                  <IconButton size="small" onClick={cancelKickMode} disabled={disabled}>
                     <Close />
                   </IconButton>
                 </span>
@@ -150,7 +157,7 @@ const RosterControl = ({
                 size="small"
                 onClick={refetchData}
                 className="refresh"
-                disabled={isFetching}
+                disabled={isFetching || disabled}
               >
                 <Refresh />
               </IconButton>

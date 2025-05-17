@@ -12,6 +12,7 @@ import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
+import { RosterLoader } from './roster/roster-loader';
 
 const App = () => {
   const { data: authInfo } = useAuth();
@@ -24,7 +25,14 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" Component={Layout}>
-              <Route path="/" Component={Roster} />
+              <Route
+                path="/"
+                element={
+                  <QueryBoundary fallback={<RosterLoader />}>
+                    <Roster />
+                  </QueryBoundary>
+                }
+              />
               <Route path="/log" Component={Log} />
               <Route path="/discord-log" Component={DiscordLog} />
               <Route path="/events" Component={EventPage} />
