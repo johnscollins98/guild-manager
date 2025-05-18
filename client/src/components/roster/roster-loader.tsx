@@ -1,28 +1,15 @@
 import { Avatar, Box, Skeleton, Typography } from '@mui/material';
 import { DateTime } from 'luxon';
 import { getDateString } from '../../lib/utils/data-processing';
-import RosterControl from './roster-control';
 
 export const RosterLoader = () => {
-  const arr = new Array(50).fill(0);
+  const arr = new Array(25).fill(0);
   return (
-    <>
-      <RosterControl
-        kickMode={false}
-        isFetching
-        onKick={() => {}}
-        selection={[]}
-        refetchData={() => {}}
-        setKickMode={() => {}}
-        setSelection={() => {}}
-        disabled
-      />
-      <Box flex={1} overflow="auto">
-        {arr.map((_, idx) => (
-          <CardSkeleton key={idx} />
-        ))}
-      </Box>
-    </>
+    <Box height="100%" overflow="auto" maxHeight="100%">
+      {arr.map((_, idx) => (
+        <CardSkeleton key={idx} />
+      ))}
+    </Box>
   );
 };
 

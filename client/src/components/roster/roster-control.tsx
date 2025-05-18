@@ -9,16 +9,15 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { useQueries } from '@tanstack/react-query';
 import { useAuth } from '../../lib/apis/auth-api';
 import './roster-control.scss';
+import { rosterQueries } from './use-roster';
 
 interface Props {
-  refetchData: () => void;
-  isFetching: boolean;
-
   kickMode: boolean;
   setKickMode: (v: boolean) => void;
 
@@ -31,8 +30,6 @@ interface Props {
 }
 
 const RosterControl = ({
-  refetchData,
-  isFetching,
   kickMode,
   setKickMode,
   selection,
@@ -151,18 +148,9 @@ const RosterControl = ({
               </Tooltip>
             </>
           )}
-          <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
-            <span>
-              <IconButton
-                size="small"
-                onClick={refetchData}
-                className="refresh"
-                disabled={isFetching || disabled}
-              >
-                <Refresh />
-              </IconButton>
-            </span>
-          </Tooltip>
+          <Suspense>
+            <RefetchButton />
+          </Suspense>
         </span>
       </div>
       <Menu
@@ -258,6 +246,28 @@ const RosterControl = ({
         </MenuItem>
       </Menu>
     </>
+  );
+};
+
+const RefetchButton = () => {
+  const queries = useQueries({
+    queries: rosterQueries
+  });
+
+  const isFetching = useMemo(() => queries.some(q => q.isFetching), [queries]);
+
+  const refetchData = useCallback(() => {
+    queries.forEach(q => q.refetch());
+  }, [queries]);
+
+  return (
+    <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
+      <span>
+        <IconButton size="small" onClick={refetchData} className="refresh" disabled={isFetching}>
+          <Refresh />
+        </IconButton>
+      </span>
+    </Tooltip>
   );
 };
 

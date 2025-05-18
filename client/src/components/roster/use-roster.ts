@@ -15,23 +15,21 @@ import {
   getExcessDiscordRecords
 } from '../../lib/utils/data-processing';
 
+export const rosterQueries = [
+  discordMembersQuery,
+  discordRolesQuery,
+  gw2MembersQuery,
+  gw2RanksQuery,
+  warningsQuery,
+  discordBotRolesQuery
+] as const;
+
 export const useRoster = (sortString?: string, filterString?: string, filterBy?: string) => {
   const queries = useSuspenseQueries({
-    queries: [
-      discordMembersQuery,
-      discordRolesQuery,
-      gw2MembersQuery,
-      gw2RanksQuery,
-      warningsQuery,
-      discordBotRolesQuery
-    ]
+    queries: rosterQueries
   });
 
   const [discordMembers, discordRoles, gw2Members, guildRanks, warnings, botRoles] = queries;
-
-  const refetch = () => queries.forEach(q => q.refetch());
-
-  const isFetching = queries.some(q => q.isFetching);
 
   const roster = getRoster(gw2Members.data, discordMembers.data, guildRanks.data, warnings.data);
 
@@ -39,9 +37,6 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
   const rosterForDisplay = onSort(filteredRoster, sortString, guildRanks.data ?? []);
 
   return {
-    isFetching,
-    refetch,
-    roster,
     rosterForDisplay,
     botRoles: botRoles.data,
     discordRoles: discordRoles.data
