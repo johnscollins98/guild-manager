@@ -1,4 +1,6 @@
 import { Avatar, Box, Skeleton, Typography } from '@mui/material';
+import { DateTime } from 'luxon';
+import { getDateString } from '../../lib/utils/data-processing';
 import RosterControl from './roster-control';
 
 export const RosterLoader = () => {
@@ -15,7 +17,7 @@ export const RosterLoader = () => {
         setSelection={() => {}}
         disabled
       />
-      <Box flex={1}>
+      <Box flex={1} overflow="auto">
         {arr.map((_, idx) => (
           <CardSkeleton key={idx} />
         ))}
@@ -28,16 +30,17 @@ const CardSkeleton = () => {
   return (
     <div>
       <Box
-        display={'flex'}
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
-        height="62px"
+        height="58px"
+        marginBottom="4px"
         padding="8px 12px"
       >
-        <Box display="flex" gap="4px" alignItems="center">
+        <Box display="flex" gap="8px" alignItems="center">
           <Box>
             <Skeleton variant="circular">
-              <Avatar />
+              <Avatar sx={{ height: '32px', width: '32px' }} />
             </Skeleton>
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" gap="0">
@@ -47,7 +50,9 @@ const CardSkeleton = () => {
               </Typography>
             </Skeleton>
             <Skeleton variant="text">
-              <Typography variant="subtitle2">{new Date().toLocaleDateString()}</Typography>
+              <Typography variant="subtitle2" fontSize="12px" fontWeight="300">
+                {getDateString(DateTime.now())}
+              </Typography>
             </Skeleton>
           </Box>
         </Box>
