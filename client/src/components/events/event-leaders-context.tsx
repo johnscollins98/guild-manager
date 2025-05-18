@@ -9,15 +9,8 @@ export const EventLeadersContext = React.createContext<DiscordMemberDTO[]>([]);
 export const useEventLeaders = () => use(EventLeadersContext);
 
 export const EventLeadersProvider = ({ children }: { children: React.ReactNode }) => {
-  const eventRoles = useQuery({
-    ...eventRolesQuery,
-    throwOnError: true
-  });
-
-  const discordMembers = useQuery({
-    ...discordMembersQuery,
-    throwOnError: true
-  });
+  const eventRoles = useQuery(eventRolesQuery);
+  const discordMembers = useQuery(discordMembersQuery);
 
   const leaders =
     discordMembers.data?.filter(m => m.roles.some(r => eventRoles.data?.includes(r.id))) ?? [];
