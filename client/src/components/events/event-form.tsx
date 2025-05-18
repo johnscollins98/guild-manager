@@ -9,16 +9,10 @@ import {
   MenuItem,
   TextField
 } from '@mui/material';
-import {
-  type ComponentProps,
-  type KeyboardEvent,
-  use,
-  useCallback,
-  useMemo,
-  useState
-} from 'react';
+import { type ComponentProps, type KeyboardEvent, useCallback, useMemo, useState } from 'react';
 import { daysOfWeek, type EventCreateDTO } from 'server';
-import { EventLeadersContext } from './event-leaders-context';
+import { QueryBoundary } from '../common/query-boundary';
+import { useEventLeaders } from './event-leaders-context';
 
 export interface EventFormProps {
   onSubmit: (e: EventCreateDTO) => void;
@@ -38,7 +32,9 @@ export const EventFormDialog = (props: EventFormProps) => {
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm" onKeyDown={stopTabPropagation}>
       <DialogTitle>{initialData ? 'Edit' : 'Create'} Event</DialogTitle>
       <DialogContent>
-        <EventForm {...props} />
+        <QueryBoundary>
+          <EventForm {...props} />
+        </QueryBoundary>
       </DialogContent>
     </Dialog>
   );
@@ -56,7 +52,7 @@ const emptyEvent: EventCreateDTO = {
 export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) => {
   const [event, setEvent] = useState(initialData ?? emptyEvent);
 
-  const possibleLeaders = use(EventLeadersContext);
+  const possibleLeaders = useEventLeaders();
 
   const onEdit = useCallback(
     (field: keyof EventCreateDTO, value: string) => {

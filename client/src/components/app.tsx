@@ -5,7 +5,6 @@ import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import './app.scss';
 import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
-import { EventLoader } from './events/event-loader';
 import EventPage from './events/event-page';
 import Layout from './layout';
 import Log from './log/log';
@@ -43,14 +42,7 @@ const App = () => {
                   </QueryBoundary>
                 }
               />
-              <Route
-                path="/events"
-                element={
-                  <QueryBoundary fallback={<EventLoader />}>
-                    <EventPage />
-                  </QueryBoundary>
-                }
-              />
+              <Route path="/events" Component={EventPage} />
               <Route path="/recruitment" Component={RecruitmentPage} />
               <Route path="*" Component={NotFound} />
             </Route>
