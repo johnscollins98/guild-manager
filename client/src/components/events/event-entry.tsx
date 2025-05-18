@@ -1,8 +1,8 @@
 import { Avatar, Box, CardActionArea, type PopoverPosition, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
-import { use, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { type EventDTO } from 'server';
-import { EventLeadersContext } from './event-leaders-context';
+import { useEventLeaders } from './event-leaders-context';
 import { EventMenu } from './event-menu';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 const EventEntry = ({ event, hasEditPermission }: Props) => {
   const [menuAnchor, setMenuAnchor] = useState<undefined | PopoverPosition>(undefined);
 
-  const possibleLeaders = use(EventLeadersContext);
+  const possibleLeaders = useEventLeaders();
 
   const localStartTime = useMemo(() => {
     const [hours, minutes] = event.startTime.split(':');

@@ -1,6 +1,6 @@
 import Code from '@mui/icons-material/Code';
 import ContentCopy from '@mui/icons-material/ContentCopy';
-import { Button, IconButton, TextField, Tooltip } from '@mui/material';
+import { Button, CircularProgress, IconButton, TextField, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
 import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useMemo, useState, type FormEventHandler } from 'react';
@@ -11,12 +11,14 @@ import {
 } from '../../lib/apis/recruitment-api';
 import { useToast } from '../common/toast/toast-context';
 
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { authQuery } from '../../lib/apis/auth-api';
 import './recruitment-page.scss';
 
 const RecruitmentPage = () => {
-  const [recruitmentPost, auth] = useSuspenseQueries({ queries: [recruitmentQuery, authQuery] });
+  const recruitmentPost = useQuery(recruitmentQuery);
+  const auth = useQuery(authQuery);
+
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
@@ -75,8 +77,11 @@ const RecruitmentPage = () => {
       style={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}
     >
       <Box justifyContent="space-between" alignItems="center" display="flex">
-        <h2>Recruitment Post</h2>
-        {auth.data.permissions.RECRUITMENT && (
+        <Box gap={2} alignItems="center" display="flex">
+          <h2>Recruitment Post</h2>
+          {(auth.isLoading || recruitmentPost.isLoading) && <CircularProgress size={24} />}
+        </Box>
+        {auth.data?.permissions.RECRUITMENT && (
           <Box display="flex" alignItems="center" gap="8px">
             <Button variant="text" type="reset" disabled={!isModified}>
               Reset
@@ -97,7 +102,7 @@ const RecruitmentPage = () => {
         </div>
         <TextField
           value={title}
-          disabled={!auth.data.permissions.RECRUITMENT}
+          disabled={!auth.data?.permissions.RECRUITMENT || recruitmentPost.isLoading}
           required
           onChange={e => setTitle(e.target.value)}
           fullWidth
@@ -123,7 +128,7 @@ const RecruitmentPage = () => {
           multiline
           label="Content"
           value={message}
-          disabled={!auth.data.permissions.RECRUITMENT}
+          disabled={!auth.data?.permissions.RECRUITMENT || recruitmentPost.isLoading}
           onChange={e => setMessage(e.target.value)}
           fullWidth
           InputProps={{
