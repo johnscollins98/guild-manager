@@ -111,7 +111,14 @@ const RecruitmentPage = () => {
           InputProps={{ sx: { paddingRight: '45px' } }}
         />
       </div>
-      <div style={{ overflow: 'auto', paddingTop: '16px' }} className="input-wrapper">
+      <div
+        style={{
+          flex: 1,
+          paddingTop: '16px',
+          overflow: 'hidden'
+        }}
+        className="input-wrapper"
+      >
         <div className="buttons">
           <Tooltip title="Copy as HTML/Rich Text">
             <IconButton onClick={() => handleCopyClick(true)}>
@@ -127,12 +134,27 @@ const RecruitmentPage = () => {
         <TextField
           multiline
           label="Content"
+          rows={1}
           value={message}
           disabled={!auth.data?.permissions.RECRUITMENT || recruitmentPost.isLoading}
           onChange={e => setMessage(e.target.value)}
           fullWidth
-          InputProps={{
-            sx: { fontFamily: 'Consolas, Menlo, Ubuntu, Roboto, monospace', paddingRight: '95px' }
+          sx={{ height: '100%' }}
+          slotProps={{
+            htmlInput: {
+              style: {
+                height: '95%',
+                overflow: 'hidden',
+                paddingRight: '95px',
+                fontFamily: 'Consolas, Menlo, Ubuntu, Roboto, monospace'
+              }
+            },
+            input: {
+              sx: {
+                height: '100%',
+                paddingRight: '0px'
+              }
+            }
           }}
           name="message"
         />
