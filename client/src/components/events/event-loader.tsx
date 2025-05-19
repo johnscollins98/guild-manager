@@ -4,7 +4,7 @@ import { Box } from '@mui/system';
 export const EventLoader = () => {
   const events = new Array(20).fill(0);
   return (
-    <Box display="flex" overflow="auto" flexWrap="wrap" sx={{ gap: { md: '4px' } }}>
+    <Box display="flex" flexWrap="wrap" sx={{ gap: { md: '4px' } }}>
       {events.map((_, idx) => (
         <Box
           key={idx}
@@ -21,13 +21,17 @@ export const EventLoader = () => {
           padding="8px 16px"
           gap={2}
         >
-          <Box display="flex" flexDirection="column">
-            <Skeleton variant="text">
-              <Typography sx={{ fontSize: '1.1rem' }}>Event</Typography>
-            </Skeleton>
-            <Skeleton variant="text">
-              <Typography variant="caption">Monday at 12:00 for 1h</Typography>
-            </Skeleton>
+          <Box display="flex" flexDirection="column" flex="1">
+            <Typography sx={{ fontSize: '1.1rem' }}>
+              <Skeleton>
+                <Typography fontSize="1.1rem">Event Name</Typography>
+              </Skeleton>
+            </Typography>
+            <Typography variant="caption">
+              <Skeleton>
+                <Typography variant="caption">Monday at 12:00 for 1h</Typography>
+              </Skeleton>
+            </Typography>
           </Box>
           <Box display="flex" gap={1} alignItems="center">
             <Skeleton variant="circular">

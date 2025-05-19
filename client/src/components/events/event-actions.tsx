@@ -25,9 +25,9 @@ export const EventActions = () => {
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <h2>Events</h2>
-        <Box display="flex" gap="8px" marginBottom="12px">
+        <Box display="flex" gap="8px" alignItems="center">
           <Button variant="contained" color="secondary" onClick={() => setShowCreateModal(true)}>
-            Create new event
+            Create Event
           </Button>
           <Button
             onClick={() => setShowPostModal(true)}
@@ -36,7 +36,7 @@ export const EventActions = () => {
             startIcon={<DiscordSvg width={22} />}
             disabled={!auth?.data?.permissions.EVENTS}
           >
-            Post to Discord
+            Post Events
           </Button>
         </Box>
       </Box>
