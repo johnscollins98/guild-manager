@@ -23,7 +23,6 @@
     "@types/react-window": "^1.8.8",
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.7.9",
-    "copy-to-clipboard": "^3.3.3",
     "cross-env": "^7.0.3",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-compiler": "^19.0.0-beta-37ed2a7-20241206",
