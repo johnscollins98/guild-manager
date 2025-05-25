@@ -66,14 +66,16 @@ const RecruitmentPage = () => {
 
     if (post) {
       const type = isHtml ? 'text/html' : 'text/plain';
-      navigator.clipboard
-        .write([
-          new ClipboardItem({
-            [type]: new Promise(resolve => resolve(new Blob([post], { type })))
-          })
-        ])
-        .then(() => toast('Copied message to clipboard', 'success'))
-        .catch(err => toast(`Failed to copy to clipboard - ${err}`, 'error'));
+      setTimeout(() => {
+        navigator.clipboard
+          .write([
+            new ClipboardItem({
+              [type]: new Promise(resolve => resolve(new Blob([post], { type })))
+            })
+          ])
+          .then(() => toast('Copied message to clipboard', 'success'))
+          .catch(err => toast(`Failed to copy to clipboard - ${err}`, 'error'));
+      });
     }
   };
 
