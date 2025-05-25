@@ -69,7 +69,7 @@ const RecruitmentPage = () => {
       navigator.clipboard
         .write([
           new ClipboardItem({
-            [type]: new Blob([post], { type })
+            [type]: new Promise(resolve => resolve(new Blob([post], { type })))
           })
         ])
         .then(() => toast('Copied message to clipboard', 'success'))
