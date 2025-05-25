@@ -65,17 +65,15 @@ const RecruitmentPage = () => {
       .catch(() => toast('Failed to generate message', 'error'));
 
     if (post) {
-      try {
-        const type = isHtml ? 'text/html' : 'text/plain';
-        await navigator.clipboard.write([
+      const type = isHtml ? 'text/html' : 'text/plain';
+      navigator.clipboard
+        .write([
           new ClipboardItem({
             [type]: new Blob([post], { type })
           })
-        ]);
-        toast('Copied message to clipboard', 'success');
-      } catch (err) {
-        toast(`Failed to copy to clipboard - ${err}`, 'error');
-      }
+        ])
+        .then(() => toast('Copied message to clipboard', 'success'))
+        .catch(err => toast(`Failed to copy to clipboard - ${err}`, 'error'));
     }
   };
 
