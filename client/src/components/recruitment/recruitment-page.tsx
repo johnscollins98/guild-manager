@@ -2,7 +2,6 @@ import Code from '@mui/icons-material/Code';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import { Button, CircularProgress, IconButton, TextField, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
-import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useMemo, useState, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
@@ -65,8 +64,17 @@ const RecruitmentPage = () => {
       .catch(() => toast('Failed to generate message', 'error'));
 
     if (post) {
-      copy(post, { format: isHtml ? 'text/html' : 'text/plain' });
-      toast('Copied message to clipboard', 'success');
+      const type = isHtml ? 'text/html' : 'text/plain';
+      setTimeout(() => {
+        navigator.clipboard
+          .write([
+            new ClipboardItem({
+              [type]: new Promise(resolve => resolve(new Blob([post], { type })))
+            })
+          ])
+          .then(() => toast('Copied message to clipboard', 'success'))
+          .catch(err => toast(`Failed to copy to clipboard - ${err}`, 'error'));
+      });
     }
   };
 
@@ -95,7 +103,14 @@ const RecruitmentPage = () => {
       <div className="input-wrapper">
         <div className="buttons centered">
           <Tooltip title="Copy to clipboard">
-            <IconButton onClick={() => copy(title)}>
+            <IconButton
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(title)
+                  .then(() => toast('Copied title to clipboard.', 'success'))
+                  .catch(e => toast(`Failed to copy title: ${e}`, 'error'))
+              }
+            >
               <ContentCopy />
             </IconButton>
           </Tooltip>
