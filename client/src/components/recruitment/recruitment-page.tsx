@@ -66,9 +66,10 @@ const RecruitmentPage = () => {
 
     if (post) {
       try {
+        const type = isHtml ? 'text/html' : 'text/plain';
         await navigator.clipboard.write([
           new ClipboardItem({
-            [isHtml ? 'text/html' : 'text/plain']: post
+            [type]: new Blob([post], { type })
           })
         ]);
         toast('Copied message to clipboard', 'success');
