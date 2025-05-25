@@ -65,12 +65,16 @@ const RecruitmentPage = () => {
       .catch(() => toast('Failed to generate message', 'error'));
 
     if (post) {
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [isHtml ? 'text/html' : 'text/plain']: post
-        })
-      ]);
-      toast('Copied message to clipboard', 'success');
+      try {
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            [isHtml ? 'text/html' : 'text/plain']: post
+          })
+        ]);
+        toast('Copied message to clipboard', 'success');
+      } catch (err) {
+        toast(`Failed to copy to clipboard - ${err}`, 'error');
+      }
     }
   };
 
