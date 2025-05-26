@@ -9,27 +9,33 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { type DiscordRole } from 'server';
 import {
   discordBotRolesQuery,
+  discordMembersQuery,
   discordRolesQuery,
   useAddDiscordRole,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
-import type MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {
-  selectedRecord: MemberRecord | undefined;
-  setSelectedRecord: (member: undefined) => void;
+  selectedRecordId: string | undefined;
+  setSelectedRecord: (string: undefined) => void;
   modalShow: boolean;
   setModalShow: (val: boolean) => void;
 }
 
-const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }: Props) => {
-  const [discordRoles, botRoles] = useSuspenseQueries({
-    queries: [discordRolesQuery, discordBotRolesQuery]
+const RoleEdit = ({ selectedRecordId, setSelectedRecord, modalShow, setModalShow }: Props) => {
+  const [discordRoles, botRoles, discordMembers] = useSuspenseQueries({
+    queries: [discordRolesQuery, discordBotRolesQuery, discordMembersQuery]
   });
+
+  const selectedRecord = useMemo(
+    () => discordMembers.data.find(r => r.id === selectedRecordId),
+    [selectedRecordId, discordMembers.data]
+  );
+
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
 
@@ -41,13 +47,13 @@ const RoleEdit = ({ selectedRecord, setSelectedRecord, modalShow, setModalShow }
   );
 
   const roleChangeHandler = async (role: DiscordRole) => {
-    if (!selectedRecord || !selectedRecord.discordId) {
+    if (!selectedRecord || !selectedRecord.id) {
       throw new Error('Cannot change roles for this member - no discord id');
     }
 
     const enabled = selectedRecord.roles.find(r => r.id === role.id);
 
-    const body = { memberId: selectedRecord.discordId, role };
+    const body = { memberId: selectedRecord.id, role };
 
     if (!enabled) {
       addRoleMutation.mutateAsync(body);

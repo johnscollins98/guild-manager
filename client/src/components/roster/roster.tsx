@@ -15,10 +15,10 @@ const Roster = () => {
 
   const [modalShow, setModalShow] = useState(false);
   const [kickModalShow, setKickModalShow] = useState(false);
-  const [selectedRecord, setSelectedRecordId] = useState<MemberRecord | undefined>(undefined);
+  const [selectedRecordId, setSelectedRecordId] = useState<string | undefined>(undefined);
 
   const openEdit = useCallback((member: MemberRecord) => {
-    setSelectedRecordId(member);
+    setSelectedRecordId(member.discordId);
     setModalShow(true);
   }, []);
 
@@ -53,7 +53,7 @@ const Roster = () => {
         <RoleEdit
           modalShow={modalShow}
           setModalShow={setModalShow}
-          selectedRecord={selectedRecord}
+          selectedRecordId={selectedRecordId}
           setSelectedRecord={setSelectedRecordId}
         />
       </Suspense>
