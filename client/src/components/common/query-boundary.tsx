@@ -6,17 +6,17 @@ import LoaderPage from './loader-page';
 export interface QueryBoundaryProps extends PropsWithChildren {
   fallback?: React.ReactNode;
   errorRender?: ComponentType<FallbackProps>;
-  key?: Key;
+  keyName?: Key;
 }
 
 export const QueryBoundary = ({
   children,
-  key,
+  keyName,
   fallback = <LoaderPage />,
   errorRender
 }: QueryBoundaryProps) => {
   return (
-    <Suspense fallback={fallback} key={key}>
+    <Suspense fallback={fallback} key={keyName}>
       <ErrorBoundary errorRender={errorRender}>{children}</ErrorBoundary>
     </Suspense>
   );
