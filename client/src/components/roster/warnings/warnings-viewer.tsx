@@ -13,22 +13,26 @@ import { WarningEntry } from './warning-entry';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  member: MemberRecord;
+  member?: MemberRecord;
 }
 
 const WarningsViewerDialog = ({ isOpen, onClose, member }: Props) => {
   useEffect(() => {
-    if (member.warnings.length === 0 && isOpen) onClose();
-  }, [onClose, member.warnings, isOpen]);
+    if (member?.warnings.length === 0 && isOpen) onClose();
+  }, [onClose, member?.warnings, isOpen]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Warnings for {member.memberId}</DialogTitle>
-      <DialogContent>
-        <QueryBoundary>
-          <WarningViewerContent member={member} />
-        </QueryBoundary>
-      </DialogContent>
+    <Dialog open={isOpen && !!member} onClose={onClose} fullWidth maxWidth="sm">
+      {member && (
+        <>
+          <DialogTitle>Warnings for {member.memberId}</DialogTitle>
+          <DialogContent>
+            <QueryBoundary>
+              <WarningViewerContent member={member} />
+            </QueryBoundary>
+          </DialogContent>
+        </>
+      )}
     </Dialog>
   );
 };

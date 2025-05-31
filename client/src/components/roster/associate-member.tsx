@@ -16,20 +16,24 @@ import { QueryBoundary } from '../common/query-boundary';
 import './associate-member.scss';
 
 export interface AssociateMemberDialogProps {
-  member: MemberRecord;
+  member?: MemberRecord;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const AssociateMemberDialog = ({ member, isOpen, onClose }: AssociateMemberDialogProps) => {
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle>Associate {member.memberId}</DialogTitle>
-      <DialogContent>
-        <QueryBoundary>
-          <AssociateMemberForm member={member} onClose={onClose} />
-        </QueryBoundary>
-      </DialogContent>
+    <Dialog open={isOpen && !!member} onClose={onClose} fullWidth maxWidth="xs">
+      {member && (
+        <>
+          <DialogTitle>Associate {member.memberId}</DialogTitle>
+          <DialogContent>
+            <QueryBoundary>
+              <AssociateMemberForm member={member} onClose={onClose} />
+            </QueryBoundary>
+          </DialogContent>
+        </>
+      )}
     </Dialog>
   );
 };

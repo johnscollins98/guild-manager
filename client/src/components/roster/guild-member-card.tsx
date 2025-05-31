@@ -8,101 +8,43 @@ import Avatar from '@mui/material/Avatar';
 import { type PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
 import type React from 'react';
-import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
-import { WarningType, type AuthInfo, type DiscordRole, type WarningDTO } from 'server';
-import { useRemoveAssociation } from '../../lib/apis/gw2-api';
-import { useAddWarningMutation } from '../../lib/apis/warnings-api';
+import { useCallback, useMemo, type Dispatch, type SetStateAction } from 'react';
+import { WarningType, type DiscordRole, type WarningDTO } from 'server';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
-import { useConfirm } from '../common/confirm-dialog';
-import { AssociateMemberDialog } from './associate-member';
-import { EditNickNameDialog } from './edit-nickname';
 import './guild-member-card.scss';
-import GuildMemberMenu from './guild-member-menu';
-import WarningFormDialog from './warnings/warning-form';
-import WarningsViewerDialog from './warnings/warnings-viewer';
+import { useIsHigherRole } from './use-is-higher-role';
 
 interface Props {
   member: MemberRecord;
   discordRoles: DiscordRole[];
-  botRoles: DiscordRole[];
-  authInfo: AuthInfo;
-  onKick: (member: MemberRecord) => void;
-  onEdit: (member: MemberRecord) => void;
   selection: string[];
   setSelection: Dispatch<SetStateAction<string[]>>;
   kickMode: boolean;
+  openMenu(v: PopoverPosition | undefined): void;
 }
 
 const GuildMemberCard = ({
   member,
   discordRoles,
-  onKick,
-  onEdit,
-  authInfo,
-  botRoles,
   selection,
   setSelection,
-  kickMode
+  kickMode,
+  openMenu
 }: Props) => {
   const rank = member.rank || member.roles[0]?.name;
   const color = getColorFromRole(rank, discordRoles);
 
   const theme = useTheme();
 
-  const confirm = useConfirm();
-
-  const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
-  const [warningOpen, setWarningOpen] = useState(false);
-  const [warningViewerOpen, setWarningViewerOpen] = useState(false);
-
-  const addWarningMutation = useAddWarningMutation();
-  const removeAssociationMutation = useRemoveAssociation();
-
-  const openMenu = useCallback(
+  const openMenuHandler = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
-      setMenuAnchor({ top: e.clientY, left: e.clientX });
+      openMenu({ top: e.clientY, left: e.clientX });
     },
-    [setMenuAnchor]
+    [openMenu]
   );
-
-  const closeMenu = useCallback(() => {
-    setMenuAnchor(undefined);
-  }, [setMenuAnchor]);
-
-  const warningSubmitHandler = useCallback(
-    async (reason: string, warningType: WarningType) => {
-      if (!member.discordId) {
-        throw new Error('Member does not exist');
-      }
-      await addWarningMutation.mutateAsync({
-        givenTo: member.discordId,
-        reason,
-        type: warningType
-      });
-    },
-    [addWarningMutation, member]
-  );
-
-  const associationRemoveHandler = useCallback(async () => {
-    if (!member.memberId) return;
-    const res = await confirm('Are you sure you want to remove this association?');
-    if (res) {
-      removeAssociationMutation.mutate(member.memberId);
-    }
-  }, [member.memberId, removeAssociationMutation, confirm]);
-
-  const [editOpen, setEditOpen] = useState(false);
-  const onEditNickname = () => {
-    setEditOpen(true);
-  };
-
-  const [associateOpen, setAssociateOpen] = useState(false);
-  const onAssociate = () => {
-    setAssociateOpen(true);
-  };
 
   const warningsByType: Record<WarningType, WarningDTO[]> = useMemo(() => {
     const byType: Record<WarningType, WarningDTO[]> = {
@@ -116,19 +58,7 @@ const GuildMemberCard = ({
     return byType;
   }, [member.warnings]);
 
-  const userRoles = useMemo(() => {
-    return authInfo.roles.map(id => discordRoles.find(r => r.id === id)).filter(r => !!r);
-  }, [authInfo.roles, discordRoles]);
-
-  const memberIsHigherRole = useMemo(
-    () =>
-      member.roles.some(
-        r =>
-          userRoles.every(ur => r.position >= ur.position) ||
-          botRoles.every(br => r.position >= br.position)
-      ),
-    [member.roles, userRoles, botRoles]
-  );
+  const memberIsHigherRole = useIsHigherRole(member);
 
   const selected = useMemo(
     () => !!member.discordId && selection.includes(member.discordId),
@@ -153,7 +83,7 @@ const GuildMemberCard = ({
       <div
         className={`member-card ${kickMode ? 'kick-mode' : ''}`}
         style={{ borderLeftColor: color }}
-        onClick={kickMode ? () => onClickKickMode() : openMenu}
+        onClick={kickMode ? () => onClickKickMode() : openMenuHandler}
       >
         <div className="top-row">
           <div className="name">
@@ -269,37 +199,6 @@ const GuildMemberCard = ({
           </div>
         </div>
       </div>
-      <GuildMemberMenu
-        member={member}
-        menuAnchor={menuAnchor}
-        permissions={authInfo.permissions}
-        memberIsHigherRole={memberIsHigherRole}
-        closeMenu={closeMenu}
-        onKick={onKick}
-        onEdit={onEdit}
-        onAssociateMember={onAssociate}
-        removeAssociation={associationRemoveHandler}
-        onChangeNickname={onEditNickname}
-        setWarningOpen={setWarningOpen}
-        setWarningViewerOpen={setWarningViewerOpen}
-      />
-      <WarningFormDialog
-        isOpen={warningOpen}
-        onClose={() => setWarningOpen(false)}
-        onSubmit={warningSubmitHandler}
-        isPending={addWarningMutation.isPending}
-      />
-      <WarningsViewerDialog
-        isOpen={warningViewerOpen}
-        onClose={() => setWarningViewerOpen(false)}
-        member={member}
-      />
-      <AssociateMemberDialog
-        isOpen={associateOpen}
-        onClose={() => setAssociateOpen(false)}
-        member={member}
-      />
-      <EditNickNameDialog isOpen={editOpen} onClose={() => setEditOpen(false)} member={member} />
     </>
   );
 };

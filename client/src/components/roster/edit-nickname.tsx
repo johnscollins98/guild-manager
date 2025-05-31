@@ -13,14 +13,18 @@ import type MemberRecord from '../../lib/interfaces/member-record';
 export interface EditNicknameProps {
   isOpen: boolean;
   onClose: () => void;
-  member: MemberRecord;
+  member?: MemberRecord;
 }
 
 export const EditNickNameDialog = ({ isOpen, onClose, member }: EditNicknameProps) => {
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>Edit Nickname</DialogTitle>
-      <EditNicknameForm member={member} onClose={onClose} />
+    <Dialog open={isOpen && !!member} onClose={onClose} maxWidth="xs" fullWidth>
+      {member && (
+        <>
+          <DialogTitle>Edit Nickname</DialogTitle>
+          <EditNicknameForm member={member} onClose={onClose} />
+        </>
+      )}
     </Dialog>
   );
 };
