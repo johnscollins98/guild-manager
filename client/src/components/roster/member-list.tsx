@@ -20,7 +20,13 @@ export const RosterList = ({ selection, setSelection, onKick, onEdit, kickMode }
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy') ?? '';
   const filterBy = searchParams.get('filterBy') ?? '';
-  const { discordRoles, rosterForDisplay, botRoles } = useRoster(sortBy, filterString, filterBy);
+  const ascending = searchParams.get('sortOrder') === 'ASC';
+  const { discordRoles, rosterForDisplay, botRoles } = useRoster(
+    sortBy,
+    ascending,
+    filterString,
+    filterBy
+  );
 
   const { data: authInfo } = useAuth();
 

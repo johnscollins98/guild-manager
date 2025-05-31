@@ -24,7 +24,12 @@ export const rosterQueries = [
   discordBotRolesQuery
 ] as const;
 
-export const useRoster = (sortString?: string, filterString?: string, filterBy?: string) => {
+export const useRoster = (
+  sortString?: string,
+  ascending?: boolean,
+  filterString?: string,
+  filterBy?: string
+) => {
   const queries = useSuspenseQueries({
     queries: rosterQueries
   });
@@ -34,7 +39,7 @@ export const useRoster = (sortString?: string, filterString?: string, filterBy?:
   const roster = getRoster(gw2Members.data, discordMembers.data, guildRanks.data, warnings.data);
 
   const filteredRoster = onFilter(roster, filterBy, filterString);
-  const rosterForDisplay = onSort(filteredRoster, sortString, guildRanks.data ?? []);
+  const rosterForDisplay = onSort(filteredRoster, sortString, ascending, guildRanks.data ?? []);
 
   return {
     rosterForDisplay,
@@ -55,26 +60,40 @@ const getRoster = (
   return roster;
 };
 
-const onSort = (toSort: MemberRecord[], sortBy = 'default', guildRanks: GW2Rank[]) => {
+const onSort = (
+  toSort: MemberRecord[],
+  sortBy = 'rank',
+  ascending = true,
+  guildRanks: GW2Rank[]
+) => {
   switch (sortBy) {
     case 'name':
       return toSort.sort((a, b) => {
         const aName = a.accountName || a.discordName || '';
         const bName = b.accountName || b.discordName || '';
-        return aName.toLowerCase().localeCompare(bName.toLowerCase());
+
+        return ascending
+          ? bName.toLowerCase().localeCompare(aName.toLowerCase())
+          : aName.toLowerCase().localeCompare(bName.toLowerCase());
       });
     case 'rank':
       return toSort.sort((a, b) => {
         const aRank = a.rank || a.roles[0]?.name;
         const bRank = b.rank || b.roles[0]?.name;
-        return compareRank(guildRanks, aRank, bRank);
+        return ascending
+          ? compareRank(guildRanks, bRank, aRank)
+          : compareRank(guildRanks, aRank, bRank);
       });
     case 'date':
       return toSort.sort((a, b) => {
-        return a.joinDate.diff(b.joinDate).toMillis();
+        return ascending
+          ? b.joinDate.diff(a.joinDate).toMillis()
+          : a.joinDate.diff(b.joinDate).toMillis();
       });
     case 'warnings':
-      return toSort.sort((a, b) => b.warnings.length - a.warnings.length);
+      return toSort.sort((a, b) =>
+        ascending ? a.warnings.length - b.warnings.length : b.warnings.length - a.warnings.length
+      );
     default:
       return toSort;
   }
