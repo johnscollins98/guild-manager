@@ -28,28 +28,7 @@ interface Props {
   setWarningViewerOpen: (isOpen: boolean) => void;
 }
 
-const GuildMemberMenu = ({
-  member,
-  menuAnchor,
-  permissions,
-  memberIsHigherRole,
-  closeMenu,
-  onKick,
-  onEdit,
-  onAssociateMember,
-  removeAssociation,
-  onChangeNickname,
-  setWarningOpen,
-  setWarningViewerOpen
-}: Props) => {
-  const menuAction = useCallback(
-    async (func: (member: MemberRecord) => Promise<void> | void) => {
-      await func(member);
-      closeMenu();
-    },
-    [member, closeMenu]
-  );
-
+const GuildMemberMenu = ({ menuAnchor, ...props }: Props) => {
   return (
     <Menu
       anchorReference="anchorPosition"
@@ -63,8 +42,36 @@ const GuildMemberMenu = ({
         horizontal: 'left'
       }}
       open={Boolean(menuAnchor)}
-      onClose={closeMenu}
+      onClose={props.closeMenu}
     >
+      <MenuContent {...props} />
+    </Menu>
+  );
+};
+
+const MenuContent = ({
+  closeMenu,
+  member,
+  memberIsHigherRole,
+  onEdit,
+  onKick,
+  onAssociateMember,
+  onChangeNickname,
+  removeAssociation,
+  setWarningOpen,
+  setWarningViewerOpen,
+  permissions
+}: Omit<Props, 'menuAnchor'>) => {
+  const menuAction = useCallback(
+    async (func: (member: MemberRecord) => Promise<void> | void) => {
+      await func(member);
+      closeMenu();
+    },
+    [member, closeMenu]
+  );
+
+  return (
+    <>
       <GuildMemberDetails member={member} />
       <Divider sx={{ marginBottom: '8px' }} />
       <GuildMemberMenuItem
@@ -114,7 +121,7 @@ const GuildMemberMenu = ({
         action={() => menuAction(() => setWarningViewerOpen(true))}
         label="View Warnings"
       />
-    </Menu>
+    </>
   );
 };
 

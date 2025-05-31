@@ -9,7 +9,6 @@ import AlertTitle from '@mui/material/AlertTitle';
 import Button from '@mui/material/Button';
 import SOGif from '../assets/images/SO_Logo.gif';
 import SOStatic from '../assets/images/SO_Static.gif';
-import DiscordLogo from '../assets/images/discord.svg?react';
 import { useAuth } from '../lib/apis/auth-api';
 
 const LoginPage = () => {
@@ -28,7 +27,11 @@ const LoginPage = () => {
         href={`${config.backEndBaseUrl}/auth?returnTo=${encodeURI(window.location.href)}`}
         variant="contained"
         color="primary"
-        startIcon={<DiscordLogo height="22" />}
+        startIcon={
+          <svg height="22" width="22">
+            <use href="discord.svg"></use>
+          </svg>
+        }
       >
         Log In
       </Button>

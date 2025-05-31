@@ -1,21 +1,15 @@
-import CalendarToday from '@mui/icons-material/CalendarToday';
 import MailIcon from '@mui/icons-material/Mail';
 import PersonIcon from '@mui/icons-material/Person';
 import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import Timer from '@mui/icons-material/Timer';
-import { CardActionArea, Checkbox, useTheme } from '@mui/material';
+import { Checkbox, useTheme } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import { type PopoverPosition } from '@mui/material/Popover';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import type React from 'react';
 import { useCallback, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { WarningType, type AuthInfo, type DiscordRole, type WarningDTO } from 'server';
-import DiscordLogo from '../../assets/images/discord.svg?react';
-import Gw2Logo from '../../assets/images/gw2.svg?react';
 import { useRemoveAssociation } from '../../lib/apis/gw2-api';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
@@ -156,128 +150,125 @@ const GuildMemberCard = ({
 
   return (
     <>
-      <Card
-        variant="outlined"
+      <div
         className={`member-card ${kickMode ? 'kick-mode' : ''}`}
         style={{ borderLeftColor: color }}
         onClick={kickMode ? () => onClickKickMode() : openMenu}
       >
-        <CardActionArea>
-          <CardContent>
-            <div className="top-row">
-              <div className="name">
-                {kickMode && member.discordId && !memberIsHigherRole ? (
-                  <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
-                ) : (
-                  <Avatar
-                    className="avatar"
-                    alt={member.memberId || member.discordName}
-                    src={member.avatar}
-                  >
-                    {member.memberId
-                      ? member.memberId[0]
-                      : member.discordName
-                        ? member.discordName[0]
-                        : null}
-                  </Avatar>
-                )}
-                <span className="details">
-                  <Typography className="name" sx={{ color }}>
-                    {member.memberId || member.discordName}
-                  </Typography>
-                  {member.joinDate ? (
-                    <span className="date">
-                      <CalendarToday />
-                      <Typography>{getDateString(member.joinDate)}</Typography>
-                    </span>
-                  ) : null}
+        <div className="top-row">
+          <div className="name">
+            {kickMode && member.discordId && !memberIsHigherRole ? (
+              <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
+            ) : (
+              <img
+                className="avatar"
+                alt={member.memberId || member.discordName}
+                src={member.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'}
+                loading="lazy"
+              />
+            )}
+            <span className="details">
+              <div className="name" style={{ color }}>
+                {member.memberId || member.discordName}
+              </div>
+              {member.joinDate ? (
+                <span className="date">{getDateString(member.joinDate)}</span>
+              ) : null}
+            </span>
+          </div>
+          <div className="icons-container">
+            {member.issues.unmatchingRoles ? (
+              <Tooltip
+                title={`Unmatching Roles (${member.rank} / ${member.roles[0]?.name || 'No Role'})`}
+              >
+                <SyncProblem className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.pending ? (
+              <Tooltip title={`Waiting for invitation`}>
+                <ScheduleSendIcon className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.invited ? (
+              <Tooltip title={`Unaccepted invitation`}>
+                <MailIcon className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.over24h ? (
+              <Tooltip title="Been in server over 24h">
+                <Timer className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.overAWeek ? (
+              <Tooltip title="Been in server over a week">
+                <Timer className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.missingGW2 ? (
+              <Tooltip title="GW2 Account Not Found">
+                <span>
+                  <img
+                    src="gw2.png"
+                    width="24"
+                    height="24"
+                    loading="lazy"
+                    style={{
+                      filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.error.main})`,
+                      transform: `translateX(1000px)`
+                    }}
+                  />
                 </span>
-              </div>
-              <div className="icons-container">
-                {member.issues.unmatchingRoles ? (
-                  <Tooltip
-                    title={`Unmatching Roles (${member.rank} / ${
-                      member.roles[0]?.name || 'No Role'
-                    })`}
-                  >
-                    <SyncProblem className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.pending ? (
-                  <Tooltip title={`Waiting for invitation`}>
-                    <ScheduleSendIcon className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.invited ? (
-                  <Tooltip title={`Unaccepted invitation`}>
-                    <MailIcon className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.over24h ? (
-                  <Tooltip title="Been in server over 24h">
-                    <Timer className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.overAWeek ? (
-                  <Tooltip title="Been in server over a week">
-                    <Timer className="error" />
-                  </Tooltip>
-                ) : null}
-                {member.issues.missingGW2 ? (
-                  <Tooltip title="GW2 Account Not Found">
-                    <span>
-                      <Gw2Logo width="24" height="24" className="error" />
-                    </span>
-                  </Tooltip>
-                ) : null}
-                {member.issues.missingDiscord ? (
-                  <Tooltip title="Discord Account Not Found">
-                    <span>
-                      <DiscordLogo width="24" height="24" className="error" />
-                    </span>
-                  </Tooltip>
-                ) : null}
-                {member.manualMatch ? (
-                  <Tooltip title="This member has been matched manually">
-                    <PersonIcon />
-                  </Tooltip>
-                ) : null}
-                {member.discordName ? (
-                  <Tooltip title={member.discordName}>
-                    <span>
-                      <DiscordLogo width="24" height="24" color={theme.palette.action.active} />
-                    </span>
-                  </Tooltip>
-                ) : null}
-                {member.rankImage && member.rank ? (
-                  <Tooltip title={member.rank}>
-                    <span>
-                      <img
-                        alt={member.rank}
-                        src={member.rankImage}
-                        style={{
-                          filter: `drop-shadow(0px 100px 0 ${theme.palette.action.active})`,
-                          transform: 'translateY(-100px)'
-                        }}
-                        width="24"
-                        height="24"
-                        className="rank-image"
-                      />
-                    </span>
-                  </Tooltip>
-                ) : null}
-                {Object.values(WarningType).map(type =>
-                  warningsByType[type].length ? (
-                    <Tooltip title={`Number of ${type} warnings`} key={type}>
-                      <Avatar className={`number ${type}`}>{warningsByType[type].length}</Avatar>
-                    </Tooltip>
-                  ) : null
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+              </Tooltip>
+            ) : null}
+            {member.issues.missingDiscord ? (
+              <Tooltip title="Discord Account Not Found">
+                <span>
+                  <svg className="error" width="24" height="24">
+                    <use href="discord.svg" />
+                  </svg>
+                </span>
+              </Tooltip>
+            ) : null}
+            {member.manualMatch ? (
+              <Tooltip title="This member has been matched manually">
+                <PersonIcon />
+              </Tooltip>
+            ) : null}
+            {member.discordName ? (
+              <Tooltip title={member.discordName}>
+                <svg width="24" height="24">
+                  <use href="discord.svg" />
+                </svg>
+              </Tooltip>
+            ) : null}
+            {member.rankImage && member.rank ? (
+              <Tooltip title={member.rank}>
+                <span>
+                  <img
+                    alt={member.rank}
+                    src={member.rankImage}
+                    loading="lazy"
+                    style={{
+                      filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.action.active})`,
+                      transform: `translateX(1000px)`
+                    }}
+                    width="24"
+                    height="24"
+                    className="rank-image"
+                  />
+                </span>
+              </Tooltip>
+            ) : null}
+            {Object.values(WarningType).map(type =>
+              warningsByType[type].length ? (
+                <Tooltip title={`Number of ${type} warnings`} key={type}>
+                  <Avatar className={`number ${type}`}>{warningsByType[type].length}</Avatar>
+                </Tooltip>
+              ) : null
+            )}
+          </div>
+        </div>
+      </div>
       <GuildMemberMenu
         member={member}
         menuAnchor={menuAnchor}

@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import { memo, type Dispatch, type SetStateAction } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AutoSizer, List } from 'react-virtualized';
 import { useAuth } from '../../lib/apis/auth-api';
@@ -15,7 +15,7 @@ interface Props {
   kickMode: boolean;
 }
 
-export const RosterList = ({ selection, setSelection, onKick, onEdit, kickMode }: Props) => {
+const RosterListImpl = ({ selection, setSelection, onKick, onEdit, kickMode }: Props) => {
   const filterString = useFilterString();
   const [searchParams] = useSearchParams();
   const sortBy = searchParams.get('sortBy') ?? '';
@@ -63,3 +63,5 @@ export const RosterList = ({ selection, setSelection, onKick, onEdit, kickMode }
     </AutoSizer>
   );
 };
+
+export const RosterList = memo(RosterListImpl);
