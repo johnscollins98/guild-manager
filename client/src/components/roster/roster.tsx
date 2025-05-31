@@ -38,8 +38,8 @@ const Roster = () => {
         setSelection={setSelection}
         onKick={() => setKickModalShow(true)}
       />
-      <Box flex="1" overflow="auto">
-        <QueryBoundary fallback={<RosterLoader />}>
+      <QueryBoundary fallback={<RosterLoader />}>
+        <Box flex="1">
           <RosterList
             kickMode={kickMode}
             onEdit={openEdit}
@@ -47,8 +47,8 @@ const Roster = () => {
             selection={selection}
             setSelection={setSelection}
           />
-        </QueryBoundary>
-      </Box>
+        </Box>
+      </QueryBoundary>
       <Suspense>
         <RoleEdit
           modalShow={modalShow}
