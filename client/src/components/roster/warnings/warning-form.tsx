@@ -18,28 +18,18 @@ interface Props {
   isPending: boolean;
 }
 
-const WarningFormDialog = ({ isOpen, onClose, onSubmit, initialData, isPending }: Props) => {
+const WarningFormDialog = ({ isOpen, ...props }: Props) => {
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth={true} maxWidth="sm">
+    <Dialog open={isOpen} onClose={props.onClose} fullWidth={true} maxWidth="sm">
       <DialogTitle>Give Warning</DialogTitle>
       <DialogContent>
-        <WarningForm
-          onSubmit={onSubmit}
-          initialData={initialData}
-          onClose={onClose}
-          isPending={isPending}
-        />
+        <WarningForm {...props} />
       </DialogContent>
     </Dialog>
   );
 };
 
-interface WarningFormProps {
-  onSubmit: Props['onSubmit'];
-  initialData: Props['initialData'];
-  onClose: Props['onClose'];
-  isPending: Props['isPending'];
-}
+type WarningFormProps = Omit<Props, 'isOpen'>;
 
 const WarningForm = ({ onSubmit, initialData, onClose, isPending }: WarningFormProps) => {
   const [warningReason, setWarningReason] = useState(initialData?.reason ?? '');

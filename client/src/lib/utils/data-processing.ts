@@ -9,100 +9,93 @@ export const generateGW2RosterRecords = (
   ranks: GW2Rank[],
   warnings: WarningDTO[]
 ): MemberRecord[] => {
-  const records: MemberRecord[] = gw2Members
-    .map(gw2Member => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const accountName = gw2Member.name.split('.')[0]!;
-      const memberId = gw2Member.name;
-      const rank = gw2Member.rank;
-      const rankImage = ranks.find(r => r.id === rank)?.icon;
-      const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
+  const discordNames = discordMembers.map(d => ({
+    id: d.id,
+    name: d.name
+      ?.normalize('NFKC')
+      .replace(
+        /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
+        ''
+      )
+  }));
 
-      const testName = accountName.toLowerCase();
+  const records: MemberRecord[] = gw2Members.map(gw2Member => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const accountName = gw2Member.name.split('.')[0]!;
+    const memberId = gw2Member.name;
+    const rank = gw2Member.rank;
+    const rankImage = ranks.find(r => r.id === rank)?.icon;
+    const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
 
-      // check for exact match
-      const discordMember = discordMembers.find(m => {
-        if (gw2Member.discordId) {
-          return gw2Member.discordId === m.id;
-        }
+    const testName = accountName.toLowerCase();
+    // Name or Name.1234 but cannot be directly next to another alphabetical character
+    const regex = new RegExp(`(?:^|[^a-z])(${testName})(?:$|[^a-z])`, 'ig');
 
-        const discordName = m.name
-          ?.normalize('NFKC')
-          .replace(
-            /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
-            ''
-          );
-
-        // Name or Name.1234 but cannot be directly next to another alphabetical character
-        const regex = new RegExp(`(?:^|[^a-z])(${testName})(?:$|[^a-z])`, 'ig');
-
-        return discordName?.match(regex);
-      });
-
-      const discordName = discordMember?.name;
-      const nickname = discordMember?.nickname;
-      const discordId = discordMember?.id;
-
-      // this is probably already sorted this way but just incase
-      const roles = discordMember?.roles?.sort((a, b) => b.position - a.position) || [];
-
-      const avatar = discordMember?.avatar;
-      const warningsForThisMember = discordId
-        ? warnings.filter(warning => warning.givenTo === discordId)
-        : [];
-
-      const missingDiscord = !discordName;
-      const unmatchingRoles = !!discordName && roles[0]?.name?.toLowerCase() !== rank.toLowerCase();
-
-      const invited = rank.toLowerCase() === 'invited';
-
-      const twentyFourHours = 1000 * 60 * 60 * 24;
-      const oneWeek = twentyFourHours * 7;
-      const overAWeek = invited && DateTime.now().diff(joinDate).toMillis() > oneWeek;
-
-      return {
-        accountName,
-        memberId,
-        rank,
-        rankImage,
-        joinDate,
-        warnings: warningsForThisMember,
-        manualMatch: !!gw2Member.discordId,
-        discordName,
-        nickname,
-        discordId,
-        roles,
-        avatar,
-        issues: {
-          missingDiscord,
-          unmatchingRoles,
-          invited,
-          overAWeek
-        }
-      };
-    })
-    .sort((a, b) => {
-      let value = 0;
-      if (a.rank && b.rank) value = compareRank(ranks, a.rank, b.rank);
-      if (value === 0) {
-        value = a.joinDate.diff(b.joinDate).toMillis();
+    // check for exact match
+    const discordMemberIndex = discordNames.findIndex(m => {
+      if (gw2Member.discordId) {
+        return gw2Member.discordId === m.id;
       }
-      return value;
+
+      return m.name?.match(regex);
     });
+
+    const discordMember = discordMembers[discordMemberIndex];
+
+    const discordName = discordMember?.name;
+    const nickname = discordMember?.nickname;
+    const discordId = discordMember?.id;
+
+    // this is probably already sorted this way but just incase
+    const roles = discordMember?.roles?.sort((a, b) => b.position - a.position) || [];
+
+    const avatar = discordMember?.avatar;
+    const warningsForThisMember = discordId
+      ? warnings.filter(warning => warning.givenTo === discordId)
+      : [];
+
+    const missingDiscord = !discordName;
+    const unmatchingRoles = !!discordName && roles[0]?.name?.toLowerCase() !== rank.toLowerCase();
+
+    const invited = rank.toLowerCase() === 'invited';
+
+    const twentyFourHours = 1000 * 60 * 60 * 24;
+    const oneWeek = twentyFourHours * 7;
+    const overAWeek = invited && DateTime.now().diff(joinDate).toMillis() > oneWeek;
+
+    return {
+      accountName,
+      memberId,
+      rank,
+      rankImage,
+      joinDate,
+      warnings: warningsForThisMember,
+      manualMatch: !!gw2Member.discordId,
+      discordName,
+      nickname,
+      discordId,
+      roles,
+      avatar,
+      issues: {
+        missingDiscord,
+        unmatchingRoles,
+        invited,
+        overAWeek
+      }
+    };
+  });
 
   return records;
 };
 
 export const getExcessDiscordRecords = (
-  gw2Members: GW2MemberResponseDTO[],
+  matchedRecords: MemberRecord[],
   discordMembers: DiscordMemberDTO[],
-  ranks: GW2Rank[],
   warnings: WarningDTO[]
 ): MemberRecord[] => {
-  const records = generateGW2RosterRecords(gw2Members, discordMembers, ranks, warnings);
   return discordMembers
     .filter(discordMember => {
-      return !records.some(record => record.discordName === discordMember.name);
+      return !matchedRecords.some(record => record.discordName === discordMember.name);
     })
     .map(discordMember => {
       const missingGW2 = !discordMember.roles.find(r => r.name === 'Bots');
@@ -130,8 +123,7 @@ export const getExcessDiscordRecords = (
           over24h
         }
       };
-    })
-    .sort((a, b) => compareRank(ranks, a.roles[0]?.name, b.roles[0]?.name));
+    });
 };
 
 export const compareRank = (

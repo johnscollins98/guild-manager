@@ -1,3 +1,5 @@
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import DeleteForever from '@mui/icons-material/DeleteForever';
@@ -12,6 +14,7 @@ import type React from 'react';
 import { Suspense, useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
+import { Box } from '@mui/material';
 import { useQueries } from '@tanstack/react-query';
 import { useAuth } from '../../lib/apis/auth-api';
 import './roster-control.scss';
@@ -38,7 +41,6 @@ const RosterControl = ({
   disabled = false
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const sortBy = searchParams.get('sortBy');
   const filterBy = searchParams.get('filterBy');
 
   const { data: authData } = useAuth();
@@ -68,17 +70,6 @@ const RosterControl = ({
     setFilterOpen(false);
     setAnchorElement(null);
   }, [setSortOpen, setFilterOpen, setAnchorElement]);
-
-  const sortHandler = useCallback(
-    (sortBy: string) => {
-      setSearchParams(old => {
-        old.set('sortBy', sortBy);
-        return old;
-      });
-      closeMenu();
-    },
-    [closeMenu, setSearchParams]
-  );
 
   const filterHandler = useCallback(
     (filterBy: string) => {
@@ -163,34 +154,10 @@ const RosterControl = ({
           horizontal: 'right'
         }}
       >
-        <MenuItem
-          selected={sortBy === 'rank'}
-          className="control-menu-item"
-          onClick={() => sortHandler('rank')}
-        >
-          Rank
-        </MenuItem>
-        <MenuItem
-          selected={sortBy === 'name'}
-          className="control-menu-item"
-          onClick={() => sortHandler('name')}
-        >
-          Name
-        </MenuItem>
-        <MenuItem
-          selected={sortBy === 'date'}
-          className="control-menu-item"
-          onClick={() => sortHandler('date')}
-        >
-          Join Date
-        </MenuItem>
-        <MenuItem
-          selected={sortBy === 'warnings'}
-          className="control-menu-item"
-          onClick={() => sortHandler('warnings')}
-        >
-          Warnings
-        </MenuItem>
+        <SortItem sortKey="rank" />
+        <SortItem sortKey="name" />
+        <SortItem sortKey="date" />
+        <SortItem sortKey="warnings" />
       </Menu>
       <Menu
         open={filterOpen}
@@ -268,6 +235,41 @@ const RefetchButton = () => {
         </IconButton>
       </span>
     </Tooltip>
+  );
+};
+
+const SortItem = ({ sortKey }: { sortKey: string }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const sortBy = searchParams.get('sortBy') || 'rank';
+  const ascending = searchParams.get('sortOrder') === 'ASC';
+
+  const sortHandler = useCallback(() => {
+    setSearchParams(old => {
+      const newOrder = sortKey === sortBy ? (ascending ? 'DESC' : 'ASC') : 'DESC';
+
+      old.set('sortOrder', newOrder);
+      old.set('sortBy', sortKey);
+      return old;
+    });
+  }, [sortKey, setSearchParams, sortBy, ascending]);
+
+  const selected = sortBy === sortKey;
+
+  const icon = selected ? (
+    ascending ? (
+      <ArrowUpward sx={{ height: '1rem' }} />
+    ) : (
+      <ArrowDownward sx={{ height: '1rem' }} />
+    )
+  ) : null;
+
+  return (
+    <MenuItem selected={selected} className="control-menu-item" onClick={sortHandler}>
+      <Box gap={0.5} display="flex" sx={{ textTransform: 'capitalize' }} alignItems="center">
+        {icon}
+        {sortKey}
+      </Box>
+    </MenuItem>
   );
 };
 

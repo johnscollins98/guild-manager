@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { type DiscordRole } from 'server';
 import {
   discordBotRolesQuery,
@@ -18,23 +18,18 @@ import {
   useAddDiscordRole,
   useRemoveDiscordRole
 } from '../../lib/apis/discord-api';
+import type MemberRecord from '../../lib/interfaces/member-record';
 
 interface Props {
-  selectedRecordId: string | undefined;
-  setSelectedRecord: (string: undefined) => void;
+  selectedRecord: MemberRecord | undefined;
   modalShow: boolean;
-  setModalShow: (val: boolean) => void;
+  onClose: () => void;
 }
 
-const RoleEdit = ({ selectedRecordId, setSelectedRecord, modalShow, setModalShow }: Props) => {
-  const [discordRoles, botRoles, discordMembers] = useSuspenseQueries({
+const RoleEdit = ({ selectedRecord, modalShow, onClose }: Props) => {
+  const [discordRoles, botRoles] = useSuspenseQueries({
     queries: [discordRolesQuery, discordBotRolesQuery, discordMembersQuery]
   });
-
-  const selectedRecord = useMemo(
-    () => discordMembers.data.find(r => r.id === selectedRecordId),
-    [selectedRecordId, discordMembers.data]
-  );
 
   const addRoleMutation = useAddDiscordRole();
   const removeRoleMutation = useRemoveDiscordRole();
@@ -47,13 +42,13 @@ const RoleEdit = ({ selectedRecordId, setSelectedRecord, modalShow, setModalShow
   );
 
   const roleChangeHandler = async (role: DiscordRole) => {
-    if (!selectedRecord || !selectedRecord.id) {
+    if (!selectedRecord || !selectedRecord.discordId) {
       throw new Error('Cannot change roles for this member - no discord id');
     }
 
     const enabled = selectedRecord.roles.find(r => r.id === role.id);
 
-    const body = { memberId: selectedRecord.id, role };
+    const body = { memberId: selectedRecord.discordId, role };
 
     if (!enabled) {
       addRoleMutation.mutateAsync(body);
@@ -62,13 +57,8 @@ const RoleEdit = ({ selectedRecordId, setSelectedRecord, modalShow, setModalShow
     }
   };
 
-  const closeEdit = async () => {
-    setModalShow(false);
-    setSelectedRecord(undefined);
-  };
-
   return (
-    <Dialog open={modalShow} onClose={closeEdit} className="role-edit-modal">
+    <Dialog open={modalShow} onClose={onClose} className="role-edit-modal">
       <DialogTitle>Edit Roles</DialogTitle>
       <DialogContent className="role-edit-content">
         {modalShow &&

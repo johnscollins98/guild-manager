@@ -3,7 +3,6 @@ import { Box } from '@mui/system';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { type EventCreateDTO } from 'server';
-import DiscordSvg from '../../assets/images/discord.svg?react';
 import { authQuery } from '../../lib/apis/auth-api';
 import { useCreateEventMutation } from '../../lib/apis/event-api';
 import { QueryBoundary } from '../common/query-boundary';
@@ -33,7 +32,11 @@ export const EventActions = () => {
             onClick={() => setShowPostModal(true)}
             variant="contained"
             className="discord-button"
-            startIcon={<DiscordSvg width={22} />}
+            startIcon={
+              <svg height="22" width="22">
+                <use href="discord.svg"></use>
+              </svg>
+            }
             disabled={!auth?.data?.permissions.EVENTS}
           >
             Post Events

@@ -8,48 +8,27 @@ import Divider from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
 import { type PopoverPosition } from '@mui/material/Popover';
 import { useCallback } from 'react';
-import { type PermissionsDTO } from 'server';
+import { useAuth } from '../../lib/apis/auth-api';
+import { useRemoveAssociation } from '../../lib/apis/gw2-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
+import { useConfirm } from '../common/confirm-dialog';
 import GuildMemberDetails from './guild-member-details';
 import GuildMemberMenuItem from './guild-member-menu-item';
+import { useIsHigherRole } from './use-is-higher-role';
 
 interface Props {
-  member: MemberRecord;
+  member?: MemberRecord;
   menuAnchor: PopoverPosition | undefined;
-  permissions: PermissionsDTO;
-  memberIsHigherRole: boolean;
   closeMenu: () => void;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
   onAssociateMember: (member: MemberRecord) => void;
-  removeAssociation: () => void;
   onChangeNickname: (member: MemberRecord) => void;
-  setWarningOpen: (isOpen: boolean) => void;
-  setWarningViewerOpen: (isOpen: boolean) => void;
+  openWarningForm: (member: MemberRecord) => void;
+  openWarningViewer: (member: MemberRecord) => void;
 }
 
-const GuildMemberMenu = ({
-  member,
-  menuAnchor,
-  permissions,
-  memberIsHigherRole,
-  closeMenu,
-  onKick,
-  onEdit,
-  onAssociateMember,
-  removeAssociation,
-  onChangeNickname,
-  setWarningOpen,
-  setWarningViewerOpen
-}: Props) => {
-  const menuAction = useCallback(
-    async (func: (member: MemberRecord) => Promise<void> | void) => {
-      await func(member);
-      closeMenu();
-    },
-    [member, closeMenu]
-  );
-
+const GuildMemberMenu = ({ menuAnchor, member, ...props }: Props) => {
   return (
     <Menu
       anchorReference="anchorPosition"
@@ -62,9 +41,50 @@ const GuildMemberMenu = ({
         vertical: 'top',
         horizontal: 'left'
       }}
-      open={Boolean(menuAnchor)}
-      onClose={closeMenu}
+      open={Boolean(menuAnchor) && !!member}
+      onClose={props.closeMenu}
     >
+      {member && <MenuContent member={member} {...props} />}
+    </Menu>
+  );
+};
+
+const MenuContent = ({
+  closeMenu,
+  member,
+  onEdit,
+  onKick,
+  onAssociateMember,
+  onChangeNickname,
+  openWarningForm,
+  openWarningViewer
+}: Omit<Props, 'menuAnchor' | 'member'> & { member: MemberRecord }) => {
+  const { data: authInfo } = useAuth();
+  const permissions = authInfo.permissions;
+
+  const menuAction = useCallback(
+    async (func: (member: MemberRecord) => Promise<void> | void) => {
+      await func(member);
+      closeMenu();
+    },
+    [member, closeMenu]
+  );
+
+  const confirm = useConfirm();
+
+  const removeAssociationMutation = useRemoveAssociation();
+  const associationRemoveHandler = useCallback(async () => {
+    if (!member.memberId) return;
+    const res = await confirm('Are you sure you want to remove this association?');
+    if (res) {
+      removeAssociationMutation.mutate(member.memberId);
+    }
+  }, [removeAssociationMutation, confirm, member.memberId]);
+
+  const memberIsHigherRole = useIsHigherRole(member);
+
+  return (
+    <>
       <GuildMemberDetails member={member} />
       <Divider sx={{ marginBottom: '8px' }} />
       <GuildMemberMenuItem
@@ -98,23 +118,23 @@ const GuildMemberMenu = ({
         label="Remove Association"
         className="error"
         disabled={!permissions.MEMBERS || !member.manualMatch}
-        action={() => menuAction(() => removeAssociation())}
+        action={() => menuAction(() => associationRemoveHandler())}
       />
       <Divider />
       <GuildMemberMenuItem
         Icon={Warning}
         disabled={!permissions.WARNINGS || !member.discordId}
         className="warning"
-        action={() => menuAction(() => setWarningOpen(true))}
+        action={() => menuAction(() => openWarningForm(member))}
         label="Give Warning"
       />
       <GuildMemberMenuItem
         Icon={Search}
         disabled={!member.discordId || member.warnings.length < 1}
-        action={() => menuAction(() => setWarningViewerOpen(true))}
+        action={() => menuAction(() => openWarningViewer(member))}
         label="View Warnings"
       />
-    </Menu>
+    </>
   );
 };
 

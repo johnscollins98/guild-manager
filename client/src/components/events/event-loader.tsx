@@ -22,14 +22,18 @@ export const EventLoader = () => {
           gap={2}
         >
           <Box display="flex" flexDirection="column" flex="1">
-            <Typography sx={{ fontSize: '1.1rem' }}>
+            <Typography sx={{ fontSize: '1.1rem' }} component="div">
               <Skeleton>
-                <Typography fontSize="1.1rem">Event Name</Typography>
+                <Typography fontSize="1.1rem" component="div">
+                  Event Name
+                </Typography>
               </Skeleton>
             </Typography>
-            <Typography variant="caption">
+            <Typography variant="caption" component="div">
               <Skeleton>
-                <Typography variant="caption">Monday at 12:00 for 1h</Typography>
+                <Typography variant="caption" component="div">
+                  Monday at 12:00 for 1h
+                </Typography>
               </Skeleton>
             </Typography>
           </Box>
