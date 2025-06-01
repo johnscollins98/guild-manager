@@ -3,6 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import type MemberRecord from '../../lib/interfaces/member-record';
+import { DiscordLogo } from '../common/discord-icon';
 import './guild-member-details.scss';
 
 interface Props {
@@ -41,9 +42,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <svg height="24" width="24">
-            <use href="discord.svg"></use>
-          </svg>
+          <DiscordLogo height="24" width="24" />
         </div>
         <div>
           <div className="detail name">{member.discordName || 'N/A'}</div>
