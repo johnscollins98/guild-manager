@@ -1,9 +1,9 @@
-import { useTheme } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { DiscordLogo } from '../common/discord-icon';
+import { Gw2Icon } from '../common/gw2-icon';
 import './guild-member-details.scss';
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
 }
 
 const GuildMemberDetails = ({ member }: Props) => {
-  const theme = useTheme();
   return (
     <>
       <div className="member-header">
@@ -21,18 +20,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <img
-            src="gw2.png"
-            height="24"
-            width="24"
-            loading="lazy"
-            style={{
-              filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.action.active})`,
-              transform: `translateX(1000px)`,
-              backgroundAttachment: 'fixed',
-              backgroundSize: 'cover'
-            }}
-          ></img>
+          <Gw2Icon height="24" width="24" />
         </div>
         <div>
           <div className="detail name">{member.memberId || 'N/A'}</div>
