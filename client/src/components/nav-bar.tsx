@@ -20,14 +20,6 @@ import { config } from '../lib/config';
 import { useConfirm } from './common/confirm-dialog';
 import './nav-bar.scss';
 
-interface FormElements extends HTMLFormControlsCollection {
-  filter: HTMLInputElement;
-}
-
-interface FilterFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
-
 const LINKS = [
   { label: 'Roster', link: '/' },
   { label: 'Log', link: '/log' },
@@ -53,19 +45,14 @@ const NavBar = ({ maxWidth }: Props) => {
   );
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const filterString = searchParams.get('filterString');
+  const filterString = searchParams.get('filterString') || '';
 
   const confirm = useConfirm();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const filterSubmitHandler: React.FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<FilterFormElement>
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const filterStringVal = e.currentTarget.elements.filter.value;
+  const filterChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
+    const filterStringVal = e.target.value;
 
     setSearchParams(old => {
       if (filterStringVal === '') {
@@ -114,7 +101,7 @@ const NavBar = ({ maxWidth }: Props) => {
           <MenuIcon />
         </IconButton>
         <Box display="flex" gap="4px">
-          <form onSubmit={filterSubmitHandler}>
+          <form>
             <TextField
               id="filter"
               name="filter"
@@ -122,7 +109,8 @@ const NavBar = ({ maxWidth }: Props) => {
               type="text"
               size="small"
               fullWidth
-              defaultValue={filterString}
+              value={filterString}
+              onChange={filterChangeHandler}
             />
           </form>
           <Tooltip title="Change Theme">
