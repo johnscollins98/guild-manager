@@ -10,9 +10,11 @@ import Tooltip from '@mui/material/Tooltip';
 import type React from 'react';
 import { useCallback, useMemo, type Dispatch, type SetStateAction } from 'react';
 import { WarningType, type DiscordRole, type WarningDTO } from 'server';
+import { DiscordLogo } from '../../components/common/discord-icon';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
+import { Gw2Icon } from '../common/gw2-icon';
 import './guild-member-card.scss';
 import { useIsHigherRole } from './use-is-higher-role';
 
@@ -137,25 +139,14 @@ const GuildMemberCard = ({
             {member.issues.missingGW2 ? (
               <Tooltip title="GW2 Account Not Found">
                 <span>
-                  <img
-                    src="gw2.png"
-                    width="24"
-                    height="24"
-                    loading="lazy"
-                    style={{
-                      filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.error.main})`,
-                      transform: `translateX(1000px)`
-                    }}
-                  />
+                  <Gw2Icon color={theme.palette.error.main} height="24" width="24" />
                 </span>
               </Tooltip>
             ) : null}
             {member.issues.missingDiscord ? (
               <Tooltip title="Discord Account Not Found">
                 <span>
-                  <svg className="error" width="24" height="24">
-                    <use href="discord.svg" />
-                  </svg>
+                  <DiscordLogo className="error" width="24" height="24" />
                 </span>
               </Tooltip>
             ) : null}
@@ -166,9 +157,7 @@ const GuildMemberCard = ({
             ) : null}
             {member.discordName ? (
               <Tooltip title={member.discordName}>
-                <svg width="24" height="24">
-                  <use href="discord.svg" />
-                </svg>
+                <DiscordLogo width="24" height="24" color={theme.palette.action.active} />
               </Tooltip>
             ) : null}
             {member.rankImage && member.rank ? (
@@ -177,7 +166,6 @@ const GuildMemberCard = ({
                   <img
                     alt={member.rank}
                     src={member.rankImage}
-                    loading="lazy"
                     style={{
                       filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.action.active})`,
                       transform: `translateX(1000px)`

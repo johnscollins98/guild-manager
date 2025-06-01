@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { type EventCreateDTO } from 'server';
 import { authQuery } from '../../lib/apis/auth-api';
 import { useCreateEventMutation } from '../../lib/apis/event-api';
+import { DiscordLogo } from '../common/discord-icon';
 import { QueryBoundary } from '../common/query-boundary';
 import { EventFormDialog } from './event-form';
 import EventPosterForm from './event-poster-form';
@@ -32,11 +33,7 @@ export const EventActions = () => {
             onClick={() => setShowPostModal(true)}
             variant="contained"
             className="discord-button"
-            startIcon={
-              <svg height="22" width="22">
-                <use href="discord.svg"></use>
-              </svg>
-            }
+            startIcon={<DiscordLogo height="22" width="22" />}
             disabled={!auth?.data?.permissions.EVENTS}
           >
             Post Events
