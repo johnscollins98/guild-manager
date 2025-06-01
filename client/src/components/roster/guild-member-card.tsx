@@ -144,7 +144,9 @@ const GuildMemberCard = ({
                     loading="lazy"
                     style={{
                       filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.error.main})`,
-                      transform: `translateX(1000px)`
+                      transform: `translateX(1000px)`,
+                      backgroundAttachment: 'fixed',
+                      backgroundSize: 'cover'
                     }}
                   />
                 </span>
