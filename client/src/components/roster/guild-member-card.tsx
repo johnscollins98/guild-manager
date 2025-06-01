@@ -14,6 +14,7 @@ import { DiscordLogo } from '../../components/common/discord-icon';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import { getDateString } from '../../lib/utils/data-processing';
 import { getColorFromRole } from '../../lib/utils/helpers';
+import { ColorFilter } from '../common/color-filter';
 import { Gw2Icon } from '../common/gw2-icon';
 import './guild-member-card.scss';
 import { useIsHigherRole } from './use-is-higher-role';
@@ -163,13 +164,9 @@ const GuildMemberCard = ({
             {member.rankImage && member.rank ? (
               <Tooltip title={member.rank}>
                 <span>
-                  <img
-                    alt={member.rank}
-                    src={member.rankImage}
-                    style={{
-                      filter: `opacity(1) drop-shadow(-1000px 0px 0 ${theme.palette.action.active})`,
-                      transform: `translateX(1000px)`
-                    }}
+                  <ColorFilter
+                    href={member.rankImage}
+                    color={theme.palette.action.active}
                     width="24"
                     height="24"
                     className="rank-image"
