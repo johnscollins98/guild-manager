@@ -52,6 +52,7 @@ export const useRoster = (
 
   return {
     rosterForDisplay: filteredRoster,
+    roster,
     botRoles: botRoles.data,
     discordRoles: discordRoles.data
   };

@@ -21,7 +21,12 @@ const RosterListImpl = ({ kickSelection, setKickSelection, onKick, kickMode }: P
   const sortBy = searchParams.get('sortBy') ?? '';
   const filterBy = searchParams.get('filterBy') ?? '';
   const ascending = searchParams.get('sortOrder') === 'ASC';
-  const { discordRoles, rosterForDisplay } = useRoster(sortBy, ascending, filterString, filterBy);
+  const { discordRoles, rosterForDisplay, roster } = useRoster(
+    sortBy,
+    ascending,
+    filterString,
+    filterBy
+  );
 
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
 
@@ -66,7 +71,7 @@ const RosterListImpl = ({ kickSelection, setKickSelection, onKick, kickMode }: P
         )}
       </AutoSizer>
       <RosterMenuDialogs
-        roster={rosterForDisplay}
+        roster={roster}
         menuAnchor={menuAnchor}
         closeMenu={closeMenu}
         onKick={onKick}
