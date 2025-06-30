@@ -18,7 +18,6 @@
     "lint": "npm run --ws lint",
     "prettier": "prettier -c '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
     "db:migrate": "npm run -w server db:migrate",
-    "db:deploy": "npm run db:deploy:prod",
     "db:deploy:dev": "npm run -w server db:deploy:dev",
     "db:deploy:prod": "npm run -w server db:deploy:prod"
   },
