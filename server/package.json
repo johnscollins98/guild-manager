@@ -10,10 +10,9 @@
     "regen-types": "npx gen-env-types .env",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "lint": "eslint . --ext .ts",
-    "typeorm": "typeorm-ts-node-commonjs",
-    "db:migrate": "typeorm migration:generate -d ./src/dataSource.ts",
-    "db:deploy": "typeorm migration:run -d ./src/dataSource.ts",
-    "db:deploy:prod": "typeorm migration:run -d ./build/dataSource.js"
+    "db:migrate": "typeorm-ts-node-commonjs migration:generate -d ./src/dataSource.ts",
+    "db:deploy:dev": "typeorm-ts-node-commonjs migration:run -d ./src/dataSource.ts",
+    "db:deploy:prod": "typeorm-ts-node-commonjs migration:run -d ./build/dataSource.js"
   },
   "dependencies": {
     "axios": "^1.7.9",
