@@ -14,7 +14,7 @@
     "start": "npm run -w server start",
     "dev-server": "npm run -w server dev",
     "dev-client": "npm run -w client start",
-    "dev": "concurrently --names=client,server --prefix-colors=auto 'npm run dev-client' 'npm run dev-server'",
+    "dev": "concurrently --names=client,server --prefix-colors=auto \"npm run dev-client\" \"npm run dev-server\"",
     "lint": "npm run --ws lint",
     "prettier": "prettier -c '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
     "db:migrate": "npm run -w server db:migrate",
