@@ -18,7 +18,7 @@ export const WarningLog = () => {
   const [sortAscending, setSortAscending] = useState(false);
 
   return (
-    <Box>
+    <Box display="flex" flexDirection="column" sx={{ overflowY: 'hidden' }}>
       <Box display="flex" justifyContent="space-between">
         <Box>
           <Tooltip
