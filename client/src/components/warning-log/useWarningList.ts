@@ -1,10 +1,11 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
+import { type WarningType, WarningTypeLabels } from 'server';
 import { discordMembersQuery } from '../../lib/apis/discord-api';
 import { warningsQuery } from '../../lib/apis/warnings-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 
-export const useWarningList = () => {
+export const useWarningList = (warningTypesToDisplay: Record<WarningType, boolean>) => {
   const [{ data: warnings }, { data: discordMembers }] = useSuspenseQueries({
     queries: [warningsQuery, discordMembersQuery]
   });
@@ -28,7 +29,7 @@ export const useWarningList = () => {
         const givenTo = getMemberName(w.givenTo);
         const givenBy = getMemberName(w.givenBy);
 
-        const summary = `[${w.type.toLocaleUpperCase()}] Given to ${givenTo} by ${givenBy}.`;
+        const summary = `[${WarningTypeLabels[w.type]}] Given to ${givenTo} by ${givenBy}.`;
 
         const details = [w.reason];
 
@@ -42,6 +43,7 @@ export const useWarningList = () => {
           date,
           summary,
           details,
+          type: w.type,
           id: w.id
         };
       }),
@@ -49,8 +51,12 @@ export const useWarningList = () => {
   );
 
   const filtered = useMemo(
-    () => logEntries.filter(e => e.summary.toLowerCase().includes(filterStringLowerCase)),
-    [filterStringLowerCase, logEntries]
+    () =>
+      logEntries.filter(
+        e =>
+          warningTypesToDisplay[e.type] && e.summary.toLowerCase().includes(filterStringLowerCase)
+      ),
+    [filterStringLowerCase, logEntries, warningTypesToDisplay]
   );
 
   return filtered;
