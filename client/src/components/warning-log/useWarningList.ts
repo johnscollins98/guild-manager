@@ -1,14 +1,15 @@
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
-import { type WarningType, WarningTypeLabels } from 'server';
+import { use, useCallback, useMemo } from 'react';
+import { WarningTypeLabels } from 'server';
 import { discordMembersQuery } from '../../lib/apis/discord-api';
 import { warningsQuery } from '../../lib/apis/warnings-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
+import { FilterContext, SortContext } from './LogSettingContext';
 
-export const useWarningList = (
-  warningTypesToDisplay: Record<WarningType, boolean>,
-  sortAscending: boolean
-) => {
+export const useWarningList = () => {
+  const { sortAscending } = use(SortContext);
+  const { warningTypesToDisplay } = use(FilterContext);
+
   const [{ data: warnings }, { data: discordMembers }] = useSuspenseQueries({
     queries: [warningsQuery, discordMembersQuery]
   });
