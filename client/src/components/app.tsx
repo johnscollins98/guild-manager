@@ -13,6 +13,7 @@ import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
+import { WarningLog } from './warning-log/WarningLog';
 
 const App = () => {
   const { data: authInfo } = useAuth();
@@ -39,6 +40,14 @@ const App = () => {
                 element={
                   <QueryBoundary fallback={<LogLoader />}>
                     <DiscordLog />
+                  </QueryBoundary>
+                }
+              />
+              <Route
+                path="/warning-log"
+                element={
+                  <QueryBoundary fallback={<LogLoader />}>
+                    <WarningLog />
                   </QueryBoundary>
                 }
               />

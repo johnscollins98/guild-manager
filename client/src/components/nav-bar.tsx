@@ -22,8 +22,9 @@ import './nav-bar.scss';
 
 const LINKS = [
   { label: 'Roster', link: '/' },
-  { label: 'Log', link: '/log' },
+  { label: 'GW2 Log', link: '/log' },
   { label: 'Discord Log', link: '/discord-log' },
+  { label: 'Warning Log', link: '/warning-log' },
   { label: 'Events', link: '/events' },
   { label: 'Recruitment', link: '/recruitment' }
 ];
