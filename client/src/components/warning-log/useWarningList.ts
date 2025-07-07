@@ -5,7 +5,10 @@ import { discordMembersQuery } from '../../lib/apis/discord-api';
 import { warningsQuery } from '../../lib/apis/warnings-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 
-export const useWarningList = (warningTypesToDisplay: Record<WarningType, boolean>) => {
+export const useWarningList = (
+  warningTypesToDisplay: Record<WarningType, boolean>,
+  sortAscending: boolean
+) => {
   const [{ data: warnings }, { data: discordMembers }] = useSuspenseQueries({
     queries: [warningsQuery, discordMembersQuery]
   });
@@ -50,13 +53,21 @@ export const useWarningList = (warningTypesToDisplay: Record<WarningType, boolea
     [getMemberName, warnings]
   );
 
+  const sorted = useMemo(
+    () =>
+      logEntries.toSorted((a, b) =>
+        sortAscending ? a.date.valueOf() - b.date.valueOf() : b.date.valueOf() - a.date.valueOf()
+      ),
+    [logEntries, sortAscending]
+  );
+
   const filtered = useMemo(
     () =>
-      logEntries.filter(
+      sorted.filter(
         e =>
           warningTypesToDisplay[e.type] && e.summary.toLowerCase().includes(filterStringLowerCase)
       ),
-    [filterStringLowerCase, logEntries, warningTypesToDisplay]
+    [filterStringLowerCase, sorted, warningTypesToDisplay]
   );
 
   return filtered;

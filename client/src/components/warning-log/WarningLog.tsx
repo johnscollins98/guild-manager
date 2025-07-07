@@ -1,4 +1,6 @@
-import { Box, Checkbox, FormControlLabel } from '@mui/material';
+import ArrowDownward from '@mui/icons-material/ArrowDownward';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
+import { Box, Button, Checkbox, FormControlLabel, Tooltip } from '@mui/material';
 import { useState } from 'react';
 import { WarningTypeLabels, type WarningType } from 'server';
 import { QueryBoundary } from '../common/query-boundary';
@@ -13,27 +15,46 @@ export const WarningLog = () => {
     official: true
   });
 
+  const [sortAscending, setSortAscending] = useState(false);
+
   return (
     <Box>
-      <Box display="flex" justifyContent="flex-end">
-        {Object.entries(warningTypesToDisplay).map(([key, value]) => (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={value}
-                onClick={() =>
-                  setWarningTypesToDisplay({ ...warningTypesToDisplay, [key]: !value })
-                }
-              />
-            }
-            label={WarningTypeLabels[key as WarningType]}
-            key={key}
-          />
-        ))}
+      <Box display="flex" justifyContent="space-between">
+        <Box>
+          <Tooltip
+            title={`Click to put ${sortAscending ? 'most recent' : 'old'} entries at the top.`}
+          >
+            <Button
+              onClick={() => setSortAscending(!sortAscending)}
+              startIcon={sortAscending ? <ArrowUpward /> : <ArrowDownward />}
+            >
+              {sortAscending ? 'Oldest at the top' : 'Newest at the top'}
+            </Button>
+          </Tooltip>
+        </Box>
+        <Box>
+          {Object.entries(warningTypesToDisplay).map(([key, value]) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={value}
+                  onClick={() =>
+                    setWarningTypesToDisplay({ ...warningTypesToDisplay, [key]: !value })
+                  }
+                />
+              }
+              label={WarningTypeLabels[key as WarningType]}
+              key={key}
+            />
+          ))}
+        </Box>
       </Box>
       <Box sx={{ overflowX: 'hidden', overflowY: 'auto', flex: '1' }}>
         <QueryBoundary fallback={<LogLoader />}>
-          <WarningList warningTypesToDisplay={warningTypesToDisplay} />
+          <WarningList
+            warningTypesToDisplay={warningTypesToDisplay}
+            sortAscending={sortAscending}
+          />
         </QueryBoundary>
       </Box>
     </Box>
@@ -41,11 +62,13 @@ export const WarningLog = () => {
 };
 
 const WarningList = ({
-  warningTypesToDisplay
+  warningTypesToDisplay,
+  sortAscending
 }: {
   warningTypesToDisplay: Record<WarningType, boolean>;
+  sortAscending: boolean;
 }) => {
-  const logEntries = useWarningList(warningTypesToDisplay);
+  const logEntries = useWarningList(warningTypesToDisplay, sortAscending);
   return logEntries.map(e => (
     <DiscordLogEntry
       date={e.date}
