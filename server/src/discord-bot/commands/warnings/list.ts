@@ -42,6 +42,11 @@ export default class WarningsListCommand implements Command {
 
     const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(memberId?.id);
 
+    if (warnings.length === 0) {
+      await interaction.editReply({ content: 'There are no warnings to display.' });
+      return;
+    }
+
     const warningsSorted = warnings.sort(
       (a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
     );
