@@ -1,6 +1,8 @@
 import {
   ActionRowBuilder,
   ChatInputCommandInteraction,
+  ComponentType,
+  InteractionEditReplyOptions,
   SlashCommandBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder
@@ -9,6 +11,7 @@ import { Service } from 'typedi';
 import { daysOfWeek, Permission } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
+import { PaginatedEmbedCreator } from '../../../services/discord/paginated-embed-creator';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-factory';
 
@@ -20,6 +23,7 @@ export default class EventsDeleteCommand implements Command {
 
   constructor(
     private readonly eventsRepo: EventRepository,
+    private readonly paginatedEmbedsCreator: PaginatedEmbedCreator,
     discordApiFactory: DiscordApiFactory
   ) {
     this.name = 'events-delete';
@@ -72,45 +76,56 @@ export default class EventsDeleteCommand implements Command {
         .setValue(`${event.id}`);
     });
 
-    const eventSelectMenu = new StringSelectMenuBuilder()
-      .setCustomId('event-id')
-      .setPlaceholder('Select an event to delete')
-      .addOptions(eventOptions);
+    const numEventsPerPage = 25;
 
-    const eventAction = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-      eventSelectMenu
-    );
+    const pages: InteractionEditReplyOptions[] = [];
 
-    const response = await interaction.editReply({
-      content: 'Please select an event to delete',
-      components: [eventAction]
+    for (let i = 0; i < eventOptions.length; i += numEventsPerPage) {
+      const eventSelectMenu = new StringSelectMenuBuilder()
+        .setCustomId('event-id')
+        .setPlaceholder('Select an event to delete')
+        .addOptions(eventOptions.slice(i, i + numEventsPerPage));
+
+      const eventAction = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+        eventSelectMenu
+      );
+
+      const page = {
+        content: 'Please select an event to delete',
+        components: [eventAction]
+      };
+
+      pages.push(page);
+    }
+
+    const message = await this.paginatedEmbedsCreator.create(interaction, pages);
+
+    const collector = message.createMessageComponentCollector({
+      componentType: ComponentType.StringSelect,
+      time: 60_000
     });
 
-    try {
-      const reply = await response.awaitMessageComponent({ time: 60_000 });
+    collector.on('collect', async i => {
+      try {
+        const eventId = i.values[0];
+        if (!eventId) {
+          throw new Error('No event id provided.');
+        }
 
-      if (!('values' in reply)) {
-        throw new Error('No values in reply.');
+        const deleted = await this.eventsRepo.delete(parseInt(eventId));
+
+        if (deleted) {
+          i.update({ content: 'Successfully deleted event.', components: [] });
+        } else {
+          i.update({ content: 'Failed to delete event, please try again.', components: [] });
+        }
+      } catch (err) {
+        console.error(err);
+        interaction.editReply({
+          content: 'The command did not complete. Please try again',
+          components: []
+        });
       }
-
-      const eventId = reply.values[0];
-      if (!eventId) {
-        throw new Error('No event id provided.');
-      }
-
-      const deleted = await this.eventsRepo.delete(parseInt(eventId));
-
-      if (deleted) {
-        reply.update({ content: 'Successfully deleted event.', components: [] });
-      } else {
-        reply.update({ content: 'Failed to delete event, please try again.', components: [] });
-      }
-    } catch (err) {
-      console.error(err);
-      interaction.editReply({
-        content: 'The command did not complete. Please try again',
-        components: []
-      });
-    }
+    });
   }
 }
