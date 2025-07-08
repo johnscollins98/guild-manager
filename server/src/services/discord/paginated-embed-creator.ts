@@ -3,15 +3,18 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChatInputCommandInteraction,
-  Colors,
   ComponentType,
-  EmbedBuilder
+  InteractionEditReplyOptions
 } from 'discord.js';
 import { Service } from 'typedi';
 
 @Service()
 export class PaginatedEmbedCreator {
-  async create(interaction: ChatInputCommandInteraction, pages: EmbedBuilder[], time = 30 * 1000) {
+  async create(
+    interaction: ChatInputCommandInteraction,
+    pages: InteractionEditReplyOptions[],
+    time = 30 * 1000
+  ) {
     let index = 0;
     const pageCount = pages.length;
 
@@ -50,12 +53,10 @@ export class PaginatedEmbedCreator {
       nextBtn,
       lastBtn
     ]);
-    const components: ActionRowBuilder<ButtonBuilder>[] = [];
-    if (pageCount > 1) components.push(buttons);
 
     const message = await interaction.editReply({
-      embeds: [pages[index]!.setColor(Colors.Blue)],
-      components
+      ...pages[index]!,
+      components: [...(pages[index]?.components ?? []), ...(pageCount > 1 ? [buttons] : [])]
     });
 
     const collector = await message.createMessageComponentCollector({
@@ -97,8 +98,8 @@ export class PaginatedEmbedCreator {
 
       try {
         await interaction.editReply({
-          embeds: [pages[index]!.setColor(Colors.Blue)],
-          components
+          ...pages[index]!,
+          components: [...(pages[index]?.components ?? []), buttons]
         });
       } catch (err) {
         console.error(err);
@@ -113,7 +114,7 @@ export class PaginatedEmbedCreator {
     collector.on('end', async () => {
       try {
         await interaction.editReply({
-          embeds: [pages[index]!.setColor(Colors.Grey)],
+          ...pages[index]!,
           components: []
         });
       } catch (err) {
@@ -123,5 +124,7 @@ export class PaginatedEmbedCreator {
         });
       }
     });
+
+    return message;
   }
 }
