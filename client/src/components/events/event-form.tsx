@@ -85,7 +85,11 @@ export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) =>
       date.setUTCHours(parseInt(hours));
       date.setUTCMinutes(parseInt(minutes));
 
-      return date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+      return date.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
     }
 
     return event.startTime;
@@ -104,7 +108,8 @@ export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) =>
           date.toLocaleTimeString(undefined, {
             timeZone: 'UTC',
             hour: '2-digit',
-            minute: '2-digit'
+            minute: '2-digit',
+            hour12: false
           })
         );
       }
