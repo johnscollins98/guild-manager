@@ -1,6 +1,8 @@
 import {
   ActionRowBuilder,
   ChatInputCommandInteraction,
+  ComponentType,
+  InteractionEditReplyOptions,
   SlashCommandBuilder,
   SlashCommandUserOption,
   StringSelectMenuBuilder,
@@ -10,6 +12,7 @@ import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
+import { PaginatedEmbedCreator } from '../../../services/discord/paginated-embed-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -21,6 +24,7 @@ export default class WarningsDeleteCommand implements Command {
 
   constructor(
     private readonly warningsRepo: WarningsRepository,
+    private readonly paginatedMessageCreator: PaginatedEmbedCreator,
     discordApiFactory: DiscordApiFactory
   ) {
     this.name = 'warnings-delete';
@@ -46,14 +50,20 @@ export default class WarningsDeleteCommand implements Command {
     const givenToUser = interaction.options.getUser('given-to-user');
     const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(givenToUser?.id);
 
+    const warningsSorted = warnings.sort(
+      (a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
+    );
+
     const discordUsers = await this.discordGuildApi.getMembers();
 
-    if (warnings.length === 0) {
+    if (warningsSorted.length === 0) {
       interaction.editReply('There are no warnings to delete');
       return;
     }
 
-    const warningOptions = warnings.map(warning => {
+    const numWarningsPerPage = 25;
+
+    const warningOptions = warningsSorted.map(warning => {
       const discordUser = discordUsers.find(u => u.user?.id === warning.givenTo);
       const username =
         discordUser?.nick ??
@@ -69,45 +79,53 @@ export default class WarningsDeleteCommand implements Command {
         .setValue(`${warning.id}`);
     });
 
-    const warningSelectMenu = new StringSelectMenuBuilder()
-      .setCustomId('warning-id')
-      .setPlaceholder('Select a warning to delete')
-      .addOptions(warningOptions);
+    const pages: InteractionEditReplyOptions[] = [];
+    for (let i = 0; i < warningOptions.length; i += numWarningsPerPage) {
+      const warningSelectMenu = new StringSelectMenuBuilder()
+        .setCustomId('warning-id')
+        .setPlaceholder('Select a warning to delete')
+        .addOptions(warningOptions.slice(i, i + numWarningsPerPage));
 
-    const warningAction = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-      warningSelectMenu
-    );
+      const warningAction = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+        warningSelectMenu
+      );
 
-    const response = await interaction.editReply({
-      content: 'Please select a warning to delete',
-      components: [warningAction]
+      const page: InteractionEditReplyOptions = {
+        content: 'Please select a warning to delete',
+        components: [warningAction]
+      };
+
+      pages.push(page);
+    }
+
+    const response = await this.paginatedMessageCreator.create(interaction, pages);
+
+    const collector = response.createMessageComponentCollector({
+      componentType: ComponentType.StringSelect,
+      time: 60_000
     });
 
-    try {
-      const reply = await response.awaitMessageComponent({ time: 60_000 });
+    collector.on('collect', async i => {
+      try {
+        const warningId = i.values[0];
+        if (!warningId) {
+          throw new Error('No warning id provided.');
+        }
 
-      if (!('values' in reply)) {
-        throw new Error('No values in reply.');
+        const deleted = await this.warningsRepo.delete(parseInt(warningId));
+
+        if (deleted) {
+          i.update({ content: 'Successfully deleted warning.', components: [] });
+        } else {
+          i.update({ content: 'Failed to delete warning, please try again.', components: [] });
+        }
+      } catch (err) {
+        console.error(err);
+        interaction.editReply({
+          content: 'The command did not complete. Please try again',
+          components: []
+        });
       }
-
-      const warningId = reply.values[0];
-      if (!warningId) {
-        throw new Error('No warning id provided.');
-      }
-
-      const deleted = await this.warningsRepo.delete(parseInt(warningId));
-
-      if (deleted) {
-        reply.update({ content: 'Successfully deleted warning.', components: [] });
-      } else {
-        reply.update({ content: 'Failed to delete warning, please try again.', components: [] });
-      }
-    } catch (err) {
-      console.error(err);
-      interaction.editReply({
-        content: 'The command did not complete. Please try again',
-        components: []
-      });
-    }
+    });
   }
 }

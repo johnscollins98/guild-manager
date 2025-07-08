@@ -1,6 +1,7 @@
 import {
   ChatInputCommandInteraction,
   EmbedBuilder,
+  InteractionEditReplyOptions,
   SlashCommandBuilder,
   SlashCommandUserOption
 } from 'discord.js';
@@ -51,7 +52,7 @@ export default class WarningsListCommand implements Command {
       (a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
     );
 
-    const embeds: EmbedBuilder[] = [];
+    const embeds: InteractionEditReplyOptions[] = [];
 
     for (let i = 0; i < warningsSorted.length; i += warningsPerPage) {
       const startIndex = i;
@@ -66,7 +67,9 @@ export default class WarningsListCommand implements Command {
         }))
       );
 
-      embeds.push(embed);
+      embeds.push({
+        embeds: [embed]
+      });
     }
 
     await this.paginationCreator.create(interaction, embeds);
