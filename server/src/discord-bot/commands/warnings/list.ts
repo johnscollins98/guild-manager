@@ -1,17 +1,22 @@
 import {
   ChatInputCommandInteraction,
+  EmbedBuilder,
   SlashCommandBuilder,
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
+import { PaginatedEmbedCreator } from '../../../services/discord/paginated-embed-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
 @Service()
 export default class WarningsListCommand implements Command {
   public readonly name: string;
-  constructor(private readonly warningsRepo: WarningsRepository) {
+  constructor(
+    private readonly warningsRepo: WarningsRepository,
+    private readonly paginationCreator: PaginatedEmbedCreator
+  ) {
     this.name = 'warnings-list';
   }
 
@@ -33,16 +38,37 @@ export default class WarningsListCommand implements Command {
   async execute(interaction: ChatInputCommandInteraction) {
     const memberId = interaction.options.getUser('given-to-user');
 
+    const warningsPerPage = 10;
+
     const warnings = await this.warningsRepo.getAllWhereGivenToIncludes(memberId?.id);
 
-    interaction.editReply({
-      content:
-        warnings
-          .map(
-            w =>
-              `* "${w.reason}"\n\tGiven to <@${w.givenTo}> by <@${w.givenBy}> on <t:${Math.floor(w.timestamp.valueOf() / 1000)}:d> (${WarningTypeLabels[w.type]})`
-          )
-          .join('\n') || 'There are no warnings.'
-    });
+    if (warnings.length === 0) {
+      await interaction.editReply({ content: 'There are no warnings to display.' });
+      return;
+    }
+
+    const warningsSorted = warnings.sort(
+      (a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
+    );
+
+    const embeds: EmbedBuilder[] = [];
+
+    for (let i = 0; i < warningsSorted.length; i += warningsPerPage) {
+      const startIndex = i;
+      const endIndex = startIndex + warningsPerPage - 1;
+
+      const slice = warningsSorted.slice(startIndex, endIndex);
+
+      const embed = new EmbedBuilder().setTitle('Warning List').addFields(
+        slice.map(w => ({
+          name: `<t:${Math.floor(w.timestamp.valueOf() / 1000)}:d> (${WarningTypeLabels[w.type]})`,
+          value: `**Given to <@${w.givenTo}> by <@${w.givenBy}>**.\n${w.reason.substring(0, 900)}`
+        }))
+      );
+
+      embeds.push(embed);
+    }
+
+    await this.paginationCreator.create(interaction, embeds);
   }
 }
