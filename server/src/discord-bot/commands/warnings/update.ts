@@ -6,10 +6,13 @@ import {
   ComponentType,
   EmbedBuilder,
   MessageComponentInteraction,
+  ModalBuilder,
   SlashCommandBuilder,
   SlashCommandUserOption,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
+  TextInputBuilder,
+  TextInputStyle,
   UserSelectMenuBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
@@ -119,7 +122,7 @@ export default class WarningsUpdateCommand implements Command {
             { name: 'Last Updated By', value: `<@${warning.lastUpdatedBy}>`, inline: true },
             {
               name: 'On',
-              value: `<t:${Math.floor(warning.timestamp.valueOf() / 1000)}:d>`,
+              value: `<t:${Math.floor(warning.lastUpdatedTimestamp.valueOf() / 1000)}:d>`,
               inline: true
             }
           ]
@@ -138,8 +141,7 @@ export default class WarningsUpdateCommand implements Command {
     const reasonBtn = new ButtonBuilder()
       .setLabel('Reason')
       .setCustomId('reason')
-      .setStyle(ButtonStyle.Primary)
-      .setDisabled(true);
+      .setStyle(ButtonStyle.Primary);
 
     const givenToBtn = new ButtonBuilder()
       .setLabel('Given To')
@@ -240,8 +242,39 @@ export default class WarningsUpdateCommand implements Command {
     await this.sendUpdateEmbed({ ...warning, givenTo: user }, res);
   }
 
-  private async onReasonSelected(_warning: Warning, interaction: MessageComponentInteraction) {
-    await interaction.update({ content: 'Unsupported' });
+  private async onReasonSelected(warning: Warning, interaction: MessageComponentInteraction) {
+    const id = `warning-${warning.id}`;
+    const modal = new ModalBuilder().setTitle('Warning Reason').setCustomId(id);
+
+    const input = new TextInputBuilder()
+      .setCustomId('reason-input')
+      .setLabel('Warning Reason')
+      .setValue(warning.reason)
+      .setRequired(true)
+      .setStyle(TextInputStyle.Paragraph);
+
+    const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
+
+    modal.addComponents(row);
+
+    await interaction.showModal(modal);
+
+    await interaction.editReply({
+      content: 'Please fill in the form.',
+      embeds: [],
+      components: []
+    });
+
+    const modalInteraction = await interaction.awaitModalSubmit({
+      time: 60_000
+    });
+
+    const value = modalInteraction.fields.getTextInputValue('reason-input');
+
+    await this.sendUpdateEmbed(
+      { ...warning, reason: value },
+      modalInteraction as unknown as MessageComponentInteraction
+    );
   }
 
   private async onDoneSelected(warning: Warning, interaction: MessageComponentInteraction) {
