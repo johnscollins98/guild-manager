@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
-import { PaginatedEmbedCreator } from '../../../services/discord/paginated-embed-creator';
+import { PaginatedMessageCreator } from '../../../services/discord/paginated-message-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-factory';
 
@@ -16,7 +16,7 @@ export default class WarningsListCommand implements Command {
   public readonly name: string;
   constructor(
     private readonly warningsRepo: WarningsRepository,
-    private readonly paginationCreator: PaginatedEmbedCreator
+    private readonly paginationCreator: PaginatedMessageCreator
   ) {
     this.name = 'warnings-list';
   }

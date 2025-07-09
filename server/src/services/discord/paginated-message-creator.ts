@@ -9,7 +9,7 @@ import {
 import { Service } from 'typedi';
 
 @Service()
-export class PaginatedEmbedCreator {
+export class PaginatedMessageCreator {
   async create(
     interaction: ChatInputCommandInteraction,
     pages: InteractionEditReplyOptions[],
