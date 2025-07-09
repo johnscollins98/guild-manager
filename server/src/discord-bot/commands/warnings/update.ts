@@ -9,7 +9,8 @@ import {
   SlashCommandBuilder,
   SlashCommandUserOption,
   StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder
+  StringSelectMenuOptionBuilder,
+  UserSelectMenuBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
 import { Permission, WarningType, WarningTypeLabels } from '../../../dtos';
@@ -112,7 +113,17 @@ export default class WarningsUpdateCommand implements Command {
       { name: 'Type', value: WarningTypeLabels[warning.type], inline: true },
       { name: 'Given To', value: `<@${warning.givenTo}>`, inline: true },
       { name: 'Given By', value: `<@${warning.givenBy}>`, inline: true },
-      { name: 'Reason', value: warning.reason.substring(0, 50) }
+      { name: 'Reason', value: warning.reason.substring(0, 50) },
+      ...(warning.lastUpdatedBy
+        ? [
+            { name: 'Last Updated By', value: `<@${warning.lastUpdatedBy}>`, inline: true },
+            {
+              name: 'On',
+              value: `<t:${Math.floor(warning.timestamp.valueOf() / 1000)}:d>`,
+              inline: true
+            }
+          ]
+        : [])
     ]);
   }
 
@@ -130,13 +141,18 @@ export default class WarningsUpdateCommand implements Command {
       .setStyle(ButtonStyle.Primary)
       .setDisabled(true);
 
+    const givenToBtn = new ButtonBuilder()
+      .setLabel('Given To')
+      .setCustomId('given-to')
+      .setStyle(ButtonStyle.Primary);
+
     const doneBtn = new ButtonBuilder()
       .setLabel('Done')
       .setCustomId('done')
       .setStyle(ButtonStyle.Success);
 
     const actionRow = new ActionRowBuilder<ButtonBuilder>({
-      components: [typeBtn, reasonBtn, doneBtn]
+      components: [typeBtn, givenToBtn, reasonBtn, doneBtn]
     });
 
     const editSelectMessage = await interaction.update({
@@ -152,6 +168,8 @@ export default class WarningsUpdateCommand implements Command {
 
     if (editSelectResponse.customId === 'type') {
       await this.onTypeSelected(warning, editSelectResponse);
+    } else if (editSelectResponse.customId === 'given-to') {
+      await this.onGivenToSelected(warning, editSelectResponse);
     } else if (editSelectResponse.customId === 'reason') {
       await this.onReasonSelected(warning, editSelectResponse);
     } else {
@@ -192,7 +210,34 @@ export default class WarningsUpdateCommand implements Command {
       throw new Error('Invalid type selected');
     }
 
-    this.sendUpdateEmbed({ ...warning, type: type as WarningType }, res);
+    await this.sendUpdateEmbed({ ...warning, type: type as WarningType }, res);
+  }
+
+  private async onGivenToSelected(warning: Warning, interaction: MessageComponentInteraction) {
+    const userMenu = new UserSelectMenuBuilder()
+      .setPlaceholder('Select a discord user')
+      .setCustomId('user-select');
+
+    const row = new ActionRowBuilder<UserSelectMenuBuilder>().addComponents(userMenu);
+
+    const msg = await interaction.update({
+      content: 'Please select a new user for the warning',
+      embeds: [this.createWarningDetailsEmbed(warning)],
+      components: [row]
+    });
+
+    const res = await msg.awaitMessageComponent({
+      componentType: ComponentType.UserSelect,
+      time: 60_000
+    });
+
+    const user = res.values[0];
+
+    if (!user) {
+      throw new Error('No user selected');
+    }
+
+    await this.sendUpdateEmbed({ ...warning, givenTo: user }, res);
   }
 
   private async onReasonSelected(_warning: Warning, interaction: MessageComponentInteraction) {
@@ -200,7 +245,10 @@ export default class WarningsUpdateCommand implements Command {
   }
 
   private async onDoneSelected(warning: Warning, interaction: MessageComponentInteraction) {
-    const updated = await this.warningsRepo.update(warning.id, warning);
+    const updated = await this.warningsRepo.update(warning.id, {
+      ...warning,
+      lastUpdatedBy: interaction.user.id
+    });
 
     if (!updated) {
       await interaction.update('Failed to update warning.');
@@ -211,7 +259,8 @@ export default class WarningsUpdateCommand implements Command {
 
     await interaction.update({
       content: 'Successfully updated warning.',
-      embeds: [embed]
+      embeds: [embed],
+      components: []
     });
   }
 }
