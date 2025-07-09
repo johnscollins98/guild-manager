@@ -1,20 +1,17 @@
 import {
-  ActionRowBuilder,
   ChatInputCommandInteraction,
   ComponentType,
-  InteractionEditReplyOptions,
   SlashCommandBuilder,
   SlashCommandUserOption,
-  StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
-import { PaginatedEmbedCreator } from '../../../services/discord/paginated-embed-creator';
+import { PaginatedSelectCreator } from '../../../services/discord/paginated-select-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class WarningsDeleteCommand implements Command {
@@ -24,7 +21,7 @@ export default class WarningsDeleteCommand implements Command {
 
   constructor(
     private readonly warningsRepo: WarningsRepository,
-    private readonly paginatedMessageCreator: PaginatedEmbedCreator,
+    private readonly paginatedSelectCreator: PaginatedSelectCreator,
     discordApiFactory: DiscordApiFactory
   ) {
     this.name = 'warnings-delete';
@@ -61,8 +58,6 @@ export default class WarningsDeleteCommand implements Command {
       return;
     }
 
-    const numWarningsPerPage = 25;
-
     const warningOptions = warningsSorted.map(warning => {
       const discordUser = discordUsers.find(u => u.user?.id === warning.givenTo);
       const username =
@@ -79,26 +74,12 @@ export default class WarningsDeleteCommand implements Command {
         .setValue(`${warning.id}`);
     });
 
-    const pages: InteractionEditReplyOptions[] = [];
-    for (let i = 0; i < warningOptions.length; i += numWarningsPerPage) {
-      const warningSelectMenu = new StringSelectMenuBuilder()
-        .setCustomId('warning-id')
-        .setPlaceholder('Select a warning to delete')
-        .addOptions(warningOptions.slice(i, i + numWarningsPerPage));
-
-      const warningAction = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-        warningSelectMenu
-      );
-
-      const page: InteractionEditReplyOptions = {
-        content: 'Please select a warning to delete',
-        components: [warningAction]
-      };
-
-      pages.push(page);
-    }
-
-    const response = await this.paginatedMessageCreator.create(interaction, pages);
+    const response = await this.paginatedSelectCreator.create(
+      interaction,
+      warningOptions,
+      'Please select a warning',
+      'warning-id'
+    );
 
     const collector = response.createMessageComponentCollector({
       componentType: ComponentType.StringSelect,

@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { daysOfWeek, Permission } from '../../../dtos';
 import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
 import { EventRepository } from '../../../services/repositories/event-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class EventsListCommand implements Command {

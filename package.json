@@ -19,7 +19,11 @@
     "prettier": "prettier -c '**/*.{js,jsx,ts,tsx,html,scss,json,md,yml}'",
     "db:migrate": "npm run -w server db:migrate",
     "db:deploy:dev": "npm run -w server db:deploy:dev",
-    "db:deploy:prod": "npm run -w server db:deploy:prod"
+    "db:deploy:prod": "npm run -w server db:deploy:prod",
+    "bot:deploy-commands:prod": "npm run -w server bot:deploy-commands:prod",
+    "bot:deploy-commands:dev": "npm run -w server bot:deploy-commands:dev",
+    "predeploy:prod": "npm run -w server predeploy:prod",
+    "predeploy:dev": "npm run -w server predeploy:dev"
   },
   "workspaces": [
     "client",
