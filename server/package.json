@@ -14,7 +14,7 @@
     "db:deploy:dev": "typeorm-ts-node-commonjs migration:run -d ./src/dataSource.ts",
     "db:deploy:prod": "typeorm-ts-node-commonjs migration:run -d ./build/dataSource.js",
     "bot:deploy-commands:prod": "node ./build/discord-bot/deploy-commands.js",
-    "bot:deploy-commands:dev": "node -r ts-node/register --env-file=.env ./src/discord-bot/deploy-commands.ts",
+    "bot:deploy-commands:dev": "ts-node -r dotenv/config --files  ./src/discord-bot/deploy-commands.ts",
     "predeploy:prod": "npm run db:deploy:prod && npm run bot:deploy-commands:prod",
     "predeploy:dev": "npm run db:deploy:dev && npm run bot:deploy-commands:dev"
   },
