@@ -65,26 +65,19 @@ export class PaginatedMessageCreator {
     });
 
     collector.on('collect', async i => {
-      if (i.user.id !== interaction.user.id)
-        return await i.reply({ content: `Only <@${interaction.user.id}> can respond.` });
-
-      await i.deferUpdate();
-
       if (i.customId === 'pagefirst') {
         index = 0;
-      }
-
-      if (i.customId === 'prevpage') {
+      } else if (i.customId === 'prevpage') {
         if (index > 0) index--;
-      }
-
-      if (i.customId === 'nextpage') {
+      } else if (i.customId === 'nextpage') {
         if (index < pageCount - 1) index++;
+      } else if (i.customId === 'lastpage') {
+        index = pageCount - 1;
+      } else {
+        return;
       }
 
-      if (i.customId === 'lastpage') {
-        index = pageCount - 1;
-      }
+      await i.deferUpdate();
 
       const firstsDisabled = index === 0;
       const lastDisabled = index === pageCount - 1;
