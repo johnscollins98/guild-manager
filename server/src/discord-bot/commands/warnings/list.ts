@@ -9,7 +9,7 @@ import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
 import { PaginatedMessageCreator } from '../../../services/discord/paginated-message-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class WarningsListCommand implements Command {

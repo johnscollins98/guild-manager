@@ -10,7 +10,7 @@ import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { PaginatedSelectCreator } from '../../../services/discord/paginated-select-creator';
 import { EventRepository } from '../../../services/repositories/event-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class EventsDeleteCommand implements Command {

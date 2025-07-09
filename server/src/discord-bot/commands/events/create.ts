@@ -17,7 +17,7 @@ import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { EventRepository } from '../../../services/repositories/event-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class EventsCreateCommand implements Command {

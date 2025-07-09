@@ -11,7 +11,7 @@ import { DiscordApiFactory } from '../../../services/discord/api-factory';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { PaginatedSelectCreator } from '../../../services/discord/paginated-select-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class WarningsDeleteCommand implements Command {

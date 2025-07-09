@@ -7,7 +7,7 @@ import {
 import { Service } from 'typedi';
 import { Permission, WarningType, WarningTypeLabels } from '../../../dtos';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
-import { Command } from '../../command-factory';
+import { Command } from '../../command-gatherer';
 
 @Service()
 export default class WarningsGiveCommand implements Command {

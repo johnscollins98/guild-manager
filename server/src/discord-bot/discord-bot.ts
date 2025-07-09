@@ -3,7 +3,7 @@ import { Service } from 'typedi';
 import { config } from '../config';
 import { DiscordController } from '../controllers/discord-controller';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
-import { CommandFactory } from './command-factory';
+import { CommandExecutor } from './command-executor';
 
 @Service()
 export class DiscordBot {
@@ -11,7 +11,7 @@ export class DiscordBot {
 
   constructor(
     private readonly memberLeftRepository: MemberLeftRepository,
-    private readonly commandFactory: CommandFactory,
+    private readonly commandExecutor: CommandExecutor,
     private readonly discordController: DiscordController
   ) {
     this.client = new Client({
@@ -32,31 +32,14 @@ export class DiscordBot {
     await this.client.login(config.botToken);
   }
 
-  async tidyup() {
-    const guild = this.client.guilds.resolve(config.discordGuildId);
-    if (guild) {
-      console.log('Deleting commands.');
-      await guild.commands.set([]);
-      console.log('Done deleting commands.');
-    }
-  }
-
   private async setupCommands() {
+    await this.commandExecutor.init();
+
     this.client.on(Events.InteractionCreate, async interaction => {
       if (!interaction.isChatInputCommand()) return;
-      if (!interaction.command) return;
 
-      this.commandFactory.executeCommandByName(interaction.command.name, interaction);
+      this.commandExecutor.executeCommandByName(interaction.commandName, interaction);
     });
-
-    const guild = this.client.guilds.resolve(config.discordGuildId);
-
-    if (!guild) throw new Error('Guild not available');
-
-    await guild.commands.set([]);
-
-    const commands = await this.commandFactory.getCommands();
-    await guild.commands.set(commands);
   }
 
   private async setupEventListeners() {
