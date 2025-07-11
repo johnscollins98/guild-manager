@@ -22,7 +22,7 @@ export class EventSelector {
     const events = await this.eventsRepo.getAll();
 
     if (events.length === 0) {
-      respond(interaction, { content: 'There are no events to delete.' });
+      respond(interaction, { content: 'There are no events.' });
       return;
     }
 
