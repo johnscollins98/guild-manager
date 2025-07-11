@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import { Permission } from '../../../dtos';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-gatherer';
+import { EventEditor } from '../../services/event-editor';
 import { EventSelector } from '../../services/events/event-selector';
 
 @Service()
@@ -11,13 +12,14 @@ export default class EventsDeleteCommand implements Command {
 
   constructor(
     private readonly eventSelector: EventSelector,
+    private readonly eventEditor: EventEditor,
     private readonly eventsRepo: EventRepository
   ) {
-    this.name = 'events-delete';
+    this.name = 'events-update';
   }
 
   async getConfig() {
-    return new SlashCommandBuilder().setName(this.name).setDescription('Delete an event');
+    return new SlashCommandBuilder().setName(this.name).setDescription('Update an event');
   }
 
   getRequiredPermissions(): Permission[] {
@@ -33,15 +35,14 @@ export default class EventsDeleteCommand implements Command {
       throw new Error('No event id provided.');
     }
 
-    const deleted = await this.eventsRepo.delete(parseInt(eventSelection.value));
+    const event = await this.eventsRepo.getById(parseInt(eventSelection.value));
 
-    if (deleted) {
-      eventSelection.interaction.update({ content: 'Successfully deleted event.', components: [] });
-    } else {
-      eventSelection.interaction.update({
-        content: 'Failed to delete event, please try again.',
-        components: []
-      });
+    if (!event) {
+      throw new Error("Event doesn't exist");
     }
+
+    this.eventEditor.sendEditor(event, eventSelection.interaction, e =>
+      this.eventsRepo.update(e.id!, e)
+    );
   }
 }

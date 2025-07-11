@@ -1,15 +1,15 @@
 import {
+  BaseMessageOptions,
   ChatInputCommandInteraction,
   EmbedBuilder,
-  InteractionEditReplyOptions,
   SlashCommandBuilder,
   SlashCommandUserOption
 } from 'discord.js';
 import { Service } from 'typedi';
 import { Permission, WarningTypeLabels } from '../../../dtos';
-import { PaginatedMessageCreator } from '../../../services/discord/paginated-message-creator';
 import WarningsRepository from '../../../services/repositories/warnings-repository';
 import { Command } from '../../command-gatherer';
+import { PaginatedMessageCreator } from '../../services/paginated-message-creator';
 
 @Service()
 export default class WarningsListCommand implements Command {
@@ -52,7 +52,7 @@ export default class WarningsListCommand implements Command {
       (a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf()
     );
 
-    const embeds: InteractionEditReplyOptions[] = [];
+    const embeds: BaseMessageOptions[] = [];
 
     for (let i = 0; i < warningsSorted.length; i += warningsPerPage) {
       const startIndex = i;

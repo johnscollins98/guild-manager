@@ -7,4 +7,5 @@ export interface EventCreateDTO {
   duration: string;
   leaderId: string;
   ignore: boolean;
+  id?: number;
 }

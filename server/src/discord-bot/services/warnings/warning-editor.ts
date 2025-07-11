@@ -5,26 +5,23 @@ import {
   ComponentType,
   EmbedBuilder,
   MessageComponentInteraction,
-  ModalBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-  UserSelectMenuBuilder
+  TextInputStyle
 } from 'discord.js';
 import { Service } from 'typedi';
-import { WarningCreateDTO, WarningType, WarningTypeLabels } from '../../dtos';
-import { Warning } from '../../models/warning.model';
+import { WarningCreateDTO, WarningType, WarningTypeLabels } from '../../../dtos';
+import { Warning } from '../../../models/warning.model';
+import { EditorHelpers } from '../editor-helpers';
+import { respond, RespondableInteraction } from '../respond';
 
 @Service()
 export class WarningEditor {
   private onSubmit: ((w: WarningCreateDTO) => Promise<Warning | null>) | undefined;
 
-  constructor() {}
+  constructor(private readonly modalTextFetch: EditorHelpers) {}
 
   async sendEditor(
     warning: WarningCreateDTO,
-    interaction: MessageComponentInteraction,
+    interaction: RespondableInteraction,
     onSubmit: ((w: WarningCreateDTO) => Promise<Warning | null>) | undefined
   ) {
     this.onSubmit = onSubmit;
@@ -55,7 +52,7 @@ export class WarningEditor {
       components: [typeBtn, givenToBtn, reasonBtn, doneBtn]
     });
 
-    const editSelectMessage = await interaction.update({
+    const editSelectMessage = await respond(interaction, {
       content: 'Would you like to change anything?',
       embeds: [embed],
       components: [actionRow]
@@ -81,69 +78,42 @@ export class WarningEditor {
     warning: WarningCreateDTO,
     interaction: MessageComponentInteraction
   ) {
-    const typeMenu = new StringSelectMenuBuilder()
-      .setPlaceholder('Please select a Warning type')
-      .setCustomId('type-select')
-      .addOptions(
-        Object.entries(WarningTypeLabels).map(([k, v]) =>
-          new StringSelectMenuOptionBuilder().setLabel(v).setValue(k)
-        )
-      );
+    const { value, interaction: textFetchInteraction } = await this.modalTextFetch.fetchFromList(
+      interaction,
+      Object.entries(WarningTypeLabels).map(([k, v]) => ({ value: k, label: v })),
+      'warning-type-select',
+      'Please select a warning type'
+    );
 
-    const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(typeMenu);
-
-    const msg = await interaction.update({
-      content: 'Please select a new type for the warning',
-      embeds: [this.createWarningDetailsEmbed(warning)],
-      components: [row]
-    });
-
-    const res = await msg.awaitMessageComponent({
-      componentType: ComponentType.StringSelect,
-      time: 60_000
-    });
-
-    const type = res.values[0];
-
-    if (!type) {
+    if (!value) {
       throw new Error('No type selected');
     }
 
-    if (!WarningTypeLabels[type as WarningType]) {
+    if (!WarningTypeLabels[value as WarningType]) {
       throw new Error('Invalid type selected');
     }
 
-    await this.sendEditor({ ...warning, type: type as WarningType }, res, this.onSubmit);
+    await this.sendEditor(
+      { ...warning, type: value as WarningType },
+      textFetchInteraction,
+      this.onSubmit
+    );
   }
 
   private async onGivenToSelected(
     warning: WarningCreateDTO,
     interaction: MessageComponentInteraction
   ) {
-    const userMenu = new UserSelectMenuBuilder()
-      .setPlaceholder('Select a discord user')
-      .setCustomId('user-select');
-
-    const row = new ActionRowBuilder<UserSelectMenuBuilder>().addComponents(userMenu);
-
-    const msg = await interaction.update({
-      content: 'Please select a new user for the warning',
-      embeds: [this.createWarningDetailsEmbed(warning)],
-      components: [row]
-    });
-
-    const res = await msg.awaitMessageComponent({
-      componentType: ComponentType.UserSelect,
-      time: 60_000
-    });
-
-    const user = res.values[0];
+    const { value: user, interaction: fetchInteraction } = await this.modalTextFetch.fetchUser(
+      interaction,
+      { placeholder: 'Select a discord user', customId: 'user-select' }
+    );
 
     if (!user) {
       throw new Error('No user selected');
     }
 
-    await this.sendEditor({ ...warning, givenTo: user }, res, this.onSubmit);
+    await this.sendEditor({ ...warning, givenTo: user }, fetchInteraction, this.onSubmit);
   }
 
   private async onReasonSelected(
@@ -151,38 +121,16 @@ export class WarningEditor {
     interaction: MessageComponentInteraction
   ) {
     const id = `warning-${warning.id}`;
-    const modal = new ModalBuilder().setTitle('Warning Reason').setCustomId(id);
 
-    const input = new TextInputBuilder()
-      .setCustomId('reason-input')
-      .setLabel('Warning Reason')
-      .setValue(warning.reason)
-      .setRequired(true)
-      .setStyle(TextInputStyle.Paragraph);
-
-    const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
-
-    modal.addComponents(row);
-
-    await interaction.showModal(modal);
-
-    await interaction.editReply({
-      content: 'Please fill in the form.',
-      embeds: [],
-      components: []
-    });
-
-    const modalInteraction = await interaction.awaitModalSubmit({
-      time: 60_000
-    });
-
-    const value = modalInteraction.fields.getTextInputValue('reason-input');
-
-    await this.sendEditor(
-      { ...warning, reason: value },
-      modalInteraction as unknown as MessageComponentInteraction,
-      this.onSubmit
+    const { value, interaction: modalInteraction } = await this.modalTextFetch.fetchText(
+      interaction,
+      id,
+      'Warning Reason',
+      warning.reason,
+      TextInputStyle.Paragraph
     );
+
+    await this.sendEditor({ ...warning, reason: value }, modalInteraction, this.onSubmit);
   }
 
   private async onDoneSelected(

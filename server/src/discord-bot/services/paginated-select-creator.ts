@@ -1,26 +1,26 @@
 import {
   ActionRowBuilder,
-  ChatInputCommandInteraction,
-  InteractionEditReplyOptions,
+  BaseMessageOptions,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder
 } from 'discord.js';
 import { Service } from 'typedi';
 import { PaginatedMessageCreator } from './paginated-message-creator';
+import { RespondableInteraction } from './respond';
 
 @Service()
 export class PaginatedSelectCreator {
   constructor(private readonly paginatedMessageCreator: PaginatedMessageCreator) {}
 
   async create(
-    interaction: ChatInputCommandInteraction,
+    interaction: RespondableInteraction,
     options: StringSelectMenuOptionBuilder[],
     label: string,
     id: string,
     numPerPage = 25,
     time = 60_000
   ) {
-    const pages: InteractionEditReplyOptions[] = [];
+    const pages: BaseMessageOptions[] = [];
     for (let i = 0; i < options.length; i += numPerPage) {
       const selectmenu = new StringSelectMenuBuilder()
         .setCustomId(id)
@@ -29,7 +29,7 @@ export class PaginatedSelectCreator {
 
       const action = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(selectmenu);
 
-      const page: InteractionEditReplyOptions = {
+      const page = {
         content: label,
         components: [action]
       };

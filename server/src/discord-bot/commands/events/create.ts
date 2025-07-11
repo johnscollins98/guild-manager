@@ -1,9 +1,5 @@
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   ChatInputCommandInteraction,
-  EmbedBuilder,
   SlashCommandBooleanOption,
   SlashCommandBuilder,
   SlashCommandNumberOption,
@@ -14,10 +10,10 @@ import { Service } from 'typedi';
 import { config } from '../../../config';
 import { DayOfWeek, daysOfWeek, Permission } from '../../../dtos';
 import { DiscordApiFactory } from '../../../services/discord/api-factory';
-import { EventEmbedCreator } from '../../../services/discord/event-embed-creator';
 import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-gatherer';
+import { EventEditor } from '../../services/event-editor';
 
 @Service()
 export default class EventsCreateCommand implements Command {
@@ -25,7 +21,7 @@ export default class EventsCreateCommand implements Command {
   private readonly discordGuildApi: IDiscordGuildApi;
   constructor(
     private readonly eventRepo: EventRepository,
-    private readonly embedCreator: EventEmbedCreator,
+    private readonly eventEditor: EventEditor,
     discordApiFactory: DiscordApiFactory
   ) {
     this.name = 'events-create';
@@ -110,49 +106,9 @@ export default class EventsCreateCommand implements Command {
       title
     };
 
-    const embedData = this.embedCreator.createEmbed(dayOfWeek, [eventToCreate]);
-    const embed = new EmbedBuilder(embedData);
-
-    const confirmButton = new ButtonBuilder()
-      .setCustomId('confirm')
-      .setLabel('Yes, create the event.')
-      .setStyle(ButtonStyle.Primary);
-
-    const rejectButton = new ButtonBuilder()
-      .setCustomId('reject')
-      .setLabel("No, I'll start again.")
-      .setStyle(ButtonStyle.Danger);
-
-    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      confirmButton,
-      rejectButton
+    await this.eventEditor.sendEditor(eventToCreate, interaction, event =>
+      this.eventRepo.create(event)
     );
-
-    const response = await interaction.editReply({
-      content: 'Event created, here is a preview. Does this look correct?',
-      embeds: [embed],
-      components: [actionRow]
-    });
-
-    try {
-      const reply = await response.awaitMessageComponent({ time: 60_000 });
-
-      if (reply.customId === 'confirm') {
-        await this.eventRepo.create(eventToCreate);
-        reply.update({ content: 'Successfully created event.', embeds: [], components: [] });
-      } else {
-        reply.update({ content: 'Event not created.', embeds: [], components: [] });
-      }
-    } catch (err) {
-      console.error(err);
-      interaction.editReply({
-        content: 'The command did not complete. Please try again',
-        components: [],
-        embeds: []
-      });
-    }
-
-    await this.eventRepo.getAll();
   }
 
   getRequiredPermissions(): Permission[] {

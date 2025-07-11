@@ -1,20 +1,16 @@
 import {
   ActionRowBuilder,
+  BaseMessageOptions,
   ButtonBuilder,
   ButtonStyle,
-  ChatInputCommandInteraction,
-  ComponentType,
-  InteractionEditReplyOptions
+  ComponentType
 } from 'discord.js';
 import { Service } from 'typedi';
+import { respond, RespondableInteraction } from './respond';
 
 @Service()
 export class PaginatedMessageCreator {
-  async create(
-    interaction: ChatInputCommandInteraction,
-    pages: InteractionEditReplyOptions[],
-    time = 30 * 1000
-  ) {
+  async create(interaction: RespondableInteraction, pages: BaseMessageOptions[], time = 30 * 1000) {
     let index = 0;
     const pageCount = pages.length;
 
@@ -54,12 +50,12 @@ export class PaginatedMessageCreator {
       lastBtn
     ]);
 
-    const message = await interaction.editReply({
+    const message = await respond(interaction, {
       ...pages[index]!,
       components: [...(pages[index]?.components ?? []), ...(pageCount > 1 ? [buttons] : [])]
     });
 
-    const collector = await message.createMessageComponentCollector({
+    const collector = message.createMessageComponentCollector({
       componentType: ComponentType.Button,
       time
     });
@@ -90,13 +86,13 @@ export class PaginatedMessageCreator {
       pageCountBtn.setLabel(`${index + 1}/${pageCount}`);
 
       try {
-        await interaction.editReply({
+        await respond(interaction, {
           ...pages[index]!,
           components: [...(pages[index]?.components ?? []), buttons]
         });
       } catch (err) {
         console.error(err);
-        await interaction.editReply({
+        await respond(interaction, {
           content: 'Something went wrong, please try again!'
         });
       }
@@ -106,13 +102,13 @@ export class PaginatedMessageCreator {
 
     collector.on('end', async () => {
       try {
-        await interaction.editReply({
+        await respond(interaction, {
           ...pages[index]!,
           components: []
         });
       } catch (err) {
         console.error(err);
-        await interaction.editReply({
+        await respond(interaction, {
           content: 'Something went wrong, please try again!'
         });
       }
