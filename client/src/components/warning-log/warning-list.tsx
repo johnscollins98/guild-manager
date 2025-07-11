@@ -1,5 +1,5 @@
 import DiscordLogEntry from '../discord-log/discord-log-entry';
-import { useWarningList } from './useWarningList';
+import { useWarningList } from './use-warning-list';
 
 export const WarningList = () => {
   const logEntries = useWarningList();

@@ -13,7 +13,7 @@ import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
-import { WarningLog } from './warning-log/WarningLog';
+import { WarningLog } from './warning-log/warning-log';
 
 const App = () => {
   const { data: authInfo } = useAuth();

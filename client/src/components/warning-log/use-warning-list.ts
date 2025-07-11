@@ -4,7 +4,7 @@ import { WarningTypeLabels } from 'server';
 import { discordMembersQuery } from '../../lib/apis/discord-api';
 import { warningsQuery } from '../../lib/apis/warnings-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import { FilterContext, SortContext } from './LogSettingContext';
+import { FilterContext, SortContext } from './log-setting-context';
 
 export const useWarningList = () => {
   const { sortAscending } = use(SortContext);

@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import { QueryBoundary } from '../common/query-boundary';
 import { LogLoader } from '../log/log-loader';
-import { WarningLogSettingsProvider } from './LogSettingContext';
-import { WarningList } from './WarningList';
-import { WarningLogBar } from './log-bar/WarningLogBar';
+import { WarningLogBar } from './log-bar/warning-log-bar';
+import { WarningLogSettingsProvider } from './log-setting-context';
+import { WarningList } from './warning-list';
 
 export const WarningLog = () => {
   return (

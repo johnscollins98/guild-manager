@@ -3,7 +3,7 @@ import { Checkbox, FormControlLabel, IconButton, MenuItem, Popover } from '@mui/
 import { Box } from '@mui/system';
 import { use, useRef, useState } from 'react';
 import { WarningTypeLabels, type WarningType } from 'server';
-import { FilterContext } from '../LogSettingContext';
+import { FilterContext } from '../log-setting-context';
 
 export const FilterMenu = () => {
   const [showPopover, setShowPopover] = useState(false);

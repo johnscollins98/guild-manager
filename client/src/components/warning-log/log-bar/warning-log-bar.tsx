@@ -1,6 +1,6 @@
 import { Box } from '@mui/system';
-import { FilterMenu } from './FilterMenu';
-import { SortButton } from './SortButton';
+import { FilterMenu } from './filter-menu';
+import { SortButton } from './sort-button';
 
 export const WarningLogBar = () => {
   return (
