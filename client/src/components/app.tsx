@@ -3,17 +3,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import './app.scss';
+import { LogLoader } from './common/log-loader';
 import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
 import EventPage from './events/event-page';
 import Layout from './layout';
 import Log from './log/log';
-import { LogLoader } from './log/log-loader';
 import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
-import { WarningLog } from './warning-log/WarningLog';
+import { WarningLog } from './warning-log/warning-log';
 
 const App = () => {
   const { data: authInfo } = useAuth();

@@ -1,18 +1,15 @@
 import { type DiscordLogChange, type DiscordLogUser } from 'server';
-import {
-  type DiscordLogDisplay,
-  type DiscordLogDisplayGenerator
-} from '../../interfaces/discord-log-string-generator';
+import { type LogDisplay, type LogDisplayGenerator } from '../../interfaces/log-string-generator';
 
-export class MemberUpdate implements DiscordLogDisplayGenerator {
+export class MemberUpdate implements LogDisplayGenerator {
   constructor(
     private readonly user: DiscordLogUser,
     private readonly target: DiscordLogUser,
     private readonly changes: DiscordLogChange[]
   ) {}
 
-  getEntry(): DiscordLogDisplay {
-    const display: DiscordLogDisplay = {
+  getEntry(): LogDisplay {
+    const display: LogDisplay = {
       summary: `${this.user.username} updated ${this.target.username}.`,
       details: []
     };

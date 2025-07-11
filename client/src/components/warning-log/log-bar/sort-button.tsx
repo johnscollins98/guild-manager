@@ -2,7 +2,7 @@ import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import { Button, Tooltip } from '@mui/material';
 import { use } from 'react';
-import { SortContext } from '../LogSettingContext';
+import { SortContext } from '../log-setting-context';
 
 export const SortButton = () => {
   const { sortAscending, setSortAscending } = use(SortContext);

@@ -1,5 +1,5 @@
 import { DiscordActionType, type DiscordLog } from 'server';
-import { type DiscordLogDisplayGenerator } from '../interfaces/discord-log-string-generator';
+import { type LogDisplayGenerator } from '../interfaces/log-string-generator';
 import { MemberKicked } from './discord-log-string-generators/member-kicked';
 import { MemberRoleUpdate } from './discord-log-string-generators/member-role-update';
 import { MemberUpdate } from './discord-log-string-generators/member-update';
@@ -7,7 +7,7 @@ import { MemberUpdate } from './discord-log-string-generators/member-update';
 export class DiscordLogDisplayFactory {
   constructor(private readonly log: DiscordLog) {}
 
-  getDiscordLogStringGenerator(id: string): DiscordLogDisplayGenerator | null {
+  getDiscordLogStringGenerator(id: string): LogDisplayGenerator | null {
     const logEntry = this.log.audit_log_entries.find(entry => entry.id === id);
 
     if (!logEntry) {
