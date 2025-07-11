@@ -2,17 +2,17 @@ import { useSuspenseQueries } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { discordLeaversQuery, discordLogQuery } from '../../lib/apis/discord-api';
 import {
-  type DiscordLogDisplay,
-  type DiscordLogDisplayGenerator
-} from '../../lib/interfaces/discord-log-string-generator';
+  type LogDisplay,
+  type LogDisplayGenerator
+} from '../../lib/interfaces/log-string-generator';
 import { DiscordLogDisplayFactory as DiscordLogEntryFactory } from '../../lib/utils/discord-log-string-factory';
 import { snowflakeToDate } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import DiscordLogEntry from './discord-log-entry';
+import LogEntry from '../common/log-entry';
 import './discord-log.scss';
 
 interface DiscordLogEntry {
-  discordDisplay: DiscordLogDisplay;
+  discordDisplay: LogDisplay;
   date: Date;
 }
 
@@ -28,9 +28,7 @@ const DiscordLog = () => {
       .filter(entry => !!factory.getDiscordLogStringGenerator(entry.id))
       .map(entry => {
         const date = snowflakeToDate(entry.id);
-        const generator = factory.getDiscordLogStringGenerator(
-          entry.id
-        ) as DiscordLogDisplayGenerator;
+        const generator = factory.getDiscordLogStringGenerator(entry.id) as LogDisplayGenerator;
         return {
           date: date,
           discordDisplay: generator.getEntry()
@@ -65,7 +63,7 @@ const DiscordLog = () => {
     <div className="log-container">
       {filteredLogData.map(entry => {
         return (
-          <DiscordLogEntry
+          <LogEntry
             displayEntry={entry.discordDisplay}
             date={entry.date}
             key={entry.date.toISOString()}

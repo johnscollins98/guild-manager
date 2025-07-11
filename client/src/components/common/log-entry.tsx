@@ -1,34 +1,37 @@
-import AccessTime from '@mui/icons-material/AccessTime';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalendarToday from '@mui/icons-material/CalendarToday';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import { type DiscordLogDisplay } from '../../lib/interfaces/discord-log-string-generator';
-import './discord-log-entry.scss';
+import { type LogDisplay } from '../../lib/interfaces/log-string-generator';
+import './log-entry.scss';
 
 interface Props {
-  displayEntry: DiscordLogDisplay;
+  displayEntry: LogDisplay;
   date: Date;
 }
 
-const DiscordLogEntry = ({ displayEntry, date }: Props) => {
+const LogEntry = ({ displayEntry, date }: Props) => {
   return (
-    <Accordion className="discord-log-entry">
+    <Accordion
+      className="log-entry"
+      disableGutters={!displayEntry.details || !displayEntry.details.length}
+    >
       <AccordionSummary
         expandIcon={displayEntry.details?.length ? <ExpandMore /> : null}
-        className="discord-log-summary"
+        className="log-summary"
+        slotProps={{ content: { className: 'summary-content' } }}
       >
         <div>
           <CalendarToday />
-          <Typography>{date.toLocaleDateString()}</Typography>
+          <Typography>
+            {date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+          </Typography>
         </div>
         <div>
-          <AccessTime />
-          <Typography>{date.toLocaleTimeString()}</Typography>
-        </div>
-        <div>
+          <AssignmentIcon />
           <Typography>{displayEntry.summary}</Typography>
         </div>
       </AccordionSummary>
@@ -47,4 +50,4 @@ const DiscordLogEntry = ({ displayEntry, date }: Props) => {
   );
 };
 
-export default DiscordLogEntry;
+export default LogEntry;

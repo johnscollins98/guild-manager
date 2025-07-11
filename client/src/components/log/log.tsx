@@ -1,6 +1,6 @@
 import { useGW2Log } from '../../lib/apis/gw2-api';
 import { useFilterString } from '../../lib/utils/use-filter-string';
-import LogEntry from './log-entry';
+import LogEntry from '../common/log-entry';
 import './log.scss';
 
 const Log = () => {
@@ -12,7 +12,11 @@ const Log = () => {
   return (
     <div className="log-container">
       {filteredData.map(entry => (
-        <LogEntry entryData={entry} key={`${entry.date}${entry.time}`} />
+        <LogEntry
+          key={entry.date}
+          displayEntry={{ summary: entry.message }}
+          date={new Date(entry.date)}
+        />
       ))}
     </div>
   );

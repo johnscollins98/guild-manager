@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
+import { LogLoader } from '../common/log-loader';
 import { QueryBoundary } from '../common/query-boundary';
-import { LogLoader } from '../log/log-loader';
 import { WarningLogBar } from './log-bar/warning-log-bar';
 import { WarningLogSettingsProvider } from './log-setting-context';
 import { WarningList } from './warning-list';
