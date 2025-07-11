@@ -24,7 +24,7 @@ export class EventEmbedCreator {
           name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
           value: `⏰ ${
             event.startTime ? this.generateTimestamp(event) : 'TBD'
-          }${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>`
+          }${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>${event.ignore ? `\n*Ignored*` : ''}`
         };
       })
     };
