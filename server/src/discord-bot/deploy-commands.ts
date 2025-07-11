@@ -5,7 +5,9 @@ import { CommandGatherer } from './command-gatherer';
 const run = async () => {
   const commandFactory = new CommandGatherer();
 
-  const commands = await commandFactory.getCommands();
+  const commands = process.argv.some(a => a === '-c' || a === '--clear')
+    ? []
+    : (await commandFactory.getCommands()).configs;
 
   const rest = new REST({});
 
@@ -24,7 +26,7 @@ const run = async () => {
   rest.setToken(config.botToken);
 
   await rest.put(Routes.applicationGuildCommands(config.discordClientId, config.discordGuildId), {
-    body: commands.configs
+    body: commands
   });
 
   console.log('Success!');
