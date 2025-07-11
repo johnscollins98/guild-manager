@@ -14,6 +14,7 @@ import { IDiscordGuildApi } from '../../../services/discord/guild-api';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-gatherer';
 import { EventEditor } from '../../services/event-editor';
+import { EventPoster } from '../../services/events/post-updated-events';
 
 @Service()
 export default class EventsCreateCommand implements Command {
@@ -22,6 +23,7 @@ export default class EventsCreateCommand implements Command {
   constructor(
     private readonly eventRepo: EventRepository,
     private readonly eventEditor: EventEditor,
+    private readonly eventPoster: EventPoster,
     discordApiFactory: DiscordApiFactory
   ) {
     this.name = 'events-create';
@@ -106,9 +108,13 @@ export default class EventsCreateCommand implements Command {
       title
     };
 
-    await this.eventEditor.sendEditor(eventToCreate, interaction, event =>
-      this.eventRepo.create(event)
+    const { event, interaction: editor } = await this.eventEditor.sendEditor(
+      eventToCreate,
+      interaction
     );
+    await this.eventRepo.create(event);
+
+    await this.eventPoster.postEventSequence(editor, 'Added new event');
   }
 
   getRequiredPermissions(): Permission[] {
