@@ -22,6 +22,7 @@
     "db:deploy:prod": "npm run -w server db:deploy:prod",
     "bot:deploy-commands:prod": "npm run -w server bot:deploy-commands:prod",
     "bot:deploy-commands:dev": "npm run -w server bot:deploy-commands:dev",
+    "bot:clear-commands:dev": "npm run -w server bot:deploy-commands:dev -- -c",
     "predeploy:prod": "npm run -w server predeploy:prod",
     "predeploy:dev": "npm run -w server predeploy:dev"
   },
