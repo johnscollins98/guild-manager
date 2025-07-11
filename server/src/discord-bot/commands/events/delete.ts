@@ -4,6 +4,7 @@ import { Permission } from '../../../dtos';
 import { EventRepository } from '../../../services/repositories/event-repository';
 import { Command } from '../../command-gatherer';
 import { EventSelector } from '../../services/events/event-selector';
+import { EventPoster } from '../../services/events/post-updated-events';
 
 @Service()
 export default class EventsDeleteCommand implements Command {
@@ -11,7 +12,8 @@ export default class EventsDeleteCommand implements Command {
 
   constructor(
     private readonly eventSelector: EventSelector,
-    private readonly eventsRepo: EventRepository
+    private readonly eventsRepo: EventRepository,
+    private readonly eventPoster: EventPoster
   ) {
     this.name = 'events-delete';
   }
@@ -36,7 +38,10 @@ export default class EventsDeleteCommand implements Command {
     const deleted = await this.eventsRepo.delete(parseInt(eventSelection.value));
 
     if (deleted) {
-      eventSelection.interaction.update({ content: 'Successfully deleted event.', components: [] });
+      await this.eventPoster.postEventSequence(
+        eventSelection.interaction,
+        'Successfully deleted event.'
+      );
     } else {
       eventSelection.interaction.update({
         content: 'Failed to delete event, please try again.',

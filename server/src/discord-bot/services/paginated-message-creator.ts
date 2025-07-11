@@ -100,20 +100,6 @@ export class PaginatedMessageCreator {
       return collector.resetTimer();
     });
 
-    collector.on('end', async () => {
-      try {
-        await respond(interaction, {
-          ...pages[index]!,
-          components: []
-        });
-      } catch (err) {
-        console.error(err);
-        await respond(interaction, {
-          content: 'Something went wrong, please try again!'
-        });
-      }
-    });
-
     return message;
   }
 }

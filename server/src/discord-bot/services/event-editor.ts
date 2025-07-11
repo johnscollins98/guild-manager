@@ -10,27 +10,18 @@ import {
 } from 'discord.js';
 import { Service } from 'typedi';
 import { DayOfWeek, daysOfWeek, EventCreateDTO } from '../../dtos';
-import { Event } from '../../models/event.model';
 import { EventEmbedCreator } from '../../services/discord/event-embed-creator';
 import { EditorHelpers } from './editor-helpers';
 import { respond, RespondableInteraction } from './respond';
 
 @Service()
 export class EventEditor {
-  private onSubmit: ((e: EventCreateDTO) => Promise<Event | null>) | undefined;
-
   constructor(
     private readonly embedCreator: EventEmbedCreator,
     private readonly editorHelpers: EditorHelpers
   ) {}
 
-  async sendEditor(
-    event: EventCreateDTO,
-    interaction: RespondableInteraction,
-    onSubmit: ((e: EventCreateDTO) => Promise<Event | null>) | undefined
-  ) {
-    this.onSubmit = onSubmit;
-
+  async sendEditor(event: EventCreateDTO, interaction: RespondableInteraction) {
     const embed = this.createEventDetailsEmbed(event);
 
     const titleBtn = new ButtonBuilder()
@@ -104,7 +95,10 @@ export class EventEditor {
         return await this.onDoneSelected(event, editSelectResponse);
     }
   }
-  async onIgnoredSelected(event: EventCreateDTO, interaction: ButtonInteraction<CacheType>) {
+  async onIgnoredSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction<CacheType>
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const { value, interaction: fetchInteraction } = await this.editorHelpers.fetchFromList(
       interaction,
       [
@@ -120,9 +114,12 @@ export class EventEditor {
       event.ignore = ignored;
     }
 
-    this.sendEditor(event, fetchInteraction, this.onSubmit);
+    return this.sendEditor(event, fetchInteraction);
   }
-  private async onLeaderSelected(event: EventCreateDTO, interaction: ButtonInteraction<CacheType>) {
+  private async onLeaderSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const { value, interaction: fetchInteraction } = await this.editorHelpers.fetchUser(
       interaction,
       {
@@ -135,10 +132,13 @@ export class EventEditor {
       event.leaderId = value;
     }
 
-    this.sendEditor(event, fetchInteraction, this.onSubmit);
+    return this.sendEditor(event, fetchInteraction);
   }
 
-  private async onTitleSelected(event: EventCreateDTO, interaction: ButtonInteraction) {
+  private async onTitleSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const { value, interaction: fetchInteraction } = await this.editorHelpers.fetchText(
       interaction,
       'event-title',
@@ -147,10 +147,13 @@ export class EventEditor {
       TextInputStyle.Short
     );
 
-    this.sendEditor({ ...event, title: value }, fetchInteraction, this.onSubmit);
+    return this.sendEditor({ ...event, title: value }, fetchInteraction);
   }
 
-  private async onDayOfWeekSelected(event: EventCreateDTO, interaction: ButtonInteraction) {
+  private async onDayOfWeekSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const options: SelectMenuComponentOptionData[] = daysOfWeek.map(d => ({ label: d, value: d }));
 
     const selection = await this.editorHelpers.fetchFromList(
@@ -160,16 +163,17 @@ export class EventEditor {
       'Select a day of the week'
     );
 
-    if (!selection) return;
-
     if (selection.value && daysOfWeek.includes(selection.value as DayOfWeek)) {
       event.day = selection.value as DayOfWeek;
     }
 
-    this.sendEditor(event, selection.interaction, this.onSubmit);
+    return this.sendEditor(event, selection.interaction);
   }
 
-  private async onStartTimeHSelected(event: EventCreateDTO, interaction: ButtonInteraction) {
+  private async onStartTimeHSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const { value, interaction: fetchInteraction } = await this.editorHelpers.fetchText(
       interaction,
       'start-time-h',
@@ -193,10 +197,13 @@ export class EventEditor {
       }
     }
 
-    this.sendEditor(event, fetchInteraction, this.onSubmit);
+    return this.sendEditor(event, fetchInteraction);
   }
 
-  private async onDurationSelected(event: EventCreateDTO, interaction: ButtonInteraction) {
+  private async onDurationSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
     const { value, interaction: fetchInteraction } = await this.editorHelpers.fetchText(
       interaction,
       'duration',
@@ -205,28 +212,14 @@ export class EventEditor {
       TextInputStyle.Short
     );
 
-    this.sendEditor({ ...event, duration: value }, fetchInteraction, this.onSubmit);
+    return this.sendEditor({ ...event, duration: value }, fetchInteraction);
   }
 
-  private async onDoneSelected(event: EventCreateDTO, interaction: ButtonInteraction) {
-    if (!this.onSubmit) {
-      throw new Error('No submit handler');
-    }
-
-    const saved = await this.onSubmit(event);
-
-    if (!saved) {
-      respond(interaction, { content: 'Failed to save event.' });
-      return;
-    }
-
-    const embed = this.createEventDetailsEmbed(saved);
-
-    await respond(interaction, {
-      content: 'Success!',
-      embeds: [embed],
-      components: []
-    });
+  private async onDoneSelected(
+    event: EventCreateDTO,
+    interaction: ButtonInteraction
+  ): Promise<{ event: EventCreateDTO; interaction: ButtonInteraction }> {
+    return { event, interaction };
   }
 
   public createEventDetailsEmbed(event: EventCreateDTO) {
