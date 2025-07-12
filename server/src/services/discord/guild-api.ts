@@ -1,7 +1,13 @@
 import { AxiosError } from 'axios';
 import { Service } from 'typedi';
 import { config } from '../../config';
-import { DiscordLog, DiscordMember, DiscordMemberUpdate, DiscordRole } from '../../dtos';
+import {
+  DiscordChannel,
+  DiscordLog,
+  DiscordMember,
+  DiscordMemberUpdate,
+  DiscordRole
+} from '../../dtos';
 import { DiscordApi } from './discord-api';
 
 export interface IDiscordGuildApi {
@@ -9,6 +15,7 @@ export interface IDiscordGuildApi {
   getMemberById(memberId: string): Promise<DiscordMember | undefined>;
   getRoles(): Promise<DiscordRole[]>;
   getLogs(): Promise<DiscordLog>;
+  getChannels(): Promise<DiscordChannel[]>;
   kickMember(id: string): Promise<boolean>;
   removeRoleFromMember(memberId: string, roleId: string): Promise<boolean>;
   addRoleToMember(memberId: string, roleId: string): Promise<boolean>;
@@ -16,7 +23,7 @@ export interface IDiscordGuildApi {
 }
 
 @Service()
-export class DiscordGuildApi {
+export class DiscordGuildApi implements IDiscordGuildApi {
   private readonly baseUrl: string;
   constructor(private readonly discordApi: DiscordApi) {
     this.baseUrl = `guilds/${config.discordGuildId}`;
@@ -61,5 +68,9 @@ export class DiscordGuildApi {
 
   async updateMember(memberId: string, updates: DiscordMemberUpdate): Promise<DiscordMember> {
     return await this.discordApi.patch(`${this.baseUrl}/members/${memberId}`, updates);
+  }
+
+  async getChannels(): Promise<DiscordChannel[]> {
+    return await this.discordApi.get(`${this.baseUrl}/channels`);
   }
 }

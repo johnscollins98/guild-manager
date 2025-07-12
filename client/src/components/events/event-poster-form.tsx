@@ -1,11 +1,17 @@
+import { Autocomplete, TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
+import { useQuery, useSuspenseQueries } from '@tanstack/react-query';
 import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
-import { usePostEvents } from '../../lib/apis/discord-api';
-import { useEventSettings } from '../../lib/apis/event-api';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  discordBotQuery,
+  discordChannelsQuery,
+  discordMessagesQuery,
+  usePostEvents
+} from '../../lib/apis/discord-api';
+import { eventSettingsQuery } from '../../lib/apis/event-api';
 import LoaderPage from '../common/loader-page';
 
 interface Props {
@@ -17,16 +23,47 @@ const EventPosterForm = ({ onClose }: Props) => {
   const [postChannel, setPostChannel] = useState('');
   const [messageId, setMessageId] = useState('');
   const [posting, setPosting] = useState(false);
-  const { data } = useEventSettings();
+
+  const [eventSettings, channels, bot] = useSuspenseQueries({
+    queries: [eventSettingsQuery, discordChannelsQuery, discordBotQuery]
+  });
+
+  const messages = useQuery({ ...discordMessagesQuery(postChannel), enabled: postChannel !== '' });
+
+  const messageOptions = useMemo(() => {
+    return Object.fromEntries(
+      messages.data
+        ?.filter(m => m.author.id === bot.data.id)
+        .map(m => [
+          m.id,
+          `${m.author.username} on ${new Date(m.timestamp).toLocaleString(undefined)}`
+        ]) ?? []
+    );
+  }, [messages.data, bot.data]);
+
   const postEventsMutation = usePostEvents();
 
+  const availableChannels = useMemo(() => {
+    return Object.fromEntries(channels.data.filter(c => c.type === 0).map(c => [c.id, c]));
+  }, [channels]);
+
+  const channelIds = useMemo(
+    () =>
+      Object.values(availableChannels)
+        .sort((a, b) => a.position - b.position)
+        .map(c => c.id),
+    [availableChannels]
+  );
+
+  console.log(channelIds);
+
   useEffect(() => {
-    if (data) {
-      setPostChannel(data.channelId ?? '');
-      setEditMessages(data.editMessages);
-      setMessageId(data.messageId ?? '');
+    if (eventSettings.data) {
+      setPostChannel(eventSettings.data.channelId ?? '');
+      setEditMessages(eventSettings.data.editMessages);
+      setMessageId(eventSettings.data.messageId ?? '');
     }
-  }, [data]);
+  }, [eventSettings.data]);
 
   const submitHandler = useCallback(
     async (e: React.FormEvent) => {
@@ -55,17 +92,35 @@ const EventPosterForm = ({ onClose }: Props) => {
   return (
     <form onSubmit={submitHandler}>
       <div>
-        <TextField
-          onChange={e => setPostChannel(e.target.value)}
+        <Autocomplete
+          onChange={(_e, v) => {
+            setPostChannel(v ?? '');
+            setMessageId('');
+          }}
+          getOptionKey={o => o}
+          options={channelIds}
+          getOptionLabel={c => availableChannels[c]?.name ?? ''}
           value={postChannel}
-          label="Channel ID to post to"
-          size="small"
-          variant="standard"
-          margin="dense"
+          renderInput={r => (
+            <TextField
+              {...r}
+              label="Channel ID to post to"
+              size="small"
+              variant="standard"
+              margin="dense"
+              required
+            />
+          )}
+          filterOptions={(options, v) =>
+            options.filter(
+              o =>
+                o.includes(v.inputValue) ||
+                availableChannels[o]?.name?.toLowerCase().includes(v.inputValue.toLowerCase())
+            )
+          }
           fullWidth
           disabled={posting}
-          required
-        />
+        ></Autocomplete>
       </div>
       <FormControlLabel
         control={
@@ -81,19 +136,25 @@ const EventPosterForm = ({ onClose }: Props) => {
       />
       {editMessages ? (
         <div style={{ marginTop: '16px' }}>
-          <TextField
+          <Autocomplete
             fullWidth
+            renderInput={r => (
+              <TextField {...r} margin="dense" variant="standard" label="Message ID" required />
+            )}
             size="small"
-            margin="dense"
-            variant="standard"
-            placeholder="Enter Message ID"
-            label="Message ID"
-            InputLabelProps={{ shrink: true }}
             value={messageId}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessageId(e.target.value)}
-            disabled={posting}
-            required
-          />
+            options={Object.keys(messageOptions)}
+            getOptionLabel={id => messageOptions[id] ?? ''}
+            filterOptions={(options, v) =>
+              options.filter(
+                o =>
+                  o.includes(v.inputValue) ||
+                  messageOptions[o]?.toLowerCase().includes(v.inputValue.toLowerCase())
+              )
+            }
+            onChange={(_e, v) => setMessageId(v ?? '')}
+            disabled={posting || messages.isPending || messages.isError}
+          ></Autocomplete>
         </div>
       ) : null}
       <div

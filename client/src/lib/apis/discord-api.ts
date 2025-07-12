@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import {
   type DiscordMemberDTO,
@@ -19,6 +19,9 @@ const discordApi: IDiscordController = {
   getLogs: () => api('log'),
   getLeavers: () => api('leavers'),
   getBotRoles: () => api('bot-roles'),
+  getBot: () => api('bot'),
+  getChannels: () => api('channels'),
+  getMessages: id => api(`channels/${id}/messages`),
   addRoleToMember: (memberId, roleId) =>
     api(`members/${memberId}/roles/${roleId}`, { method: 'PUT' }),
   removeRoleFromMember: (memberId, roleId) =>
@@ -53,6 +56,27 @@ export const discordBotRolesQuery = {
   queryFn: discordApi.getBotRoles
 };
 export const useDiscordBotRoles = () => useSuspenseQuery(discordBotRolesQuery);
+
+export const discordBotQuery = queryOptions({
+  queryKey: ['discord/bot'],
+  queryFn: discordApi.getBot
+});
+
+export const useDiscordBot = () => useSuspenseQuery(discordBotQuery);
+
+export const discordChannelsQuery = queryOptions({
+  queryKey: ['discord/channels'],
+  queryFn: discordApi.getChannels
+});
+export const useDiscordChannels = () => useSuspenseQuery(discordChannelsQuery);
+
+export const discordMessagesQuery = (id: string) =>
+  queryOptions({
+    queryKey: [`discord/channels`, id, 'messages'],
+    queryFn: () => discordApi.getMessages(id)
+  });
+
+export const useDiscordMessages = (id: string) => useSuspenseQuery(discordMessagesQuery(id));
 
 export interface ChangeRoleDTO {
   memberId: string;

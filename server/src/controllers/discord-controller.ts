@@ -18,12 +18,14 @@ import {
 import { Service } from 'typedi';
 import { config } from '../config';
 import {
+  DiscordChannel,
   DiscordLog,
   DiscordMember,
   DiscordMemberDTO,
   DiscordMemberUpdate,
   DiscordMessagePost,
   DiscordRole,
+  DiscordUser,
   EventSettingsUpsertDTO,
   MemberLeftDTO,
   daysOfWeek
@@ -108,6 +110,21 @@ export class DiscordController implements IDiscordController {
       member?.roles ?? [],
       roles.map(r => r.name)
     );
+  }
+
+  @Get('/bot')
+  async getBot(): Promise<DiscordUser> {
+    return await this.discordUserApi.getCurrentUser();
+  }
+
+  @Get('/channels')
+  async getChannels(): Promise<DiscordChannel[]> {
+    return await this.discordGuildApi.getChannels();
+  }
+
+  @Get('/channels/:channelId/messages')
+  async getMessages(@Param('channelId') channelId: string) {
+    return await this.discordChannelApi.getChannelMessages(channelId);
   }
 
   @OnUndefined(204)
