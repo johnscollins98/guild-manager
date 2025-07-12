@@ -15,16 +15,7 @@ interface Props {
 const EventPosterForm = ({ onClose }: Props) => {
   const [editMessages, setEditMessages] = useState(false);
   const [postChannel, setPostChannel] = useState('');
-  const [existingMessageIds, setExistingMessageIds] = useState({
-    Monday: '',
-    Tuesday: '',
-    Wednesday: '',
-    Thursday: '',
-    Friday: '',
-    Saturday: '',
-    Sunday: '',
-    Dynamic: ''
-  });
+  const [messageId, setMessageId] = useState('');
   const [posting, setPosting] = useState(false);
   const { data } = useEventSettings();
   const postEventsMutation = usePostEvents();
@@ -33,16 +24,7 @@ const EventPosterForm = ({ onClose }: Props) => {
     if (data) {
       setPostChannel(data.channelId ?? '');
       setEditMessages(data.editMessages);
-      setExistingMessageIds({
-        Monday: data.existingMessageIds.Monday ?? '',
-        Tuesday: data.existingMessageIds.Tuesday ?? '',
-        Wednesday: data.existingMessageIds.Wednesday ?? '',
-        Thursday: data.existingMessageIds.Thursday ?? '',
-        Friday: data.existingMessageIds.Friday ?? '',
-        Saturday: data.existingMessageIds.Saturday ?? '',
-        Sunday: data.existingMessageIds.Sunday ?? '',
-        Dynamic: data.existingMessageIds.Dynamic ?? ''
-      });
+      setMessageId(data.messageId ?? '');
     }
   }, [data]);
 
@@ -54,21 +36,13 @@ const EventPosterForm = ({ onClose }: Props) => {
       await postEventsMutation.mutateAsync({
         channelId: postChannel,
         editMessages,
-        existingMessageIds
+        messageId: messageId
       });
 
       onClose();
       setPosting(false);
     },
-    [postChannel, editMessages, existingMessageIds, setPosting, onClose, postEventsMutation]
-  );
-
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>, day: string) => {
-      e.preventDefault();
-      setExistingMessageIds({ ...existingMessageIds, [day]: e.target.value });
-    },
-    [existingMessageIds, setExistingMessageIds]
+    [postChannel, editMessages, messageId, setPosting, onClose, postEventsMutation]
   );
 
   if (posting)
@@ -103,26 +77,23 @@ const EventPosterForm = ({ onClose }: Props) => {
             disabled={posting}
           />
         }
-        label="Edit existing messages?"
+        label="Edit existing message?"
       />
       {editMessages ? (
         <div style={{ marginTop: '16px' }}>
-          {Object.entries(existingMessageIds).map(([day, value]) => (
-            <TextField
-              fullWidth
-              size="small"
-              margin="dense"
-              key={day}
-              variant="standard"
-              placeholder="Enter Message ID"
-              label={day}
-              InputLabelProps={{ shrink: true }}
-              value={value}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(e, day)}
-              disabled={posting}
-              required
-            />
-          ))}
+          <TextField
+            fullWidth
+            size="small"
+            margin="dense"
+            variant="standard"
+            placeholder="Enter Message ID"
+            label="Message ID"
+            InputLabelProps={{ shrink: true }}
+            value={messageId}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessageId(e.target.value)}
+            disabled={posting}
+            required
+          />
         </div>
       ) : null}
       <div

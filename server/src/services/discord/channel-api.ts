@@ -13,7 +13,11 @@ export interface IDiscordChannelApi {
   createDirectMessageChannel(userId: string): Promise<string>;
   getChannelMessages(channelId: string): Promise<DiscordMessage[]>;
   getChannelMessage(channelId: string, messageId: string): Promise<DiscordMessageDetails>;
-  editEmbed(channelId: string, messageId: string, embed: DiscordEmbed): Promise<boolean>;
+  editMessage(
+    channelId: string,
+    messageId: string,
+    messageObject: DiscordMessagePost
+  ): Promise<boolean>;
   addEmbed(channelId: string, embed: DiscordEmbed): Promise<boolean>;
   sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean>;
 }
@@ -41,17 +45,13 @@ export class DiscordChannelApi implements IDiscordChannelApi {
     return await this.discordApi.get(`channels/${channelId}/messages/${messageId}`);
   }
 
-  async editEmbed(channelId: string, messageId: string, embed: DiscordEmbed): Promise<boolean> {
-    const currentMessage = await this.getChannelMessage(channelId, messageId);
-
-    // check there is a change before posting
-    const areEmbedsTheSame = this.areEmbedsTheSame(embed, currentMessage.embeds[0]);
-    if (!areEmbedsTheSame) {
-      console.log(`Updating embed in channel ${channelId}, message ${messageId}`);
-      await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, {
-        embeds: [embed]
-      });
-    }
+  async editMessage(
+    channelId: string,
+    messageId: string,
+    messageObject: DiscordMessagePost
+  ): Promise<boolean> {
+    console.log(`Updating embed in channel ${channelId}, message ${messageId}`);
+    await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, messageObject);
     return true;
   }
 
@@ -62,28 +62,6 @@ export class DiscordChannelApi implements IDiscordChannelApi {
 
   async sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean> {
     await this.discordApi.post(`channels/${channelId}/messages`, messageObject);
-    return true;
-  }
-
-  private areEmbedsTheSame(newEmbed: DiscordEmbed, existingEmbed?: DiscordEmbed): boolean {
-    if (!existingEmbed) return false;
-    if (newEmbed.title !== existingEmbed.title) return false;
-    if (newEmbed.color !== existingEmbed.color) return false;
-
-    const embedAFields = newEmbed.fields || [];
-    const embedBFields = existingEmbed.fields || [];
-    const longerLength = Math.max(embedAFields.length, embedBFields.length);
-    for (let i = 0; i < longerLength; i++) {
-      const fieldA = embedAFields[i];
-      const fieldB = embedBFields[i];
-
-      if (!fieldA) return false;
-      if (!fieldB) return false;
-
-      if (fieldA.name !== fieldB.name) return false;
-      if (fieldA.value !== fieldB.value) return false;
-    }
-
     return true;
   }
 }

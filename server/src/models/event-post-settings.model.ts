@@ -15,26 +15,5 @@ export class EventPostSettings {
   editMessages!: boolean;
 
   @Column({ nullable: true })
-  Monday?: string;
-
-  @Column({ nullable: true })
-  Tuesday?: string;
-
-  @Column({ nullable: true })
-  Wednesday?: string;
-
-  @Column({ nullable: true })
-  Thursday?: string;
-
-  @Column({ nullable: true })
-  Friday?: string;
-
-  @Column({ nullable: true })
-  Saturday?: string;
-
-  @Column({ nullable: true })
-  Sunday?: string;
-
-  @Column({ nullable: true })
-  Dynamic?: string;
+  messageId?: string;
 }
