@@ -7,10 +7,10 @@ export type EventSettingsUpsertDTO = {
 } & (
   | {
       editMessages: true;
-      existingMessageIds: ExistingMessageIds;
+      messageId: string;
     }
   | {
       editMessages: false;
-      existingMessageIds?: ExistingMessageIds;
+      messageId?: string;
     }
 );

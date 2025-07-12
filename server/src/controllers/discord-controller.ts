@@ -175,7 +175,7 @@ export class DiscordController implements IDiscordController {
       await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
         channelId: newSettings.channelId,
         editMessages: newSettings.editMessages,
-        ...newSettings.existingMessageIds
+        messageId: newSettings.messageId
       });
     }
 
@@ -195,9 +195,8 @@ export class DiscordController implements IDiscordController {
 
     const channelMessages = await this.discordChannelApi.getChannelMessages(channelId);
 
-    for (const day of daysOfWeek) {
+    const embedPromises = daysOfWeek.map(async day => {
       const events = await this.eventRepository.getEventsOnADay(day, { ignore: false });
-
       const parseTime = (str: string) => {
         return Date.parse(`1970/01/01 ${str}`);
       };
@@ -209,21 +208,22 @@ export class DiscordController implements IDiscordController {
         return aTime - bTime;
       });
 
-      const embed = this.discordEventEmbedCreator.createEmbed(day, sorted);
-      if (settings.editMessages) {
-        const messageId = settings[day];
-        if (!messageId) throw 'Invalid Message IDs';
+      return this.discordEventEmbedCreator.createEmbed(day, sorted);
+    });
 
-        if (!channelMessages.find(m => m.id === messageId)) {
-          throw new BadRequestError('Invalid Message IDs');
-        }
+    const embeds = await Promise.all(embedPromises);
 
-        await this.discordChannelApi.editEmbed(channelId, messageId, embed);
-      } else {
-        await this.discordChannelApi.addEmbed(channelId, embed);
+    if (settings.editMessages) {
+      const messageId = settings.messageId;
+      if (!messageId) throw 'Invalid Message IDs';
+
+      if (!channelMessages.find(m => m.id === messageId)) {
+        throw new BadRequestError('Invalid Message IDs');
       }
 
-      await new Promise(r => setTimeout(r, 1000));
+      await this.discordChannelApi.editMessage(channelId, messageId, { embeds: embeds });
+    } else {
+      await this.discordChannelApi.sendMessage(channelId, { embeds: embeds });
     }
   }
 }

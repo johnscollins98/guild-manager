@@ -35,16 +35,7 @@ export class EventsController implements IEventsController {
     return {
       channelId: model.channelId,
       editMessages: model.editMessages,
-      existingMessageIds: {
-        Monday: model.Monday,
-        Tuesday: model.Tuesday,
-        Wednesday: model.Wednesday,
-        Thursday: model.Thursday,
-        Friday: model.Friday,
-        Saturday: model.Saturday,
-        Sunday: model.Sunday,
-        Dynamic: model.Dynamic
-      }
+      messageId: model.messageId
     };
   }
 

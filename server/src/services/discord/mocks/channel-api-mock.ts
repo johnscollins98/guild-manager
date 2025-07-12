@@ -12,6 +12,14 @@ import { IDiscordChannelApi } from '../channel-api';
 
 @Service()
 export class MockDiscordChannelApi implements IDiscordChannelApi {
+  editMessage(
+    _channelId: string,
+    _messageId: string,
+    _messageObject: DiscordMessagePost
+  ): Promise<boolean> {
+    return Promise.resolve(true);
+  }
+
   getChannel(_channelId: string): Promise<DiscordChannel> {
     return Promise.resolve({ id: '1234' });
   }
