@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { ChannelType } from 'discord.js';
 import { Service } from 'typedi';
 import {
   DiscordChannel,
@@ -21,7 +22,12 @@ export class MockDiscordChannelApi implements IDiscordChannelApi {
   }
 
   getChannel(_channelId: string): Promise<DiscordChannel> {
-    return Promise.resolve({ id: '1234' });
+    return Promise.resolve({
+      id: '1234',
+      name: 'Channel 1',
+      type: ChannelType.GuildText,
+      position: 1
+    });
   }
 
   createDirectMessageChannel(_userId: string): Promise<string> {
@@ -29,7 +35,9 @@ export class MockDiscordChannelApi implements IDiscordChannelApi {
   }
 
   getChannelMessages(_channelId: string): Promise<DiscordMessage[]> {
-    return Promise.resolve([{ id: '1234' }]);
+    return Promise.resolve([
+      { id: '1234', author: { id: '1', username: 'test' }, timestamp: new Date().toISOString() }
+    ]);
   }
 
   getChannelMessage(_channelId: string, _messageId: string): Promise<DiscordMessageDetails> {

@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { ChannelType } from 'discord.js';
 import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
-import { DiscordLog, DiscordMember, DiscordMemberUpdate, DiscordRole } from '../../../dtos';
+import {
+  DiscordChannel,
+  DiscordLog,
+  DiscordMember,
+  DiscordMemberUpdate,
+  DiscordRole
+} from '../../../dtos';
 import { IDiscordGuildApi } from '../guild-api';
 
 const members: DiscordMember[] = [
@@ -26,6 +33,11 @@ const members: DiscordMember[] = [
   }
 ];
 
+const channels: DiscordChannel[] = [
+  { name: 'Channel 1', id: '1', type: ChannelType.GuildText, position: 1 },
+  { name: 'Channel 2', id: '2', type: ChannelType.GuildVoice, position: 2 }
+];
+
 const roles: DiscordRole[] = [
   {
     color: 123,
@@ -42,6 +54,9 @@ const log: DiscordLog = {
 
 @Service()
 export class MockDiscordGuildApi implements IDiscordGuildApi {
+  getChannels(): Promise<DiscordChannel[]> {
+    return Promise.resolve(channels);
+  }
   getMembers(): Promise<DiscordMember[]> {
     return Promise.resolve(members);
   }
