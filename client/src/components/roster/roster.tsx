@@ -7,6 +7,7 @@ import { Box } from '@mui/material';
 import { QueryBoundary } from '../common/query-boundary';
 import { RosterList } from './member-list';
 import { RosterLoader } from './roster-loader';
+import { RosterSummary } from './roster-summary';
 
 const Roster = () => {
   const [kickMode, setKickMode] = useState(false);
@@ -39,6 +40,7 @@ const Roster = () => {
             setKickSelection={setSelection}
           />
         </Box>
+        <RosterSummary />
       </QueryBoundary>
       <KickModal
         isOpen={kickModalShow}
