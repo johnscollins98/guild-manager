@@ -47,13 +47,18 @@ export default class EventsCreateCommand implements Command {
           .setName('day-of-week')
           .setDescription('Day that event runs')
       )
+      .addUserOption(
+        new SlashCommandUserOption()
+          .setName('leader')
+          .setDescription('Leader of event')
+          .setRequired(true)
+      )
       .addNumberOption(
         new SlashCommandNumberOption()
           .setMinValue(0)
           .setMaxValue(23)
           .setName('start-time-h')
           .setDescription('Start time (hour) (UTC)')
-          .setRequired(true)
       )
       .addNumberOption(
         new SlashCommandNumberOption()
@@ -61,7 +66,6 @@ export default class EventsCreateCommand implements Command {
           .setMaxValue(59)
           .setName('start-time-m')
           .setDescription('Start time (minutes) (UTC)')
-          .setRequired(true)
       )
       .addNumberOption(
         new SlashCommandNumberOption()
@@ -69,13 +73,6 @@ export default class EventsCreateCommand implements Command {
           .setMaxValue(4)
           .setName('duration')
           .setDescription('Duration (in hours)')
-          .setRequired(true)
-      )
-      .addUserOption(
-        new SlashCommandUserOption()
-          .setName('leader')
-          .setDescription('Leader of event')
-          .setRequired(true)
       )
       .addBooleanOption(
         new SlashCommandBooleanOption()
@@ -87,9 +84,9 @@ export default class EventsCreateCommand implements Command {
 
   async execute(interaction: ChatInputCommandInteraction) {
     const dayOfWeek = interaction.options.getString('day-of-week', true) as DayOfWeek;
-    const startH = interaction.options.getNumber('start-time-h', true);
-    const startM = interaction.options.getNumber('start-time-m', true);
-    const duration = interaction.options.getNumber('duration', true);
+    const startH = interaction.options.getNumber('start-time-h');
+    const startM = interaction.options.getNumber('start-time-m') ?? 0;
+    const duration = interaction.options.getNumber('duration');
     const leader = interaction.options.getUser('leader', true);
     const ignore = interaction.options.getBoolean('ignored') ?? false;
     const title = interaction.options.getString('title', true);
@@ -99,12 +96,16 @@ export default class EventsCreateCommand implements Command {
       interaction.editReply(`<@${leader.id}> is not a valid event leader.`);
     }
 
+    const startTime = startH
+      ? `${startH.toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${startM.toLocaleString(undefined, { minimumIntegerDigits: 2 })}`
+      : '';
+
     const eventToCreate = {
       day: dayOfWeek,
-      duration: duration + 'h',
+      duration: duration ? duration + 'h' : '',
       leaderId: leader.id,
       ignore,
-      startTime: `${startH.toLocaleString(undefined, { minimumIntegerDigits: 2 })}:${startM.toLocaleString(undefined, { minimumIntegerDigits: 2 })}`,
+      startTime,
       title
     };
 
