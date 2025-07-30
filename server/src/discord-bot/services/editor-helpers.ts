@@ -63,7 +63,8 @@ export class EditorHelpers {
     id: string,
     label: string,
     value: string,
-    style: TextInputStyle
+    style: TextInputStyle,
+    required = true
   ) {
     const modal = new ModalBuilder().setTitle(label).setCustomId(`modal-${id}`);
 
@@ -71,7 +72,7 @@ export class EditorHelpers {
       .setCustomId(id)
       .setLabel(label)
       .setValue(value)
-      .setRequired(true)
+      .setRequired(required)
       .setStyle(style);
 
     const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);

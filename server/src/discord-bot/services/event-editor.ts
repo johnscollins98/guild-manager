@@ -179,7 +179,8 @@ export class EventEditor {
       'start-time-h',
       'Input a start time in format HH:MM (UTC)',
       event.startTime,
-      TextInputStyle.Short
+      TextInputStyle.Short,
+      false
     );
 
     const regex = new RegExp(/\d\d:\d\d/);
@@ -195,6 +196,8 @@ export class EventEditor {
       if (hhInt >= 0 && hhInt <= 23 && mmInt >= 0 && mmInt <= 59) {
         event.startTime = value;
       }
+    } else if (value.trim() == '') {
+      event.startTime = '';
     }
 
     return this.sendEditor(event, fetchInteraction);
@@ -209,7 +212,8 @@ export class EventEditor {
       'duration',
       'Input an event duration',
       event.duration,
-      TextInputStyle.Short
+      TextInputStyle.Short,
+      false
     );
 
     return this.sendEditor({ ...event, duration: value }, fetchInteraction);
