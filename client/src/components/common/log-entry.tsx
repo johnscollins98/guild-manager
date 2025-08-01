@@ -5,22 +5,20 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
-import { type LogDisplay } from '../../lib/interfaces/log-string-generator';
+import { type ReactNode } from 'react';
 import './log-entry.scss';
 
 interface Props {
-  displayEntry: LogDisplay;
   date: Date;
+  children: ReactNode;
+  details?: ReactNode[];
 }
 
-const LogEntry = ({ displayEntry, date }: Props) => {
+const LogEntry = ({ children, details, date }: Props) => {
   return (
-    <Accordion
-      className="log-entry"
-      disableGutters={!displayEntry.details || !displayEntry.details.length}
-    >
+    <Accordion className="log-entry" disableGutters={details ? details.length === 0 : true}>
       <AccordionSummary
-        expandIcon={displayEntry.details?.length ? <ExpandMore /> : null}
+        expandIcon={details?.length ? <ExpandMore /> : null}
         className="log-summary"
         slotProps={{ content: { className: 'summary-content' } }}
       >
@@ -32,14 +30,14 @@ const LogEntry = ({ displayEntry, date }: Props) => {
         </div>
         <div>
           <AssignmentIcon />
-          <Typography>{displayEntry.summary}</Typography>
+          <Typography>{children}</Typography>
         </div>
       </AccordionSummary>
-      {displayEntry.details ? (
+      {details ? (
         <AccordionDetails>
           <ul style={{ margin: 0 }}>
-            {displayEntry.details.map(d => (
-              <li key={d}>
+            {details.map(d => (
+              <li key={d?.toString()}>
                 <Typography>{d}</Typography>
               </li>
             ))}

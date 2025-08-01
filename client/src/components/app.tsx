@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useAuth } from '../lib/apis/auth-api';
 import { usePrefetchGW2Log } from '../lib/apis/gw2-api';
 import './app.scss';
+import { AuditLog } from './audit-log/audit-log';
 import { LogLoader } from './common/log-loader';
 import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
@@ -48,6 +49,14 @@ const App = () => {
                 element={
                   <QueryBoundary fallback={<LogLoader />}>
                     <WarningLog />
+                  </QueryBoundary>
+                }
+              />
+              <Route
+                path="/audit-log"
+                element={
+                  <QueryBoundary fallback={<LogLoader />}>
+                    <AuditLog />
                   </QueryBoundary>
                 }
               />

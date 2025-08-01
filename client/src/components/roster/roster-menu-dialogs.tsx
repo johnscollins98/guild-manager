@@ -102,7 +102,6 @@ export const RosterMenuDialogs = ({
 
   const warningSubmitHandler = useCallback(
     async (reason: string, warningType: WarningType) => {
-      console.log(member);
       if (!member?.discordId) {
         throw new Error('Member does not exist');
       }

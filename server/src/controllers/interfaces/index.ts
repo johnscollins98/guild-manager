@@ -1,3 +1,4 @@
+export * from './audit-log-interface';
 export * from './auth-interface';
 export * from './discord-interface';
 export * from './event-interface';
