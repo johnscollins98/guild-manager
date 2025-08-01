@@ -1,8 +1,10 @@
 import { AxiosError } from 'axios';
+import { User } from 'discord.js';
 import {
   Authorized,
   BadRequestError,
   Body,
+  CurrentUser,
   Delete,
   ForbiddenError,
   Get,
@@ -36,6 +38,7 @@ import { EventEmbedCreator } from '../services/discord/event-embed-creator';
 import { IDiscordGuildApi } from '../services/discord/guild-api';
 import { DiscordMemberFormatter } from '../services/discord/member-formatter';
 import { IDiscordUserApi } from '../services/discord/user-api';
+import { AuditLogRepository } from '../services/repositories/audit-log-repository';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
 import { EventRepository } from '../services/repositories/event-repository';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
@@ -54,7 +57,8 @@ export class DiscordController implements IDiscordController {
     private readonly discordEventEmbedCreator: EventEmbedCreator,
     private readonly eventRepository: EventRepository,
     private readonly eventSettingsRepository: EventPostSettingsRepository,
-    private readonly memberLeftRepository: MemberLeftRepository
+    private readonly memberLeftRepository: MemberLeftRepository,
+    private readonly auditLogRepo: AuditLogRepository
   ) {
     this.discordChannelApi = discordApiFactory.channelApi();
     this.discordGuildApi = discordApiFactory.guildApi();
@@ -132,8 +136,10 @@ export class DiscordController implements IDiscordController {
   @Put('/members/:memberId/roles/:roleId')
   async addRoleToMember(
     @Param('memberId') memberId: string,
-    @Param('roleId') roleId: string
+    @Param('roleId') roleId: string,
+    @CurrentUser() user: Express.User
   ): Promise<void> {
+    await this.auditLogRepo.logRoleAdd(user, memberId, roleId);
     await this.discordGuildApi.addRoleToMember(memberId, roleId);
   }
 
@@ -142,8 +148,10 @@ export class DiscordController implements IDiscordController {
   @Delete('/members/:memberId/roles/:roleId')
   async removeRoleFromMember(
     @Param('memberId') memberId: string,
-    @Param('roleId') roleId: string
+    @Param('roleId') roleId: string,
+    @CurrentUser() user: Express.User
   ): Promise<void> {
+    await this.auditLogRepo.logRoleRemove(user, memberId, roleId);
     await this.discordGuildApi.removeRoleFromMember(memberId, roleId);
   }
 
@@ -152,15 +160,21 @@ export class DiscordController implements IDiscordController {
   @Put('/members/:memberId')
   async updateMember(
     @Param('memberId') memberId: string,
-    @Body() updates: DiscordMemberUpdate
+    @Body() updates: DiscordMemberUpdate,
+    @CurrentUser() user: Express.User
   ): Promise<void> {
+    await this.auditLogRepo.logUserNickchange(user, memberId, updates.nick ?? '');
     await this.discordGuildApi.updateMember(memberId, updates);
   }
 
   @OnUndefined(204)
   @Authorized('MEMBERS')
   @Delete('/members/:memberId')
-  async deleteMember(@Param('memberId') memberId: string): Promise<undefined> {
+  async deleteMember(
+    @Param('memberId') memberId: string,
+    @CurrentUser() user: Express.User
+  ): Promise<undefined> {
+    await this.auditLogRepo.logUserKick(user, memberId);
     await this.discordGuildApi.kickMember(memberId);
   }
 
@@ -187,7 +201,10 @@ export class DiscordController implements IDiscordController {
   @OnUndefined(200)
   @Authorized('EVENTS')
   @Post('/eventUpdate')
-  async postEventUpdates(@Body() newSettings?: EventSettingsUpsertDTO): Promise<void> {
+  async postEventUpdates(
+    @Body() newSettings?: EventSettingsUpsertDTO,
+    @CurrentUser() user?: User
+  ): Promise<void> {
     if (newSettings) {
       await this.eventSettingsRepository.updateByGuildId(config.discordGuildId, {
         channelId: newSettings.channelId,
@@ -241,6 +258,10 @@ export class DiscordController implements IDiscordController {
       await this.discordChannelApi.editMessage(channelId, messageId, { embeds: embeds });
     } else {
       await this.discordChannelApi.sendMessage(channelId, { embeds: embeds });
+    }
+
+    if (user) {
+      await this.auditLogRepo.logEventPost(user);
     }
   }
 }

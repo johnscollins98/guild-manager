@@ -48,7 +48,11 @@ export default class EventsDeleteCommand implements Command {
       eventSelection.interaction
     );
 
-    const updated = await this.eventsRepo.update(updatedEvent.id!, updatedEvent);
+    const updated = await this.eventsRepo.updateAndLog(
+      interaction.user,
+      updatedEvent.id!,
+      updatedEvent
+    );
 
     if (!updated) {
       throw new Error('Failed to update event.');

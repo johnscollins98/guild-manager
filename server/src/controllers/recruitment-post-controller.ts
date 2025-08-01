@@ -1,6 +1,7 @@
 import {
   Authorized,
   Body,
+  CurrentUser,
   Delete,
   Get,
   JsonController,
@@ -13,6 +14,7 @@ import {
 import { Service } from 'typedi';
 import { RecruitmentPostCreateDTO, RecruitmentPostDTO } from '../dtos';
 import { PostGeneratorFactory } from '../services/recruitment/post-generator-factory';
+import { AuditLogRepository } from '../services/repositories/audit-log-repository';
 import { RecruitmentPostRepository } from '../services/repositories/recruitment-post-repository';
 import { IRecruitmentPostController } from './interfaces';
 
@@ -22,7 +24,8 @@ import { IRecruitmentPostController } from './interfaces';
 export class RecruitmentPostController implements IRecruitmentPostController {
   constructor(
     private readonly recruitmentRepo: RecruitmentPostRepository,
-    private readonly postGeneratorFactory: PostGeneratorFactory
+    private readonly postGeneratorFactory: PostGeneratorFactory,
+    private readonly auditLogRepo: AuditLogRepository
   ) {}
 
   @Get('/')
@@ -42,8 +45,13 @@ export class RecruitmentPostController implements IRecruitmentPostController {
 
   @Put('/')
   @Authorized('RECRUITMENT')
-  async upsert(@Body() body: RecruitmentPostCreateDTO): Promise<RecruitmentPostDTO> {
+  async upsert(
+    @Body() body: RecruitmentPostCreateDTO,
+    @CurrentUser() user: Express.User
+  ): Promise<RecruitmentPostDTO> {
     const post = await this.recruitmentRepo.getOne();
+
+    await this.auditLogRepo.logRecruitmentUpdate(user);
 
     if (post) {
       await this.recruitmentRepo.update(post.id, body);
