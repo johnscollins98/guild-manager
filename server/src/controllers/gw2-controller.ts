@@ -1,6 +1,7 @@
 import {
   Authorized,
   Body,
+  CurrentUser,
   Delete,
   Get,
   Header,
@@ -19,7 +20,9 @@ import { Manager } from '../server';
 import { GW2ApiFactory } from '../services/gw2/api-factory';
 import { IGW2GuildApi } from '../services/gw2/guild-api';
 import { GW2LogFormatter } from '../services/gw2/log-formatter';
+import { AuditLogRepository } from '../services/repositories/audit-log-repository';
 import { IGW2Controller } from './interfaces/gw2-interface';
+import { User } from './interfaces/user';
 
 @JsonController('/api/gw2')
 @Authorized()
@@ -30,7 +33,8 @@ export class GW2Controller implements IGW2Controller {
 
   constructor(
     gw2GuildApiFactory: GW2ApiFactory,
-    private readonly logFormatter: GW2LogFormatter
+    private readonly logFormatter: GW2LogFormatter,
+    private readonly auditLogRepo: AuditLogRepository
   ) {
     this.gw2GuildApi = gw2GuildApiFactory.guildApi();
     this.associationRepo = Manager.getRepository(MemberAssociation);
@@ -66,17 +70,33 @@ export class GW2Controller implements IGW2Controller {
   @Post('/association')
   @Authorized('MEMBERS')
   @OnUndefined(204)
-  async associateToDiscordAccount(@Body() associationDto: AssociationDTO): Promise<void> {
+  async associateToDiscordAccount(
+    @Body() associationDto: AssociationDTO,
+    @CurrentUser() user: User
+  ): Promise<void> {
     await this.associationRepo.save(associationDto);
+    await this.auditLogRepo.logUserAssociate(
+      user,
+      associationDto.discordAccountId,
+      associationDto.gw2AccountName
+    );
   }
 
   @Delete('/association/:id')
   @Authorized('MEMBERS')
   @OnUndefined(204)
-  async removeAssociation(@Param('id') id: string): Promise<void> {
-    const res = await this.associationRepo.delete({ gw2AccountName: id });
-    if (!res.affected) {
+  async removeAssociation(@Param('id') id: string, @CurrentUser() user: User): Promise<void> {
+    const toDelete = await this.associationRepo.findOneBy({ gw2AccountName: id });
+
+    if (!toDelete) {
       throw new NotFoundError();
     }
+
+    const res = await this.associationRepo.remove(toDelete);
+    if (!res) {
+      throw new NotFoundError();
+    }
+
+    await this.auditLogRepo.logRemoveAssociation(user, res.discordAccountId, id);
   }
 }

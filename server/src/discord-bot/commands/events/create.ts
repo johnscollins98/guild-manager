@@ -113,7 +113,7 @@ export default class EventsCreateCommand implements Command {
       eventToCreate,
       interaction
     );
-    await this.eventRepo.create(event);
+    await this.eventRepo.createAndLog(interaction.user, event);
 
     await this.eventPoster.postEventSequence(editor, 'Added new event');
   }

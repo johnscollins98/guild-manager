@@ -1,6 +1,7 @@
 import {
   Authorized,
   Body,
+  CurrentUser,
   Delete,
   Get,
   JsonController,
@@ -58,9 +59,8 @@ export class EventsController implements IEventsController {
   @Delete('/:id')
   @Authorized('EVENTS')
   @OnUndefined(204)
-  async delete(@Param('id') id: number): Promise<void> {
-    const res = await this.eventRepo.delete(id);
-
+  async delete(@Param('id') id: number, @CurrentUser() user: Express.User): Promise<void> {
+    const res = await this.eventRepo.deletedAndLog(user, id);
     if (!res) {
       throw new NotFoundError('Event not found');
     }
@@ -68,14 +68,21 @@ export class EventsController implements IEventsController {
 
   @Post('/')
   @Authorized('EVENTS')
-  create(@Body() event: EventCreateDTO): Promise<EventDTO> {
-    return this.eventRepo.create(event);
+  async create(
+    @Body() event: EventCreateDTO,
+    @CurrentUser() user: Express.User
+  ): Promise<EventDTO> {
+    return this.eventRepo.createAndLog(user, event);
   }
 
   @Put('/:id')
   @Authorized('EVENTS')
   @OnNull(404)
-  update(@Param('id') id: number, @Body() event: EventCreateDTO): Promise<EventDTO | null> {
-    return this.eventRepo.update(id, event);
+  async update(
+    @Param('id') id: number,
+    @Body() event: EventCreateDTO,
+    @CurrentUser() user: Express.User
+  ): Promise<EventDTO | null> {
+    return this.eventRepo.updateAndLog(user, id, event);
   }
 }

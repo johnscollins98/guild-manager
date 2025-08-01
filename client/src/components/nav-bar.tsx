@@ -25,6 +25,7 @@ const LINKS = [
   { label: 'GW2 Log', link: '/log' },
   { label: 'Discord Log', link: '/discord-log' },
   { label: 'Warning Log', link: '/warning-log' },
+  { label: 'Audit Log', link: '/audit-log' },
   { label: 'Events', link: '/events' },
   { label: 'Recruitment', link: '/recruitment' }
 ];
@@ -85,7 +86,7 @@ const NavBar = ({ maxWidth }: Props) => {
         padding={1}
         display="flex"
       >
-        <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
+        <Box alignItems="center" gap="16px" sx={{ display: { lg: 'flex', xs: 'none' } }}>
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
             {LINKS.map(l => (
@@ -96,7 +97,7 @@ const NavBar = ({ maxWidth }: Props) => {
           </div>
         </Box>
         <IconButton
-          sx={{ display: { md: 'none', xs: 'inline-flex' } }}
+          sx={{ display: { lg: 'none', xs: 'inline-flex' } }}
           onClick={() => setDrawerOpen(true)}
         >
           <MenuIcon />

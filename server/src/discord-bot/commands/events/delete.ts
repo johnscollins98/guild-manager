@@ -35,7 +35,10 @@ export default class EventsDeleteCommand implements Command {
       throw new Error('No event id provided.');
     }
 
-    const deleted = await this.eventsRepo.delete(parseInt(eventSelection.value));
+    const deleted = await this.eventsRepo.deletedAndLog(
+      interaction.user,
+      parseInt(eventSelection.value)
+    );
 
     if (deleted) {
       await this.eventPoster.postEventSequence(

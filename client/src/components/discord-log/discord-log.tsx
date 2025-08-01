@@ -64,10 +64,12 @@ const DiscordLog = () => {
       {filteredLogData.map(entry => {
         return (
           <LogEntry
-            displayEntry={entry.discordDisplay}
+            details={entry.discordDisplay.details}
             date={entry.date}
             key={entry.date.toISOString()}
-          />
+          >
+            {entry.discordDisplay.summary}
+          </LogEntry>
         );
       })}
     </div>

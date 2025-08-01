@@ -56,10 +56,7 @@ export default class WarningsUpdateCommand implements Command {
 
     await this.warningEditor.sendEditor(warning, warningSelection.interaction, async warning => {
       if (warning.id) {
-        return this.warningsRepo.update(warning.id, {
-          ...warning,
-          lastUpdatedBy: interaction.user.id
-        });
+        return this.warningsRepo.updateAndLog(warning.id, warning, interaction.user);
       }
       return null;
     });

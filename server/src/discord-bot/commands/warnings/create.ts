@@ -64,7 +64,8 @@ export default class WarningsGiveCommand implements Command {
       type
     };
 
-    const submitHandler = (w: WarningCreateDTO) => this.warningsRepo.create(w);
+    const submitHandler = (w: WarningCreateDTO) =>
+      this.warningsRepo.createAndLog(w, interaction.user);
 
     await this.warningEditor.sendEditor(warning, interaction, submitHandler);
   }

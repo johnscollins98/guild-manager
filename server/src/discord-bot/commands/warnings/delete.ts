@@ -45,7 +45,10 @@ export default class WarningsDeleteCommand implements Command {
       throw new Error('No warning id provided.');
     }
 
-    const deleted = await this.warningsRepo.delete(parseInt(warningSelection.value));
+    const deleted = await this.warningsRepo.deleteAndLog(
+      parseInt(warningSelection.value),
+      interaction.user
+    );
 
     if (deleted) {
       warningSelection.interaction.update({

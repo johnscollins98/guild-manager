@@ -10,7 +10,7 @@ import {
   EventSettingsUpsertDTO,
   MemberLeftDTO
 } from '../../dtos';
-
+import { User } from './user';
 export interface IDiscordController {
   getRoles(): Promise<DiscordRole[]>;
   getMembers(): Promise<DiscordMemberDTO[]>;
@@ -20,10 +20,10 @@ export interface IDiscordController {
   getBot(): Promise<DiscordUser>;
   getChannels(): Promise<DiscordChannel[]>;
   getMessages(channelId: string): Promise<DiscordMessage[]>;
-  addRoleToMember(memberId: string, roleId: string): Promise<void>;
-  removeRoleFromMember(memberId: string, roleId: string): Promise<void>;
-  updateMember(memberId: string, updates: DiscordMemberUpdate): Promise<void>;
-  deleteMember(memberId: string): Promise<void>;
+  addRoleToMember(memberId: string, roleId: string, user?: User): Promise<void>;
+  removeRoleFromMember(memberId: string, roleId: string, user?: User): Promise<void>;
+  updateMember(memberId: string, updates: DiscordMemberUpdate, user?: User): Promise<void>;
+  deleteMember(memberId: string, user?: User): Promise<void>;
   sendMessageToMember(memberId: string, messageData: DiscordMessagePost): Promise<void>;
-  postEventUpdates(settings: EventSettingsUpsertDTO): Promise<void>;
+  postEventUpdates(settings?: EventSettingsUpsertDTO, user?: User): Promise<void>;
 }

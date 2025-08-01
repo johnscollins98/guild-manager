@@ -42,8 +42,8 @@ export class WarningsController implements IWarningsController {
   @Delete('/:id')
   @OnUndefined(204)
   @Authorized('WARNINGS')
-  async delete(@Param('id') id: number): Promise<void> {
-    const res = await this.warningRepo.delete(id);
+  async delete(@Param('id') id: number, @CurrentUser() user: Express.User): Promise<void> {
+    const res = await this.warningRepo.deleteAndLog(id, user);
 
     if (!res) {
       throw new NotFoundError('Cannot find warning');
@@ -52,21 +52,21 @@ export class WarningsController implements IWarningsController {
 
   @Post('/')
   @Authorized('WARNINGS')
-  create(
+  async create(
     @Body() warning: WarningCreateDTO,
-    @CurrentUser() user?: Express.User
+    @CurrentUser() user: Express.User
   ): Promise<WarningDTO> {
-    return this.warningRepo.create({ ...warning, givenBy: user?.id });
+    return this.warningRepo.createAndLog(warning, user);
   }
 
   @Put('/:id')
   @Authorized('WARNINGS')
   @OnNull(404)
-  update(
+  async update(
     @Param('id') id: number,
     @Body() warning: WarningCreateDTO,
-    @CurrentUser() user?: Express.User
+    @CurrentUser() user: Express.User
   ): Promise<WarningDTO | null> {
-    return this.warningRepo.update(id, { ...warning, lastUpdatedBy: user?.id });
+    return this.warningRepo.updateAndLog(id, warning, user);
   }
 }

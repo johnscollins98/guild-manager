@@ -12,11 +12,9 @@ const Log = () => {
   return (
     <div className="log-container">
       {filteredData.map(entry => (
-        <LogEntry
-          key={entry.date}
-          displayEntry={{ summary: entry.message }}
-          date={new Date(entry.date)}
-        />
+        <LogEntry key={entry.date} date={new Date(entry.date)}>
+          {entry.message}
+        </LogEntry>
       ))}
     </div>
   );

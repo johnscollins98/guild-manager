@@ -46,7 +46,7 @@ export class EventPoster {
 
     if (res.customId === 'yes') {
       await respond(res, { content: 'Posting events...', components: [] });
-      await this.discordController.postEventUpdates();
+      await this.discordController.postEventUpdates(undefined, interaction.user);
       await res.editReply({ content: 'Updates posted!', components: [] });
     } else {
       await respond(res, { content: label || 'Did not post updates.', components: [] });

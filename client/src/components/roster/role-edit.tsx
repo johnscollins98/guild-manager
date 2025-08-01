@@ -73,6 +73,7 @@ const RoleEdit = ({ selectedRecord, modalShow, onClose }: Props) => {
             >
               <FormGroup row key={role.id}>
                 <FormControlLabel
+                  onClick={e => e.preventDefault()}
                   control={
                     <StyledCheckbox
                       color={getColorFromRole(role.name, discordRoles.data) || ''}
