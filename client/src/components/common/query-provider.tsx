@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import axios from 'axios';
 import { type PropsWithChildren } from 'react';
+import { auditLogQuery } from '../../lib/apis/audit-log-api';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -12,6 +13,11 @@ const queryClient = new QueryClient({
           return data;
         }
         throw new Error('Invalid QueryKey');
+      }
+    },
+    mutations: {
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: auditLogQuery(0).queryKey });
       }
     }
   }
