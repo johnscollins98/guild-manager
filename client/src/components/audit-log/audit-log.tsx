@@ -73,7 +73,7 @@ const UserRoleRemove = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
   const role = useRoleById(data.roleId);
 
-  return `${sourceName} remove ${role?.name ?? 'Unknown'} role from ${targetName}`;
+  return `${sourceName} removed ${role?.name ?? 'Unknown'} role from ${targetName}`;
 };
 
 const UserNickChanged = ({ data }: Props) => {
