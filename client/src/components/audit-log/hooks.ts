@@ -1,6 +1,5 @@
 import { type AuditLogEntry } from 'server';
 import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
-import { useEvents } from '../../lib/apis/event-api';
 
 export const useMemberNames = (data: AuditLogEntry) => {
   const discordMembers = useDiscordMembers();
@@ -22,12 +21,4 @@ export const useRoleById = (roleId?: string) => {
   if (!roleId) return undefined;
 
   return roles.data.find(r => r.id === roleId);
-};
-
-export const useEventById = (eventId?: number) => {
-  const events = useEvents();
-
-  if (!eventId) return undefined;
-
-  return events.data.find(e => e.id === eventId);
 };

@@ -8,12 +8,14 @@ import { LogLoader } from './common/log-loader';
 import { QueryBoundary } from './common/query-boundary';
 import DiscordLog from './discord-log/discord-log';
 import EventPage from './events/event-page';
+import { SingleEventPage } from './events/single-event-page';
 import Layout from './layout';
 import Log from './log/log';
 import LoginPage from './login-page';
 import NotFound from './not-found';
 import RecruitmentPage from './recruitment/recruitment-page';
 import Roster from './roster/roster';
+import { SingleWarningPage } from './roster/warnings/single-warning-page';
 import { WarningLog } from './warning-log/warning-log';
 
 const App = () => {
@@ -61,6 +63,8 @@ const App = () => {
                 }
               />
               <Route path="/events" Component={EventPage} />
+              <Route path="/events/:eventId" Component={SingleEventPage} />
+              <Route path="/warnings/:warningId" Component={SingleWarningPage} />
               <Route path="/recruitment" Component={RecruitmentPage} />
               <Route path="*" Component={NotFound} />
             </Route>

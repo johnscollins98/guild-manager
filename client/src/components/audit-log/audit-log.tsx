@@ -1,8 +1,11 @@
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { Action, type AuditLogEntry } from 'server';
 import { useAuditLog } from '../../lib/apis/audit-log-api';
+import { useEventById } from '../../lib/apis/event-api';
+import { useWarningById } from '../../lib/apis/warnings-api';
 import LogEntry from '../common/log-entry';
-import { useEventById, useMemberNames, useRoleById } from './hooks';
+import { useMemberNames, useRoleById } from './hooks';
 
 export const AuditLog = () => {
   const auditLog = useAuditLog(100);
@@ -73,7 +76,7 @@ const UserRoleRemove = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
   const role = useRoleById(data.roleId);
 
-  return `${sourceName} remove ${role?.name ?? 'Unknown'} role from ${targetName}`;
+  return `${sourceName} removed ${role?.name ?? 'Unknown'} role from ${targetName}`;
 };
 
 const UserNickChanged = ({ data }: Props) => {
@@ -93,7 +96,20 @@ const UserRemoveAssociate = ({ data }: Props) => {
 
 const WarningAdd = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
-  return `${sourceName} added a warning for ${targetName}.`;
+  const warningQuery = useWarningById(data.warningId!);
+  const warning = warningQuery.data;
+
+  return (
+    <>
+      {sourceName} added{' '}
+      {warning ? (
+        <Link to={`/warnings/${data.warningId}`}>an {warning.type} warning</Link>
+      ) : (
+        'a warning'
+      )}{' '}
+      for {targetName}.
+    </>
+  );
 };
 
 const WarningRemove = ({ data }: Props) => {
@@ -103,16 +119,34 @@ const WarningRemove = ({ data }: Props) => {
 
 const WarningUpdate = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
-  return `${sourceName} updated a warning for ${targetName}`;
+  const warningQuery = useWarningById(data.warningId!);
+  const warning = warningQuery.data;
+
+  return (
+    <>
+      {sourceName} updated{' '}
+      {warning ? (
+        <Link to={`/warnings/${data.warningId}`}>an {warning.type} warning</Link>
+      ) : (
+        'a warning'
+      )}{' '}
+      for {targetName}
+    </>
+  );
 };
 
 const EventCreate = ({ data }: Props) => {
   const { sourceName } = useMemberNames(data);
-  const event = useEventById(data.eventId);
+  const eventQuery = useEventById(data.eventId!);
+  const event = eventQuery.data;
 
-  return event
-    ? `${sourceName} created the '${event.title}' event.`
-    : `${sourceName} created an unknown event.`;
+  return event ? (
+    <>
+      {sourceName} created the <Link to={`/events/${event.id}`}>{event.title}</Link> event.
+    </>
+  ) : (
+    `${sourceName} created an unknown event.`
+  );
 };
 
 const EventDelete = ({ data }: Props) => {
@@ -123,11 +157,16 @@ const EventDelete = ({ data }: Props) => {
 
 const EventUpdate = ({ data }: Props) => {
   const { sourceName } = useMemberNames(data);
-  const event = useEventById(data.eventId);
+  const eventQuery = useEventById(data.eventId!);
+  const event = eventQuery.data;
 
-  return event
-    ? `${sourceName} updated the '${event.title}' event.`
-    : `${sourceName} updated an unknown event.`;
+  return event ? (
+    <>
+      {sourceName} updated the <Link to={`/events/${event.id}`}>{event.title}</Link> event.
+    </>
+  ) : (
+    `${sourceName} updated an unknown event.`
+  );
 };
 
 const EventPost = ({ data }: Props) => {

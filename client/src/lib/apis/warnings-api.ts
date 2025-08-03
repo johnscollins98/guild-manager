@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import { type IWarningsController, type WarningCreateDTO, type WarningDTO } from 'server';
 import { useToast } from '../../components/common/toast/toast-context';
@@ -8,7 +8,7 @@ const api = createApi('/api/warnings');
 
 const warningsApi: IWarningsController = {
   getAll: () => api(''),
-  get: (id: number) => api(`${id}`),
+  get: (id: number) => api(`${id}`, { validateStatus: s => s === 200 || s === 404 }),
   getForMember: (id: string) => api(`member/${id}`),
   delete: (id: number) => api(`${id}`, { method: 'DELETE' }),
   create: (data: WarningCreateDTO) => api('', { method: 'POST', data }),
@@ -17,6 +17,13 @@ const warningsApi: IWarningsController = {
 
 export const warningsQuery = { queryKey: ['warnings'], queryFn: warningsApi.getAll };
 export const useWarnings = () => useSuspenseQuery(warningsQuery);
+
+export const warningByIdQuery = (id: number) =>
+  queryOptions({
+    queryKey: ['warnings', id],
+    queryFn: () => warningsApi.get(id)
+  });
+export const useWarningById = (id: number) => useSuspenseQuery(warningByIdQuery(id));
 
 export const memberWarningsQuery = (memberId: string) => ({
   queryKey: ['warnings', memberId],

@@ -139,7 +139,7 @@ export class AuditLogRepository extends BaseRepository<AuditLog> {
       sourceUsername: sourceUser.username,
       targetUserId: targetId,
       targetUsername:
-        targetUser?.user?.username ?? targetUser?.user?.global_name ?? targetUser?.nick
+        targetUser?.nick ?? targetUser?.user?.username ?? targetUser?.user?.global_name
     };
   }
 
