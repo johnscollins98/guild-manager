@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
 import { type EventCreateDTO, type EventDTO, type IEventsController } from 'server';
 import { useToast } from '../../components/common/toast/toast-context';
@@ -9,7 +9,7 @@ const api = createApi('/api/events');
 export const eventsApi: IEventsController = {
   getGuildSettings: () => api('settings'),
   getAll: () => api(''),
-  get: id => api(`${id}`),
+  get: id => api(`${id}`, { validateStatus: s => s === 200 || s === 404 }),
   getEventsOnADay: day => api(`day/${day}`),
   delete: id => api(`${id}`, { method: 'DELETE' }),
   create: data => api('', { method: 'POST', data }),
@@ -24,6 +24,14 @@ export const eventSettingsQuery = {
   queryFn: eventsApi.getGuildSettings
 };
 export const useEventSettings = () => useSuspenseQuery(eventSettingsQuery);
+
+export const eventByIdQuery = (id: number) =>
+  queryOptions({
+    queryKey: ['events', id],
+    queryFn: () => eventsApi.get(id)
+  });
+
+export const useEventById = (id: number) => useSuspenseQuery(eventByIdQuery(id));
 
 export const useCreateEventMutation = () => {
   const queryClient = useQueryClient();
