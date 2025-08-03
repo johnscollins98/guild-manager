@@ -31,7 +31,7 @@ const Content = ({ warningId }: { warningId: number }) => {
   }
 
   const givenTo = discordMembers.data.find(m => m.id === warning.givenTo);
-  const givenBy = discordMembers.data.find(m => m.id === warning.givenTo);
+  const givenBy = discordMembers.data.find(m => m.id === warning.givenBy);
   const updatedBy = warning.lastUpdatedBy
     ? discordMembers.data.find(m => m.id === warning.lastUpdatedBy)
     : undefined;
