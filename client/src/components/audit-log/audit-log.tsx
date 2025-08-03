@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { Action, type AuditLogEntry } from 'server';
 import { useAuditLog } from '../../lib/apis/audit-log-api';
+import { useWarningById } from '../../lib/apis/warnings-api';
 import LogEntry from '../common/log-entry';
 import { useEventById, useMemberNames, useRoleById } from './hooks';
 
@@ -93,7 +95,20 @@ const UserRemoveAssociate = ({ data }: Props) => {
 
 const WarningAdd = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
-  return `${sourceName} added a warning for ${targetName}.`;
+  const warningQuery = useWarningById(data.warningId!);
+  const warning = warningQuery.data;
+
+  return (
+    <>
+      {sourceName} added{' '}
+      {warning ? (
+        <Link to={`/warnings/${data.warningId}`}>an {warning.type} warning</Link>
+      ) : (
+        'a warning'
+      )}{' '}
+      for {targetName}.
+    </>
+  );
 };
 
 const WarningRemove = ({ data }: Props) => {
@@ -103,7 +118,20 @@ const WarningRemove = ({ data }: Props) => {
 
 const WarningUpdate = ({ data }: Props) => {
   const { sourceName, targetName } = useMemberNames(data);
-  return `${sourceName} updated a warning for ${targetName}`;
+  const warningQuery = useWarningById(data.warningId!);
+  const warning = warningQuery.data;
+
+  return (
+    <>
+      {sourceName} updated{' '}
+      {warning ? (
+        <Link to={`/warnings/${data.warningId}`}>an {warning.type} warning</Link>
+      ) : (
+        'a warning'
+      )}{' '}
+      for {targetName}
+    </>
+  );
 };
 
 const EventCreate = ({ data }: Props) => {
