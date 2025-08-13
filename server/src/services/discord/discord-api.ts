@@ -1,6 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import axiosRateLimit from 'axios-rate-limit';
 import { Service } from 'typedi';
+import { init } from '../../axios-logger';
 import { config } from '../../config';
+
+const rateLimitedAxios = axiosRateLimit(axios.create(), { maxRequests: 30, perMilliseconds: 1000 });
+init(rateLimitedAxios);
 
 @Service()
 export class DiscordApi {
@@ -46,7 +51,7 @@ export class DiscordApi {
   }
 
   private async makeRequest<T = unknown>(endpoint: string, init?: AxiosRequestConfig): Promise<T> {
-    const response = await axios({
+    const response = await rateLimitedAxios({
       headers: {
         Authorization: `${this.isBearer ? 'Bearer' : 'Bot'} ${this.apiKey}`,
         'Content-Type': 'application/json',
