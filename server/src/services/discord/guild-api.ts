@@ -24,9 +24,9 @@ export interface IDiscordGuildApi {
 
 @Service()
 export class DiscordGuildApi implements IDiscordGuildApi {
-  private readonly baseUrl: string;
+  private readonly baseUrl: `/${string}`;
   constructor(private readonly discordApi: DiscordApi) {
-    this.baseUrl = `guilds/${config.discordGuildId}`;
+    this.baseUrl = `/guilds/${config.discordGuildId}`;
   }
 
   async getMembers(): Promise<DiscordMember[]> {

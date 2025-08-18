@@ -27,7 +27,7 @@ export class DiscordChannelApi implements IDiscordChannelApi {
   constructor(private readonly discordApi: DiscordApi) {}
 
   async getChannel(channelId: string): Promise<DiscordChannel> {
-    return await this.discordApi.get(`channels/${channelId}`);
+    return await this.discordApi.get(`/channels/${channelId}`);
   }
 
   async createDirectMessageChannel(userId: string): Promise<string> {
@@ -38,11 +38,11 @@ export class DiscordChannelApi implements IDiscordChannelApi {
   }
 
   async getChannelMessages(channelId: string): Promise<DiscordMessage[]> {
-    return await this.discordApi.get(`channels/${channelId}/messages`);
+    return await this.discordApi.get(`/channels/${channelId}/messages`);
   }
 
   async getChannelMessage(channelId: string, messageId: string): Promise<DiscordMessageDetails> {
-    return await this.discordApi.get(`channels/${channelId}/messages/${messageId}`);
+    return await this.discordApi.get(`/channels/${channelId}/messages/${messageId}`);
   }
 
   async editMessage(
@@ -51,7 +51,7 @@ export class DiscordChannelApi implements IDiscordChannelApi {
     messageObject: DiscordMessagePost
   ): Promise<boolean> {
     console.log(`Updating embed in channel ${channelId}, message ${messageId}`);
-    await this.discordApi.patch(`channels/${channelId}/messages/${messageId}`, messageObject);
+    await this.discordApi.patch(`/channels/${channelId}/messages/${messageId}`, messageObject);
     return true;
   }
 
@@ -61,7 +61,7 @@ export class DiscordChannelApi implements IDiscordChannelApi {
   }
 
   async sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean> {
-    await this.discordApi.post(`channels/${channelId}/messages`, messageObject);
+    await this.discordApi.post(`/channels/${channelId}/messages`, messageObject);
     return true;
   }
 }
