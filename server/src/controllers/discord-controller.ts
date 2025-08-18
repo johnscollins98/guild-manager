@@ -189,7 +189,6 @@ export class DiscordController implements IDiscordController {
       const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
       await this.discordChannelApi.sendMessage(dmChannelId, messageData);
     } catch (err) {
-      console.error(err);
       if (err instanceof AxiosError && err.status === 403) {
         throw new ForbiddenError(err.message);
       } else {

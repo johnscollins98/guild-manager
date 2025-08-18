@@ -152,11 +152,12 @@ export class AuditLogRepository extends BaseRepository<AuditLog> {
     try {
       const user = await this.discordGuildApi.getMemberById(id);
 
-      cache.put(key, user, 10000);
+      if (user) {
+        cache.put(key, user, 5 * 50 * 1000);
+      }
 
       return user;
-    } catch (err) {
-      console.error(err);
+    } catch {
       return undefined;
     }
   }

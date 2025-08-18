@@ -4,7 +4,7 @@ import { Service } from 'typedi';
 import { init } from '../../axios-logger';
 import { config } from '../../config';
 
-const rateLimitedAxios = axiosRateLimit(axios.create(), { maxRequests: 30, perMilliseconds: 1000 });
+const rateLimitedAxios = axiosRateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
 init(rateLimitedAxios);
 
 @Service()
