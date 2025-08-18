@@ -11,6 +11,6 @@ export class DiscordUserApi implements IDiscordUserApi {
   constructor(private readonly discordApi: DiscordApi) {}
 
   async getCurrentUser(): Promise<DiscordUser> {
-    return this.discordApi.get('users/@me');
+    return this.discordApi.get('/users/@me');
   }
 }
