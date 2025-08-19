@@ -1,5 +1,3 @@
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CalendarToday from '@mui/icons-material/CalendarToday';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -22,16 +20,10 @@ const LogEntry = ({ children, details, date }: Props) => {
         className="log-summary"
         slotProps={{ content: { className: 'summary-content' } }}
       >
-        <div>
-          <CalendarToday />
-          <Typography>
-            {date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
-          </Typography>
-        </div>
-        <div>
-          <AssignmentIcon />
-          <Typography>{children}</Typography>
-        </div>
+        <Typography>{children}</Typography>
+        <Typography variant="caption" color="textDisabled">
+          {date.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}
+        </Typography>
       </AccordionSummary>
       {details ? (
         <AccordionDetails>

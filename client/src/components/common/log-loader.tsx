@@ -1,6 +1,4 @@
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CalendarToday from '@mui/icons-material/CalendarToday';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Accordion, AccordionSummary, Box, Skeleton, Typography } from '@mui/material';
 import './log-entry.scss';
 
 export const LogLoader = () => {
@@ -9,29 +7,24 @@ export const LogLoader = () => {
   return (
     <Box overflow="auto">
       {arr.map((_, idx) => (
-        <div className="log-entry" key={idx}>
-          <div className="log-summary">
-            <div className="summary-content">
-              <div>
-                <CalendarToday color="disabled" />
-                <Skeleton variant="text">
-                  <Typography>
-                    {new Date().toLocaleString(undefined, {
-                      dateStyle: 'short',
-                      timeStyle: 'short'
-                    })}
-                  </Typography>
-                </Skeleton>
-              </div>
-              <div>
-                <AssignmentIcon color="disabled" />
-                <Skeleton variant="text">
-                  <Typography>Some log message that is fairly long.</Typography>
-                </Skeleton>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Accordion className="log-entry" key={idx} disableGutters>
+          <AccordionSummary
+            className="log-summary"
+            slotProps={{ content: { className: 'summary-content' } }}
+          >
+            <Skeleton variant="text">
+              <Typography>Some log message that is fairly long.</Typography>
+            </Skeleton>
+            <Skeleton variant="text">
+              <Typography variant="caption">
+                {new Date().toLocaleString(undefined, {
+                  dateStyle: 'short',
+                  timeStyle: 'short'
+                })}
+              </Typography>
+            </Skeleton>
+          </AccordionSummary>
+        </Accordion>
       ))}
     </Box>
   );
