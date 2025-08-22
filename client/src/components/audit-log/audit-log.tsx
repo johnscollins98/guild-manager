@@ -32,9 +32,7 @@ export const AuditLog = () => {
     <Box overflow="auto" sx={{ overflowAnchor: 'none' }}>
       {auditLog.data.map(l => (
         <Suspense key={l.id} fallback={<LoadingLogEntry />}>
-          <LogEntry date={new Date(l.timestamp)}>
-            <Entry data={l} />
-          </LogEntry>
+          <LogEntryWrapper logEntry={l} />
         </Suspense>
       ))}
       {auditLog.hasNextPage && (
@@ -49,6 +47,16 @@ export const AuditLog = () => {
         </Box>
       )}
     </Box>
+  );
+};
+
+const LogEntryWrapper = ({ logEntry }: { logEntry: AuditLogEntry }) => {
+  const { sourceUser } = useMemberNames(logEntry);
+
+  return (
+    <LogEntry date={new Date(logEntry.timestamp)} avatarUrl={sourceUser?.avatar}>
+      <Entry data={logEntry} />
+    </LogEntry>
   );
 };
 

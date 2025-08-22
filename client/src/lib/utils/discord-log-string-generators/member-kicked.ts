@@ -8,6 +8,9 @@ export class MemberKicked implements LogDisplayGenerator {
   ) {}
 
   getEntry(): LogDisplay {
-    return { summary: `${this.kicker.username} kicked ${this.kickee.username}.` };
+    return {
+      summary: `${this.kicker.username} kicked ${this.kickee.username}.`,
+      sourceUser: this.kicker
+    };
   }
 }

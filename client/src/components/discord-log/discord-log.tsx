@@ -96,6 +96,11 @@ const DiscordLog = () => {
           <LogEntry
             details={entry.discordDisplay.details}
             date={entry.date}
+            avatarUrl={
+              entry.discordDisplay.sourceUser
+                ? `https://cdn.discordapp.com/avatars/${entry.discordDisplay.sourceUser.id}/${entry.discordDisplay.sourceUser.avatar}.png`
+                : undefined
+            }
             key={entry.date.toISOString()}
           >
             {entry.discordDisplay.summary}

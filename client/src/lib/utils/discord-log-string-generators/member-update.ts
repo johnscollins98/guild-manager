@@ -11,6 +11,7 @@ export class MemberUpdate implements LogDisplayGenerator {
   getEntry(): LogDisplay {
     const display: LogDisplay = {
       summary: `${this.user.username} updated ${this.target.username}.`,
+      sourceUser: this.user,
       details: []
     };
 

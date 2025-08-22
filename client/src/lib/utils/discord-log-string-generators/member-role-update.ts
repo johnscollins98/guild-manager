@@ -24,6 +24,6 @@ export class MemberRoleUpdate implements LogDisplayGenerator {
       details = details.concat(values.map(v => `Removed role ${v.name}`));
     }
 
-    return { summary, details };
+    return { summary, details, sourceUser: this.user };
   }
 }
