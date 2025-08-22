@@ -32,7 +32,7 @@ const DiscordLog = () => {
     },
     select: data =>
       data.pages.reduce(
-        (p, t) => ({
+        (t, p) => ({
           audit_log_entries: [...t.audit_log_entries, ...p.audit_log_entries],
           users: [...t.users, ...p.users]
         }),
@@ -54,14 +54,14 @@ const DiscordLog = () => {
       });
 
     const leaversData = discordLeavers.data
-      .filter(
-        l =>
-          // only show leavers data that's never than the last entry
-          new Date(l.time).valueOf >=
-          snowflakeToDate(
-            discordLog.data.audit_log_entries[discordLog.data.audit_log_entries.length - 1]!.id!
-          ).valueOf
-      )
+      .filter(l => {
+        const leaverDate = new Date(l.time);
+        const lastLog =
+          discordLog.data.audit_log_entries[discordLog.data.audit_log_entries.length - 1]!;
+        const lastLogDate = snowflakeToDate(lastLog.id);
+
+        return leaverDate.getTime() >= lastLogDate.getTime();
+      })
       .map(l => ({
         discordDisplay: {
           summary: `${l.displayName} left/kicked.`,
@@ -74,6 +74,8 @@ const DiscordLog = () => {
         },
         date: new Date(l.time)
       }));
+
+    console.log(leaversData.length);
 
     return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
   }, [discordLog.data, discordLeavers.data]);
