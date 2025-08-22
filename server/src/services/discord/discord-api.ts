@@ -59,7 +59,7 @@ export class DiscordApi {
     const dateFormat = 'yyyy-LL-dd TT';
 
     const methodString = `${yellow}${request.method}`;
-    const routeString = `${white}${request.fullRoute}`;
+    const routeString = `${white}${request.fullRoute}${request.query ? `/${request.query}` : ''}`;
     const dateString = () => `${white}[${DateTime.now().toFormat(dateFormat)}]`;
     const prefix = (reqStr: string) => `${blue}[Discord][${reqStr}]`;
 

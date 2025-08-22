@@ -1,6 +1,8 @@
-import { useSuspenseQueries } from '@tanstack/react-query';
+import { Box, Button } from '@mui/material';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { discordLeaversQuery, discordLogQuery } from '../../lib/apis/discord-api';
+import { type DiscordLog } from 'server';
+import { discordLogQuery, useDiscordLeavers } from '../../lib/apis/discord-api';
 import {
   type LogDisplay,
   type LogDisplayGenerator
@@ -18,8 +20,24 @@ interface DiscordLogEntry {
 
 const DiscordLog = () => {
   const filterString = useFilterString();
-  const [discordLog, discordLeavers] = useSuspenseQueries({
-    queries: [discordLogQuery, discordLeaversQuery]
+  const discordLeavers = useDiscordLeavers();
+
+  const discordLog = useSuspenseInfiniteQuery({
+    initialPageParam: '',
+    queryFn: discordLogQuery.queryFn,
+    queryKey: discordLogQuery.queryKey,
+    getNextPageParam: lastPage => {
+      const id = lastPage.audit_log_entries[lastPage.audit_log_entries.length - 1]?.id;
+      return id;
+    },
+    select: data =>
+      data.pages.reduce(
+        (p, t) => ({
+          audit_log_entries: [...t.audit_log_entries, ...p.audit_log_entries],
+          users: [...t.users, ...p.users]
+        }),
+        { audit_log_entries: [], users: [] }
+      )
   });
 
   const logData: DiscordLogEntry[] | undefined = useMemo(() => {
@@ -35,18 +53,27 @@ const DiscordLog = () => {
         };
       });
 
-    const leaversData = discordLeavers.data.map(l => ({
-      discordDisplay: {
-        summary: `${l.displayName} left/kicked.`,
-        details: [
-          `Account Name: ${l.username ?? ''}`,
-          `User Display Name: ${l.userDisplayName ?? ''}`,
-          `Global Name: ${l.globalName ?? ''}`,
-          ...(l.nickname ? [`Nickname: ${l.nickname}`] : [])
-        ]
-      },
-      date: new Date(l.time)
-    }));
+    const leaversData = discordLeavers.data
+      .filter(
+        l =>
+          // only show leavers data that's never than the last entry
+          new Date(l.time).valueOf >=
+          snowflakeToDate(
+            discordLog.data.audit_log_entries[discordLog.data.audit_log_entries.length - 1]!.id!
+          ).valueOf
+      )
+      .map(l => ({
+        discordDisplay: {
+          summary: `${l.displayName} left/kicked.`,
+          details: [
+            `Account Name: ${l.username ?? ''}`,
+            `User Display Name: ${l.userDisplayName ?? ''}`,
+            `Global Name: ${l.globalName ?? ''}`,
+            ...(l.nickname ? [`Nickname: ${l.nickname}`] : [])
+          ]
+        },
+        date: new Date(l.time)
+      }));
 
     return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
   }, [discordLog.data, discordLeavers.data]);
@@ -72,6 +99,15 @@ const DiscordLog = () => {
           </LogEntry>
         );
       })}
+      <Box display="flex" justifyContent="center">
+        <Button
+          onClick={() => discordLog.fetchNextPage()}
+          loadingPosition="end"
+          loading={discordLog.isFetching}
+        >
+          Load More
+        </Button>
+      </Box>
     </div>
   );
 };

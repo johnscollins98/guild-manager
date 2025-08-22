@@ -15,7 +15,8 @@ import {
   OnUndefined,
   Param,
   Post,
-  Put
+  Put,
+  QueryParam
 } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
@@ -90,8 +91,8 @@ export class DiscordController implements IDiscordController {
   }
 
   @Get('/log')
-  async getLogs(): Promise<DiscordLog> {
-    return await this.discordGuildApi.getLogs();
+  async getLogs(@QueryParam('before') before?: string): Promise<DiscordLog> {
+    return await this.discordGuildApi.getLogs(100, before);
   }
 
   @Get('/leavers')
