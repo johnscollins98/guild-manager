@@ -15,6 +15,7 @@ export class GW2LogFormatter {
     const type = entry.type;
 
     let message = '';
+    let user = entry.user;
 
     switch (type) {
       case 'joined':
@@ -22,6 +23,7 @@ export class GW2LogFormatter {
         break;
       case 'invited':
         message = `${entry.user} invited by ${entry.invited_by}`;
+        user = entry.invited_by;
         break;
       case 'kick':
         if (entry.user == entry.kicked_by) {
@@ -29,12 +31,14 @@ export class GW2LogFormatter {
         } else {
           message = `${entry.user} kicked by ${entry.kicked_by}`;
         }
+        user = entry.kicked_by;
         break;
       case 'rank_change':
         message = `${entry.changed_by} changed ${entry.user}'s rank from ${entry.old_rank} to ${entry.new_rank}`;
+        user = entry.changed_by;
         break;
     }
 
-    return { date: entry.time, message };
+    return { date: entry.time, message, user };
   }
 }

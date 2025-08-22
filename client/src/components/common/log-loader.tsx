@@ -20,17 +20,22 @@ export const LoadingLogEntry = () => {
         className="log-summary"
         slotProps={{ content: { className: 'summary-content' } }}
       >
-        <Skeleton variant="text">
-          <Typography>Some log message that is fairly long.</Typography>
-        </Skeleton>
-        <Skeleton variant="text">
-          <Typography variant="caption">
-            {new Date().toLocaleString(undefined, {
-              dateStyle: 'short',
-              timeStyle: 'short'
-            })}
-          </Typography>
-        </Skeleton>
+        <Box display="flex" gap={1.5} alignItems="center">
+          <Skeleton variant="circular" width="30px" height="30px" />
+          <Box>
+            <Skeleton variant="text">
+              <Typography>Some log message that is fairly long.</Typography>
+            </Skeleton>
+            <Skeleton variant="text">
+              <Typography variant="caption">
+                {new Date().toLocaleString(undefined, {
+                  dateStyle: 'short',
+                  timeStyle: 'short'
+                })}
+              </Typography>
+            </Skeleton>
+          </Box>
+        </Box>
       </AccordionSummary>
     </Accordion>
   );

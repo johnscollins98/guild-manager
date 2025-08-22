@@ -20,7 +20,7 @@ export const useWarningList = () => {
     (id: string) => {
       const member = discordMembers.find(m => m.id === id);
 
-      return member?.nickname || member?.name || 'Unknown Member';
+      return { name: member?.nickname || member?.name || 'Unknown Member', member };
     },
     [discordMembers]
   );
@@ -33,7 +33,7 @@ export const useWarningList = () => {
         const givenTo = getMemberName(w.givenTo);
         const givenBy = getMemberName(w.givenBy);
 
-        const summary = `[${WarningTypeLabels[w.type]}] Given to ${givenTo} by ${givenBy}.`;
+        const summary = `[${WarningTypeLabels[w.type]}] Given to ${givenTo.name} by ${givenBy.name}.`;
 
         const details = [w.reason];
 
@@ -47,6 +47,7 @@ export const useWarningList = () => {
           date,
           summary,
           details,
+          avatarUrl: givenTo.member?.avatar,
           type: w.type,
           id: w.id
         };
