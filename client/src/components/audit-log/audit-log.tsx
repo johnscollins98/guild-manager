@@ -1,22 +1,53 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { Action, type AuditLogEntry } from 'server';
-import { useAuditLog } from '../../lib/apis/audit-log-api';
+import { auditLogQuery } from '../../lib/apis/audit-log-api';
 import { useEventById } from '../../lib/apis/event-api';
 import { useWarningById } from '../../lib/apis/warnings-api';
 import LogEntry from '../common/log-entry';
+import { LoadingLogEntry } from '../common/log-loader';
 import { useMemberNames, useRoleById } from './hooks';
 
+const queryFn = ({ pageParam }: { pageParam: string }) => {
+  return auditLogQuery(5, pageParam ? new Date(pageParam) : undefined).queryFn();
+};
+
 export const AuditLog = () => {
-  const auditLog = useAuditLog(100);
+  const auditLog = useSuspenseInfiniteQuery({
+    initialPageParam: '',
+    queryKey: auditLogQuery(100).queryKey,
+    queryFn,
+    getNextPageParam: lastPage => {
+      const lastEntry = lastPage[lastPage.length - 1];
+      if (!lastEntry) return null;
+
+      return new Date(lastEntry.timestamp).toISOString();
+    },
+    select: data => data.pages.reduce((total, page) => [...total, ...page])
+  });
 
   return (
-    <Box overflow="auto">
+    <Box overflow="auto" sx={{ overflowAnchor: 'none' }}>
       {auditLog.data.map(l => (
-        <LogEntry date={new Date(l.timestamp)} key={l.id}>
-          <Entry data={l} />
-        </LogEntry>
+        <Suspense key={l.id} fallback={<LoadingLogEntry />}>
+          <LogEntry date={new Date(l.timestamp)}>
+            <Entry data={l} />
+          </LogEntry>
+        </Suspense>
       ))}
+      {auditLog.hasNextPage && (
+        <Box display="flex" justifyContent="center">
+          <Button
+            onClick={() => auditLog.fetchNextPage()}
+            loading={auditLog.isFetching}
+            loadingPosition="end"
+          >
+            Load more
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
