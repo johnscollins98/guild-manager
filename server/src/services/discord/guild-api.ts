@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import { Routes } from 'discord.js';
 import { Service } from 'typedi';
 import { config } from '../../config';
 import {
@@ -14,7 +15,7 @@ export interface IDiscordGuildApi {
   getMembers(): Promise<DiscordMember[]>;
   getMemberById(memberId: string): Promise<DiscordMember | undefined>;
   getRoles(): Promise<DiscordRole[]>;
-  getLogs(): Promise<DiscordLog>;
+  getLogs(limit?: number, before?: string): Promise<DiscordLog>;
   getChannels(): Promise<DiscordChannel[]>;
   kickMember(id: string): Promise<boolean>;
   removeRoleFromMember(memberId: string, roleId: string): Promise<boolean>;
@@ -48,8 +49,14 @@ export class DiscordGuildApi implements IDiscordGuildApi {
     return await this.discordApi.get(`${this.baseUrl}/roles`);
   }
 
-  async getLogs(): Promise<DiscordLog> {
-    return await this.discordApi.get(`${this.baseUrl}/audit-logs?limit=100`);
+  async getLogs(limit = 100, before?: string): Promise<DiscordLog> {
+    const query = new URLSearchParams({ limit: limit.toString() });
+
+    if (before) {
+      query.append('before', before);
+    }
+
+    return await this.discordApi.get(Routes.guildAuditLog(config.discordGuildId), { query });
   }
 
   async kickMember(id: string): Promise<boolean> {

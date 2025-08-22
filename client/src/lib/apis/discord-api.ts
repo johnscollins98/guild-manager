@@ -16,7 +16,14 @@ const api = createApi('/api/discord');
 const discordApi: IDiscordController = {
   getRoles: () => api('roles'),
   getMembers: () => api('members'),
-  getLogs: () => api('log'),
+  getLogs: (opts?: { pageParam?: string }) => {
+    const params = new URLSearchParams();
+    if (opts?.pageParam) {
+      params.append('before', opts.pageParam);
+    }
+
+    return api('log', { params });
+  },
   getLeavers: () => api('leavers'),
   getBotRoles: () => api('bot-roles'),
   getBot: () => api('bot'),
