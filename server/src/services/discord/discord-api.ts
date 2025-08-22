@@ -1,13 +1,7 @@
-import axios from 'axios';
-import axiosRateLimit from 'axios-rate-limit';
 import { InternalRequest, RequestData, RequestMethod, REST, RouteLike } from 'discord.js';
 import { DateTime } from 'luxon';
 import { Service } from 'typedi';
-import { init } from '../../axios-logger';
 import { config } from '../../config';
-
-const rateLimitedAxios = axiosRateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
-init(rateLimitedAxios);
 
 @Service()
 export class DiscordApi {
