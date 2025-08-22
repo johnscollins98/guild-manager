@@ -11,7 +11,7 @@ import { LoadingLogEntry } from '../common/log-loader';
 import { useMemberNames, useRoleById } from './hooks';
 
 const queryFn = ({ pageParam }: { pageParam: string }) => {
-  return auditLogQuery(5, pageParam ? new Date(pageParam) : undefined).queryFn();
+  return auditLogQuery(100, pageParam ? new Date(pageParam) : undefined).queryFn();
 };
 
 export const AuditLog = () => {
