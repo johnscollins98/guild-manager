@@ -27,8 +27,11 @@ const DiscordLog = () => {
     queryFn: discordLogQuery.queryFn,
     queryKey: discordLogQuery.queryKey,
     getNextPageParam: lastPage => {
-      const id = lastPage.audit_log_entries[lastPage.audit_log_entries.length - 1]?.id;
-      return id;
+      const lastEntry = lastPage.audit_log_entries[lastPage.audit_log_entries.length - 1];
+
+      if (!lastEntry) return null;
+
+      return lastEntry.id;
     },
     select: data =>
       data.pages.reduce(
@@ -74,8 +77,6 @@ const DiscordLog = () => {
         },
         date: new Date(l.time)
       }));
-
-    console.log(leaversData.length);
 
     return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
   }, [discordLog.data, discordLeavers.data]);

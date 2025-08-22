@@ -7,25 +7,31 @@ export const LogLoader = () => {
   return (
     <Box overflow="auto">
       {arr.map((_, idx) => (
-        <Accordion className="log-entry" key={idx} disableGutters>
-          <AccordionSummary
-            className="log-summary"
-            slotProps={{ content: { className: 'summary-content' } }}
-          >
-            <Skeleton variant="text">
-              <Typography>Some log message that is fairly long.</Typography>
-            </Skeleton>
-            <Skeleton variant="text">
-              <Typography variant="caption">
-                {new Date().toLocaleString(undefined, {
-                  dateStyle: 'short',
-                  timeStyle: 'short'
-                })}
-              </Typography>
-            </Skeleton>
-          </AccordionSummary>
-        </Accordion>
+        <LoadingLogEntry key={idx} />
       ))}
     </Box>
+  );
+};
+
+export const LoadingLogEntry = () => {
+  return (
+    <Accordion className="log-entry" disableGutters>
+      <AccordionSummary
+        className="log-summary"
+        slotProps={{ content: { className: 'summary-content' } }}
+      >
+        <Skeleton variant="text">
+          <Typography>Some log message that is fairly long.</Typography>
+        </Skeleton>
+        <Skeleton variant="text">
+          <Typography variant="caption">
+            {new Date().toLocaleString(undefined, {
+              dateStyle: 'short',
+              timeStyle: 'short'
+            })}
+          </Typography>
+        </Skeleton>
+      </AccordionSummary>
+    </Accordion>
   );
 };
