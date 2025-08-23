@@ -89,6 +89,15 @@ export class DiscordBot {
         return;
       }
 
+      if (config.leaversChannelId) {
+        const leaversChannel = await this.client.channels.fetch(config.leaversChannelId);
+        if (leaversChannel && leaversChannel.isSendable()) {
+          leaversChannel.send({
+            content: `**${m.displayName}** left the server :(`
+          });
+        }
+      }
+
       console.log(`Logging ${m.displayName} left`);
       this.memberLeftRepository.create({
         displayName: m.displayName,

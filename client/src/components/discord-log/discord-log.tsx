@@ -67,7 +67,7 @@ const DiscordLog = () => {
       })
       .map(l => ({
         discordDisplay: {
-          summary: `${l.displayName} left/kicked.`,
+          summary: `${l.displayName} left.`,
           details: [
             `Account Name: ${l.username ?? ''}`,
             `User Display Name: ${l.userDisplayName ?? ''}`,
