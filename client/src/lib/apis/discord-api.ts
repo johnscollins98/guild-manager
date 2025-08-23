@@ -27,6 +27,7 @@ const discordApi: IDiscordController = {
   getLeavers: () => api('leavers'),
   getBotRoles: () => api('bot-roles'),
   getBot: () => api('bot'),
+  getUserById: userId => api(`user/${userId}`),
   getChannels: () => api('channels'),
   getMessages: id => api(`channels/${id}/messages`),
   addRoleToMember: (memberId, roleId) =>
@@ -70,6 +71,13 @@ export const discordBotQuery = queryOptions({
 });
 
 export const useDiscordBot = () => useSuspenseQuery(discordBotQuery);
+
+export const discordUserQuery = (userId: string) =>
+  queryOptions({
+    queryKey: [`discord/user/${userId}`],
+    queryFn: () => discordApi.getUserById(userId)
+  });
+export const useDiscordUser = (userId: string) => useSuspenseQuery(discordUserQuery(userId));
 
 export const discordChannelsQuery = queryOptions({
   queryKey: ['discord/channels'],

@@ -10,4 +10,11 @@ export class MockDiscordUserApi implements IDiscordUserApi {
       username: 'Bot'
     };
   }
+
+  async getUserById(id: string): Promise<DiscordUser> {
+    return {
+      id: id,
+      username: 'User ' + id
+    };
+  }
 }
