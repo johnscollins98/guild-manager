@@ -18,6 +18,7 @@ export interface IDiscordController {
   getLeavers(): Promise<MemberLeftDTO[]>;
   getBotRoles(): Promise<DiscordRole[]>;
   getBot(): Promise<DiscordUser>;
+  getUserById(userId: string): Promise<DiscordUser | undefined>;
   getChannels(): Promise<DiscordChannel[]>;
   getMessages(channelId: string): Promise<DiscordMessage[]>;
   addRoleToMember(memberId: string, roleId: string, user?: User): Promise<void>;

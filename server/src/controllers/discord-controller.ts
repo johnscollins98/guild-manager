@@ -122,6 +122,11 @@ export class DiscordController implements IDiscordController {
     return await this.discordUserApi.getCurrentUser();
   }
 
+  @Get('/user/:userId')
+  async getUserById(@Param('userId') userId: string) {
+    return await this.discordUserApi.getUserById(userId);
+  }
+
   @Get('/channels')
   async getChannels(): Promise<DiscordChannel[]> {
     return await this.discordGuildApi.getChannels();
