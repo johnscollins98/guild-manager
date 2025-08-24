@@ -1,13 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Suspense, use, useMemo } from 'react';
-import {
-  WarningTypeLabels,
-  type DiscordMemberDTO,
-  type DiscordUser,
-  type WarningDTO
-} from 'server';
+import { WarningTypeLabels, type WarningDTO } from 'server';
 import { discordUserQuery, useDiscordMembers } from '../../lib/apis/discord-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
+import { getUserAvatar, getUserName } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import LogEntry from '../common/log-entry';
 import { LoadingLogEntry } from '../common/log-loader';
@@ -66,6 +62,11 @@ const Entry = ({ warning }: { warning: WarningDTO }) => {
     enabled: !!warning.lastUpdatedBy && !lastUpdatedByMember
   });
 
+  const avatarUrl = useMemo(
+    () => getUserAvatar(givenToMember, givenToUser.data),
+    [givenToMember, givenToUser.data]
+  );
+
   if (givenByUser.isLoading || givenToUser.isLoading || lastUpdatedByUser.isLoading) {
     return <LoadingLogEntry />;
   }
@@ -87,12 +88,6 @@ const Entry = ({ warning }: { warning: WarningDTO }) => {
     details.push(`Last updated on ${updatedDate.toLocaleString()} by ${updatedMember}.`);
   }
 
-  const avatarUrl =
-    givenToMember?.avatar ??
-    (givenToUser.data?.avatar
-      ? `https://cdn.discordapp.com/avatars/${givenToUser.data?.id}/${givenToUser.data?.avatar}.png`
-      : undefined);
-
   return (
     <LogEntry
       date={new Date(warning.timestamp)}
@@ -103,12 +98,4 @@ const Entry = ({ warning }: { warning: WarningDTO }) => {
       {summary}
     </LogEntry>
   );
-};
-
-const getUserName = (member: DiscordMemberDTO | undefined, user: DiscordUser | undefined) => {
-  if (member?.nickname) return member.nickname;
-  if (member?.name) return member.name;
-  if (user?.username) return user.username;
-  if (user?.global_name) return user.global_name;
-  return 'Unknown User';
 };

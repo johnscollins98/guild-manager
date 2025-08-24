@@ -26,9 +26,7 @@ export class DiscordMemberFormatter {
       id: member?.user?.id,
       roles: this.getRoleInfo(roles, member.roles, validRoles),
       joined: member.joined_at,
-      avatar: member?.user?.avatar
-        ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`
-        : undefined
+      avatar: member.user?.avatar
     };
   }
 

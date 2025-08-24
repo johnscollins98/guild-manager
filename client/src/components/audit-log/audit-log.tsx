@@ -6,6 +6,7 @@ import { Action, type AuditLogEntry } from 'server';
 import { auditLogQuery } from '../../lib/apis/audit-log-api';
 import { useEventById } from '../../lib/apis/event-api';
 import { useWarningById } from '../../lib/apis/warnings-api';
+import { getUserAvatar } from '../../lib/utils/helpers';
 import LogEntry from '../common/log-entry';
 import { LoadingLogEntry } from '../common/log-loader';
 import { useMemberNames, useRoleById } from './hooks';
@@ -54,7 +55,7 @@ const LogEntryWrapper = ({ logEntry }: { logEntry: AuditLogEntry }) => {
   const { sourceUser } = useMemberNames(logEntry);
 
   return (
-    <LogEntry date={new Date(logEntry.timestamp)} avatarUrl={sourceUser?.avatar}>
+    <LogEntry date={new Date(logEntry.timestamp)} avatarUrl={getUserAvatar(sourceUser, undefined)}>
       <Entry data={logEntry} />
     </LogEntry>
   );
