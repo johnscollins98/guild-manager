@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { Suspense, use, useMemo } from 'react';
 import { WarningTypeLabels, type WarningDTO } from 'server';
-import { discordUserQuery, useDiscordMembers } from '../../lib/apis/discord-api';
+import { getMemberOrUserQuery } from '../../lib/apis/discord-api';
 import { useWarnings } from '../../lib/apis/warnings-api';
 import { getUserAvatar, getUserName } from '../../lib/utils/helpers';
 import { useFilterString } from '../../lib/utils/use-filter-string';
@@ -39,40 +39,18 @@ export const WarningList = () => {
 const Entry = ({ warning }: { warning: WarningDTO }) => {
   const filterStringLowerCase = useFilterString().toLowerCase();
 
-  const discordMembers = useDiscordMembers();
-
-  const givenToMember = discordMembers.data.find(m => m.id === warning.givenTo);
-  const givenByMember = discordMembers.data.find(m => m.id === warning.givenBy);
-  const lastUpdatedByMember = warning.lastUpdatedBy
-    ? discordMembers.data.find(m => m.id === warning.lastUpdatedBy)
-    : undefined;
-
-  const givenByUser = useQuery({
-    ...discordUserQuery(warning.givenBy),
-    enabled: !givenByMember
+  const [givenBy, givenTo, lastUpdatedBy] = useSuspenseQueries({
+    queries: [
+      getMemberOrUserQuery(warning.givenBy),
+      getMemberOrUserQuery(warning.givenTo),
+      getMemberOrUserQuery(warning.lastUpdatedBy)
+    ]
   });
 
-  const givenToUser = useQuery({
-    ...discordUserQuery(warning.givenTo),
-    enabled: !givenToMember
-  });
+  const avatarUrl = useMemo(() => getUserAvatar(givenTo.data), [givenTo?.data]);
 
-  const lastUpdatedByUser = useQuery({
-    ...discordUserQuery(warning.lastUpdatedBy ?? ''),
-    enabled: !!warning.lastUpdatedBy && !lastUpdatedByMember
-  });
-
-  const avatarUrl = useMemo(
-    () => getUserAvatar(givenToMember, givenToUser.data),
-    [givenToMember, givenToUser.data]
-  );
-
-  if (givenByUser.isLoading || givenToUser.isLoading || lastUpdatedByUser.isLoading) {
-    return <LoadingLogEntry />;
-  }
-
-  const givenToName = getUserName(givenToMember, givenToUser.data);
-  const givenByName = getUserName(givenByMember, givenByUser.data);
+  const givenToName = getUserName(givenTo.data);
+  const givenByName = getUserName(givenBy.data);
 
   const summary = `[${WarningTypeLabels[warning.type]}] Given to ${givenToName} by ${givenByName}.`;
 
@@ -83,7 +61,7 @@ const Entry = ({ warning }: { warning: WarningDTO }) => {
   const details = [warning.reason];
 
   if (warning.lastUpdatedBy) {
-    const updatedMember = getUserName(lastUpdatedByMember, lastUpdatedByUser.data);
+    const updatedMember = getUserName(lastUpdatedBy.data);
     const updatedDate = new Date(warning.lastUpdatedTimestamp);
     details.push(`Last updated on ${updatedDate.toLocaleString()} by ${updatedMember}.`);
   }

@@ -1,18 +1,17 @@
+import { useSuspenseQueries } from '@tanstack/react-query';
 import { type AuditLogEntry } from 'server';
-import { useDiscordMembers, useDiscordRoles } from '../../lib/apis/discord-api';
+import { getMemberOrUserQuery, useDiscordRoles } from '../../lib/apis/discord-api';
+import { getUserName } from '../../lib/utils/helpers';
 
 export const useMemberNames = (data: AuditLogEntry) => {
-  const discordMembers = useDiscordMembers();
+  const [sourceUser, targetUser] = useSuspenseQueries({
+    queries: [getMemberOrUserQuery(data.sourceUserId), getMemberOrUserQuery(data.targetUserId)]
+  });
 
-  const sourceUser = discordMembers.data.find(m => m.id === data.sourceUserId);
-  const sourceName =
-    sourceUser?.nickname ?? sourceUser?.name ?? data.sourceUsername ?? 'Unknown User';
+  const sourceName = getUserName(sourceUser.data);
+  const targetName = getUserName(targetUser.data);
 
-  const targetUser = discordMembers.data.find(m => m.id === data.targetUserId);
-  const targetName =
-    targetUser?.nickname ?? targetUser?.name ?? data.targetUsername ?? 'Unknown User';
-
-  return { sourceName, targetName, sourceUser, targetUser };
+  return { sourceName, targetName, sourceUser: sourceUser.data, targetUser: targetUser.data };
 };
 
 export const useRoleById = (roleId?: string) => {

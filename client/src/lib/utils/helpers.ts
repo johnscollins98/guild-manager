@@ -15,10 +15,12 @@ export const snowflakeToDate = (snowflake: string): Date => {
   return new Date(Number(unixTimestamp));
 };
 
-export const getUserAvatar = (
-  member: DiscordMemberDTO | undefined,
-  user: DiscordUser | undefined
-) => {
+interface MemberOrUser {
+  member?: DiscordMemberDTO;
+  user?: DiscordUser;
+}
+
+export const getUserAvatar = ({ member, user }: MemberOrUser) => {
   const id = member?.id || user?.id;
   const avatar = member?.avatar || user?.avatar;
 
@@ -27,10 +29,7 @@ export const getUserAvatar = (
     : 'https://cdn.discordapp.com/embed/avatars/0.png';
 };
 
-export const getUserName = (
-  member: DiscordMemberDTO | undefined,
-  user: DiscordUser | undefined
-) => {
+export const getUserName = ({ member, user }: MemberOrUser) => {
   if (member?.nickname) return member.nickname;
   if (member?.name) return member.name;
   if (user?.username) return user.username;
