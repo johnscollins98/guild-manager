@@ -103,6 +103,7 @@ export class DiscordBot {
         displayName: m.displayName,
         nickname: m.nickname ?? undefined,
         username: m.user.username,
+        userId: m.user.id,
         userDisplayName: m.user.displayName,
         globalName: m.user.globalName ?? undefined,
         time: new Date()
