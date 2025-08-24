@@ -1,6 +1,7 @@
 import { SnackbarProvider } from 'notistack';
 import { type PropsWithChildren } from 'react';
 import { ConfirmContextProvider } from './confirm-dialog/confirm-context-provider';
+import { FilterStringProvider } from './filter-string-provider';
 import QueryProvider from './query-provider';
 import { ThemeProvider } from './theme/theme-provider';
 import { ToastProvider } from './toast/toast-provider';
@@ -11,7 +12,9 @@ export const Providers = ({ children }: PropsWithChildren) => {
       <ThemeProvider>
         <SnackbarProvider maxSnack={5} autoHideDuration={3000}>
           <ToastProvider>
-            <ConfirmContextProvider>{children}</ConfirmContextProvider>
+            <FilterStringProvider>
+              <ConfirmContextProvider>{children}</ConfirmContextProvider>
+            </FilterStringProvider>
           </ToastProvider>
         </SnackbarProvider>
       </ThemeProvider>

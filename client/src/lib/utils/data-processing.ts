@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
 import type MemberRecord from '../interfaces/member-record';
+import { getUserAvatar } from './helpers';
 
 export const generateGW2RosterRecords = (
   gw2Members: GW2MemberResponseDTO[],
@@ -49,7 +50,7 @@ export const generateGW2RosterRecords = (
     // this is probably already sorted this way but just incase
     const roles = discordMember?.roles?.sort((a, b) => b.position - a.position) || [];
 
-    const avatar = discordMember?.avatar;
+    const avatar = getUserAvatar(discordMember, undefined);
     const warningsForThisMember = discordId
       ? warnings.filter(warning => warning.givenTo === discordId)
       : [];
