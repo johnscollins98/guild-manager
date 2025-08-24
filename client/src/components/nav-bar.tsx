@@ -13,11 +13,12 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { type Mode } from '@mui/system/cssVars/useCurrentColorScheme';
 import type React from 'react';
-import { useCallback, useState } from 'react';
+import { use, useCallback, useState } from 'react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { config } from '../lib/config';
 import { useConfirm } from './common/confirm-dialog';
+import { FilterStringContext } from './common/filter-string-provider';
 import './nav-bar.scss';
 
 const LINKS = [
@@ -46,8 +47,9 @@ const NavBar = ({ maxWidth }: Props) => {
     [setMode, setModeMenuAnchor]
   );
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filterString = searchParams.get('filterString') || '';
+  const [searchParams] = useSearchParams();
+
+  const [filterString, setFilterString] = use(FilterStringContext);
 
   const confirm = useConfirm();
 
@@ -55,15 +57,7 @@ const NavBar = ({ maxWidth }: Props) => {
 
   const filterChangeHandler: React.ChangeEventHandler<HTMLInputElement> = e => {
     const filterStringVal = e.target.value;
-
-    setSearchParams(old => {
-      if (filterStringVal === '') {
-        old.delete('filterString');
-      } else {
-        old.set('filterString', filterStringVal);
-      }
-      return old;
-    });
+    setFilterString(filterStringVal);
   };
 
   const linkSearchParamString = filterString

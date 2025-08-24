@@ -1,7 +1,7 @@
-import { useSearchParams } from 'react-router-dom';
+import { use } from 'react';
+import { FilterStringContext } from '../../components/common/filter-string-provider';
 
 export const useFilterString = () => {
-  const [searchParams] = useSearchParams();
-  const str = searchParams.get('filterString') ?? '';
+  const [str] = use(FilterStringContext);
   return str.toLowerCase();
 };
