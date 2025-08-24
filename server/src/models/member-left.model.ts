@@ -20,6 +20,9 @@ export class MemberLeft {
   @Column({ nullable: true })
   globalName?: string;
 
+  @Column({ nullable: true })
+  userId?: string;
+
   @Column()
   time!: Date;
 }
