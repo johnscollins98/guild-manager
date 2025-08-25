@@ -30,8 +30,7 @@ import {
   DiscordRole,
   DiscordUser,
   EventSettingsUpsertDTO,
-  MemberLeftDTO,
-  daysOfWeek
+  MemberLeftDTO
 } from '../dtos';
 import { DiscordApiFactory } from '../services/discord/api-factory';
 import { IDiscordChannelApi } from '../services/discord/channel-api';
@@ -41,7 +40,6 @@ import { DiscordMemberFormatter } from '../services/discord/member-formatter';
 import { IDiscordUserApi } from '../services/discord/user-api';
 import { AuditLogRepository } from '../services/repositories/audit-log-repository';
 import { EventPostSettingsRepository } from '../services/repositories/event-post-settings-repository';
-import { EventRepository } from '../services/repositories/event-repository';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
 import { IDiscordController } from './interfaces/discord-interface';
 
@@ -56,7 +54,6 @@ export class DiscordController implements IDiscordController {
     discordApiFactory: DiscordApiFactory,
     private readonly discordMemberFormatter: DiscordMemberFormatter,
     private readonly discordEventEmbedCreator: EventEmbedCreator,
-    private readonly eventRepository: EventRepository,
     private readonly eventSettingsRepository: EventPostSettingsRepository,
     private readonly memberLeftRepository: MemberLeftRepository,
     private readonly auditLogRepo: AuditLogRepository
@@ -234,23 +231,7 @@ export class DiscordController implements IDiscordController {
 
     const channelMessages = await this.discordChannelApi.getChannelMessages(channelId);
 
-    const embedPromises = daysOfWeek.map(async day => {
-      const events = await this.eventRepository.getEventsOnADay(day, { ignore: false });
-      const parseTime = (str: string) => {
-        return Date.parse(`1970/01/01 ${str}`);
-      };
-
-      const sorted = events.sort((a, b) => {
-        const aTime = parseTime(a.startTime);
-        const bTime = parseTime(b.startTime);
-
-        return aTime - bTime;
-      });
-
-      return this.discordEventEmbedCreator.createEmbed(day, sorted);
-    });
-
-    const embeds = await Promise.all(embedPromises);
+    const embeds = await this.discordEventEmbedCreator.createEmbeds();
 
     if (settings.editMessages) {
       const messageId = settings.messageId;

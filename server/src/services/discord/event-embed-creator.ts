@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
-import { DayOfWeek, DiscordEmbed } from '../../dtos';
+import { DayOfWeek, daysOfWeek, DiscordEmbed } from '../../dtos';
 import { Event } from '../../models/event.model';
+import { EventRepository } from '../repositories/event-repository';
 
 const dayOfWeekToIndex: Record<DayOfWeek, number> = {
   Dynamic: 1,
@@ -15,18 +16,49 @@ const dayOfWeekToIndex: Record<DayOfWeek, number> = {
 
 @Service()
 export class EventEmbedCreator {
-  createEmbed(day: string, events: Omit<Event, 'id'>[]): DiscordEmbed {
+  constructor(private readonly eventsRepository: EventRepository) {}
+
+  async createEmbeds(): Promise<DiscordEmbed[]> {
+    const embeds = await Promise.all(
+      daysOfWeek.map(async day => {
+        const events = await this.eventsRepository.getEventsOnADay(day, { ignore: false });
+        if (day === 'Dynamic' && events.length === 0) return null;
+
+        const parseTime = (str: string) => {
+          return Date.parse(`1970/01/01 ${str}`);
+        };
+
+        const sorted = events.sort((a, b) => {
+          const aTime = parseTime(a.startTime);
+          const bTime = parseTime(b.startTime);
+
+          return aTime - bTime;
+        });
+
+        return this.createEmbed(day, sorted);
+      })
+    );
+
+    return embeds.filter(e => e !== null);
+  }
+
+  public createEmbed(day: DayOfWeek, events: Omit<Event, 'id'>[]) {
+    const fields = events.map(event => ({
+      name: `\u200b\n📅 **${event.title}**`,
+      value: `⏰ ${
+        event.startTime ? this.generateTimestamp(event) : ''
+      }\n⏳ ${event.duration}\n👑 <@${event.leaderId}>${event.ignore ? `\n*Ignored*` : ''}`
+    }));
+
+    if (fields.length === 0) {
+      fields.push({ name: '', value: 'None :(' });
+    }
+
     return {
       color: 3447003,
       title: `${day} Events`,
-      fields: events.map((event, i) => {
-        return {
-          name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
-          value: `⏰ ${
-            event.startTime ? this.generateTimestamp(event) : 'TBD'
-          }${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>${event.ignore ? `\n*Ignored*` : ''}`
-        };
-      })
+      fields,
+      footer: { text: '\u200b'.padEnd(150) + '\u200b' }
     };
   }
 
