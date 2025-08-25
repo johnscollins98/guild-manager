@@ -136,6 +136,7 @@ export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) =>
           value={localStartTime}
           slotProps={{ inputLabel: { shrink: true } }}
           hiddenLabel
+          onReset={() => setUtcStartTimeWithLocalTime('')}
           type="time"
         />
         <EditField label="Duration" onEdit={v => onEdit('duration', v)} value={event.duration} />
