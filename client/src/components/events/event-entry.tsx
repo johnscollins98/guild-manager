@@ -65,7 +65,7 @@ const EventEntry = ({ event, hasEditPermission }: Props) => {
             <Tooltip title={leader?.name}>
               <Avatar
                 alt={leader?.id}
-                src={getUserAvatar(leader, undefined)}
+                src={getUserAvatar({ member: leader })}
                 sx={{ width: '32px', height: '32px' }}
               >
                 {leader?.name}

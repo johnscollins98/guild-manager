@@ -55,7 +55,7 @@ const LogEntryWrapper = ({ logEntry }: { logEntry: AuditLogEntry }) => {
   const { sourceUser } = useMemberNames(logEntry);
 
   return (
-    <LogEntry date={new Date(logEntry.timestamp)} avatarUrl={getUserAvatar(sourceUser, undefined)}>
+    <LogEntry date={new Date(logEntry.timestamp)} avatarUrl={getUserAvatar(sourceUser)}>
       <Entry data={logEntry} />
     </LogEntry>
   );

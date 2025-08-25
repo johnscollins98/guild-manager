@@ -1,29 +1,15 @@
 import { Box, Button } from '@mui/material';
-import { useSuspenseInfiniteQuery, useSuspenseQueries } from '@tanstack/react-query';
-import { useMemo } from 'react';
-import { type DiscordLog } from 'server';
-import {
-  discordLeaversQuery,
-  discordLogQuery,
-  discordMembersQuery
-} from '../../lib/apis/discord-api';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { Suspense, useMemo } from 'react';
+import { type DiscordLog, type DiscordLogUser } from 'server';
+import { discordLogQuery, useDiscordLeavers } from '../../lib/apis/discord-api';
 import { snowflakeToDate } from '../../lib/utils/helpers';
-import { useFilterString } from '../../lib/utils/use-filter-string';
-import LogEntry from '../common/log-entry';
-import { getDiscordLogData } from './discord-log-formatter';
-
-interface DiscordLogEntry {
-  avatarUrl?: string;
-  summary: string;
-  details: string[];
-  date: Date;
-}
+import { LoadingLogEntry } from '../common/log-loader';
+import { DiscordLogDisplay, type Log } from './discord-log-display';
+import { type Leaver, LeaverLogDisplay } from './leaver-log-display';
 
 const DiscordLog = () => {
-  const filterString = useFilterString();
-  const [discordMembers, discordLeavers] = useSuspenseQueries({
-    queries: [discordMembersQuery, discordLeaversQuery]
-  });
+  const discordLeavers = useDiscordLeavers();
 
   const discordLog = useSuspenseInfiniteQuery({
     initialPageParam: '',
@@ -46,54 +32,30 @@ const DiscordLog = () => {
       )
   });
 
-  const logData: DiscordLogEntry[] | undefined = useMemo(() => {
-    const auditData = discordLog.data.audit_log_entries
-      .map(entry => getDiscordLogData(entry, discordMembers.data, discordLog.data.users))
-      .filter(entry => entry !== null);
-
+  const sortedAndFiltered = useMemo(() => {
+    const auditData = discordLog.data.audit_log_entries.map(
+      d => ({ ...d, date: snowflakeToDate(d.id), leaver: false }) as const
+    );
     const leaversData = discordLeavers.data
       .filter(l => {
         const leaverDate = new Date(l.time);
-        const lastLog =
-          discordLog.data.audit_log_entries[discordLog.data.audit_log_entries.length - 1]!;
-        const lastLogDate = snowflakeToDate(lastLog.id);
+        const lastLog = auditData[auditData.length - 1]!;
+        const lastLogDate = lastLog.date;
 
         return leaverDate.getTime() >= lastLogDate.getTime();
       })
-      .map(l => ({
-        summary: `${l.displayName} left.`,
-        details: [
-          `Account Name: ${l.username ?? ''}`,
-          `User Display Name: ${l.userDisplayName ?? ''}`,
-          `Global Name: ${l.globalName ?? ''}`,
-          ...(l.nickname ? [`Nickname: ${l.nickname}`] : [])
-        ],
-        date: new Date(l.time)
-      }));
+      .map(l => ({ ...l, date: new Date(l.time), leaver: true }) as const);
 
     return [...auditData, ...leaversData].sort((a, b) => b.date.getTime() - a.date.getTime());
-  }, [discordLog.data, discordLeavers.data, discordMembers.data]);
-
-  const filteredLogData = useMemo(() => {
-    return logData.filter(
-      entry =>
-        entry.summary.toLowerCase().includes(filterString) ||
-        entry.details?.some(detail => detail.toLowerCase().includes(filterString))
-    );
-  }, [logData, filterString]);
+  }, [discordLeavers.data, discordLog.data.audit_log_entries]);
 
   return (
-    <Box overflow="auto" sx={{ overflowAnchor: 'none' }}>
-      {filteredLogData.map(entry => {
+    <Box sx={{ overflowAnchor: 'none', overflowY: 'auto', overflowX: 'hidden' }}>
+      {sortedAndFiltered.map(entry => {
         return (
-          <LogEntry
-            details={entry.details}
-            date={entry.date}
-            avatarUrl={entry.avatarUrl}
-            key={entry.date.toISOString()}
-          >
-            {entry.summary}
-          </LogEntry>
+          <Suspense fallback={<LoadingLogEntry />} key={entry.id}>
+            <LogSwitch entry={entry} users={discordLog.data.users} />
+          </Suspense>
         );
       })}
       <Box display="flex" justifyContent="center">
@@ -106,6 +68,16 @@ const DiscordLog = () => {
         </Button>
       </Box>
     </Box>
+  );
+};
+
+type Entry = Log | Leaver;
+
+const LogSwitch = ({ entry, users }: { entry: Entry; users: DiscordLogUser[] }) => {
+  return entry.leaver ? (
+    <LeaverLogDisplay entry={entry} users={users} />
+  ) : (
+    <DiscordLogDisplay entry={entry} users={users} />
   );
 };
 

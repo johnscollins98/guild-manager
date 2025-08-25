@@ -3,9 +3,11 @@ import { AxiosError } from 'axios';
 import {
   type DiscordMemberDTO,
   type DiscordRole,
+  type DiscordUser,
   type EventSettingsUpsertDTO,
   type IDiscordController
 } from 'server';
+import { queryClient } from '../../components/common/query-provider';
 import { useToast } from '../../components/common/toast/toast-context';
 import { config } from '../config';
 import { createApi } from './axios-wrapper';
@@ -27,7 +29,7 @@ const discordApi: IDiscordController = {
   getLeavers: () => api('leavers'),
   getBotRoles: () => api('bot-roles'),
   getBot: () => api('bot'),
-  getUserById: userId => api(`user/${userId}`),
+  getUserById: userId => api(`user/${userId}`, { validateStatus: s => s === 200 || s === 404 }),
   getChannels: () => api('channels'),
   getMessages: id => api(`channels/${id}/messages`),
   addRoleToMember: (memberId, roleId) =>
@@ -92,6 +94,33 @@ export const discordMessagesQuery = (id: string) =>
   });
 
 export const useDiscordMessages = (id: string) => useSuspenseQuery(discordMessagesQuery(id));
+
+export const getMemberOrUserQuery = (id?: string, userList?: DiscordUser[]) =>
+  queryOptions({
+    queryKey: ['memberOrUser', id],
+    queryFn: async (): Promise<{ member?: DiscordMemberDTO; user?: DiscordUser }> => {
+      if (!id) return {};
+
+      // check in list of members first
+      const discordMembers = await queryClient.fetchQuery(discordMembersQuery);
+      const member = discordMembers.find(m => m.id === id);
+      if (member) {
+        return { member };
+      }
+
+      // check in list of users
+      if (userList) {
+        const user = userList.find(u => u.id === id);
+        if (user) {
+          return { user };
+        }
+      }
+
+      // get via api only if needed
+      const user = await queryClient.fetchQuery(discordUserQuery(id));
+      return { user };
+    }
+  });
 
 export interface ChangeRoleDTO {
   memberId: string;

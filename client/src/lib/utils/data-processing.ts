@@ -50,7 +50,7 @@ export const generateGW2RosterRecords = (
     // this is probably already sorted this way but just incase
     const roles = discordMember?.roles?.sort((a, b) => b.position - a.position) || [];
 
-    const avatar = getUserAvatar(discordMember, undefined);
+    const avatar = getUserAvatar({ member: discordMember });
     const warningsForThisMember = discordId
       ? warnings.filter(warning => warning.givenTo === discordId)
       : [];
