@@ -112,6 +112,8 @@ export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) =>
             hour12: false
           })
         );
+      } else {
+        onEdit('startTime', '');
       }
     },
     [onEdit]
