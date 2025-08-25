@@ -50,7 +50,7 @@ const DiscordLog = () => {
   }, [discordLeavers.data, discordLog.data.audit_log_entries]);
 
   return (
-    <Box overflow="auto" sx={{ overflowAnchor: 'none' }}>
+    <Box sx={{ overflowAnchor: 'none', overflowY: 'auto', overflowX: 'hidden' }}>
       {sortedAndFiltered.map(entry => {
         return (
           <Suspense fallback={<LoadingLogEntry />} key={entry.id}>
