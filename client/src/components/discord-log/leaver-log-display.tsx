@@ -35,7 +35,7 @@ export const LeaverLogDisplay = ({ entry, users }: { entry: Leaver; users: Disco
 
   const summary = `${entryCopy.displayName} left.`;
 
-  if (useIsFiltered(summary, details)) return null;
+  if (!useIsFiltered(summary, details)) return null;
 
   return (
     <LogEntry date={entryCopy.date} details={details} avatarUrl={avatar}>
