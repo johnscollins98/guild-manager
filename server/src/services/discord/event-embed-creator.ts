@@ -22,6 +22,7 @@ export class EventEmbedCreator {
     const embeds = await Promise.all(
       daysOfWeek.map(async day => {
         const events = await this.eventsRepository.getEventsOnADay(day, { ignore: false });
+        if (day === 'Dynamic' && events.length === 0) return null;
 
         const parseTime = (str: string) => {
           return Date.parse(`1970/01/01 ${str}`);
@@ -38,7 +39,7 @@ export class EventEmbedCreator {
       })
     );
 
-    return embeds;
+    return embeds.filter(e => e !== null);
   }
 
   public createEmbed(day: DayOfWeek, events: Omit<Event, 'id'>[]) {
