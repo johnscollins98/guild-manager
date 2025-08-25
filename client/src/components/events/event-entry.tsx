@@ -2,6 +2,7 @@ import { Avatar, Box, CardActionArea, type PopoverPosition, Typography } from '@
 import Tooltip from '@mui/material/Tooltip';
 import { useMemo, useState } from 'react';
 import { type EventDTO } from 'server';
+import { getUserAvatar } from '../../lib/utils/helpers';
 import { useEventLeaders } from './event-leaders-context';
 import { EventMenu } from './event-menu';
 
@@ -62,7 +63,11 @@ const EventEntry = ({ event, hasEditPermission }: Props) => {
           </Box>
           <Box display="flex" gap={1} alignItems="center">
             <Tooltip title={leader?.name}>
-              <Avatar alt={leader?.id} src={leader?.avatar} sx={{ width: '32px', height: '32px' }}>
+              <Avatar
+                alt={leader?.id}
+                src={getUserAvatar(leader, undefined)}
+                sx={{ width: '32px', height: '32px' }}
+              >
                 {leader?.name}
               </Avatar>
             </Tooltip>
