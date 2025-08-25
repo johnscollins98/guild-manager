@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
-import { DayOfWeek, DiscordEmbed } from '../../dtos';
+import { DayOfWeek, daysOfWeek, DiscordEmbed } from '../../dtos';
 import { Event } from '../../models/event.model';
+import { EventRepository } from '../repositories/event-repository';
 
 const dayOfWeekToIndex: Record<DayOfWeek, number> = {
   Dynamic: 1,
@@ -15,7 +16,32 @@ const dayOfWeekToIndex: Record<DayOfWeek, number> = {
 
 @Service()
 export class EventEmbedCreator {
-  createEmbed(day: string, events: Omit<Event, 'id'>[]): DiscordEmbed {
+  constructor(private readonly eventsRepository: EventRepository) {}
+
+  async createEmbeds(): Promise<DiscordEmbed[]> {
+    const embeds = await Promise.all(
+      daysOfWeek.map(async day => {
+        const events = await this.eventsRepository.getEventsOnADay(day, { ignore: false });
+
+        const parseTime = (str: string) => {
+          return Date.parse(`1970/01/01 ${str}`);
+        };
+
+        const sorted = events.sort((a, b) => {
+          const aTime = parseTime(a.startTime);
+          const bTime = parseTime(b.startTime);
+
+          return aTime - bTime;
+        });
+
+        return this.createEmbed(day, sorted);
+      })
+    );
+
+    return embeds;
+  }
+
+  public createEmbed(day: DayOfWeek, events: Omit<Event, 'id'>[]) {
     return {
       color: 3447003,
       title: `${day} Events`,
