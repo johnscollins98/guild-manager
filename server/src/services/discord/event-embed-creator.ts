@@ -43,17 +43,22 @@ export class EventEmbedCreator {
   }
 
   public createEmbed(day: DayOfWeek, events: Omit<Event, 'id'>[]) {
+    const fields = events.map(event => ({
+      name: `\u200b\n📅 **${event.title}**`,
+      value: `⏰ ${
+        event.startTime ? this.generateTimestamp(event) : ''
+      }\n⏳ ${event.duration}\n👑 <@${event.leaderId}>${event.ignore ? `\n*Ignored*` : ''}`
+    }));
+
+    if (fields.length === 0) {
+      fields.push({ name: '', value: 'None :(' });
+    }
+
     return {
       color: 3447003,
       title: `${day} Events`,
-      fields: events.map((event, i) => {
-        return {
-          name: `\u200b${i !== 0 ? '\n' : ''}📅 **${event.title}**`,
-          value: `⏰ ${
-            event.startTime ? this.generateTimestamp(event) : 'TBD'
-          }${`\u200b\u3000`.repeat(15)}\n⏳ ${event.duration}\n👑 <@${event.leaderId}>${event.ignore ? `\n*Ignored*` : ''}`
-        };
-      })
+      fields,
+      footer: { text: '\u200b'.padEnd(150) + '\u200b' }
     };
   }
 
