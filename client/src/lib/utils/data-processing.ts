@@ -116,7 +116,7 @@ export const getExcessDiscordRecords = (
         discordId: discordMember.id,
         roles: discordMember.roles || [],
         manualMatch: false,
-        avatar: discordMember.avatar,
+        avatar: getUserAvatar({ member: discordMember }),
         warnings: warnings.filter(w => w.givenTo === discordMember.id),
         issues: {
           pending,
