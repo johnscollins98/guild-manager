@@ -10,6 +10,7 @@ import {
   WarningTypeLabels
 } from 'server';
 import { useDeleteWarningMutation, useUpdateWarningMutation } from '../../../lib/apis/warnings-api';
+import { getUserAvatar } from '../../../lib/utils/helpers';
 import { useConfirm } from '../../common/confirm-dialog';
 import WarningFormDialog from './warning-form';
 
@@ -66,7 +67,7 @@ export const WarningEntry = ({ warning, getDiscordMemberById, authData }: Warnin
           <Box display="flex" gap="8px" alignItems="center">
             <Tooltip title={`Given by ${givenByName}`}>
               <Avatar
-                src={givenByUser?.avatar}
+                src={getUserAvatar({ member: givenByUser })}
                 alt={givenByName}
                 sx={{ height: '32px', width: '32px' }}
               >
