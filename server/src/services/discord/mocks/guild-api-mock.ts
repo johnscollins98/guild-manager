@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { ChannelType } from 'discord.js';
+import { APIGuildScheduledEvent, ChannelType } from 'discord.js';
 import { HttpError } from 'routing-controllers';
 import { Service } from 'typedi';
 import {
@@ -54,6 +54,9 @@ const log: DiscordLog = {
 
 @Service()
 export class MockDiscordGuildApi implements IDiscordGuildApi {
+  getEvents(): Promise<APIGuildScheduledEvent[]> {
+    return Promise.resolve([]);
+  }
   getChannels(): Promise<DiscordChannel[]> {
     return Promise.resolve(channels);
   }
