@@ -134,8 +134,10 @@ export const EventForm = ({ onSubmit, initialData, onClose }: EventFormProps) =>
           label={`Start Time (${timezoneString})`}
           onEdit={setUtcStartTimeWithLocalTime}
           value={localStartTime}
-          slotProps={{ inputLabel: { shrink: true } }}
-          hiddenLabel
+          slotProps={{
+            inputLabel: { shrink: true },
+            input: { disableUnderline: true, sx: { borderRadius: '4px' } }
+          }}
           type="time"
         />
         <EditField label="Duration" onEdit={v => onEdit('duration', v)} value={event.duration} />
@@ -181,7 +183,6 @@ interface EditFieldProps extends ComponentProps<typeof TextField> {
 const EditField = ({ onEdit, ...props }: EditFieldProps) => {
   return (
     <TextField
-      variant="outlined"
       size="small"
       onChange={e => {
         onEdit(e.target.value);

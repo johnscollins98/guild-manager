@@ -40,7 +40,7 @@ export const EventList = () => {
     [eventsQuery.data, filterString]
   );
   return (
-    <Box display="flex" overflow="auto" flexWrap="wrap" sx={{ gap: { md: '4px' } }}>
+    <Box display="flex" overflow="auto" flexWrap="wrap" sx={{ gap: '4px' }}>
       {sortedEvents.map(event => (
         <EventEntry event={event} hasEditPermission={auth.data.permissions.EVENTS} key={event.id} />
       ))}

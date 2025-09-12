@@ -89,7 +89,16 @@ const AssociateMemberForm = ({ member, onClose }: AssociateMemberFormProps) => {
         options={data
           .filter(member => member.id !== undefined && member.name !== undefined)
           .map(member => ({ label: member.nickname ?? member.name!, value: member.id! }))}
-        renderInput={p => <TextField label="Select Discord Member" required {...p} />}
+        renderInput={p => (
+          <TextField
+            label="Select Discord Member"
+            required
+            {...p}
+            slotProps={{
+              input: { ...p.InputProps, disableUnderline: true, sx: { borderRadius: '4px' } }
+            }}
+          />
+        )}
         fullWidth
       />
       <div className="actions">

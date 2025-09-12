@@ -48,6 +48,17 @@ const theme = createTheme({
           border: `1px solid ${theme.palette.divider}`
         })
       }
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'filled',
+        slotProps: {
+          input: props => ({
+            disableUnderline: props.variant === 'filled',
+            sx: { ...props.sx, borderRadius: '4px' }
+          })
+        }
+      }
     }
   }
 });

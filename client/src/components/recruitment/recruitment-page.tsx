@@ -130,7 +130,8 @@ const RecruitmentPage = () => {
         style={{
           flex: 1,
           paddingTop: '16px',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          borderRadius: '4px'
         }}
         className="input-wrapper"
       >
@@ -168,7 +169,8 @@ const RecruitmentPage = () => {
               sx: {
                 height: '100%',
                 paddingRight: '0px'
-              }
+              },
+              disableUnderline: true
             }
           }}
           name="message"
