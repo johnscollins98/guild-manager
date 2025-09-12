@@ -104,9 +104,11 @@ const EventPosterForm = ({ onClose }: Props) => {
           renderInput={r => (
             <TextField
               {...r}
+              slotProps={{
+                input: { ...r.InputProps, disableUnderline: true, sx: { borderRadius: '4px' } }
+              }}
               label="Channel ID to post to"
               size="small"
-              variant="standard"
               margin="dense"
               required
             />
@@ -139,7 +141,15 @@ const EventPosterForm = ({ onClose }: Props) => {
           <Autocomplete
             fullWidth
             renderInput={r => (
-              <TextField {...r} margin="dense" variant="standard" label="Message ID" required />
+              <TextField
+                {...r}
+                slotProps={{
+                  input: { ...r.InputProps, disableUnderline: true, sx: { borderRadius: '4px' } }
+                }}
+                margin="dense"
+                label="Message ID"
+                required
+              />
             )}
             size="small"
             value={messageId}

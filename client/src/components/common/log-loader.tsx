@@ -15,10 +15,16 @@ export const LogLoader = () => {
 
 export const LoadingLogEntry = () => {
   return (
-    <Accordion className="log-entry" disableGutters>
+    <Accordion
+      className="log-entry"
+      disableGutters
+      slotProps={{ root: { sx: { ':before': { display: 'none' } } } }}
+    >
       <AccordionSummary
         className="log-summary"
-        slotProps={{ content: { className: 'summary-content' } }}
+        slotProps={{
+          content: { className: 'summary-content' }
+        }}
       >
         <Box display="flex" gap={1.5} alignItems="center">
           <Skeleton variant="circular" width="30px" height="30px" />

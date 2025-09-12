@@ -56,7 +56,6 @@ const WarningForm = ({ onSubmit, initialData, onClose, isPending }: WarningFormP
         onChange={e => setWarningType(e.target.value as WarningType)}
         label="Warning"
         select
-        variant="outlined"
         fullWidth
         size="small"
         required
@@ -70,7 +69,6 @@ const WarningForm = ({ onSubmit, initialData, onClose, isPending }: WarningFormP
       <TextField
         value={warningReason}
         onChange={e => setWarningReason(e.target.value)}
-        variant="outlined"
         label="Reason"
         size="small"
         fullWidth

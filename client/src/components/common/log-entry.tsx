@@ -16,7 +16,13 @@ interface Props {
 
 const LogEntry = ({ children, details, date, avatarUrl }: Props) => {
   return (
-    <Accordion className="log-entry" disableGutters={details ? details.length === 0 : true}>
+    <Accordion
+      className="log-entry"
+      disableGutters={details ? details.length === 0 : true}
+      slotProps={{
+        root: { sx: { ':before': { display: 'none' } } }
+      }}
+    >
       <AccordionSummary
         expandIcon={details?.length ? <ExpandMore /> : null}
         className="log-summary"

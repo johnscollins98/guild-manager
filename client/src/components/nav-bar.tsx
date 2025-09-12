@@ -2,7 +2,8 @@ import Brightness3 from '@mui/icons-material/Brightness3';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { Menu, MenuItem, useColorScheme } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment, Menu, MenuItem, useColorScheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -96,19 +97,29 @@ const NavBar = ({ maxWidth }: Props) => {
         >
           <MenuIcon />
         </IconButton>
-        <Box display="flex" gap="4px">
-          <form>
-            <TextField
-              id="filter"
-              name="filter"
-              label="Filter"
-              type="text"
-              size="small"
-              fullWidth
-              value={filterString}
-              onChange={filterChangeHandler}
-            />
-          </form>
+        <Box display="flex" alignItems="center" gap="4px">
+          <TextField
+            id="filter"
+            name="filter"
+            label="Filter"
+            hiddenLabel
+            slotProps={{
+              inputLabel: { sx: { display: 'none' } },
+              input: {
+                disableUnderline: true,
+                sx: { borderRadius: '4px' },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ height: '16px', width: '16px' }} />
+                  </InputAdornment>
+                )
+              }
+            }}
+            type="text"
+            size="small"
+            value={filterString}
+            onChange={filterChangeHandler}
+          />
           <Tooltip title="Change Theme">
             <IconButton onClick={e => setModeMenuAnchor(e.currentTarget)}>
               <Brightness3 />
