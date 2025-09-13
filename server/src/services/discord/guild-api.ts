@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { Routes } from 'discord.js';
+import { APIGuildScheduledEvent, Routes } from 'discord.js';
 import { Service } from 'typedi';
 import { config } from '../../config';
 import {
@@ -21,6 +21,7 @@ export interface IDiscordGuildApi {
   removeRoleFromMember(memberId: string, roleId: string): Promise<boolean>;
   addRoleToMember(memberId: string, roleId: string): Promise<boolean>;
   updateMember(memberId: string, updates: DiscordMemberUpdate): Promise<DiscordMember>;
+  getEvents(): Promise<APIGuildScheduledEvent[]>;
 }
 
 @Service()
@@ -79,5 +80,9 @@ export class DiscordGuildApi implements IDiscordGuildApi {
 
   async getChannels(): Promise<DiscordChannel[]> {
     return await this.discordApi.get(`${this.baseUrl}/channels`);
+  }
+
+  async getEvents(): Promise<APIGuildScheduledEvent[]> {
+    return await this.discordApi.get(Routes.guildScheduledEvents(config.discordGuildId));
   }
 }
