@@ -28,7 +28,7 @@ const LINKS = [
   { label: 'Discord Log', link: '/discord-log' },
   { label: 'Warning Log', link: '/warning-log' },
   { label: 'Audit Log', link: '/audit-log' },
-  { label: 'Events', link: '/events' },
+  // { label: 'Events', link: '/events' },
   { label: 'Recruitment', link: '/recruitment' }
 ];
 
