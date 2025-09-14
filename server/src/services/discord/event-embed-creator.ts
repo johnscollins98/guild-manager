@@ -43,7 +43,8 @@ export class EventEmbedCreator {
     const laterMessagesPart = laterMessage ? `\n\n**Events coming later:**\n${laterMessage}` : '';
 
     return {
-      content: `**Upcoming Sunspear Order Events:**\n${upcomingMessage}${laterMessagesPart}\n\n~~--------------------------------------------~~`
+      content: `**Upcoming Sunspear Order Events:**\n${upcomingMessage}${laterMessagesPart}\n\n~~--------------------------------------------~~`,
+      embeds: []
     };
   }
 
