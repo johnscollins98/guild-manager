@@ -1,7 +1,10 @@
+import { APIGuildScheduledEvent, MessageEditOptions } from 'discord.js';
 import { Service } from 'typedi';
-import { DayOfWeek, daysOfWeek, DiscordEmbed } from '../../dtos';
+import { config } from '../../config';
+import { DayOfWeek } from '../../dtos';
 import { Event } from '../../models/event.model';
-import { EventRepository } from '../repositories/event-repository';
+import { DiscordApiFactory } from './api-factory';
+import { IDiscordGuildApi } from './guild-api';
 
 const dayOfWeekToIndex: Record<DayOfWeek, number> = {
   Dynamic: 1,
@@ -16,30 +19,32 @@ const dayOfWeekToIndex: Record<DayOfWeek, number> = {
 
 @Service()
 export class EventEmbedCreator {
-  constructor(private readonly eventsRepository: EventRepository) {}
+  private readonly guildApi: IDiscordGuildApi;
+  constructor(discordApiFactory: DiscordApiFactory) {
+    this.guildApi = discordApiFactory.guildApi();
+  }
 
-  async createEmbeds(): Promise<DiscordEmbed[]> {
-    const embeds = await Promise.all(
-      daysOfWeek.map(async day => {
-        const events = await this.eventsRepository.getEventsOnADay(day, { ignore: false });
-        if (day === 'Dynamic' && events.length === 0) return null;
+  async createEmbeds(): Promise<MessageEditOptions> {
+    const events = await this.guildApi.getEvents();
 
-        const parseTime = (str: string) => {
-          return Date.parse(`1970/01/01 ${str}`);
-        };
-
-        const sorted = events.sort((a, b) => {
-          const aTime = parseTime(a.startTime);
-          const bTime = parseTime(b.startTime);
-
-          return aTime - bTime;
-        });
-
-        return this.createEmbed(day, sorted);
-      })
+    const in7Days = new Date();
+    in7Days.setDate(in7Days.getDate() + 7);
+    const [upcoming, later] = events.reduce(
+      ([u, l], event) => {
+        const isUpcoming = new Date(event.scheduled_start_time).valueOf() <= in7Days.valueOf();
+        return isUpcoming ? [[...u, event], l] : [u, [...l, event]];
+      },
+      [[], []] as [APIGuildScheduledEvent[], APIGuildScheduledEvent[]]
     );
 
-    return embeds.filter(e => e !== null);
+    const upcomingMessage = this.eventListToMessage(upcoming);
+    const laterMessage = this.eventListToMessage(later);
+
+    const laterMessagesPart = laterMessage ? `\n\n**Events coming later:**\n${laterMessage}` : '';
+
+    return {
+      content: `**Upcoming Sunspear Order Events:**\n${upcomingMessage}${laterMessagesPart}\n\n~~--------------------------------------------~~`
+    };
   }
 
   public createEmbed(day: DayOfWeek, events: Omit<Event, 'id'>[]) {
@@ -74,5 +79,22 @@ export class EventEmbedCreator {
     today.setUTCSeconds(0);
 
     return `<t:${Math.floor(today.valueOf() / 1000)}:t>`;
+  }
+
+  private eventListToMessage(events: APIGuildScheduledEvent[]) {
+    return events
+      .sort((a, b) => {
+        const bDate = new Date(b.scheduled_start_time);
+        const aDate = new Date(a.scheduled_start_time);
+
+        return aDate.valueOf() - bDate.valueOf();
+      })
+      .map(e => {
+        const name = e.name;
+        const timestamp = new Date(e.scheduled_start_time);
+
+        return `* [${name}](https://discord.com/events/${config.discordGuildId}/${e.id}) (<t:${Math.floor(timestamp.valueOf() / 1000)}:F>)`;
+      })
+      .join('\n');
   }
 }

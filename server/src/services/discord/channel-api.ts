@@ -1,3 +1,4 @@
+import { MessageEditOptions } from 'discord.js';
 import { Service } from 'typedi';
 import {
   DiscordChannel,
@@ -16,10 +17,10 @@ export interface IDiscordChannelApi {
   editMessage(
     channelId: string,
     messageId: string,
-    messageObject: DiscordMessagePost
+    messageObject: MessageEditOptions
   ): Promise<boolean>;
   addEmbed(channelId: string, embed: DiscordEmbed): Promise<boolean>;
-  sendMessage(channelId: string, messageObject: DiscordMessagePost): Promise<boolean>;
+  sendMessage(channelId: string, messageObject: MessageEditOptions): Promise<boolean>;
 }
 
 @Service()

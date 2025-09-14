@@ -241,9 +241,9 @@ export class DiscordController implements IDiscordController {
         throw new BadRequestError('Invalid Message IDs');
       }
 
-      await this.discordChannelApi.editMessage(channelId, messageId, { embeds: embeds });
+      await this.discordChannelApi.editMessage(channelId, messageId, embeds);
     } else {
-      await this.discordChannelApi.sendMessage(channelId, { embeds: embeds });
+      await this.discordChannelApi.sendMessage(channelId, embeds);
     }
 
     if (user) {
