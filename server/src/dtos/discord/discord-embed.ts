@@ -1,7 +1,8 @@
 export interface DiscordEmbed {
-  color: number;
+  color?: number;
   title: string;
-  fields: Field[];
+  fields?: Field[];
+  description?: string;
 }
 
 export interface Field {

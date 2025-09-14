@@ -21,7 +21,6 @@ export default class EventsListCommand implements Command {
 
   async execute(interaction: ChatInputCommandInteraction) {
     const embeds = await this.embedCreator.createEmbeds();
-
-    interaction.editReply({ embeds });
+    interaction.editReply(embeds);
   }
 }
