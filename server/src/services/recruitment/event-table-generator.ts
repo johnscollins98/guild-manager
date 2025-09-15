@@ -59,7 +59,7 @@ export class EventTableGenerator {
     }
 
     return this.generateLink(
-      `${new Date(event.scheduled_start_time).toLocaleTimeString(undefined, { timeZone: 'UTC', timeZoneName: 'short', hour: '2-digit', minute: '2-digit' })}`,
+      `${new Date(event.scheduled_start_time).toLocaleTimeString(undefined, { timeZone: 'UTC', timeZoneName: 'short', hour12: false, hour: '2-digit', minute: '2-digit' })}`,
       this.generateStartTimeUrl(event)
     );
   }
