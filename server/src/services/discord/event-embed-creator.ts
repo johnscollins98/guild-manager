@@ -29,10 +29,27 @@ export class EventEmbedCreator {
 
     const in7Days = new Date();
     in7Days.setDate(in7Days.getDate() + 7);
+    const in7DaysNum = in7Days.valueOf();
+
+    const in21Days = new Date();
+    const in21DaysNum = in21Days.setDate(in21Days.getDate() + 21).valueOf();
+
     const [upcoming, later] = events.reduce(
       ([u, l], event) => {
-        const isUpcoming = new Date(event.scheduled_start_time).valueOf() <= in7Days.valueOf();
-        return isUpcoming ? [[...u, event], l] : [u, [...l, event]];
+        const eventDate = new Date(event.scheduled_start_time).valueOf();
+        const isUpcoming = eventDate <= in7DaysNum;
+
+        if (isUpcoming) {
+          return [[...u, event], l];
+        }
+
+        const isLater = eventDate <= in21DaysNum;
+
+        if (isLater) {
+          return [u, [...l, event]];
+        }
+
+        return [u, l];
       },
       [[], []] as [APIGuildScheduledEvent[], APIGuildScheduledEvent[]]
     );
@@ -40,7 +57,7 @@ export class EventEmbedCreator {
     const upcomingMessage = this.eventListToMessage(upcoming);
     const laterMessage = this.eventListToMessage(later);
 
-    const laterMessagesPart = laterMessage ? `\n\n**Events coming later:**\n${laterMessage}` : '';
+    const laterMessagesPart = laterMessage ? `\n\n**Events Coming Later:**\n${laterMessage}` : '';
 
     return {
       content: `**Upcoming Sunspear Order Events:**\n${upcomingMessage}${laterMessagesPart}\n\n~~--------------------------------------------~~`,
