@@ -41,10 +41,10 @@ export class EventTableGenerator {
           const event = eventsByDay[d][i];
           const timeClarification =
             event?.recurrence_rule?.interval !== 1
-              ? ` (Every ${event?.recurrence_rule?.interval} weeks)`
+              ? ` - Every ${event?.recurrence_rule?.interval} weeks`
               : '';
           return event
-            ? `**${event.name}**<br/>${this.generateStartTimeLink(event)}${timeClarification}`
+            ? `**${event.name}** (${this.generateStartTimeLink(event)}${timeClarification})`
             : '-';
         })
       );
