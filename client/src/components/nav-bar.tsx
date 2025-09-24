@@ -1,9 +1,10 @@
 import Brightness3 from '@mui/icons-material/Brightness3';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Logout from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SearchIcon from '@mui/icons-material/Search';
-import { InputAdornment, Menu, MenuItem, useColorScheme } from '@mui/material';
+import { Collapse, InputAdornment, Menu, MenuItem, useColorScheme } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,8 +15,8 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { type Mode } from '@mui/system/cssVars/useCurrentColorScheme';
 import type React from 'react';
-import { use, useCallback, useState } from 'react';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { use, useCallback, useRef, useState } from 'react';
+import { NavLink, useMatch, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { config } from '../lib/config';
 import { useConfirm } from './common/confirm-dialog';
@@ -24,12 +25,17 @@ import './nav-bar.scss';
 
 const LINKS = [
   { label: 'Roster', link: '/' },
-  { label: 'GW2 Log', link: '/log' },
-  { label: 'Discord Log', link: '/discord-log' },
-  { label: 'Warning Log', link: '/warning-log' },
-  { label: 'Audit Log', link: '/audit-log' },
+  { label: 'Recruitment', link: '/recruitment' },
+  {
+    label: 'Logs',
+    sublinks: [
+      { label: 'GW2 Log', link: '/log/gw2' },
+      { label: 'Discord Log', link: '/log/discord' },
+      { label: 'Warning Log', link: '/log/warning' },
+      { label: 'Audit Log', link: '/log/audit' }
+    ]
+  }
   // { label: 'Events', link: '/events' },
-  { label: 'Recruitment', link: '/recruitment' }
 ];
 
 interface Props {
@@ -81,18 +87,23 @@ const NavBar = ({ maxWidth }: Props) => {
         padding={1}
         display="flex"
       >
-        <Box alignItems="center" gap="16px" sx={{ display: { lg: 'flex', xs: 'none' } }}>
+        <Box alignItems="center" gap="16px" sx={{ display: { md: 'flex', xs: 'none' } }}>
           <img src={SOStatic} height={40} width={40} alt="logo" />
           <div>
             {LINKS.map(l => (
-              <Button key={l.link} component={NavLink} to={`${l.link}?${linkSearchParamString}`}>
-                {l.label}
-              </Button>
+              <span key={l.label}>
+                {l.link && (
+                  <Button component={NavLink} to={`${l.link}?${linkSearchParamString}`}>
+                    {l.label}
+                  </Button>
+                )}
+                {l.sublinks && <NavMenu link={l} searchParamString={linkSearchParamString} />}
+              </span>
             ))}
           </div>
         </Box>
         <IconButton
-          sx={{ display: { lg: 'none', xs: 'inline-flex' } }}
+          sx={{ display: { md: 'none', xs: 'inline-flex' } }}
           onClick={() => setDrawerOpen(true)}
         >
           <MenuIcon />
@@ -171,19 +182,112 @@ const NavBar = ({ maxWidth }: Props) => {
         </Box>
         <Box sx={{ width: '200px' }} className="nav-list">
           {LINKS.map(l => (
-            <ListItemButton
-              key={l.link}
-              component={NavLink}
-              className="nav-link"
-              to={`${l.link}?${searchParams}`}
-              onClick={() => setDrawerOpen(false)}
-            >
-              {l.label}
-            </ListItemButton>
+            <div key={l.label}>
+              {l.link && (
+                <ListItemButton
+                  key={l.link}
+                  component={NavLink}
+                  className="nav-link"
+                  to={`${l.link}?${searchParams}`}
+                  onClick={() => setDrawerOpen(false)}
+                >
+                  {l.label}
+                </ListItemButton>
+              )}
+              {l.sublinks && (
+                <NavDrawerMenu
+                  link={l}
+                  searchParamString={searchParams}
+                  closeDrawer={() => setDrawerOpen(false)}
+                />
+              )}
+            </div>
           ))}
         </Box>
       </Drawer>
     </AppBar>
+  );
+};
+
+const NavMenu = ({
+  link,
+  searchParamString
+}: {
+  link: { label: string; sublinks: { label: string; link: string }[] };
+  searchParamString?: string | URLSearchParams;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  const closeHandler = () => {
+    setOpen(false);
+  };
+
+  const anchorRef = useRef(null);
+
+  const match = useMatch('/log/*');
+
+  return (
+    <>
+      <Button
+        onClick={() => setOpen(!open)}
+        ref={anchorRef}
+        endIcon={<KeyboardArrowDownIcon />}
+        sx={{ fontWeight: match ? 'bold' : undefined }}
+      >
+        {link.label}
+      </Button>
+      <Menu open={open} onClose={closeHandler} anchorEl={anchorRef.current}>
+        {link.sublinks.map(l => (
+          <MenuItem
+            key={l.link}
+            component={NavLink}
+            to={`${l.link}?${searchParamString}`}
+            onClick={closeHandler}
+            dense
+          >
+            {l.label}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+};
+
+const NavDrawerMenu = ({
+  link,
+  searchParamString,
+  closeDrawer
+}: {
+  link: { label: string; sublinks: { label: string; link: string }[] };
+  searchParamString?: string | URLSearchParams;
+  closeDrawer: () => void;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  const match = useMatch('/log/*');
+
+  return (
+    <>
+      <ListItemButton
+        onClick={() => setOpen(!open)}
+        sx={{ fontWeight: match ? 'bold' : undefined, display: 'flex', gap: '1rem' }}
+      >
+        {link.label} <KeyboardArrowDownIcon />
+      </ListItemButton>
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        {link.sublinks.map(l => (
+          <ListItemButton
+            key={l.link}
+            component={NavLink}
+            to={`${l.link}?${searchParamString}`}
+            onClick={closeDrawer}
+            sx={{ pl: 4 }}
+          >
+            {l.label}
+          </ListItemButton>
+        ))}
+      </Collapse>
+    </>
   );
 };
 

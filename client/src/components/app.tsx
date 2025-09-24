@@ -29,38 +29,40 @@ const App = () => {
           <Routes>
             <Route path="/" Component={Layout}>
               <Route path="/" Component={Roster} />
-              <Route
-                path="/log"
-                element={
-                  <QueryBoundary fallback={<LogLoader />}>
-                    <Log />
-                  </QueryBoundary>
-                }
-              />
-              <Route
-                path="/discord-log"
-                element={
-                  <QueryBoundary fallback={<LogLoader />}>
-                    <DiscordLog />
-                  </QueryBoundary>
-                }
-              />
-              <Route
-                path="/warning-log"
-                element={
-                  <QueryBoundary fallback={<LogLoader />}>
-                    <WarningLog />
-                  </QueryBoundary>
-                }
-              />
-              <Route
-                path="/audit-log"
-                element={
-                  <QueryBoundary fallback={<LogLoader />}>
-                    <AuditLog />
-                  </QueryBoundary>
-                }
-              />
+              <Route path="/log">
+                <Route
+                  path="gw2"
+                  element={
+                    <QueryBoundary fallback={<LogLoader />}>
+                      <Log />
+                    </QueryBoundary>
+                  }
+                />
+                <Route
+                  path="discord"
+                  element={
+                    <QueryBoundary fallback={<LogLoader />}>
+                      <DiscordLog />
+                    </QueryBoundary>
+                  }
+                />
+                <Route
+                  path="warning"
+                  element={
+                    <QueryBoundary fallback={<LogLoader />}>
+                      <WarningLog />
+                    </QueryBoundary>
+                  }
+                />
+                <Route
+                  path="audit"
+                  element={
+                    <QueryBoundary fallback={<LogLoader />}>
+                      <AuditLog />
+                    </QueryBoundary>
+                  }
+                />
+              </Route>
               {/* <Route path="/events" Component={EventPage} /> */}
               <Route path="/events/:eventId" Component={SingleEventPage} />
               <Route path="/warnings/:warningId" Component={SingleWarningPage} />
