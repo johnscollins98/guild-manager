@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
-import { useEffect, useRef, type FormEventHandler } from 'react';
+import { type FormEventHandler } from 'react';
 
 import './confirm-dialog.scss';
 
@@ -17,13 +17,6 @@ export interface Props {
 const ConfirmDialog = ({ onResponse, title, message, open }: Props) => {
   const onConfirm = () => onResponse(true);
   const onCancel = () => onResponse(false);
-
-  const submitRef = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (submitRef && submitRef.current) {
-      submitRef.current.focus();
-    }
-  }, [submitRef]);
 
   const handleSubmit: FormEventHandler = e => {
     e.preventDefault();
@@ -42,7 +35,7 @@ const ConfirmDialog = ({ onResponse, title, message, open }: Props) => {
           </div>
           <div className="confirm-modal-actions">
             <Button type="reset">Cancel</Button>
-            <Button color="primary" variant="contained" type="submit" ref={submitRef}>
+            <Button color="primary" variant="contained" type="submit" autoFocus>
               Confirm
             </Button>
           </div>

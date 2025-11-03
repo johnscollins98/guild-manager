@@ -4,7 +4,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useQuery, useSuspenseQueries } from '@tanstack/react-query';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useTransition } from 'react';
 import {
   discordBotQuery,
   discordChannelsQuery,
@@ -19,14 +19,15 @@ interface Props {
 }
 
 const EventPosterForm = ({ onClose }: Props) => {
-  const [editMessages, setEditMessages] = useState(false);
-  const [postChannel, setPostChannel] = useState('');
-  const [messageId, setMessageId] = useState('');
-  const [posting, setPosting] = useState(false);
-
   const [eventSettings, channels, bot] = useSuspenseQueries({
     queries: [eventSettingsQuery, discordChannelsQuery, discordBotQuery]
   });
+
+  const [editMessages, setEditMessages] = useState(eventSettings.data.editMessages);
+  const [postChannel, setPostChannel] = useState(eventSettings.data.channelId ?? '');
+  const [messageId, setMessageId] = useState(eventSettings.data.messageId ?? '');
+
+  const [pending, startTransition] = useTransition();
 
   const messages = useQuery({ ...discordMessagesQuery(postChannel), enabled: postChannel !== '' });
 
@@ -55,34 +56,24 @@ const EventPosterForm = ({ onClose }: Props) => {
     [availableChannels]
   );
 
-  console.log(channelIds);
-
-  useEffect(() => {
-    if (eventSettings.data) {
-      setPostChannel(eventSettings.data.channelId ?? '');
-      setEditMessages(eventSettings.data.editMessages);
-      setMessageId(eventSettings.data.messageId ?? '');
-    }
-  }, [eventSettings.data]);
-
   const submitHandler = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      setPosting(true);
 
-      await postEventsMutation.mutateAsync({
-        channelId: postChannel,
-        editMessages,
-        messageId: messageId
+      startTransition(async () => {
+        await postEventsMutation.mutateAsync({
+          channelId: postChannel,
+          editMessages,
+          messageId: messageId
+        });
+
+        onClose();
       });
-
-      onClose();
-      setPosting(false);
     },
-    [postChannel, editMessages, messageId, setPosting, onClose, postEventsMutation]
+    [postChannel, editMessages, messageId, onClose, postEventsMutation]
   );
 
-  if (posting)
+  if (pending)
     return (
       <div style={{ height: '300px' }}>
         <LoaderPage />
@@ -121,7 +112,7 @@ const EventPosterForm = ({ onClose }: Props) => {
             )
           }
           fullWidth
-          disabled={posting}
+          disabled={pending}
         ></Autocomplete>
       </div>
       <FormControlLabel
@@ -131,7 +122,7 @@ const EventPosterForm = ({ onClose }: Props) => {
             onChange={e => {
               setEditMessages(e.target.checked);
             }}
-            disabled={posting}
+            disabled={pending}
           />
         }
         label="Edit existing message?"
@@ -163,7 +154,7 @@ const EventPosterForm = ({ onClose }: Props) => {
               )
             }
             onChange={(_e, v) => setMessageId(v ?? '')}
-            disabled={posting || messages.isPending || messages.isError}
+            disabled={pending || messages.isPending || messages.isError}
           ></Autocomplete>
         </div>
       ) : null}
@@ -174,10 +165,10 @@ const EventPosterForm = ({ onClose }: Props) => {
           marginTop: '16px'
         }}
       >
-        <Button variant="text" onClick={onClose} style={{ marginRight: '8px' }} disabled={posting}>
+        <Button variant="text" onClick={onClose} style={{ marginRight: '8px' }} disabled={pending}>
           Close
         </Button>
-        <Button variant="contained" color="primary" type="submit" disabled={posting}>
+        <Button variant="contained" color="primary" type="submit" disabled={pending}>
           Submit
         </Button>
       </div>

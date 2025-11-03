@@ -2,7 +2,7 @@ import Code from '@mui/icons-material/Code';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import { Button, CircularProgress, IconButton, TextField, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
-import { useCallback, useEffect, useMemo, useState, type FormEventHandler } from 'react';
+import { useCallback, useMemo, useState, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
   recruitmentQuery,
@@ -30,12 +30,12 @@ const RecruitmentPage = () => {
     );
   }, [recruitmentPost.data, title, message]);
 
-  useEffect(() => {
-    if (recruitmentPost.data) {
-      setMessage(recruitmentPost.data.content);
-      setTitle(recruitmentPost.data.title);
-    }
-  }, [recruitmentPost.data]);
+  const [prevData, setPrevData] = useState(recruitmentPost.data);
+  if (recruitmentPost.data !== prevData) {
+    setPrevData(recruitmentPost.data);
+    setMessage(recruitmentPost.data?.content ?? '');
+    setTitle(recruitmentPost.data?.title ?? '');
+  }
 
   const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
     e => {

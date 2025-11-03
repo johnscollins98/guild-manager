@@ -15,7 +15,7 @@ import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
 import { type Mode } from '@mui/system/cssVars/useCurrentColorScheme';
 import type React from 'react';
-import { use, useCallback, useRef, useState } from 'react';
+import { use, useCallback, useState } from 'react';
 import { NavLink, useMatch, useSearchParams } from 'react-router-dom';
 import SOStatic from '../assets/images/SO_Static.gif';
 import { config } from '../lib/config';
@@ -216,27 +216,24 @@ const NavMenu = ({
   link: { label: string; sublinks: { label: string; link: string }[] };
   searchParamString?: string | URLSearchParams;
 }) => {
-  const [open, setOpen] = useState(false);
+  const [menuTarget, setMenuTarget] = useState<HTMLElement | null>(null);
 
   const closeHandler = () => {
-    setOpen(false);
+    setMenuTarget(null);
   };
-
-  const anchorRef = useRef(null);
 
   const match = useMatch('/log/*');
 
   return (
     <>
       <Button
-        onClick={() => setOpen(!open)}
-        ref={anchorRef}
+        onClick={e => setMenuTarget(e.currentTarget)}
         endIcon={<KeyboardArrowDownIcon />}
         sx={{ fontWeight: match ? 'bold' : undefined }}
       >
         {link.label}
       </Button>
-      <Menu open={open} onClose={closeHandler} anchorEl={anchorRef.current}>
+      <Menu open={!!menuTarget} onClose={closeHandler} anchorEl={menuTarget}>
         {link.sublinks.map(l => (
           <MenuItem
             key={l.link}

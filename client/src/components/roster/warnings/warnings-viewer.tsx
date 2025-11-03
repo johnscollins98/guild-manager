@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useSuspenseQueries } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { authQuery } from '../../../lib/apis/auth-api';
 import { discordMembersQuery } from '../../../lib/apis/discord-api';
 import type MemberRecord from '../../../lib/interfaces/member-record';
@@ -17,9 +17,9 @@ interface Props {
 }
 
 const WarningsViewerDialog = ({ isOpen, onClose, member }: Props) => {
-  useEffect(() => {
-    if (member?.warnings.length === 0 && isOpen) onClose();
-  }, [onClose, member?.warnings, isOpen]);
+  if (isOpen && member?.warnings.length === 0) {
+    onClose();
+  }
 
   return (
     <Dialog open={isOpen && !!member} onClose={onClose} fullWidth maxWidth="sm">
