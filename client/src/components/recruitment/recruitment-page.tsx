@@ -2,7 +2,7 @@ import Code from '@mui/icons-material/Code';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import { Button, CircularProgress, IconButton, TextField, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
-import { useCallback, useMemo, useState, type FormEventHandler } from 'react';
+import { useCallback, useState, type FormEventHandler } from 'react';
 import {
   recruitmentApi,
   recruitmentQuery,
@@ -19,44 +19,31 @@ const RecruitmentPage = () => {
   const auth = useQuery(authQuery);
 
   const recruitmentPostMutation = useRecruitmentPostMutation();
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
   const toast = useToast();
 
-  const isModified = useMemo(() => {
-    return (
-      title !== (recruitmentPost.data?.title ?? '') ||
-      message !== (recruitmentPost.data?.content ?? '')
-    );
-  }, [recruitmentPost.data, title, message]);
-
-  const [prevData, setPrevData] = useState(recruitmentPost.data);
-  if (recruitmentPost.data !== prevData) {
-    setPrevData(recruitmentPost.data);
-    setMessage(recruitmentPost.data?.content ?? '');
-    setTitle(recruitmentPost.data?.title ?? '');
-  }
+  const [message, setMessage] = useState('');
+  const [title, setTitle] = useState('');
+  const messageToDisplay = message || (recruitmentPost.data?.content ?? '');
+  const titleToDisplay = title || (recruitmentPost.data?.title ?? '');
+  const isModified = title !== '' || message !== '';
 
   const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
     e => {
       e.preventDefault();
       e.stopPropagation();
 
-      recruitmentPostMutation.mutate({ title: title, content: message });
+      recruitmentPostMutation.mutate({ title: titleToDisplay, content: messageToDisplay });
     },
-    [message, recruitmentPostMutation, title]
+    [messageToDisplay, recruitmentPostMutation, titleToDisplay]
   );
 
-  const resetHandler: FormEventHandler<HTMLFormElement> = useCallback(
-    e => {
-      e.preventDefault();
-      e.stopPropagation();
+  const resetHandler: FormEventHandler<HTMLFormElement> = e => {
+    e.preventDefault();
+    e.stopPropagation();
 
-      setMessage(recruitmentPost.data?.content ?? '');
-      setTitle(recruitmentPost.data?.title ?? '');
-    },
-    [recruitmentPost.data]
-  );
+    setMessage('');
+    setTitle('');
+  };
 
   const handleCopyClick = async (isHtml: boolean) => {
     const post = await recruitmentApi
@@ -106,7 +93,7 @@ const RecruitmentPage = () => {
             <IconButton
               onClick={() =>
                 navigator.clipboard
-                  .writeText(title)
+                  .writeText(titleToDisplay)
                   .then(() => toast('Copied title to clipboard.', 'success'))
                   .catch(e => toast(`Failed to copy title: ${e}`, 'error'))
               }
@@ -116,7 +103,7 @@ const RecruitmentPage = () => {
           </Tooltip>
         </div>
         <TextField
-          value={title}
+          value={titleToDisplay}
           disabled={!auth.data?.permissions.RECRUITMENT || recruitmentPost.isLoading}
           required
           onChange={e => setTitle(e.target.value)}
@@ -151,7 +138,7 @@ const RecruitmentPage = () => {
           multiline
           label="Content"
           rows={1}
-          value={message}
+          value={messageToDisplay}
           disabled={!auth.data?.permissions.RECRUITMENT || recruitmentPost.isLoading}
           onChange={e => setMessage(e.target.value)}
           fullWidth
