@@ -8,25 +8,28 @@ import {
   type FormControlLabelProps
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { use, useRef, useState } from 'react';
+import { use, useState } from 'react';
 import { WarningTypeLabels, type WarningType } from 'server';
 import { FilterContext } from '../log-setting-context';
 
 export const FilterMenu = () => {
-  const [showPopover, setShowPopover] = useState(false);
-  const buttonRef = useRef(null);
+  const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
   const { warningTypesToDisplay, setWarningTypesToDisplay } = use(FilterContext);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setPopoverAnchor(popoverAnchor ? null : event.currentTarget);
+  };
 
   return (
     <>
       <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
-        <IconButton onClick={() => setShowPopover(!showPopover)} ref={buttonRef}>
+        <IconButton onClick={handleClick}>
           <FilterList />
         </IconButton>
         <Popover
-          open={showPopover}
-          onClose={() => setShowPopover(false)}
-          anchorEl={buttonRef.current}
+          open={!!popoverAnchor}
+          onClose={() => setPopoverAnchor(null)}
+          anchorEl={popoverAnchor}
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>

@@ -47,7 +47,7 @@ const Entry = ({ warning }: { warning: WarningDTO }) => {
     ]
   });
 
-  const avatarUrl = useMemo(() => getUserAvatar(givenTo.data), [givenTo?.data]);
+  const avatarUrl = getUserAvatar(givenTo.data);
 
   const givenToName = getUserName(givenTo.data);
   const givenByName = getUserName(givenBy.data);

@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import type React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Box, MenuItem } from '@mui/material';
 import { type WarningCreateDTO, WarningType, WarningTypeLabels } from 'server';
@@ -34,11 +34,6 @@ type WarningFormProps = Omit<Props, 'isOpen'>;
 const WarningForm = ({ onSubmit, initialData, onClose, isPending }: WarningFormProps) => {
   const [warningReason, setWarningReason] = useState(initialData?.reason ?? '');
   const [warningType, setWarningType] = useState(initialData?.type ?? WarningType.OFFICIAL);
-
-  useEffect(() => {
-    setWarningReason(initialData?.reason ?? '');
-    setWarningType(initialData?.type ?? WarningType.OFFICIAL);
-  }, [initialData]);
 
   const submitHandler: React.FormEventHandler = useCallback(
     async (e: React.FormEvent) => {
