@@ -21,11 +21,11 @@ const RecruitmentPage = () => {
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const toast = useToast();
 
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
-  const messageToDisplay = message || (recruitmentPost.data?.content ?? '');
-  const titleToDisplay = title || (recruitmentPost.data?.title ?? '');
-  const isModified = title !== '' || message !== '';
+  const [message, setMessage] = useState<string | null>(null);
+  const [title, setTitle] = useState<string | null>(null);
+  const messageToDisplay = message ?? recruitmentPost.data?.content ?? '';
+  const titleToDisplay = title ?? recruitmentPost.data?.title ?? '';
+  const isModified = title !== null || message !== null;
 
   const submitHandler: FormEventHandler<HTMLFormElement> = useCallback(
     e => {
