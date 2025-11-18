@@ -41,8 +41,8 @@ const RecruitmentPage = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    setMessage('');
-    setTitle('');
+    setMessage(null);
+    setTitle(null);
   };
 
   const handleCopyClick = async (isHtml: boolean) => {
