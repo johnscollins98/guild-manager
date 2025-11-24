@@ -1,5 +1,4 @@
-import { AxiosError } from 'axios';
-import { User } from 'discord.js';
+import { DiscordAPIError, User } from 'discord.js';
 import {
   Authorized,
   BadRequestError,
@@ -192,7 +191,7 @@ export class DiscordController implements IDiscordController {
       const dmChannelId = await this.discordChannelApi.createDirectMessageChannel(memberId);
       await this.discordChannelApi.sendMessage(dmChannelId, messageData);
     } catch (err) {
-      if (err instanceof AxiosError && err.status === 403) {
+      if (err instanceof DiscordAPIError && err.status === 403) {
         throw new ForbiddenError(err.message);
       } else {
         throw new InternalServerError('An unknown error occurred.');
