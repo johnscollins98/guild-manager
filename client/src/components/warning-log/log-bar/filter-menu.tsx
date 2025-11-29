@@ -36,7 +36,6 @@ export const FilterMenu = () => {
             {Object.entries(warningTypesToDisplay).map(([key, value]) => (
               <MenuItem
                 key={key}
-                dense
                 onClick={() =>
                   setWarningTypesToDisplay({ ...warningTypesToDisplay, [key]: !value })
                 }

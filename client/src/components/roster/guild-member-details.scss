@@ -1,11 +1,16 @@
 div.member-header {
   display: flex;
-  padding: 0px 10px 8px 10px;
+  padding: 4px 10px 4px 10px;
   align-items: center;
 
   .avatar {
     margin-right: 16px;
   }
+}
+
+hr.MuiDivider-root {
+  margin-top: calc(1 * var(--mui-spacing));
+  margin-bottom: calc(1 * var(--mui-spacing));
 }
 
 div.detail {
@@ -25,7 +30,7 @@ div.detail {
 
 div.member-detail-container {
   display: flex;
-  padding: 4px 10px;
+  padding: 0px 16px;
 
   div.name {
     font-size: medium;
@@ -41,7 +46,6 @@ div.member-detail-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4px;
     color: var(--mui-palette-action-active);
   }
 }

@@ -39,9 +39,6 @@ const theme = createTheme({
       }
     },
     MuiList: {
-      defaultProps: {
-        dense: true
-      },
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.default,

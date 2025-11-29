@@ -100,7 +100,6 @@ const EventPosterForm = ({ onClose }: Props) => {
               }}
               label="Channel ID to post to"
               size="small"
-              margin="dense"
               required
             />
           )}
@@ -137,7 +136,6 @@ const EventPosterForm = ({ onClose }: Props) => {
                 slotProps={{
                   input: { ...r.InputProps, disableUnderline: true, sx: { borderRadius: '4px' } }
                 }}
-                margin="dense"
                 label="Message ID"
                 required
               />
