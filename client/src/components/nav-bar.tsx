@@ -240,7 +240,6 @@ const NavMenu = ({
             component={NavLink}
             to={`${l.link}?${searchParamString}`}
             onClick={closeHandler}
-            dense
           >
             {l.label}
           </MenuItem>

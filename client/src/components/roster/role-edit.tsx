@@ -66,7 +66,6 @@ const RoleEdit = ({ selectedRecord, modalShow, onClose }: Props) => {
           discordRoles.data.map(role => (
             <MenuItem
               className="role-menu-item"
-              dense
               disabled={roleIsAboveBot(role)}
               key={role.id}
               onClick={() => roleChangeHandler(role)}

@@ -20,7 +20,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <Gw2Icon height="24" width="24" />
+          <Gw2Icon height="20" width="20" />
         </div>
         <div>
           <div className="detail name">{member.memberId || 'N/A'}</div>
@@ -30,7 +30,7 @@ const GuildMemberDetails = ({ member }: Props) => {
       <Divider />
       <div className="member-detail-container">
         <div className="icon">
-          <DiscordLogo height="24" width="24" />
+          <DiscordLogo height="20" width="20" />
         </div>
         <div>
           <div className="detail name">{member.discordName || 'N/A'}</div>
