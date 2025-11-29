@@ -92,12 +92,12 @@ const RosterControl = ({
       <div className="roster-bar">
         <span className="left">
           <Tooltip title="Filter Members">
-            <IconButton size="small" onClick={onFilterOpen} disabled={disabled}>
+            <IconButton size="medium" onClick={onFilterOpen} disabled={disabled}>
               <FilterList />
             </IconButton>
           </Tooltip>
           <Tooltip title="Sort Members">
-            <IconButton size="small" onClick={onSortOpen} disabled={disabled}>
+            <IconButton size="medium" onClick={onSortOpen} disabled={disabled}>
               <ImportExport />
             </IconButton>
           </Tooltip>
@@ -108,7 +108,7 @@ const RosterControl = ({
               <span>
                 <IconButton
                   disabled={!authData?.permissions.MEMBERS || disabled}
-                  size="small"
+                  size="medium"
                   onClick={() => setKickMode(true)}
                 >
                   <DeleteForever />
@@ -122,7 +122,7 @@ const RosterControl = ({
               <Tooltip title={'Confirm Mass Kick'}>
                 <span>
                   <IconButton
-                    size="small"
+                    size="medium"
                     onClick={onKick}
                     disabled={selection.length === 0 || disabled}
                   >
@@ -132,7 +132,7 @@ const RosterControl = ({
               </Tooltip>
               <Tooltip title={'Cancel Mass Kick'}>
                 <span>
-                  <IconButton size="small" onClick={cancelKickMode} disabled={disabled}>
+                  <IconButton size="medium" onClick={cancelKickMode} disabled={disabled}>
                     <Close />
                   </IconButton>
                 </span>
@@ -230,7 +230,7 @@ const RefetchButton = () => {
   return (
     <Tooltip title={isFetching ? 'Refreshing...' : 'Refresh Data'}>
       <span>
-        <IconButton size="small" onClick={refetchData} className="refresh" disabled={isFetching}>
+        <IconButton size="medium" onClick={refetchData} className="refresh" disabled={isFetching}>
           <Refresh />
         </IconButton>
       </span>

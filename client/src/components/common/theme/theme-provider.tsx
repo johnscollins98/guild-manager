@@ -27,6 +27,11 @@ const theme = createTheme({
       }
     },
     MuiDialog: {
+      styleOverrides: {
+        paper: {
+          minWidth: '350px'
+        }
+      },
       defaultProps: {
         PaperProps: {
           elevation: 0
@@ -46,6 +51,7 @@ const theme = createTheme({
     MuiList: {
       styleOverrides: {
         root: ({ theme }) => ({
+          minWidth: '150px',
           backgroundColor: theme.palette.background.default,
           borderRadius: '8px',
           border: `1px solid ${theme.palette.divider}`
