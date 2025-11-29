@@ -34,6 +34,11 @@ const theme = createTheme({
       }
     },
     MuiPaper: {
+      styleOverrides: {
+        rounded: {
+          borderRadius: '8px'
+        }
+      },
       defaultProps: {
         elevation: 0
       }
@@ -42,6 +47,7 @@ const theme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           backgroundColor: theme.palette.background.default,
+          borderRadius: '8px',
           border: `1px solid ${theme.palette.divider}`
         })
       }
