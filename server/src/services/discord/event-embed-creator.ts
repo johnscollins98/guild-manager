@@ -1,5 +1,11 @@
-import { APIGuildScheduledEvent, MessageEditOptions, SnowflakeUtil } from 'discord.js';
-import { Options, RRule, Weekday } from 'rrule';
+import {
+  APIGuildScheduledEvent,
+  APIGuildScheduledEventRecurrenceRule,
+  GuildScheduledEventRecurrenceRuleFrequency,
+  MessageEditOptions,
+  SnowflakeUtil
+} from 'discord.js';
+import { Frequency, Options, RRule, Weekday } from 'rrule';
 import { Service } from 'typedi';
 import { config } from '../../config';
 import { DayOfWeek } from '../../dtos';
@@ -149,47 +155,7 @@ export class EventEmbedCreator {
           occurrenceMs = originalDate.valueOf();
         } else {
           try {
-            const freq =
-              recurrenceRule.frequency === 0
-                ? RRule.YEARLY
-                : recurrenceRule.frequency === 1
-                  ? RRule.MONTHLY
-                  : recurrenceRule.frequency === 2
-                    ? RRule.WEEKLY
-                    : RRule.DAILY;
-
-            const wkdayMap = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
-
-            const options: Partial<Options> = {
-              freq,
-              interval: recurrenceRule.interval ?? 1,
-              dtstart: new Date(recurrenceRule.start)
-            };
-
-            if (recurrenceRule.end) options.until = new Date(recurrenceRule.end);
-            if (recurrenceRule.count != null) options.count = recurrenceRule.count;
-            if (recurrenceRule.by_month) options.bymonth = recurrenceRule.by_month;
-            if (recurrenceRule.by_month_day) options.bymonthday = recurrenceRule.by_month_day;
-            if (recurrenceRule.by_year_day) options.byyearday = recurrenceRule.by_year_day;
-
-            const byweekday: Weekday[] = [];
-            if (recurrenceRule.by_weekday) {
-              for (const d of recurrenceRule.by_weekday) {
-                const wd = wkdayMap[d];
-                if (wd) byweekday.push(wd);
-              }
-            }
-
-            if (recurrenceRule.by_n_weekday) {
-              for (const nwd of recurrenceRule.by_n_weekday) {
-                const wd = wkdayMap[nwd.day];
-                if (wd) byweekday.push(wd.nth(nwd.n));
-              }
-            }
-
-            if (byweekday.length) options.byweekday = byweekday;
-
-            const rule = new RRule(options);
+            const rule = this.rruleFromDiscordRecurrenceRule(recurrenceRule);
 
             // Iterate occurrences starting at dtstart until we find one
             // that's not in the exceptions set. Limit iterations to avoid
@@ -220,5 +186,58 @@ export class EventEmbedCreator {
         } as AdjustedEvent;
       })
       .filter(Boolean) as AdjustedEvent[];
+  }
+
+  private rruleFromDiscordRecurrenceRule(recurrenceRule: APIGuildScheduledEventRecurrenceRule) {
+    const freq = this.rruleFrequencyFromDiscordFrequency(recurrenceRule.frequency);
+
+    const wkdayMap = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+
+    const options: Partial<Options> = {
+      freq,
+      interval: recurrenceRule.interval ?? 1,
+      dtstart: new Date(recurrenceRule.start)
+    };
+
+    if (recurrenceRule.end) options.until = new Date(recurrenceRule.end);
+    if (recurrenceRule.count != null) options.count = recurrenceRule.count;
+    if (recurrenceRule.by_month) options.bymonth = recurrenceRule.by_month;
+    if (recurrenceRule.by_month_day) options.bymonthday = recurrenceRule.by_month_day;
+    if (recurrenceRule.by_year_day) options.byyearday = recurrenceRule.by_year_day;
+
+    const byweekday: Weekday[] = [];
+    if (recurrenceRule.by_weekday) {
+      for (const d of recurrenceRule.by_weekday) {
+        const wd = wkdayMap[d];
+        if (wd) byweekday.push(wd);
+      }
+    }
+
+    if (recurrenceRule.by_n_weekday) {
+      for (const nwd of recurrenceRule.by_n_weekday) {
+        const wd = wkdayMap[nwd.day];
+        if (wd) byweekday.push(wd.nth(nwd.n));
+      }
+    }
+
+    if (byweekday.length) options.byweekday = byweekday;
+
+    const rule = new RRule(options);
+    return rule;
+  }
+
+  private rruleFrequencyFromDiscordFrequency(
+    frequency: GuildScheduledEventRecurrenceRuleFrequency
+  ): Frequency {
+    switch (frequency) {
+      case GuildScheduledEventRecurrenceRuleFrequency.Yearly:
+        return RRule.YEARLY;
+      case GuildScheduledEventRecurrenceRuleFrequency.Monthly:
+        return RRule.MONTHLY;
+      case GuildScheduledEventRecurrenceRuleFrequency.Weekly:
+        return RRule.WEEKLY;
+      case GuildScheduledEventRecurrenceRuleFrequency.Daily:
+        return RRule.DAILY;
+    }
   }
 }
