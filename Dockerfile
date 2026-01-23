@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:24-alpine AS base
 
 # Build App
 FROM base AS builder
@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 COPY ./client/package.json ./client/package.json
 COPY ./server/package.json ./server/package.json
 
-RUN npm install --frozen-lockfile
+RUN npm ci
 
 COPY ./server ./server
 RUN npm run -w server build
@@ -26,7 +26,7 @@ COPY package.json package-lock.json ./
 COPY ./server/package.json ./server/
 COPY ./client/package.json ./client/
 
-RUN npm install --omit=dev --frozen-lockfile
+RUN npm ci --omit=dev
 
 RUN addgroup --system --gid 1002 nodejs
 RUN adduser --system --uid 1002 guildmanager
