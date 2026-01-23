@@ -5,6 +5,8 @@ services:
     pull_policy: never
     env_file:
       - ./server/.env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
     ports:
       - 3000:3000
     depends_on:
@@ -18,6 +20,8 @@ services:
     command: 'npm run db:deploy:prod'
     env_file:
       - ./server/.env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
     depends_on:
       db:
         condition: service_healthy
