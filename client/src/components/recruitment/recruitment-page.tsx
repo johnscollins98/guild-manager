@@ -16,7 +16,15 @@ import './recruitment-page.scss';
 
 const RecruitmentPage = () => {
   const recruitmentPost = useQuery(recruitmentQuery);
+
   const auth = useQuery(authQuery);
+
+  // initialise events cache
+  useQuery({
+    queryKey: ['discord-events'],
+    queryFn: () => recruitmentApi.getGeneratedPost(false),
+    refetchInterval: 5 * 60 * 1000 // refetch every 5 minutes to keep the cache warm
+  });
 
   const recruitmentPostMutation = useRecruitmentPostMutation();
   const toast = useToast();

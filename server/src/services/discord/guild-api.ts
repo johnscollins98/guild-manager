@@ -9,6 +9,7 @@ import {
   DiscordMemberUpdate,
   DiscordRole
 } from '../../dtos';
+import { cached } from '../cache';
 import { DiscordApi } from './discord-api';
 
 export interface IDiscordGuildApi {
@@ -47,7 +48,11 @@ export class DiscordGuildApi implements IDiscordGuildApi {
   }
 
   async getRoles(): Promise<DiscordRole[]> {
-    return await this.discordApi.get(`${this.baseUrl}/roles`);
+    return cached(
+      `guildRoles-${config.discordGuildId}`,
+      async () => this.discordApi.get(`${this.baseUrl}/roles`),
+      60 * 60 * 1000
+    );
   }
 
   async getLogs(limit = 100, before?: string): Promise<DiscordLog> {
@@ -79,10 +84,18 @@ export class DiscordGuildApi implements IDiscordGuildApi {
   }
 
   async getChannels(): Promise<DiscordChannel[]> {
-    return await this.discordApi.get(`${this.baseUrl}/channels`);
+    return cached(
+      `guildChannels-${config.discordGuildId}`,
+      async () => this.discordApi.get(`${this.baseUrl}/channels`),
+      60 * 60 * 1000
+    );
   }
 
   async getEvents(): Promise<APIGuildScheduledEvent[]> {
-    return await this.discordApi.get(Routes.guildScheduledEvents(config.discordGuildId));
+    return cached(
+      `guildEvents-${config.discordGuildId}`,
+      async () => this.discordApi.get(Routes.guildScheduledEvents(config.discordGuildId)),
+      10 * 60 * 1000
+    );
   }
 }
