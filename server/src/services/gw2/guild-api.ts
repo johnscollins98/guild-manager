@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { config } from '../../config';
 import { GW2LogEntry, GW2Member, GW2Rank } from '../../dtos';
+import { cached } from '../cache';
 import { GW2Api } from './gw2-api';
 
 export interface IGW2GuildApi {
@@ -26,7 +27,11 @@ export class GW2GuildApi implements IGW2GuildApi {
   }
 
   async getRanks(): Promise<GW2Rank[]> {
-    return await this.get<GW2Rank[]>('ranks');
+    return cached(
+      `gw2GuildRanks-${this.guildId}`,
+      async () => this.get<GW2Rank[]>('ranks'),
+      60 * 60 * 1000
+    );
   }
 
   private async get<T>(endpoint: string): Promise<T> {

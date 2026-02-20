@@ -1,7 +1,7 @@
-import cache from 'memory-cache';
 import Container, { Service } from 'typedi';
 import { config } from '../../config';
-import { AuthInfo, DiscordMember, Permission, PermissionsDTO } from '../../dtos';
+import { AuthInfo, Permission, PermissionsDTO } from '../../dtos';
+import { cached } from '../cache';
 import { DiscordGuildApi } from '../discord/guild-api';
 
 const notLoggedIn: AuthInfo = {
@@ -44,18 +44,20 @@ export class AuthService {
     const loggedIn = true;
 
     const cacheKey = `discord-member/${config.discordGuildId}/${userId}`;
-    let cachedMember: Promise<DiscordMember | undefined> | null = cache.get(cacheKey);
-    try {
-      if (!cachedMember) {
-        const guildApi = Container.get(DiscordGuildApi);
-        cachedMember = guildApi.getMemberById(userId);
-        cache.put(cacheKey, cachedMember, 10000);
-      }
-    } catch (err) {
-      console.error(err);
-    }
 
-    const member = await cachedMember;
+    const member = await cached(
+      cacheKey,
+      () => {
+        try {
+          const guildApi = Container.get(DiscordGuildApi);
+          return guildApi.getMemberById(userId);
+        } catch (err) {
+          console.error(err);
+          return Promise.resolve(undefined);
+        }
+      },
+      10000
+    );
 
     const username = member?.user?.username;
     const roles = member?.roles ?? [];
