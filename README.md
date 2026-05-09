@@ -1,3 +1,5 @@
+# Guild Manager
+
 ## Description
 
 Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in sync.
