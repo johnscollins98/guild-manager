@@ -4,7 +4,7 @@ Uses Discord and GW2 API to help manage a Guild and Discord server, keep them in
 
 ## Requirements
 
-- Node v22
+- Node v24
 - Postgres 17
 
 There is a Docker devcontainer (see `.devcontainer`) that can setup these requirements plus some extension recommendations.
