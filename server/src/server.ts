@@ -25,6 +25,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// Trust proxy headers (important for Railway and other reverse proxies)
+app.set('trust proxy', 1);
+
 // Use in-memory session store for PKCE state management only
 app.use(
   session({
