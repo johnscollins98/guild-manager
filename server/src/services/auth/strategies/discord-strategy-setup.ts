@@ -2,29 +2,13 @@ import passport from 'passport';
 import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
+import { JWTService } from '../jwt-service';
 import DiscordStrategy, { DiscordProfile } from './discord-strategy';
 
 @Service()
 export class DiscordStrategySetup {
-  constructor() {
-    passport.serializeUser((user, done) => {
-      done(null, user);
-    });
-
-    passport.deserializeUser(async (user: Express.User, done) => {
-      // return false if access token has expired
-      if (user) {
-        const currentDate = Date.now();
-        user.expires = new Date(user.expires);
-        if (!user.expires || currentDate >= user.expires.getTime()) {
-          console.error('User access token has expired');
-          return done(null, false);
-        }
-      }
-
-      done(null, user);
-    });
-
+  constructor(private readonly jwtService: JWTService) {
+    // Store PKCE state for later verification
     passport.use(
       new DiscordStrategy(
         {
@@ -43,11 +27,19 @@ export class DiscordStrategySetup {
           done: OAuth2Strategy.VerifyCallback
         ) => {
           try {
-            const user: Express.User = {
+            // Generate JWT token (expires in 24 hours)
+            const token = this.jwtService.signToken(
+              profile.id,
+              profile.username,
+              params.expires_in
+            );
+
+            const user = {
               id: profile.id,
               username: profile.username,
-              expires: new Date(Date.now() + params.expires_in * 1000)
-            };
+              expires: new Date(Date.now() + params.expires_in * 1000),
+              token
+            } satisfies Express.User;
 
             done(null, user);
           } catch (err) {

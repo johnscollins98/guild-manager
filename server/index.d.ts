@@ -6,6 +6,7 @@ declare global {
       id: string;
       username: string;
       expires: Date;
+      token?: string;
     }
   }
 }
