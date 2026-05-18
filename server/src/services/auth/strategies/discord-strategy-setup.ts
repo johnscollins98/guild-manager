@@ -1,10 +1,8 @@
 import passport from 'passport';
-import PassportDiscord, { Profile } from 'passport-discord';
 import OAuth2Strategy from 'passport-oauth2';
 import { Service } from 'typedi';
 import { config } from '../../../config';
-
-const DiscordStrategy = PassportDiscord.Strategy;
+import DiscordStrategy, { DiscordProfile } from './discord-strategy';
 
 @Service()
 export class DiscordStrategySetup {
@@ -33,13 +31,15 @@ export class DiscordStrategySetup {
           clientID: config.discordClientId,
           clientSecret: config.discordClientSecret,
           callbackURL: config.discordAuthRedirect,
+          pkce: true,
+          state: true,
           scope: ['identify', 'guilds.members.read']
         },
         async (
           _accessToken: string,
           _refreshToken: string,
           params: { expires_in: number },
-          profile: Profile,
+          profile: DiscordProfile,
           done: OAuth2Strategy.VerifyCallback
         ) => {
           try {

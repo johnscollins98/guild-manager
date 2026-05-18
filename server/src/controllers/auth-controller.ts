@@ -23,19 +23,17 @@ export class AuthController implements IAuthController {
   @Get('/')
   @UseBefore((req: Request, res: Response, next: () => void) => {
     const { returnTo } = req.query;
-    const authenticator = passport.authenticate('discord', {
-      state: getReturnToUri(returnTo)
-    });
-    authenticator(req, res, next);
+
+    if (returnTo) req.session.returnTo = typeof returnTo === 'string' ? returnTo : undefined;
+
+    passport.authenticate('discord')(req, res, next);
   })
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   authenticate() {}
 
   @Get('/redirect')
   @UseBefore((req: Request, res: Response, next: () => void) => {
-    const { state } = req.query;
     const redirectUri =
-      getReturnToUri(state) ??
+      req.session.returnTo ??
       `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`;
 
     const authenticator = passport.authenticate('discord', {
@@ -64,7 +62,3 @@ export class AuthController implements IAuthController {
     return Promise.resolve(config.eventRoles);
   }
 }
-
-const getReturnToUri = (queryParam: Request['query'][string]) => {
-  return typeof queryParam === 'string' ? encodeURI(queryParam) : undefined;
-};
