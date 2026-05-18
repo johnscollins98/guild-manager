@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import passport from 'passport';
-import { Authorized, CurrentUser, Get, JsonController, Res, UseBefore } from 'routing-controllers';
+import { Authorized, CurrentUser, Get, JsonController, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
 import { AuthInfo } from '../dtos';
@@ -54,7 +54,7 @@ export class AuthController implements IAuthController {
   redirect() {}
 
   @Get('/logout')
-  logout(@Res() res: Response): void {
+  @UseBefore((_req: Request, res: Response) => {
     res.clearCookie('auth.jwt', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -63,7 +63,8 @@ export class AuthController implements IAuthController {
 
     const redirectUri = process.env.NODE_ENV === 'production' ? '/' : `${config.frontEndBaseUrl}/`;
     res.redirect(redirectUri);
-  }
+  })
+  logout(): void {}
 
   @Get('/authorization')
   getAuthorization(@CurrentUser() user?: Express.User): Promise<AuthInfo> {
