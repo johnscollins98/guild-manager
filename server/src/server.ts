@@ -13,7 +13,7 @@ import { DiscordBot } from './discord-bot/discord-bot';
 import { Permission } from './dtos';
 import { CustomErrorHandler } from './middleware/error-handler';
 import { AuthService } from './services/auth/auth-service';
-import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
+import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy-setup';
 import { EventUpdater } from './services/discord/event-updater';
 
 rc_useContainer(Container);
@@ -34,7 +34,10 @@ app.use(
   session({
     secret: config.sessionSecret,
     cookie: {
-      maxAge: 60000 * 60 * 24 * 7
+      maxAge: 60000 * 60 * 24 * 7,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     },
     resave: true,
     saveUninitialized: false,
