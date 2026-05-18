@@ -15,12 +15,18 @@ export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
     next: (err?: unknown) => unknown
   ): void {
     console.error(error);
+
+    // Don't try to send response if headers already sent
+    if (response.headersSent) {
+      next(error);
+      return;
+    }
+
     if (error && error instanceof HttpError) {
       response.status(error.httpCode).json(error);
     } else {
       const internalServerError = new InternalServerError(`An unexpected error occurred.`);
       response.status(500).json(internalServerError);
     }
-    next();
   }
 }
