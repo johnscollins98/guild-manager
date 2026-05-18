@@ -1,4 +1,4 @@
-import PgConnection from 'connect-pg-simple';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
@@ -12,8 +12,9 @@ import { dataSource } from './dataSource';
 import { DiscordBot } from './discord-bot/discord-bot';
 import { Permission } from './dtos';
 import { CustomErrorHandler } from './middleware/error-handler';
+import { JWTMiddleware } from './middleware/jwt-middleware';
 import { AuthService } from './services/auth/auth-service';
-import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy';
+import { DiscordStrategySetup } from './services/auth/strategies/discord-strategy-setup';
 import { EventUpdater } from './services/discord/event-updater';
 
 rc_useContainer(Container);
@@ -22,34 +23,34 @@ initAxiosLogger();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
-const DBStore = PgConnection(session);
+// Trust proxy headers (important for Railway and other reverse proxies)
+app.set('trust proxy', 1);
 
-const store = new DBStore({
-  conString: config.databaseUrl,
-  createTableIfMissing: true
-});
-
+// Use in-memory session store for PKCE state management only
 app.use(
   session({
     secret: config.sessionSecret,
     cookie: {
-      maxAge: 60000 * 60 * 24 * 7
+      maxAge: 60000 * 10, // 10 minutes for PKCE state
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     },
-    resave: true,
+    resave: false,
     saveUninitialized: false,
-    name: 'discord.oauth2',
-    store
+    name: 'pkce.state',
+    store: new session.MemoryStore()
   })
 );
 app.use(passport.initialize());
-app.use(passport.session());
 
 useExpressServer(app, {
   cors: true,
   controllers: [path.join(__dirname + '/controllers/*-controller.*')],
   defaultErrorHandler: false,
-  middlewares: [CustomErrorHandler],
+  middlewares: [JWTMiddleware, CustomErrorHandler],
   authorizationChecker: async (action: Action, roles: Permission[]) => {
     if (process.env.NODE_ENV === 'development' && config.skipAuth) {
       return true;

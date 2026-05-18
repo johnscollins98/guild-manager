@@ -1,14 +1,6 @@
 import { Request, Response } from 'express';
 import passport from 'passport';
-import {
-  Authorized,
-  CurrentUser,
-  Get,
-  JsonController,
-  Redirect,
-  Req,
-  UseBefore
-} from 'routing-controllers';
+import { Authorized, CurrentUser, Get, JsonController, Res, UseBefore } from 'routing-controllers';
 import { Service } from 'typedi';
 import { config } from '../config';
 import { AuthInfo } from '../dtos';
@@ -23,34 +15,54 @@ export class AuthController implements IAuthController {
   @Get('/')
   @UseBefore((req: Request, res: Response, next: () => void) => {
     const { returnTo } = req.query;
-    const authenticator = passport.authenticate('discord', {
-      state: getReturnToUri(returnTo)
-    });
-    authenticator(req, res, next);
+
+    if (returnTo && req.session)
+      req.session.returnTo = typeof returnTo === 'string' ? returnTo : undefined;
+
+    passport.authenticate('discord')(req, res, next);
   })
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   authenticate() {}
 
   @Get('/redirect')
   @UseBefore((req: Request, res: Response, next: () => void) => {
-    const { state } = req.query;
     const redirectUri =
-      getReturnToUri(state) ??
+      req.session?.returnTo ??
       `${process.env.NODE_ENV === 'production' ? '' : config.frontEndBaseUrl}/`;
 
-    const authenticator = passport.authenticate('discord', {
-      failureRedirect: redirectUri,
-      successRedirect: redirectUri
-    });
-    authenticator(req, res, next);
+    passport.authenticate('discord', (err: unknown, user: { token?: string }) => {
+      if (err) {
+        return res.redirect(redirectUri);
+      }
+
+      if (!user) {
+        return res.redirect(redirectUri);
+      }
+
+      // Set JWT as httpOnly cookie
+      if (user.token) {
+        res.cookie('auth.jwt', user.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        });
+      }
+
+      res.redirect(redirectUri);
+    })(req, res, next);
   })
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   redirect() {}
 
   @Get('/logout')
-  @Redirect(process.env.NODE_ENV === 'production' ? '/' : `${config.frontEndBaseUrl}/`)
-  logout(@Req() req: Request): void {
-    req.logout(() => {});
+  logout(@Res() res: Response): void {
+    res.clearCookie('auth.jwt', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    });
+
+    const redirectUri = process.env.NODE_ENV === 'production' ? '/' : `${config.frontEndBaseUrl}/`;
+    res.redirect(redirectUri);
   }
 
   @Get('/authorization')
@@ -64,7 +76,3 @@ export class AuthController implements IAuthController {
     return Promise.resolve(config.eventRoles);
   }
 }
-
-const getReturnToUri = (queryParam: Request['query'][string]) => {
-  return typeof queryParam === 'string' ? encodeURI(queryParam) : undefined;
-};
