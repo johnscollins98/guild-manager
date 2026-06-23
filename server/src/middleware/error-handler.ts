@@ -14,8 +14,6 @@ export class CustomErrorHandler implements ExpressErrorMiddlewareInterface {
     response: Response,
     next: (err?: unknown) => unknown
   ): void {
-    console.error(error);
-
     // Don't try to send response if headers already sent
     if (response.headersSent) {
       next(error);
