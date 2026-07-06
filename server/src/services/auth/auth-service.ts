@@ -47,10 +47,10 @@ export class AuthService {
 
     const member = await cached(
       cacheKey,
-      () => {
+      async () => {
         try {
           const guildApi = Container.get(DiscordGuildApi);
-          return guildApi.getMemberById(userId);
+          return await guildApi.getMemberById(userId);
         } catch (err) {
           console.error(err);
           return Promise.resolve(undefined);
