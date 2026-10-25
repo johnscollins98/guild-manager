@@ -104,7 +104,7 @@ const RosterControl = ({
         </span>
         <span className="right">
           {!kickMode && (
-            <Tooltip title={'Mass kick (up to 5 members)'}>
+            <Tooltip title={'Mass kick'}>
               <span>
                 <IconButton
                   disabled={!authData?.permissions.MEMBERS || disabled}
