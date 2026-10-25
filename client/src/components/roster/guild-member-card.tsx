@@ -76,10 +76,9 @@ const GuildMemberCard = ({
     if (selected) {
       setSelection(old => old.filter(m => m !== id));
     } else {
-      if (selection.length >= 5) return;
       setSelection(old => [...old, id]);
     }
-  }, [member.discordId, memberIsHigherRole, selected, selection.length, setSelection]);
+  }, [member.discordId, memberIsHigherRole, selected, setSelection]);
 
   return (
     <>
@@ -91,7 +90,7 @@ const GuildMemberCard = ({
         <div className="top-row">
           <div className="name">
             {kickMode && member.discordId && !memberIsHigherRole ? (
-              <Checkbox disabled={!selected && selection.length >= 5} checked={selected} />
+              <Checkbox checked={selected} />
             ) : (
               <img
                 className="avatar"
