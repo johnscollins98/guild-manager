@@ -2,6 +2,7 @@ import ArrowDownward from '@mui/icons-material/ArrowDownward';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
+import AutoFixHigh from '@mui/icons-material/AutoFixHigh';
 import DeleteForever from '@mui/icons-material/DeleteForever';
 import FilterList from '@mui/icons-material/FilterList';
 import ImportExport from '@mui/icons-material/ImportExport';
@@ -28,6 +29,7 @@ interface Props {
   setSelection: (v: string[]) => void;
 
   onKick: () => void;
+  onAutoFix: () => void;
 
   disabled?: boolean;
 }
@@ -38,6 +40,7 @@ const RosterControl = ({
   selection,
   setSelection,
   onKick,
+  onAutoFix,
   disabled = false
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -103,6 +106,20 @@ const RosterControl = ({
           </Tooltip>
         </span>
         <span className="right">
+          {!kickMode && (
+            <Tooltip title="Review suggested fixes">
+              <span>
+                <IconButton
+                  aria-label="Review suggested fixes"
+                  size="medium"
+                  onClick={onAutoFix}
+                  disabled={!authData?.permissions.MEMBERS || disabled}
+                >
+                  <AutoFixHigh />
+                </IconButton>
+              </span>
+            </Tooltip>
+          )}
           {!kickMode && (
             <Tooltip title={'Mass kick'}>
               <span>

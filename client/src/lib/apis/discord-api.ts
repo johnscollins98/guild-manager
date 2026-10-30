@@ -227,6 +227,7 @@ export const useUpdateDiscordMember = () => {
 export interface KickMemberDTO {
   memberIds: string[];
   reinvite?: boolean;
+  reinviteUrl?: string;
   reason?: string;
 }
 
@@ -236,7 +237,7 @@ export const useKickDiscordMembers = () => {
   const sendMessage = useSendMessage();
 
   return useMutation<void, AxiosError, KickMemberDTO, DiscordMemberDTO[]>({
-    async mutationFn({ reinvite, reason, memberIds }) {
+    async mutationFn({ reinvite, reinviteUrl, reason, memberIds }) {
       const promises = memberIds.map(async memberId => {
         if (reinvite) {
           let content = 'You have been kicked from Sunspear Order';
@@ -244,8 +245,9 @@ export const useKickDiscordMembers = () => {
             content += ` for the following reason: "${reason}"`;
           }
 
-          if (config.discordReinviteUrl) {
-            content += `\n\nYou are welcome to re-join at any time using the following link: ${config.discordReinviteUrl}`;
+          const inviteUrl = reinviteUrl || config.discordReinviteUrl;
+          if (inviteUrl) {
+            content += `\n\nYou are welcome to re-join at any time using the following link: ${inviteUrl}`;
           }
 
           try {
