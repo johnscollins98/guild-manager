@@ -1,4 +1,5 @@
 import ArrowForward from '@mui/icons-material/ArrowForward';
+import BlockOutlined from '@mui/icons-material/BlockOutlined';
 import {
   Avatar,
   Box,
@@ -43,8 +44,9 @@ const SuggestionGroup = ({
   onReinviteChange,
   footer
 }: Props) => {
-  const enabledCount = fixes.filter(fix => enabled.includes(fix.key)).length;
-  const allEnabled = enabledCount === fixes.length;
+  const availableFixes = fixes.filter(fix => fix.available);
+  const enabledCount = availableFixes.filter(fix => enabled.includes(fix.key)).length;
+  const allEnabled = availableFixes.length > 0 && enabledCount === availableFixes.length;
   const someEnabled = enabledCount > 0 && !allEnabled;
   const handleToggleAll = () => onToggleAll(!allEnabled);
 
@@ -57,7 +59,7 @@ const SuggestionGroup = ({
           size="small"
           checked={allEnabled}
           indeterminate={someEnabled}
-          disabled={busy}
+          disabled={busy || availableFixes.length === 0}
           onChange={handleToggleAll}
           inputProps={{ 'aria-label': `Enable all ${label.toLowerCase()}` }}
           sx={{ mr: 0, ml: 0.5 }}
@@ -68,6 +70,7 @@ const SuggestionGroup = ({
         {fixes.map(fix => {
           const name = fix.member.nickname || fix.member.discordName || fix.member.accountName;
           const isRoleFix = fix.kind === 'role';
+          const unavailable = !fix.available;
           const isEnabled = enabled.includes(fix.key);
           const nameColor = getColorFromRole(
             isRoleFix ? fix.member.rank : fix.member.roles[0]?.name,
@@ -95,18 +98,38 @@ const SuggestionGroup = ({
                 type="button"
                 aria-label={`Apply fix for ${name}`}
                 aria-pressed={isEnabled}
-                disabled={busy}
+                disabled={busy || unavailable}
                 onClick={handleToggleFix}
+                sx={unavailable ? { '&.Mui-disabled': { opacity: 0.7 } } : undefined}
               >
-                <Checkbox
-                  inputProps={{ 'aria-label': `Apply fix for ${name}` }}
-                  checked={isEnabled}
-                  disabled={busy}
-                  onClick={stopCardToggle}
-                  onChange={handleCheckboxChange}
-                  sx={{ ml: -1, mr: 1 }}
-                />
-                <Avatar src={fix.member.avatar} alt="" sx={{ width: 32, height: 32, mr: 1 }}>
+                {unavailable ? (
+                  <Box
+                    aria-label="Bot cannot manage this member"
+                    title="Bot cannot manage this member"
+                    sx={{ width: 36, mr: 1, display: 'flex', justifyContent: 'center' }}
+                  >
+                    <BlockOutlined fontSize="small" color="disabled" />
+                  </Box>
+                ) : (
+                  <Checkbox
+                    inputProps={{ 'aria-label': `Apply fix for ${name}` }}
+                    checked={isEnabled}
+                    disabled={busy}
+                    onClick={stopCardToggle}
+                    onChange={handleCheckboxChange}
+                    sx={{ ml: -1, mr: 1 }}
+                  />
+                )}
+                <Avatar
+                  src={fix.member.avatar}
+                  alt=""
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    mr: 1,
+                    opacity: unavailable ? 0.65 : 1
+                  }}
+                >
                   {name.slice(0, 1).toUpperCase()}
                 </Avatar>
                 {isRoleFix ? (
@@ -114,7 +137,9 @@ const SuggestionGroup = ({
                     <Typography
                       variant="body2"
                       fontWeight={600}
-                      sx={{ color: nameColor ?? 'text.primary' }}
+                      sx={{
+                        color: unavailable ? 'text.disabled' : (nameColor ?? 'text.primary')
+                      }}
                     >
                       {name}
                     </Typography>
@@ -124,7 +149,9 @@ const SuggestionGroup = ({
                         variant="body2"
                         component="span"
                         sx={{
-                          color: discordRoleColor ?? 'text.secondary'
+                          color: unavailable
+                            ? 'text.disabled'
+                            : (discordRoleColor ?? 'text.secondary')
                         }}
                       >
                         {fix.member.roles.length
@@ -137,37 +164,50 @@ const SuggestionGroup = ({
                         variant="body2"
                         component="span"
                         sx={{
-                          color: rankColor ?? 'text.primary'
+                          color: unavailable ? 'text.disabled' : (rankColor ?? 'text.primary')
                         }}
                       >
                         {fix.member.rank}
                       </Typography>
                     </Stack>
                     <Typography variant="caption" color="text.secondary">
-                      Update Discord role to match GW2 Rank. Applies{' '}
-                      <Box
-                        component="span"
-                        sx={{
-                          color: targetRoleColor ?? 'inherit',
-                          fontWeight: 600
-                        }}
-                      >
-                        {fix.role.name}
-                      </Box>{' '}
-                      role
+                      {unavailable ? (
+                        'The bot can’t manage members at this rank or above.'
+                      ) : (
+                        <>
+                          Update Discord role to match GW2 Rank. Applies{' '}
+                          <Box
+                            component="span"
+                            sx={{
+                              color: targetRoleColor ?? 'inherit',
+                              fontWeight: 600
+                            }}
+                          >
+                            {fix.role.name}
+                          </Box>{' '}
+                          role
+                        </>
+                      )}
                     </Typography>
                   </Stack>
                 ) : (
                   <Stack sx={{ minWidth: 0 }}>
-                    <Typography variant="body2" sx={{ color: nameColor ?? 'text.primary' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: unavailable ? 'text.disabled' : (nameColor ?? 'text.primary')
+                      }}
+                    >
                       {name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      Kick from Discord
+                      {unavailable
+                        ? 'The bot can’t manage members at this rank or above.'
+                        : 'Kick from Discord'}
                     </Typography>
                   </Stack>
                 )}
-                {fix.kind === 'kick' && onReinviteChange && reinviteByKick && (
+                {fix.kind === 'kick' && !unavailable && onReinviteChange && reinviteByKick && (
                   <Stack
                     direction="row"
                     alignItems="center"

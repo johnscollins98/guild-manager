@@ -46,13 +46,13 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
   const suggestions = useSuggestedFixes(records, roles);
   const activeFixes = suggestions.all.filter(
     (fix): fix is Exclude<SuggestedFix, { kind: 'manual' }> =>
-      fix.kind !== 'manual' && enabled.includes(fix.key)
+      fix.kind !== 'manual' && fix.available && enabled.includes(fix.key)
   );
   const missingAssociationTarget = activeFixes.some(
     fix => fix.kind === 'associate' && !associationTargets[fix.key]
   );
   const activeReinviteCount = suggestions.kicks.filter(
-    fix => enabled.includes(fix.key) && reinviteByKick[fix.key]
+    fix => fix.available && enabled.includes(fix.key) && reinviteByKick[fix.key]
   ).length;
   const hasEnabledKick = activeFixes.some(fix => fix.kind === 'kick');
   const inviteConfigured = Boolean(config.discordReinviteUrl);
@@ -88,7 +88,7 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
   };
 
   const setGroupEnabled = (fixes: SuggestedFix[], apply: boolean) => {
-    const keys = fixes.map(fix => fix.key);
+    const keys = fixes.filter(fix => fix.available).map(fix => fix.key);
     setEnabled(old =>
       apply ? [...new Set([...old, ...keys])] : old.filter(key => !keys.includes(key))
     );
@@ -102,7 +102,7 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
 
   const handleReinviteAll = () => {
     const enabledKickKeys = suggestions.kicks
-      .filter(fix => enabled.includes(fix.key))
+      .filter(fix => fix.available && enabled.includes(fix.key))
       .map(fix => fix.key);
     setReinviteByKick(old => ({
       ...old,
