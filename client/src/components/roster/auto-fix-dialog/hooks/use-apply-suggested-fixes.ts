@@ -82,10 +82,14 @@ const useApplySuggestedFixes = ({
     setWorking(false);
     if (failures === 0) {
       openToast(`Finished applying ${fixes.length} suggested fix${fixes.length === 1 ? '' : 'es'}.`, 'success');
-      onComplete();
     } else {
       openToast(`Finished with ${failures} failed fix${failures === 1 ? '' : 'es'}.`, 'warning');
     }
+
+    // Clear the review selection after every batch. Successful mutations may
+    // already have updated the roster cache, and leaving them selected would
+    // let a retry apply those same actions again alongside any failures.
+    onComplete();
   };
 
   return { applyFixes, busy, progress };
