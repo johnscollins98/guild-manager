@@ -49,8 +49,8 @@ const Roster = () => {
           flex: 1,
           minHeight: 0,
           minWidth: 0,
-          flexDirection: { xs: 'column', lg: 'row' },
-          rowGap: { xs: 2, lg: 0 }
+          flexDirection: { xs: 'column', md: 'row' },
+          rowGap: { xs: 2, md: 0 }
         }}
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>

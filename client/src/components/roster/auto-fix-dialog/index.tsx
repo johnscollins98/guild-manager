@@ -36,7 +36,7 @@ interface Props {
 }
 
 const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
-  const isLargeScreen = useMediaQuery(theme => theme.breakpoints.up('lg'));
+  const isMediumScreen = useMediaQuery(theme => theme.breakpoints.up('md'));
   const [enabled, setEnabled] = useState<string[]>([]);
   const [reinviteByKick, setReinviteByKick] = useState<Record<string, boolean>>({});
   const [reason, setReason] = useState('');
@@ -139,26 +139,26 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
 
   return (
     <Collapse
-      orientation={isLargeScreen ? 'horizontal' : 'vertical'}
+      orientation={isMediumScreen ? 'horizontal' : 'vertical'}
       in={isOpen}
       mountOnEnter
       unmountOnExit
       timeout="auto"
       sx={{ flexShrink: 0 }}
     >
-      <Slide direction={isLargeScreen ? 'left' : 'up'} in={isOpen}>
+      <Slide direction={isMediumScreen ? 'left' : 'up'} in={isOpen}>
         <Stack
           component="aside"
           aria-label="Review suggested fixes"
           sx={{
-            flex: { xs: '0 0 auto', lg: '0 0 560px' },
-            width: { xs: '100%', lg: 560 },
+            flex: { xs: '0 0 auto', md: '0 0 420px', lg: '0 0 560px' },
+            width: { xs: '100%', md: 420, lg: 560 },
             minWidth: 0,
-            height: { xs: 'auto', lg: '100%' },
-            maxHeight: { xs: '60vh', lg: 'none' },
-            borderLeft: { xs: 0, lg: 1 },
-            borderTop: { xs: 1, lg: 0 },
-            borderColor: { xs: 'divider', lg: 'divider' },
+            height: { xs: 'auto', md: '100%' },
+            maxHeight: { xs: '60vh', md: 'none' },
+            borderLeft: { xs: 0, md: 1 },
+            borderTop: { xs: 1, md: 0 },
+            borderColor: { xs: 'divider', md: 'divider' },
             bgcolor: 'background.paper'
           }}
         >
@@ -169,7 +169,7 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
           display: 'flex',
           flexDirection: 'column',
           minHeight: 0,
-          height: { xs: 'auto', lg: '100%' }
+          height: { xs: 'auto', md: '100%' }
         }}
       >
         <Stack
@@ -190,7 +190,7 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
             px: 2,
             py: 2,
             overflowY: 'auto',
-            flex: { xs: '0 1 auto', lg: 1 },
+            flex: { xs: '0 1 auto', md: 1 },
             minHeight: 0,
             borderTop: 1,
             borderBottom: 1,
