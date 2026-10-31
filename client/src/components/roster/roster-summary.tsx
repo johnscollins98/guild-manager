@@ -1,19 +1,15 @@
 import MailIcon from '@mui/icons-material/Mail';
 import { Box, Typography } from '@mui/material';
-import { useSuspenseQueries } from '@tanstack/react-query';
-import { discordMembersQuery } from '../../lib/apis/discord-api';
-import { gw2MembersQuery } from '../../lib/apis/gw2-api';
 import { DiscordLogo } from '../common/discord-icon';
 import { Gw2Icon } from '../common/gw2-icon';
 
-export const RosterSummary = () => {
-  const [gw2Members, discordMembers] = useSuspenseQueries({
-    queries: [gw2MembersQuery, discordMembersQuery]
-  });
+interface Props {
+  inviteCount: number;
+  gw2MemberCount: number;
+  discordMemberCount: number;
+}
 
-  const inviteCount = gw2Members.data.filter(m => m.rank === 'invited').length;
-  const gw2MemberCount = gw2Members.data.length - inviteCount;
-
+export const RosterSummary = ({ inviteCount, gw2MemberCount, discordMemberCount }: Props) => {
   return (
     <Box display="flex" gap={3} justifyContent="flex-end" sx={{ pt: 1, pr: { xs: 0, md: 2 } }}>
       {inviteCount !== 0 && (
@@ -28,7 +24,7 @@ export const RosterSummary = () => {
       </Box>
       <Box display="flex" alignItems="center" gap={0.5}>
         <DiscordLogo height={24} width={24} />
-        <Typography>{discordMembers.data.length}</Typography>
+        <Typography>{discordMemberCount}</Typography>
       </Box>
     </Box>
   );

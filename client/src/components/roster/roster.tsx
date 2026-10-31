@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import AutoFixDialog from './auto-fix-dialog';
 import KickModal from './kick-modal';
@@ -11,6 +11,7 @@ import { RosterList } from './member-list';
 import { RosterLoader } from './roster-loader';
 import { RosterSummary } from './roster-summary';
 import { useRoster } from './use-roster';
+import { useFilterString } from '../../lib/utils/use-filter-string';
 
 const Roster = () => {
   const [kickMode, setKickMode] = useState(false);
@@ -18,13 +19,6 @@ const Roster = () => {
 
   const [kickModalShow, setKickModalShow] = useState(false);
   const [autoFixOpen, setAutoFixOpen] = useState(false);
-  const [searchParams] = useSearchParams();
-  const { roster, discordRoles } = useRoster(
-    searchParams.get('sortBy') || undefined,
-    searchParams.get('sortOrder') === 'ASC',
-    undefined,
-    searchParams.get('filterBy') || undefined
-  );
 
   const onKick = useCallback((member: MemberRecord) => {
     if (member.discordId) {
@@ -43,36 +37,16 @@ const Roster = () => {
         onKick={() => setKickModalShow(true)}
         onAutoFix={() => setAutoFixOpen(open => !open)}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          flex: 1,
-          minHeight: 0,
-          minWidth: 0,
-          flexDirection: { xs: 'column', md: 'row' },
-          rowGap: { xs: 2, md: 0 }
-        }}
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
-          <QueryBoundary fallback={<RosterLoader />}>
-            <Box flex="1" minHeight={0}>
-              <RosterList
-                kickMode={kickMode}
-                onKick={onKick}
-                kickSelection={selection}
-                setKickSelection={setSelection}
-              />
-            </Box>
-            <RosterSummary />
-          </QueryBoundary>
-        </Box>
-        <AutoFixDialog
-          isOpen={autoFixOpen}
-          onClose={() => setAutoFixOpen(false)}
-          records={roster}
-          roles={discordRoles}
+      <QueryBoundary fallback={<RosterLoader />}>
+        <RosterContent
+          kickMode={kickMode}
+          selection={selection}
+          setSelection={setSelection}
+          onKick={onKick}
+          autoFixOpen={autoFixOpen}
+          onCloseAutoFix={() => setAutoFixOpen(false)}
         />
-      </Box>
+      </QueryBoundary>
       <KickModal
         isOpen={kickModalShow}
         onClose={() => setKickModalShow(false)}
@@ -83,6 +57,72 @@ const Roster = () => {
         }}
       />
     </>
+  );
+};
+
+interface RosterContentProps {
+  kickMode: boolean;
+  selection: string[];
+  setSelection: Dispatch<SetStateAction<string[]>>;
+  onKick: (member: MemberRecord) => void;
+  autoFixOpen: boolean;
+  onCloseAutoFix: () => void;
+}
+
+const RosterContent = ({
+  kickMode,
+  selection,
+  setSelection,
+  onKick,
+  autoFixOpen,
+  onCloseAutoFix
+}: RosterContentProps) => {
+  const [searchParams] = useSearchParams();
+  const filterString = useFilterString();
+  const { roster, rosterForDisplay, discordRoles, inviteCount, gw2MemberCount, discordMemberCount } =
+    useRoster(
+      searchParams.get('sortBy') ?? '',
+      searchParams.get('sortOrder') === 'ASC',
+      filterString,
+      searchParams.get('filterBy') ?? ''
+    );
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flex: 1,
+        minHeight: 0,
+        minWidth: 0,
+        flexDirection: { xs: 'column', md: 'row' },
+        rowGap: { xs: 2, md: 0 }
+      }}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, minHeight: 0 }}>
+        <Box flex="1" minHeight={0}>
+          <RosterList
+            kickMode={kickMode}
+            onKick={onKick}
+            kickSelection={selection}
+            setKickSelection={setSelection}
+            discordRoles={discordRoles}
+            rosterForDisplay={rosterForDisplay}
+            roster={roster}
+          />
+        </Box>
+        <RosterSummary
+          inviteCount={inviteCount}
+          gw2MemberCount={gw2MemberCount}
+          discordMemberCount={discordMemberCount}
+        />
+      </Box>
+      <AutoFixDialog
+        isOpen={autoFixOpen}
+        onClose={onCloseAutoFix}
+        records={roster}
+        roles={discordRoles}
+      />
+    </Box>
   );
 };
 
