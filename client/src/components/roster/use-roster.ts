@@ -54,7 +54,10 @@ export const useRoster = (
     rosterForDisplay: filteredRoster,
     roster,
     botRoles: botRoles.data,
-    discordRoles: discordRoles.data
+    discordRoles: discordRoles.data,
+    inviteCount: gw2Members.data.filter(member => member.rank === 'invited').length,
+    gw2MemberCount: gw2Members.data.filter(member => member.rank !== 'invited').length,
+    discordMemberCount: discordMembers.data.length
   };
 };
 

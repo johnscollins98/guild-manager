@@ -1,4 +1,5 @@
 import MailIcon from '@mui/icons-material/Mail';
+import PeopleAlt from '@mui/icons-material/PeopleAlt';
 import PersonIcon from '@mui/icons-material/Person';
 import ScheduleSendIcon from '@mui/icons-material/ScheduleSend';
 import SyncProblem from '@mui/icons-material/SyncProblem';
@@ -114,6 +115,11 @@ const GuildMemberCard = ({
                 title={`Unmatching Roles (${member.rank} / ${member.roles[0]?.name || 'No Role'})`}
               >
                 <SyncProblem className="error" />
+              </Tooltip>
+            ) : null}
+            {member.issues.duplicateMatch ? (
+              <Tooltip title="This GW2 account name matches multiple Discord accounts. Review and choose the correct association.">
+                <PeopleAlt className="error" />
               </Tooltip>
             ) : null}
             {member.issues.pending ? (

@@ -1,33 +1,30 @@
 import { type PopoverPosition } from '@mui/material';
 import { memo, useCallback, useState, type Dispatch, type SetStateAction } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { AutoSizer, List } from 'react-virtualized';
+import type { DiscordRole } from 'server';
 import type MemberRecord from '../../lib/interfaces/member-record';
-import { useFilterString } from '../../lib/utils/use-filter-string';
 import GuildMemberCard from './guild-member-card';
 import { RosterMenuDialogs } from './roster-menu-dialogs';
-import { useRoster } from './use-roster';
 
 interface Props {
   kickSelection: string[];
   setKickSelection: Dispatch<SetStateAction<string[]>>;
   onKick: (member: MemberRecord) => void;
   kickMode: boolean;
+  discordRoles: DiscordRole[];
+  rosterForDisplay: MemberRecord[];
+  roster: MemberRecord[];
 }
 
-const RosterListImpl = ({ kickSelection, setKickSelection, onKick, kickMode }: Props) => {
-  const filterString = useFilterString();
-  const [searchParams] = useSearchParams();
-  const sortBy = searchParams.get('sortBy') ?? '';
-  const filterBy = searchParams.get('filterBy') ?? '';
-  const ascending = searchParams.get('sortOrder') === 'ASC';
-  const { discordRoles, rosterForDisplay, roster } = useRoster(
-    sortBy,
-    ascending,
-    filterString,
-    filterBy
-  );
-
+const RosterListImpl = ({
+  kickSelection,
+  setKickSelection,
+  onKick,
+  kickMode,
+  discordRoles,
+  rosterForDisplay,
+  roster
+}: Props) => {
   const [menuAnchor, setMenuAnchor] = useState<PopoverPosition | undefined>(undefined);
 
   const [selectedRecordId, setSelectedRecordId] = useState<string | undefined>(undefined);

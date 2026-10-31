@@ -33,15 +33,16 @@ export const generateGW2RosterRecords = (
     const regex = new RegExp(`(?:^|[^a-z])(${testName})(?:$|[^a-z])`, 'ig');
 
     // check for exact match
-    const discordMemberIndex = discordNames.findIndex(m => {
-      if (gw2Member.discordId) {
-        return gw2Member.discordId === m.id;
-      }
+    const matchingDiscordMembers = gw2Member.discordId
+      ? discordMembers.filter(
+          (member): member is DiscordMemberDTO & { id: string } => member.id === gw2Member.discordId
+        )
+      : discordNames
+          .filter(member => member.name?.match(regex))
+          .map(member => discordMembers.find(discordMember => discordMember.id === member.id))
+          .filter((member): member is DiscordMemberDTO & { id: string } => !!member?.id);
 
-      return m.name?.match(regex);
-    });
-
-    const discordMember = discordMembers[discordMemberIndex];
+    const discordMember = matchingDiscordMembers[0];
 
     const discordName = discordMember?.name;
     const nickname = discordMember?.nickname;
@@ -75,13 +76,21 @@ export const generateGW2RosterRecords = (
       discordName,
       nickname,
       discordId,
+      matchingDiscordMembers: matchingDiscordMembers.map(member => ({
+        id: member.id,
+        name: member.nickname ?? member.name ?? member.id,
+        avatar: getUserAvatar({ member }),
+        roles: [...member.roles].sort((a, b) => b.position - a.position),
+        joined: member.joined
+      })),
       roles,
       avatar,
       issues: {
         missingDiscord,
         unmatchingRoles,
         invited,
-        overAWeek
+        overAWeek,
+        duplicateMatch: matchingDiscordMembers.length > 1
       }
     };
   });
