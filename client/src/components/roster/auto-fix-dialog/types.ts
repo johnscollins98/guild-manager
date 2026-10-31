@@ -2,13 +2,21 @@ import type { DiscordRole } from 'server';
 import type MemberRecord from '../../../lib/interfaces/member-record';
 
 export type SuggestedFix =
-  | { key: string; kind: 'role'; member: MemberRecord; role: DiscordRole }
-  | { key: string; kind: 'kick'; member: MemberRecord }
-  | { key: string; kind: 'manual'; member: MemberRecord; action: string; reason: string }
+  | { key: string; kind: 'role'; member: MemberRecord; role: DiscordRole; available: boolean }
+  | { key: string; kind: 'kick'; member: MemberRecord; available: boolean }
+  | {
+      key: string;
+      kind: 'manual';
+      member: MemberRecord;
+      action: string;
+      reason: string;
+      available: boolean;
+    }
   | {
       key: string;
       kind: 'associate';
       member: MemberRecord;
+      available: boolean;
       options: {
         value: string;
         label: string;
