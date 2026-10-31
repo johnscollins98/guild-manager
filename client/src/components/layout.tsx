@@ -10,7 +10,7 @@ const Layout = () => {
     <>
       <NavBar maxWidth={maxWidth} />
       <Box className="outlet" maxWidth={maxWidth} width="100%" margin="auto">
-        <QueryBoundary key={location.key}>
+        <QueryBoundary key={location.pathname}>
           <Outlet />
         </QueryBoundary>
       </Box>
