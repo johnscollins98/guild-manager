@@ -15,7 +15,7 @@ export const RosterSummary = () => {
   const gw2MemberCount = gw2Members.data.length - inviteCount;
 
   return (
-    <Box display="flex" gap={3} justifyContent="flex-end" sx={{ pt: 1, pr: { xs: 0, lg: 2 } }}>
+    <Box display="flex" gap={3} justifyContent="flex-end" sx={{ pt: 1, pr: { xs: 0, md: 2 } }}>
       {inviteCount !== 0 && (
         <Box display="flex" alignItems="center" gap={0.5}>
           <MailIcon />
