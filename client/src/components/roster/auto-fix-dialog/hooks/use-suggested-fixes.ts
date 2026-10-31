@@ -54,7 +54,7 @@ const useSuggestedFixes = (records: MemberRecord[], roles: DiscordRole[]): Sugge
         });
       }
 
-      if (member.issues.missingGW2 && member.discordId) {
+      if (member.issues.missingGW2 && member.issues.over24h && member.discordId) {
         groups.kicks.push({
           key: `kick:${member.discordId}`,
           kind: 'kick',
