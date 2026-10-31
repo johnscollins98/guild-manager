@@ -3,6 +3,7 @@ import Close from '@mui/icons-material/Close';
 import SyncProblem from '@mui/icons-material/SyncProblem';
 import {
   Alert,
+  Box,
   Button,
   CircularProgress,
   IconButton,
@@ -225,7 +226,12 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
                         color="var(--mui-palette-error-main)"
                         aria-label="GW2 account missing"
                       />{' '}
-                      Kick members without a GW2 account
+                      <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                        Kick members without a GW2 account
+                      </Box>
+                      <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+                        Kick: no GW2 account
+                      </Box>
                     </>
                   }
                   label="Discord kicks section"

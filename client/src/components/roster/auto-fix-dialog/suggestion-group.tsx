@@ -2,7 +2,6 @@ import ArrowForward from '@mui/icons-material/ArrowForward';
 import {
   Avatar,
   Box,
-  Button,
   Checkbox,
   List,
   ListItem,
@@ -44,22 +43,25 @@ const SuggestionGroup = ({
   onReinviteChange,
   footer
 }: Props) => {
-  const handleEnableAll = () => onToggleAll(true);
-  const handleDisableAll = () => onToggleAll(false);
+  const enabledCount = fixes.filter(fix => enabled.includes(fix.key)).length;
+  const allEnabled = enabledCount === fixes.length;
+  const someEnabled = enabledCount > 0 && !allEnabled;
+  const handleToggleAll = () => onToggleAll(!allEnabled);
 
   return (
     <CollapsibleSection
       title={title}
       label={label}
       actions={
-        <Stack direction="row" spacing={1}>
-          <Button size="small" disabled={busy} onClick={handleEnableAll}>
-            Enable all
-          </Button>
-          <Button size="small" disabled={busy} onClick={handleDisableAll}>
-            Disable all
-          </Button>
-        </Stack>
+        <Checkbox
+          size="small"
+          checked={allEnabled}
+          indeterminate={someEnabled}
+          disabled={busy}
+          onChange={handleToggleAll}
+          inputProps={{ 'aria-label': `Enable all ${label.toLowerCase()}` }}
+          sx={{ mr: 0, ml: 0.5 }}
+        />
       }
     >
       <List disablePadding>
