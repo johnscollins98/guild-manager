@@ -16,6 +16,6 @@ jobs:
         with:
           node-version: '24.x'
       - name: Install Dependencies
-        run: npm install --frozen-lockfile
+        run: npm ci
       - name: Run Build
         run: npm run build
