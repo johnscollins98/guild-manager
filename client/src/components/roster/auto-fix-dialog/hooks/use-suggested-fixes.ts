@@ -15,8 +15,11 @@ const useSuggestedFixes = (records: MemberRecord[], roles: DiscordRole[]): Sugge
 
     records.forEach(member => {
       if (member.issues.unmatchingRoles && member.discordId && member.rank) {
-        const role = roles.find(candidate => candidate.name.toLowerCase() === member.rank?.toLowerCase());
-        if (role) groups.roles.push({ key: `role:${member.discordId}`, kind: 'role', member, role });
+        const role = roles.find(
+          candidate => candidate.name.toLowerCase() === member.rank?.toLowerCase()
+        );
+        if (role)
+          groups.roles.push({ key: `role:${member.discordId}`, kind: 'role', member, role });
       }
 
       if (

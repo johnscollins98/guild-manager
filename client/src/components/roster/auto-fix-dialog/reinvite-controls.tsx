@@ -27,9 +27,11 @@ const ReinviteControls = ({
       onChange={event => onReasonChange(event.target.value)}
       fullWidth
       size="small"
-      helperText={activeReinviteCount > 0
-        ? `Included for ${activeReinviteCount} re-invite${activeReinviteCount === 1 ? '' : 's'}.`
-        : 'Enable re-invite for at least one selected kick to add a reason.'}
+      helperText={
+        activeReinviteCount > 0
+          ? `Included for ${activeReinviteCount} re-invite${activeReinviteCount === 1 ? '' : 's'}.`
+          : 'Enable re-invite for at least one selected kick to add a reason.'
+      }
     />
     <Stack direction="row" spacing={1}>
       <Button size="small" disabled={busy || !inviteConfigured} onClick={onReinviteAll}>

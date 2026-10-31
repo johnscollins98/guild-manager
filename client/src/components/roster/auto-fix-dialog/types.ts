@@ -9,7 +9,13 @@ export type SuggestedFix =
       key: string;
       kind: 'associate';
       member: MemberRecord;
-      options: { value: string; label: string; avatar?: string; roles?: DiscordRole[]; joined?: string }[];
+      options: {
+        value: string;
+        label: string;
+        avatar?: string;
+        roles?: DiscordRole[];
+        joined?: string;
+      }[];
     };
 
 export interface SuggestedFixGroups {

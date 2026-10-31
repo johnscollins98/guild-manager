@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { useToast } from '../../../common/toast/toast-context';
 import {
   useAddDiscordRole,
   useKickDiscordMembers,
   useRemoveDiscordRole
 } from '../../../../lib/apis/discord-api';
 import { useAssociateToDiscordAccountMutation } from '../../../../lib/apis/gw2-api';
+import { useToast } from '../../../common/toast/toast-context';
 import type { SuggestedFix } from '../types';
 
 interface Options {
@@ -31,7 +31,8 @@ const useApplySuggestedFixes = ({
   const [working, setWorking] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const busy = working || addRole.isPending || removeRole.isPending || kick.isPending || associate.isPending;
+  const busy =
+    working || addRole.isPending || removeRole.isPending || kick.isPending || associate.isPending;
 
   const applyFixes = async () => {
     setWorking(true);
@@ -81,7 +82,10 @@ const useApplySuggestedFixes = ({
 
     setWorking(false);
     if (failures === 0) {
-      openToast(`Finished applying ${fixes.length} suggested fix${fixes.length === 1 ? '' : 'es'}.`, 'success');
+      openToast(
+        `Finished applying ${fixes.length} suggested fix${fixes.length === 1 ? '' : 'es'}.`,
+        'success'
+      );
     } else {
       openToast(`Finished with ${failures} failed fix${failures === 1 ? '' : 'es'}.`, 'warning');
     }
