@@ -6,12 +6,12 @@ import RosterControl from './roster-control';
 
 import { Box } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import { useFilterString } from '../../lib/utils/use-filter-string';
 import { QueryBoundary } from '../common/query-boundary';
 import { RosterList } from './member-list';
 import { RosterLoader } from './roster-loader';
 import { RosterSummary } from './roster-summary';
 import { useRoster } from './use-roster';
-import { useFilterString } from '../../lib/utils/use-filter-string';
 
 const Roster = () => {
   const [kickMode, setKickMode] = useState(false);
@@ -79,13 +79,19 @@ const RosterContent = ({
 }: RosterContentProps) => {
   const [searchParams] = useSearchParams();
   const filterString = useFilterString();
-  const { roster, rosterForDisplay, discordRoles, inviteCount, gw2MemberCount, discordMemberCount } =
-    useRoster(
-      searchParams.get('sortBy') ?? '',
-      searchParams.get('sortOrder') === 'ASC',
-      filterString,
-      searchParams.get('filterBy') ?? ''
-    );
+  const {
+    roster,
+    rosterForDisplay,
+    discordRoles,
+    inviteCount,
+    gw2MemberCount,
+    discordMemberCount
+  } = useRoster(
+    searchParams.get('sortBy') ?? '',
+    searchParams.get('sortOrder') === 'ASC',
+    filterString,
+    searchParams.get('filterBy') ?? ''
+  );
 
   return (
     <Box
