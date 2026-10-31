@@ -6,10 +6,13 @@ import {
   Box,
   Button,
   CircularProgress,
+  Collapse,
   IconButton,
   LinearProgress,
+  Slide,
   Stack,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 import { useCallback, useState, type FormEvent } from 'react';
 import type { DiscordRole } from 'server';
@@ -33,6 +36,7 @@ interface Props {
 }
 
 const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
+  const isLargeScreen = useMediaQuery(theme => theme.breakpoints.up('lg'));
   const [enabled, setEnabled] = useState<string[]>([]);
   const [reinviteByKick, setReinviteByKick] = useState<Record<string, boolean>>({});
   const [reason, setReason] = useState('');
@@ -134,22 +138,30 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
   };
 
   return (
-    <Stack
-      component="aside"
-      aria-label="Review suggested fixes"
-      sx={{
-        display: isOpen ? 'flex' : 'none',
-        flex: { xs: '0 0 auto', lg: '0 0 560px' },
-        width: { xs: '100%', lg: 560 },
-        minWidth: 0,
-        height: { xs: 'auto', lg: '100%' },
-        maxHeight: { xs: '60vh', lg: 'none' },
-        borderLeft: { xs: 0, lg: 1 },
-        borderTop: { xs: 1, lg: 0 },
-        borderColor: { xs: 'divider', lg: 'divider' },
-        bgcolor: 'background.paper'
-      }}
+    <Collapse
+      orientation={isLargeScreen ? 'horizontal' : 'vertical'}
+      in={isOpen}
+      mountOnEnter
+      unmountOnExit
+      timeout="auto"
+      sx={{ flexShrink: 0 }}
     >
+      <Slide direction={isLargeScreen ? 'left' : 'up'} in={isOpen}>
+        <Stack
+          component="aside"
+          aria-label="Review suggested fixes"
+          sx={{
+            flex: { xs: '0 0 auto', lg: '0 0 560px' },
+            width: { xs: '100%', lg: 560 },
+            minWidth: 0,
+            height: { xs: 'auto', lg: '100%' },
+            maxHeight: { xs: '60vh', lg: 'none' },
+            borderLeft: { xs: 0, lg: 1 },
+            borderTop: { xs: 1, lg: 0 },
+            borderColor: { xs: 'divider', lg: 'divider' },
+            bgcolor: 'background.paper'
+          }}
+        >
       <Stack
         component="form"
         onSubmit={submit}
@@ -298,7 +310,9 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
         onClose={handleConfirmationClose}
         onConfirm={handleConfirmApply}
       />
-    </Stack>
+        </Stack>
+      </Slide>
+    </Collapse>
   );
 };
 
