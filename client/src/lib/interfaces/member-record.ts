@@ -11,6 +11,13 @@ export default interface MemberRecord {
   discordName?: string;
   manualMatch: boolean;
   discordId?: string;
+  matchingDiscordMembers?: {
+    id: string;
+    name: string;
+    avatar?: string;
+    roles?: DiscordRole[];
+    joined?: string;
+  }[];
   roles: DiscordRole[];
   avatar?: string;
   warnings: WarningDTO[];
@@ -22,5 +29,6 @@ export default interface MemberRecord {
     overAWeek?: boolean;
     invited?: boolean;
     pending?: boolean;
+    duplicateMatch?: boolean;
   };
 }
