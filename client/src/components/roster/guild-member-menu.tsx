@@ -22,7 +22,8 @@ interface Props {
   closeMenu: () => void;
   onKick: (member: MemberRecord) => void;
   onEdit: (member: MemberRecord) => void;
-  onAssociateMember: (member: MemberRecord) => void;
+  onLinkDiscordAccount: (member: MemberRecord) => void;
+  onLinkGW2Account: (member: MemberRecord) => void;
   onChangeNickname: (member: MemberRecord) => void;
   openWarningForm: (member: MemberRecord) => void;
   openWarningViewer: (member: MemberRecord) => void;
@@ -54,7 +55,8 @@ const MenuContent = ({
   member,
   onEdit,
   onKick,
-  onAssociateMember,
+  onLinkDiscordAccount,
+  onLinkGW2Account,
   onChangeNickname,
   openWarningForm,
   openWarningViewer
@@ -109,9 +111,15 @@ const MenuContent = ({
       <Divider />
       <GuildMemberMenuItem
         Icon={Person}
-        label="Associate"
+        label="Link Discord Account"
         disabled={!permissions.MEMBERS || !member.memberId}
-        action={() => menuAction(() => onAssociateMember(member))}
+        action={() => menuAction(() => onLinkDiscordAccount(member))}
+      />
+      <GuildMemberMenuItem
+        Icon={Person}
+        label="Link GW2 Account"
+        disabled={!permissions.MEMBERS || !member.discordId}
+        action={() => menuAction(() => onLinkGW2Account(member))}
       />
       <GuildMemberMenuItem
         Icon={Close}

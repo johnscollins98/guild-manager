@@ -3,7 +3,7 @@ import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } fr
 import { type WarningType } from 'server';
 import { useAddWarningMutation } from '../../lib/apis/warnings-api';
 import type MemberRecord from '../../lib/interfaces/member-record';
-import { AssociateMemberDialog } from './associate-member';
+import { LinkDiscordAccountDialog, LinkGW2AccountDialog } from './associate-member';
 import { EditNickNameDialog } from './edit-nickname';
 import GuildMemberMenu from './guild-member-menu';
 import RoleEdit from './role-edit';
@@ -61,17 +61,30 @@ export const RosterMenuDialogs = ({
     setNicknameOpen(false);
   }, []);
 
-  const [associateOpen, setAssociateOpen] = useState(false);
-  const onAssociate = useCallback(
+  const [linkDiscordOpen, setLinkDiscordOpen] = useState(false);
+  const onLinkDiscordAccount = useCallback(
     (member: MemberRecord) => {
       setSelectedRecordId(member.memberId);
-      setAssociateOpen(true);
+      setLinkDiscordOpen(true);
     },
     [setSelectedRecordId]
   );
 
-  const closeAssociate = useCallback(() => {
-    setAssociateOpen(false);
+  const closeLinkDiscord = useCallback(() => {
+    setLinkDiscordOpen(false);
+  }, []);
+
+  const [linkGW2Open, setLinkGW2Open] = useState(false);
+  const onLinkGW2Account = useCallback(
+    (member: MemberRecord) => {
+      setSelectedRecordId(member.discordId);
+      setLinkGW2Open(true);
+    },
+    [setSelectedRecordId]
+  );
+
+  const closeLinkGW2 = useCallback(() => {
+    setLinkGW2Open(false);
   }, []);
 
   const openWarningForm = useCallback(
@@ -121,7 +134,8 @@ export const RosterMenuDialogs = ({
         closeMenu={closeMenu}
         onKick={onKick}
         onEdit={onRoleEdit}
-        onAssociateMember={onAssociate}
+        onLinkDiscordAccount={onLinkDiscordAccount}
+        onLinkGW2Account={onLinkGW2Account}
         onChangeNickname={onEditNickname}
         openWarningForm={openWarningForm}
         openWarningViewer={openWarningViewer}
@@ -137,7 +151,12 @@ export const RosterMenuDialogs = ({
         onClose={closeWarningViewer}
         member={member}
       />
-      <AssociateMemberDialog isOpen={associateOpen} onClose={closeAssociate} member={member} />
+      <LinkDiscordAccountDialog
+        isOpen={linkDiscordOpen}
+        onClose={closeLinkDiscord}
+        member={member}
+      />
+      <LinkGW2AccountDialog isOpen={linkGW2Open} onClose={closeLinkGW2} member={member} />
       <EditNickNameDialog isOpen={nicknameOpen} onClose={closeNickname} member={member} />
       <RoleEdit modalShow={roleEditOpen} onClose={closeRoleEdit} selectedRecord={member} />
     </>
