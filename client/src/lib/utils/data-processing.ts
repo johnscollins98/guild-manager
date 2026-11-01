@@ -1,5 +1,10 @@
 import { DateTime } from 'luxon';
-import { type DiscordMemberDTO, type GW2Rank, type WarningDTO } from 'server';
+import {
+  matchesAccountName,
+  type DiscordMemberDTO,
+  type GW2Rank,
+  type WarningDTO
+} from 'server';
 import { type GW2MemberResponseDTO } from 'server/src/dtos/gw2/gw2-member-response-dto';
 import type MemberRecord from '../interfaces/member-record';
 import { getUserAvatar } from './helpers';
@@ -10,16 +15,6 @@ export const generateGW2RosterRecords = (
   ranks: GW2Rank[],
   warnings: WarningDTO[]
 ): MemberRecord[] => {
-  const discordNames = discordMembers.map(d => ({
-    id: d.id,
-    name: d.name
-      ?.normalize('NFKC')
-      .replace(
-        /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g,
-        ''
-      )
-  }));
-
   const records: MemberRecord[] = gw2Members.map(gw2Member => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const accountName = gw2Member.name.split('.')[0]!;
@@ -28,19 +23,15 @@ export const generateGW2RosterRecords = (
     const rankImage = ranks.find(r => r.id === rank)?.icon;
     const joinDate = DateTime.fromISO(gw2Member.joined, { zone: 'utc' });
 
-    const testName = accountName.toLowerCase();
-    // Name or Name.1234 but cannot be directly next to another alphabetical character
-    const regex = new RegExp(`(?:^|[^a-z])(${testName})(?:$|[^a-z])`, 'ig');
-
     // check for exact match
     const matchingDiscordMembers = gw2Member.discordId
       ? discordMembers.filter(
           (member): member is DiscordMemberDTO & { id: string } => member.id === gw2Member.discordId
         )
-      : discordNames
-          .filter(member => member.name?.match(regex))
-          .map(member => discordMembers.find(discordMember => discordMember.id === member.id))
-          .filter((member): member is DiscordMemberDTO & { id: string } => !!member?.id);
+      : discordMembers.filter(
+          (member): member is DiscordMemberDTO & { id: string } =>
+            !!member.id && matchesAccountName(member.name, gw2Member.name)
+        );
 
     const discordMember = matchingDiscordMembers[0];
 

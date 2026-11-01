@@ -15,6 +15,7 @@ declare namespace NodeJS {
     AUTH_MANAGE_MEMBERS: string;
     AUTH_MANAGE_RECRUITMENT: string;
     EVENT_ROLES: string;
+    WELCOME_TEST_USER_ID: string;
     SESSION_SECRET: string;
     FRONT_END_BASE_URL: string;
     NODE_ENV: string;

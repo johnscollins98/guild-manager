@@ -25,6 +25,7 @@ export const config = {
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
   accessRoles: process.env.AUTH_ACCESS?.split(',') ?? [],
   welcomeChannelId: process.env.WELCOME_CHANNEL_ID,
+  welcomeTestUserId: process.env.WELCOME_TEST_USER_ID ?? '',
   leaversChannelId: process.env.LEAVERS_CHANNEL_ID,
   recruitmentRoleId: process.env.RECRUITMENT_ROLE_ID,
   pendingRoleId: process.env.PENDING_ROLE_ID,

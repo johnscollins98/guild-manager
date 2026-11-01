@@ -1,9 +1,9 @@
 import { AuditLogEvent, Client, Events, Partials } from 'discord.js';
 import { Service } from 'typedi';
 import { config } from '../config';
-import { DiscordController } from '../controllers/discord-controller';
 import { MemberLeftRepository } from '../services/repositories/member-left-repository';
 import { CommandExecutor } from './command-executor';
+import { WelcomeMessageHandler } from './services/welcome-message-handler';
 
 @Service()
 export class DiscordBot {
@@ -12,7 +12,7 @@ export class DiscordBot {
   constructor(
     private readonly memberLeftRepository: MemberLeftRepository,
     private readonly commandExecutor: CommandExecutor,
-    private readonly discordController: DiscordController
+    private readonly welcomeMessageHandler: WelcomeMessageHandler
   ) {
     this.client = new Client({
       intents: ['GuildPresences', 'GuildMembers', 'Guilds', 'MessageContent', 'GuildMessages'],
@@ -36,6 +36,7 @@ export class DiscordBot {
     await this.commandExecutor.init();
 
     this.client.on(Events.InteractionCreate, async interaction => {
+      await this.welcomeMessageHandler.handleInteraction(interaction);
       if (!interaction.isChatInputCommand()) return;
 
       this.commandExecutor.executeCommandByName(interaction.commandName, interaction);
@@ -43,35 +44,10 @@ export class DiscordBot {
   }
 
   private async setupEventListeners() {
-    this.client.on('messageCreate', async e => {
-      if (!config.discordGuildId || e.guildId !== config.discordGuildId) return;
-      if (!config.welcomeChannelId || e.channelId !== config.welcomeChannelId) return;
-      if (e.member?.user.bot) return;
-
-      // only respond if matches <text>.#### format
-      const match = new RegExp(/.*\.\d\d\d\d/gm).exec(e.content);
-      if (!match) return;
-
-      const memberRoles = e.member?.roles;
-      if (!memberRoles) return;
-
-      // get valid roles
-      const validRoles = await this.discordController.getRoles();
-      const validRoleIds = validRoles.map(r => r.id);
-
-      // only respond if they have no "valid" roles (i.e. uninvited etc)
-      if (memberRoles.cache.hasAny(...validRoleIds)) {
-        return;
-      }
-
-      e.reply(
-        `Thanks! ${config.recruitmentRoleId ? `A <@&${config.recruitmentRoleId}>` : 'We'} will get you invited in-game ASAP and keep you updated.`
-      );
-
-      if (config.pendingRoleId) {
-        e.member.roles.add(config.pendingRoleId);
-      }
-    });
+    this.client.on('messageCreate', message => this.welcomeMessageHandler.handle(message));
+    this.client.on(Events.GuildMemberAdd, member =>
+      this.welcomeMessageHandler.handleMemberJoin(member)
+    );
 
     // Will refactor if we add more event listeners
     this.client.on('guildMemberRemove', async m => {
