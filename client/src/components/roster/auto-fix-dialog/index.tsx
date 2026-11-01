@@ -17,25 +17,23 @@ import {
 import { useCallback, useState, type FormEvent } from 'react';
 import type { DiscordRole } from 'server';
 import { config } from '../../../lib/config';
-import type MemberRecord from '../../../lib/interfaces/member-record';
 import { Gw2Icon } from '../../common/gw2-icon';
 import ConfirmationDialog from './confirmation-dialog';
 import DuplicateMatchSection from './duplicate-match-section';
 import useApplySuggestedFixes from './hooks/use-apply-suggested-fixes';
-import useSuggestedFixes from './hooks/use-suggested-fixes';
 import ManualActionsSection from './manual-actions-section';
 import ReinviteControls from './reinvite-controls';
 import SuggestionGroup from './suggestion-group';
-import type { SuggestedFix } from './types';
+import type { SuggestedFix, SuggestedFixGroups } from './types';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  records: MemberRecord[];
+  suggestions: SuggestedFixGroups;
   roles: DiscordRole[];
 }
 
-const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
+const AutoFixDialog = ({ isOpen, onClose, suggestions, roles }: Props) => {
   const isMediumScreen = useMediaQuery(theme => theme.breakpoints.up('md'));
   const [enabled, setEnabled] = useState<string[]>([]);
   const [reinviteByKick, setReinviteByKick] = useState<Record<string, boolean>>({});
@@ -43,7 +41,6 @@ const AutoFixDialog = ({ isOpen, onClose, records, roles }: Props) => {
   const [associationTargets, setAssociationTargets] = useState<Record<string, string>>({});
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const suggestions = useSuggestedFixes(records, roles);
   const activeFixes = suggestions.all.filter(
     (fix): fix is Exclude<SuggestedFix, { kind: 'manual' }> =>
       fix.kind !== 'manual' && fix.available && enabled.includes(fix.key)
