@@ -7,6 +7,8 @@ import DeleteForever from '@mui/icons-material/DeleteForever';
 import FilterList from '@mui/icons-material/FilterList';
 import ImportExport from '@mui/icons-material/ImportExport';
 import Refresh from '@mui/icons-material/Refresh';
+import Badge from '@mui/material/Badge';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -30,6 +32,7 @@ interface Props {
 
   onKick: () => void;
   onAutoFix: () => void;
+  issueCount: number | undefined;
 
   disabled?: boolean;
 }
@@ -41,6 +44,7 @@ const RosterControl = ({
   setSelection,
   onKick,
   onAutoFix,
+  issueCount,
   disabled = false
 }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -107,18 +111,11 @@ const RosterControl = ({
         </span>
         <span className="right">
           {!kickMode && (
-            <Tooltip title="Review suggested fixes">
-              <span>
-                <IconButton
-                  aria-label="Review suggested fixes"
-                  size="medium"
-                  onClick={onAutoFix}
-                  disabled={!authData?.permissions.MEMBERS || disabled}
-                >
-                  <AutoFixHigh />
-                </IconButton>
-              </span>
-            </Tooltip>
+            <AutoFixButton
+              issueCount={issueCount}
+              onClick={onAutoFix}
+              disabled={!authData?.permissions.MEMBERS || disabled}
+            />
           )}
           {!kickMode && (
             <Tooltip title={'Mass kick'}>
@@ -287,6 +284,38 @@ const SortItem = ({ sortKey }: { sortKey: string }) => {
         {sortKey}
       </Box>
     </MenuItem>
+  );
+};
+
+const AutoFixButton = ({
+  issueCount,
+  onClick,
+  disabled
+}: {
+  issueCount: number | undefined;
+  onClick: () => void;
+  disabled: boolean;
+}) => {
+  const badgeContent =
+    issueCount === undefined ? <CircularProgress size={12} color="inherit" /> : issueCount;
+
+  const badgeColor = issueCount === undefined ? 'default' : issueCount === 0 ? 'success' : 'error';
+
+  const label =
+    issueCount === undefined
+      ? 'Review suggested fixes'
+      : `Review ${issueCount} suggested fix${issueCount === 1 ? '' : 'es'}`;
+
+  return (
+    <Tooltip title={label}>
+      <span>
+        <IconButton aria-label={label} size="medium" onClick={onClick} disabled={disabled}>
+          <Badge badgeContent={badgeContent} color={badgeColor} max={99} showZero>
+            <AutoFixHigh />
+          </Badge>
+        </IconButton>
+      </span>
+    </Tooltip>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useCallback, useState, type Dispatch, type SetStateAction } from 'react';
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import type MemberRecord from '../../lib/interfaces/member-record';
 import AutoFixDialog from './auto-fix-dialog';
 import KickModal from './kick-modal';
@@ -8,6 +8,7 @@ import { Box } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { useFilterString } from '../../lib/utils/use-filter-string';
 import { QueryBoundary } from '../common/query-boundary';
+import useSuggestedFixes from './auto-fix-dialog/hooks/use-suggested-fixes';
 import { RosterList } from './member-list';
 import { RosterLoader } from './roster-loader';
 import { RosterSummary } from './roster-summary';
@@ -16,6 +17,7 @@ import { useRoster } from './use-roster';
 const Roster = () => {
   const [kickMode, setKickMode] = useState(false);
   const [selection, setSelection] = useState<string[]>([]);
+  const [issueCount, setIssueCount] = useState<number | undefined>();
 
   const [kickModalShow, setKickModalShow] = useState(false);
   const [autoFixOpen, setAutoFixOpen] = useState(false);
@@ -36,6 +38,7 @@ const Roster = () => {
         setSelection={setSelection}
         onKick={() => setKickModalShow(true)}
         onAutoFix={() => setAutoFixOpen(open => !open)}
+        issueCount={issueCount}
       />
       <QueryBoundary fallback={<RosterLoader />}>
         <RosterContent
@@ -43,6 +46,7 @@ const Roster = () => {
           selection={selection}
           setSelection={setSelection}
           onKick={onKick}
+          onIssueCountChange={setIssueCount}
           autoFixOpen={autoFixOpen}
           onCloseAutoFix={() => setAutoFixOpen(false)}
         />
@@ -65,6 +69,7 @@ interface RosterContentProps {
   selection: string[];
   setSelection: Dispatch<SetStateAction<string[]>>;
   onKick: (member: MemberRecord) => void;
+  onIssueCountChange: (count: number) => void;
   autoFixOpen: boolean;
   onCloseAutoFix: () => void;
 }
@@ -74,6 +79,7 @@ const RosterContent = ({
   selection,
   setSelection,
   onKick,
+  onIssueCountChange,
   autoFixOpen,
   onCloseAutoFix
 }: RosterContentProps) => {
@@ -92,6 +98,11 @@ const RosterContent = ({
     filterString,
     searchParams.get('filterBy') ?? ''
   );
+  const suggestions = useSuggestedFixes(roster, discordRoles);
+
+  useEffect(() => {
+    onIssueCountChange(suggestions.all.length);
+  }, [onIssueCountChange, suggestions.all.length]);
 
   return (
     <Box
@@ -125,7 +136,7 @@ const RosterContent = ({
       <AutoFixDialog
         isOpen={autoFixOpen}
         onClose={onCloseAutoFix}
-        records={roster}
+        suggestions={suggestions}
         roles={discordRoles}
       />
     </Box>
