@@ -8,7 +8,7 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useCallback, useState, type FunctionComponent } from 'react';
-import { useKickDiscordMembers } from '../../lib/apis/discord-api';
+import { useDiscordReinviteLink, useKickDiscordMembers } from '../../lib/apis/discord-api';
 import './kick-modal.scss';
 
 interface KickModalProps {
@@ -21,16 +21,22 @@ interface KickModalProps {
 const KickModal: FunctionComponent<KickModalProps> = ({ ids, isOpen, onClose, onConfirm }) => {
   const [reasonText, setReasonText] = useState<string>('');
   const [reinvite, setReinvite] = useState<boolean>(false);
+  const { data: reinviteLink } = useDiscordReinviteLink();
   const kickMutation = useKickDiscordMembers();
 
   const onFormSubmitted: React.FormEventHandler<HTMLFormElement> = useCallback(
     async e => {
       e.preventDefault();
-      kickMutation.mutate({ memberIds: ids, reason: reasonText, reinvite });
+      kickMutation.mutate({
+        memberIds: ids,
+        reason: reasonText,
+        reinvite,
+        reinviteUrl: reinviteLink.url ?? undefined
+      });
       onConfirm();
       onClose();
     },
-    [ids, reinvite, reasonText, onClose, kickMutation, onConfirm]
+    [ids, reinvite, reasonText, reinviteLink.url, onClose, kickMutation, onConfirm]
   );
 
   return (
@@ -39,27 +45,29 @@ const KickModal: FunctionComponent<KickModalProps> = ({ ids, isOpen, onClose, on
       <DialogContent className="kick-modal-content">
         <form onSubmit={onFormSubmitted} onReset={onClose}>
           <Typography className="kick-modal-message">
-            Are you sure you want to kick these user(s)?
+            Are you sure you want to kick {ids.length === 1 ? 'this user?' : 'these users?'}
           </Typography>
-          <div className="kick-reinvite-form">
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox checked={reinvite} onChange={(_, v) => setReinvite(v)} />}
-                label="Send re-invite message"
-              />
-            </FormGroup>
-            {reinvite && (
-              <TextField
-                id="reason-field"
-                label="Reason for kick"
-                variant="outlined"
-                onChange={e => setReasonText(e.target.value)}
-                value={reasonText}
-                fullWidth
-                required
-              />
-            )}
-          </div>
+          {reinviteLink.url && (
+            <div className="kick-reinvite-form">
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox checked={reinvite} onChange={(_, v) => setReinvite(v)} />}
+                  label="Send re-invite message"
+                />
+              </FormGroup>
+              {reinvite && (
+                <TextField
+                  id="reason-field"
+                  label="Reason for kick"
+                  variant="outlined"
+                  onChange={e => setReasonText(e.target.value)}
+                  value={reasonText}
+                  fullWidth
+                  required
+                />
+              )}
+            </div>
+          )}
           <div className="kick-modal-actions">
             <Button variant="text" type="reset" disabled={kickMutation.isPending}>
               Cancel

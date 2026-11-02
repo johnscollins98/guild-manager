@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useCallback, useState, type FormEvent } from 'react';
 import type { DiscordRole } from 'server';
-import { config } from '../../../lib/config';
+import { useDiscordReinviteLink } from '../../../lib/apis/discord-api';
 import { Gw2Icon } from '../../common/gw2-icon';
 import ConfirmationDialog from './confirmation-dialog';
 import DuplicateMatchSection from './duplicate-match-section';
@@ -40,6 +40,7 @@ const AutoFixDialog = ({ isOpen, onClose, suggestions, roles }: Props) => {
   const [reason, setReason] = useState('');
   const [associationTargets, setAssociationTargets] = useState<Record<string, string>>({});
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const { data: reinviteLink } = useDiscordReinviteLink();
 
   const activeFixes = suggestions.all.filter(
     (fix): fix is Exclude<SuggestedFix, { kind: 'manual' }> =>
@@ -52,7 +53,7 @@ const AutoFixDialog = ({ isOpen, onClose, suggestions, roles }: Props) => {
     fix => fix.available && enabled.includes(fix.key) && reinviteByKick[fix.key]
   ).length;
   const hasEnabledKick = activeFixes.some(fix => fix.kind === 'kick');
-  const inviteConfigured = Boolean(config.discordReinviteUrl);
+  const inviteConfigured = Boolean(reinviteLink.url);
 
   const resetReview = useCallback(() => {
     setEnabled([]);
@@ -71,6 +72,7 @@ const AutoFixDialog = ({ isOpen, onClose, suggestions, roles }: Props) => {
     fixes: activeFixes,
     associationTargets,
     reinviteByKick,
+    reinviteUrl: reinviteLink.url,
     reason,
     onComplete: resetReview
   });

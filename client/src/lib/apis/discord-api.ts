@@ -9,7 +9,6 @@ import {
 } from 'server';
 import { queryClient } from '../../components/common/query-provider';
 import { useToast } from '../../components/common/toast/toast-context';
-import { config } from '../config';
 import { createApi } from './axios-wrapper';
 import { eventSettingsQuery } from './event-api';
 
@@ -29,6 +28,7 @@ const discordApi: IDiscordController = {
   getLeavers: () => api('leavers'),
   getBotRoles: () => api('bot-roles'),
   getBot: () => api('bot'),
+  getReinviteLink: () => api('reinvite-link'),
   getUserById: userId => api(`user/${userId}`, { validateStatus: s => s === 200 || s === 404 }),
   getChannels: () => api('channels'),
   getMessages: id => api(`channels/${id}/messages`),
@@ -73,6 +73,13 @@ export const discordBotQuery = queryOptions({
 });
 
 export const useDiscordBot = () => useSuspenseQuery(discordBotQuery);
+
+export const discordReinviteLinkQuery = queryOptions({
+  queryKey: ['discord/reinvite-link'],
+  queryFn: discordApi.getReinviteLink
+});
+
+export const useDiscordReinviteLink = () => useSuspenseQuery(discordReinviteLinkQuery);
 
 export const discordUserQuery = (userId: string) =>
   queryOptions({
@@ -245,7 +252,7 @@ export const useKickDiscordMembers = () => {
             content += ` for the following reason: "${reason}"`;
           }
 
-          const inviteUrl = reinviteUrl || config.discordReinviteUrl;
+          const inviteUrl = reinviteUrl;
           if (inviteUrl) {
             content += `\n\nYou are welcome to re-join at any time using the following link: ${inviteUrl}`;
           }
