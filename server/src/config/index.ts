@@ -22,6 +22,7 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL,
   discordClientId: process.env.DISCORD_CLIENT_ID,
   discordClientSecret: process.env.DISCORD_CLIENT_SECRET,
+  discordReinviteUrl: process.env.VITE_DISCORD_REINVITE_LINK,
   discordAuthRedirect: process.env.DISCORD_AUTH_REDIRECT,
   accessRoles: process.env.AUTH_ACCESS?.split(',') ?? [],
   welcomeChannelId: process.env.WELCOME_CHANNEL_ID,

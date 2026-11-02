@@ -118,6 +118,11 @@ export class DiscordController implements IDiscordController {
     return await this.discordUserApi.getCurrentUser();
   }
 
+  @Get('/reinvite-link')
+  async getReinviteLink(): Promise<{ url: string | null }> {
+    return { url: config.discordReinviteUrl ?? null };
+  }
+
   @Get('/user/:userId')
   async getUserById(@Param('userId') userId: string) {
     return await this.discordUserApi.getUserById(userId);

@@ -12,6 +12,7 @@ interface Options {
   fixes: SuggestedFix[];
   associationTargets: Record<string, string>;
   reinviteByKick: Record<string, boolean>;
+  reinviteUrl: string | null;
   reason: string;
   onComplete: () => void;
 }
@@ -20,6 +21,7 @@ const useApplySuggestedFixes = ({
   fixes,
   associationTargets,
   reinviteByKick,
+  reinviteUrl,
   reason,
   onComplete
 }: Options) => {
@@ -58,6 +60,7 @@ const useApplySuggestedFixes = ({
           await kick.mutateAsync({
             memberIds: [fix.member.discordId],
             reinvite: !!reinviteByKick[fix.key],
+            reinviteUrl: reinviteUrl ?? undefined,
             reason: reason.trim() || undefined
           });
           openToast(`Kicked ${name}.`, 'success');
